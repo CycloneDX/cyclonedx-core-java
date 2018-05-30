@@ -14,14 +14,11 @@ Maven Usage
 -------------------
 
 ```xml
-<!-- uses default configuration -->
-<plugins>
-    <plugin>
-        <groupId>org.cyclonedx</groupId>
-        <artifactId>cyclonedx-core-java</artifactId>
-        <version>1.0.0</version>
-    </plugin>
-</plugins>
+<dependency>
+    <groupId>org.cyclonedx</groupId>
+    <artifactId>cyclonedx-core-java</artifactId>
+    <version>1.0.0</version>
+</dependency>
 ```
 
 Copyright & License
