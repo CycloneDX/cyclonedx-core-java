@@ -53,11 +53,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public final class BomUtil {
+public final class BomUtils {
 
     private static final String NS_BOM = "http://cyclonedx.org/schema/bom/1.0";
 
-    private BomUtil() { }
+    private BomUtils() { }
 
     public static Document createBom(Set<Component> components) throws ParserConfigurationException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
