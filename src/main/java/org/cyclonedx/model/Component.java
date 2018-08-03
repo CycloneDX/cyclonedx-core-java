@@ -17,6 +17,8 @@
  */
 package org.cyclonedx.model;
 
+import com.github.packageurl.PackageURL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Component {
@@ -92,6 +94,13 @@ public class Component {
         this.hashes = hashes;
     }
 
+    public void addHash(Hash hash) {
+        if (this.hashes == null) {
+            this.hashes = new ArrayList<>();
+        }
+        this.hashes.add(hash);
+    }
+
     public List<License> getLicenses() {
         return licenses;
     }
@@ -122,6 +131,10 @@ public class Component {
 
     public void setPurl(String purl) {
         this.purl = purl;
+    }
+
+    public void setPurl(PackageURL purl) {
+        this.purl = purl.canonicalize();
     }
 
     public boolean isModified() {
