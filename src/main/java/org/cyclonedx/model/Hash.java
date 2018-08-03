@@ -19,8 +19,32 @@ package org.cyclonedx.model;
 
 public class Hash {
 
+    public enum Algorithm {
+        MD5("MD5"),
+        SHA1("SHA-1"),
+        SHA_256("SHA-256"),
+        SHA_384("SHA-384"),
+        SHA_512("SHA-512"),
+        SHA3_256("SHA3-256"),
+        SHA3_512("SHA3-512");
+
+        private String spec;
+        Algorithm(String spec) {
+            this.spec = spec;
+        }
+
+        public String getSpec(){
+            return spec;
+        }
+    }
+
     private String algorithm;
     private String value;
+
+    public Hash(Algorithm algorithm, String value) {
+        this.algorithm = algorithm.getSpec();
+        this.value = value;
+    }
 
     public Hash(String algorithm, String value) {
         this.algorithm = algorithm;
