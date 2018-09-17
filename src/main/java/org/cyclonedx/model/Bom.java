@@ -17,30 +17,34 @@
  */
 package org.cyclonedx.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
-@XmlRootElement(name = "license", namespace = "http://cyclonedx.org/schema/bom/1.0")
-public class License {
+@XmlRootElement(name = "bom", namespace = "http://cyclonedx.org/schema/bom/1.0")
+public class Bom {
 
-    private String id;
-    private String name;
+    private List<Component> components;
+    private int version;
 
-    public String getId() {
-        return id;
+    public List<Component> getComponents() {
+        return components;
     }
 
-    @XmlElement(name = "id", namespace = "http://cyclonedx.org/schema/bom/1.0")
-    public void setId(String id) {
-        this.id = id;
+    @XmlElementWrapper(name = "components", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "component", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    public void setComponents(List<Component> components) {
+        this.components = components;
     }
 
-    public String getName() {
-        return name;
+    public int getVersion() {
+        return version;
     }
 
-    @XmlElement(name = "name", namespace = "http://cyclonedx.org/schema/bom/1.0")
-    public void setName(String name) {
-        this.name = name;
+    @XmlAttribute(name = "version")
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

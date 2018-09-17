@@ -18,9 +18,14 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlRootElement(name = "component", namespace = "http://cyclonedx.org/schema/bom/1.0")
 public class Component {
 
     private String publisher;
@@ -38,10 +43,28 @@ public class Component {
     private List<Component> components;
     private String type;
 
+    public enum Classification {
+        APPLICATION("application"),
+        FRAMEWORK("framework"),
+        LIBRARY("library"),
+        OPERATING_SYSTEM("operating-system"),
+        DEVICE("device");
+
+        private String value;
+        Classification(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     public String getPublisher() {
         return publisher;
     }
 
+    @XmlElement(name = "publisher", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -50,6 +73,7 @@ public class Component {
         return group;
     }
 
+    @XmlElement(name = "group", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setGroup(String group) {
         this.group = group;
     }
@@ -58,6 +82,7 @@ public class Component {
         return name;
     }
 
+    @XmlElement(name = "name", required = true, namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setName(String name) {
         this.name = name;
     }
@@ -66,6 +91,7 @@ public class Component {
         return version;
     }
 
+    @XmlElement(name = "version", required = true, namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setVersion(String version) {
         this.version = version;
     }
@@ -74,6 +100,7 @@ public class Component {
         return description;
     }
 
+    @XmlElement(name = "description", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setDescription(String description) {
         this.description = description;
     }
@@ -82,6 +109,7 @@ public class Component {
         return scope;
     }
 
+    @XmlElement(name = "scope", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setScope(String scope) {
         this.scope = scope;
     }
@@ -90,6 +118,8 @@ public class Component {
         return hashes;
     }
 
+    @XmlElementWrapper(name = "hashes", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "hash", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setHashes(List<Hash> hashes) {
         this.hashes = hashes;
     }
@@ -105,6 +135,8 @@ public class Component {
         return licenses;
     }
 
+    @XmlElementWrapper(name = "licenses", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "license", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setLicenses(List<License> licenses) {
         this.licenses = licenses;
     }
@@ -113,6 +145,7 @@ public class Component {
         return copyright;
     }
 
+    @XmlElement(name = "copyright", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setCopyright(String copyright) {
         this.copyright = copyright;
     }
@@ -121,6 +154,7 @@ public class Component {
         return cpe;
     }
 
+    @XmlElement(name = "cpe", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setCpe(String cpe) {
         this.cpe = cpe;
     }
@@ -129,6 +163,7 @@ public class Component {
         return purl;
     }
 
+    @XmlElement(name = "purl", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setPurl(String purl) {
         this.purl = purl;
     }
@@ -141,6 +176,7 @@ public class Component {
         return modified;
     }
 
+    @XmlElement(name = "modified", required = true, namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setModified(boolean modified) {
         this.modified = modified;
     }
@@ -149,6 +185,8 @@ public class Component {
         return components;
     }
 
+    @XmlElementWrapper(name = "components", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "component", namespace = "http://cyclonedx.org/schema/bom/1.0")
     public void setComponents(List<Component> components) {
         this.components = components;
     }
@@ -157,7 +195,12 @@ public class Component {
         return type;
     }
 
+    @XmlAttribute(name = "type", required = true)
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setType(Classification classification) {
+        this.type = classification.value;
     }
 }
