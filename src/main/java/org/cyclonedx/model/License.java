@@ -17,10 +17,11 @@
  */
 package org.cyclonedx.model;
 
+import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "license", namespace = "http://cyclonedx.org/schema/bom/1.0")
+@XmlRootElement(name = "license", namespace = CycloneDxSchema.NS_BOM)
 public class License {
 
     private String id;
@@ -30,7 +31,7 @@ public class License {
         return id;
     }
 
-    @XmlElement(name = "id", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "id", namespace = CycloneDxSchema.NS_BOM)
     public void setId(String id) {
         this.id = id;
     }
@@ -39,7 +40,7 @@ public class License {
         return name;
     }
 
-    @XmlElement(name = "name", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "name", namespace = CycloneDxSchema.NS_BOM)
     public void setName(String name) {
         this.name = name;
     }

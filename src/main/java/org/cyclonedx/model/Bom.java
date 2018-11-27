@@ -17,13 +17,15 @@
  */
 package org.cyclonedx.model;
 
+import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name = "bom", namespace = "http://cyclonedx.org/schema/bom/1.0")
+@XmlRootElement(name = "bom", namespace = CycloneDxSchema.NS_BOM)
 public class Bom {
 
     private List<Component> components;
@@ -33,10 +35,17 @@ public class Bom {
         return components;
     }
 
-    @XmlElementWrapper(name = "components", namespace = "http://cyclonedx.org/schema/bom/1.0")
-    @XmlElement(name = "component", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM)
     public void setComponents(List<Component> components) {
         this.components = components;
+    }
+
+    public void addComponent(Component component) {
+        if (components == null) {
+            components = new ArrayList<>();
+        }
+        components.add(component);
     }
 
     public int getVersion() {

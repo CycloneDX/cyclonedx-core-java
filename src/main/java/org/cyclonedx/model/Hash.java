@@ -17,11 +17,12 @@
  */
 package org.cyclonedx.model;
 
+import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
-@XmlRootElement(name = "hash", namespace = "http://cyclonedx.org/schema/bom/1.0")
+@XmlRootElement(name = "hash", namespace = CycloneDxSchema.NS_BOM)
 public class Hash {
 
     public enum Algorithm {
@@ -43,8 +44,13 @@ public class Hash {
         }
     }
 
+    @XmlAttribute(name = "alg", required = true)
     private String algorithm;
+
+    @XmlValue()
     private String value;
+
+    public Hash() { }
 
     public Hash(Algorithm algorithm, String value) {
         this.algorithm = algorithm.getSpec();
@@ -60,17 +66,7 @@ public class Hash {
         return algorithm;
     }
 
-    @XmlAttribute(name = "alg", required = true)
-    public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
-    }
-
     public String getValue() {
         return value;
-    }
-
-    @XmlValue()
-    public void setValue(String value) {
-        this.value = value;
     }
 }

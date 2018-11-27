@@ -7,8 +7,8 @@
 CycloneDX Core (Java)
 =========
 
-The CycloneDX core module provides a model representation of the BoM along with utilities to assist in creating, 
-validating, and parsing BoMs. CycloneDX is a lightweight BoM specification that is easily created, human readable, 
+The CycloneDX core module provides a model representation of the BOM along with utilities to assist in creating, 
+validating, and parsing BOMs. CycloneDX is a lightweight BoM specification that is easily created, human readable, 
 and simple to parse. The resulting bom.xml can be used with tools such as [OWASP Dependency-Track](https://dependencytrack.org/) 
 for the continuous analysis of components.
 

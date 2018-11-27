@@ -18,6 +18,7 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
+import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -25,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name = "component", namespace = "http://cyclonedx.org/schema/bom/1.0")
+@XmlRootElement(name = "component", namespace = CycloneDxSchema.NS_BOM)
 public class Component {
 
     private String publisher;
@@ -64,7 +65,7 @@ public class Component {
         return publisher;
     }
 
-    @XmlElement(name = "publisher", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "publisher", namespace = CycloneDxSchema.NS_BOM)
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -73,7 +74,7 @@ public class Component {
         return group;
     }
 
-    @XmlElement(name = "group", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "group", namespace = CycloneDxSchema.NS_BOM)
     public void setGroup(String group) {
         this.group = group;
     }
@@ -82,7 +83,7 @@ public class Component {
         return name;
     }
 
-    @XmlElement(name = "name", required = true, namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "name", required = true, namespace = CycloneDxSchema.NS_BOM)
     public void setName(String name) {
         this.name = name;
     }
@@ -91,7 +92,7 @@ public class Component {
         return version;
     }
 
-    @XmlElement(name = "version", required = true, namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "version", required = true, namespace = CycloneDxSchema.NS_BOM)
     public void setVersion(String version) {
         this.version = version;
     }
@@ -100,7 +101,7 @@ public class Component {
         return description;
     }
 
-    @XmlElement(name = "description", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "description", namespace = CycloneDxSchema.NS_BOM)
     public void setDescription(String description) {
         this.description = description;
     }
@@ -109,7 +110,7 @@ public class Component {
         return scope;
     }
 
-    @XmlElement(name = "scope", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "scope", namespace = CycloneDxSchema.NS_BOM)
     public void setScope(String scope) {
         this.scope = scope;
     }
@@ -118,8 +119,8 @@ public class Component {
         return hashes;
     }
 
-    @XmlElementWrapper(name = "hashes", namespace = "http://cyclonedx.org/schema/bom/1.0")
-    @XmlElement(name = "hash", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElementWrapper(name = "hashes", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "hash", namespace = CycloneDxSchema.NS_BOM)
     public void setHashes(List<Hash> hashes) {
         this.hashes = hashes;
     }
@@ -135,17 +136,24 @@ public class Component {
         return licenses;
     }
 
-    @XmlElementWrapper(name = "licenses", namespace = "http://cyclonedx.org/schema/bom/1.0")
-    @XmlElement(name = "license", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElementWrapper(name = "licenses", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "license", namespace = CycloneDxSchema.NS_BOM)
     public void setLicenses(List<License> licenses) {
         this.licenses = licenses;
+    }
+
+    public void addLicense(License license) {
+        if (this.licenses == null) {
+            this.licenses = new ArrayList<>();
+        }
+        this.licenses.add(license);
     }
 
     public String getCopyright() {
         return copyright;
     }
 
-    @XmlElement(name = "copyright", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "copyright", namespace = CycloneDxSchema.NS_BOM)
     public void setCopyright(String copyright) {
         this.copyright = copyright;
     }
@@ -154,7 +162,7 @@ public class Component {
         return cpe;
     }
 
-    @XmlElement(name = "cpe", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "cpe", namespace = CycloneDxSchema.NS_BOM)
     public void setCpe(String cpe) {
         this.cpe = cpe;
     }
@@ -163,7 +171,7 @@ public class Component {
         return purl;
     }
 
-    @XmlElement(name = "purl", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "purl", namespace = CycloneDxSchema.NS_BOM)
     public void setPurl(String purl) {
         this.purl = purl;
     }
@@ -176,7 +184,7 @@ public class Component {
         return modified;
     }
 
-    @XmlElement(name = "modified", required = true, namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElement(name = "modified", required = true, namespace = CycloneDxSchema.NS_BOM)
     public void setModified(boolean modified) {
         this.modified = modified;
     }
@@ -185,10 +193,17 @@ public class Component {
         return components;
     }
 
-    @XmlElementWrapper(name = "components", namespace = "http://cyclonedx.org/schema/bom/1.0")
-    @XmlElement(name = "component", namespace = "http://cyclonedx.org/schema/bom/1.0")
+    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM)
     public void setComponents(List<Component> components) {
         this.components = components;
+    }
+
+    public void addComponent(Component component) {
+        if (this.components == null) {
+            this.components = new ArrayList<>();
+        }
+        this.components.add(component);
     }
 
     public String getType() {
