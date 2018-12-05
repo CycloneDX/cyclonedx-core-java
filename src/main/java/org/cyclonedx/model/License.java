@@ -20,6 +20,7 @@ package org.cyclonedx.model;
 import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 @XmlRootElement(name = "license", namespace = CycloneDxSchema.NS_BOM)
 public class License {
@@ -43,5 +44,19 @@ public class License {
     @XmlElement(name = "name", namespace = CycloneDxSchema.NS_BOM)
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        License license = (License) o;
+        return Objects.equals(id, license.id) &&
+                Objects.equals(name, license.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

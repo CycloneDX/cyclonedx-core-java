@@ -21,6 +21,7 @@ import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
+import java.util.Objects;
 
 @XmlRootElement(name = "hash", namespace = CycloneDxSchema.NS_BOM)
 public class Hash {
@@ -68,5 +69,19 @@ public class Hash {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hash hash = (Hash) o;
+        return Objects.equals(algorithm, hash.algorithm) &&
+                Objects.equals(value, hash.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(algorithm, value);
     }
 }

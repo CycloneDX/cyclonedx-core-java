@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @XmlRootElement(name = "component", namespace = CycloneDxSchema.NS_BOM)
 public class Component {
@@ -217,5 +218,31 @@ public class Component {
 
     public void setType(Classification classification) {
         this.type = classification.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(publisher, group, name, version, description, scope, hashes, licenses, copyright, cpe, purl, modified, components, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Component component = (Component) o;
+        return modified == component.modified &&
+                Objects.equals(publisher, component.publisher) &&
+                Objects.equals(group, component.group) &&
+                Objects.equals(name, component.name) &&
+                Objects.equals(version, component.version) &&
+                Objects.equals(description, component.description) &&
+                Objects.equals(scope, component.scope) &&
+                Objects.equals(hashes, component.hashes) &&
+                Objects.equals(licenses, component.licenses) &&
+                Objects.equals(copyright, component.copyright) &&
+                Objects.equals(cpe, component.cpe) &&
+                Objects.equals(purl, component.purl) &&
+                Objects.equals(components, component.components) &&
+                Objects.equals(type, component.type);
     }
 }
