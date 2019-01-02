@@ -137,6 +137,6 @@ public class BomParser extends CycloneDxSchema {
      * @since 1.1.0
      */
     public boolean isValid(File file) {
-        return validate(file).size() == 0;
+        return validate(file).isEmpty();
     }
 }
