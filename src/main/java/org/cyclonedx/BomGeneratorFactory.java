@@ -17,16 +17,16 @@
  */
 package org.cyclonedx;
 
-import org.w3c.dom.Document;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import org.cyclonedx.model.Component;
+import java.util.Set;
 
-public interface BomGenerator {
+public class BomGeneratorFactory {
 
-    CycloneDxSchema.Version getSchemaVersion();
-
-    Document generate() throws ParserConfigurationException;
-
-    String toXmlString() throws TransformerException;
-
+    public static BomGenerator create(CycloneDxSchema.Version version, Set<Component> components) {
+        if (CycloneDxSchema.Version.VERSION_10 == version) {
+            return new BomGenerator10(components);
+        } else {
+            return new BomGenerator11(components);
+        }
+    }
 }

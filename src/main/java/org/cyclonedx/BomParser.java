@@ -78,7 +78,7 @@ public class BomParser extends CycloneDxSchema {
      */
     private Bom parse(StreamSource streamSource) throws ParseException {
         try {
-            final Schema schema = getXmlSchema();
+            final Schema schema = getXmlSchema(CycloneDxSchema.Version.VERSION_11);
 
             // Parse the native bom
             final JAXBContext jaxbContext = JAXBContext.newInstance(Bom.class);
@@ -89,8 +89,8 @@ public class BomParser extends CycloneDxSchema {
             final XMLInputFactory xif = XMLInputFactory.newFactory();
             xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
             xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-            final XMLStreamReader xsr = xif.createXMLStreamReader(streamSource);
-
+            final XMLStreamReader xsr = new NamespaceStreamReaderDelegate(
+                    xif.createXMLStreamReader(streamSource));
             return (Bom) unmarshaller.unmarshal(xsr);
         } catch (JAXBException | XMLStreamException | SAXException e) {
             throw new ParseException(e);
@@ -98,16 +98,28 @@ public class BomParser extends CycloneDxSchema {
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the specification through XML validation.
+     * Verifies a CycloneDX BoM conforms to the latest version of the specification
+     * through XML validation.
      * @param file the CycloneDX BoM file to validate
      * @return a List of SAXParseExceptions. If the size of the list is 0, validation was successful
      * @since 1.1.0
      */
     public List<SAXParseException> validate(File file) {
+        return validate(file, CycloneDxSchema.Version.VERSION_11);
+    }
+
+    /**
+     * Verifies a CycloneDX BoM conforms to the specification through XML validation.
+     * @param file the CycloneDX BoM file to validate
+     * @param schemaVersion the schema version to validate against
+     * @return a List of SAXParseExceptions. If the size of the list is 0, validation was successful
+     * @since 2.0.0
+     */
+    public List<SAXParseException> validate(File file, CycloneDxSchema.Version schemaVersion) {
         final Source xmlFile = new StreamSource(file);
         final List<SAXParseException> exceptions = new LinkedList<>();
         try {
-            final Schema schema = getXmlSchema();
+            final Schema schema = getXmlSchema(schemaVersion);
             final Validator validator = schema.newValidator();
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
@@ -131,12 +143,24 @@ public class BomParser extends CycloneDxSchema {
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the specification through XML validation.
+     * Verifies a CycloneDX BoM conforms to the latest version of the specification
+     * through XML validation.
      * @param file the CycloneDX BoM file to validate
      * @return true is the file is a valid BoM, false if not
      * @since 1.1.0
      */
     public boolean isValid(File file) {
         return validate(file).isEmpty();
+    }
+
+    /**
+     * Verifies a CycloneDX BoM conforms to the specification through XML validation.
+     * @param file the CycloneDX BoM file to validate
+     * @param schemaVersion the schema version to validate against
+     * @return true is the file is a valid BoM, false if not
+     * @since 2.0.0
+     */
+    public boolean isValid(File file, CycloneDxSchema.Version schemaVersion) {
+        return validate(file, schemaVersion).isEmpty();
     }
 }

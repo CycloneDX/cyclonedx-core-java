@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name = "bom", namespace = CycloneDxSchema.NS_BOM)
+@XmlRootElement(name = "bom", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Bom {
 
     private List<Component> components;
@@ -35,8 +35,8 @@ public class Bom {
         return components;
     }
 
-    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM)
-    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setComponents(List<Component> components) {
         this.components = components;
     }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@XmlRootElement(name = "component", namespace = CycloneDxSchema.NS_BOM)
+@XmlRootElement(name = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Component {
 
     private String publisher;
@@ -38,6 +38,7 @@ public class Component {
     private String scope;
     private List<Hash> hashes;
     private List<License> licenses;
+    private String licenseExpression;
     private String copyright;
     private String cpe;
     private String purl;
@@ -66,7 +67,7 @@ public class Component {
         return publisher;
     }
 
-    @XmlElement(name = "publisher", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "publisher", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -75,7 +76,7 @@ public class Component {
         return group;
     }
 
-    @XmlElement(name = "group", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "group", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setGroup(String group) {
         this.group = group;
     }
@@ -84,7 +85,7 @@ public class Component {
         return name;
     }
 
-    @XmlElement(name = "name", required = true, namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "name", required = true, namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setName(String name) {
         this.name = name;
     }
@@ -93,7 +94,7 @@ public class Component {
         return version;
     }
 
-    @XmlElement(name = "version", required = true, namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "version", required = true, namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setVersion(String version) {
         this.version = version;
     }
@@ -102,7 +103,7 @@ public class Component {
         return description;
     }
 
-    @XmlElement(name = "description", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "description", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setDescription(String description) {
         this.description = description;
     }
@@ -111,7 +112,7 @@ public class Component {
         return scope;
     }
 
-    @XmlElement(name = "scope", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "scope", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setScope(String scope) {
         this.scope = scope;
     }
@@ -120,8 +121,8 @@ public class Component {
         return hashes;
     }
 
-    @XmlElementWrapper(name = "hashes", namespace = CycloneDxSchema.NS_BOM)
-    @XmlElement(name = "hash", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElementWrapper(name = "hashes", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @XmlElement(name = "hash", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setHashes(List<Hash> hashes) {
         this.hashes = hashes;
     }
@@ -137,8 +138,8 @@ public class Component {
         return licenses;
     }
 
-    @XmlElementWrapper(name = "licenses", namespace = CycloneDxSchema.NS_BOM)
-    @XmlElement(name = "license", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElementWrapper(name = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @XmlElement(name = "license", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setLicenses(List<License> licenses) {
         this.licenses = licenses;
     }
@@ -150,20 +151,34 @@ public class Component {
         this.licenses.add(license);
     }
 
+    public String getLicenseExpression() {
+        return licenseExpression;
+    }
+
+    @XmlElementWrapper(name = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @XmlElement(name = "expression", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setLicenseExpression(List<String> licenseExpression) {
+        if (licenseExpression != null && licenseExpression.size() == 1) {
+            this.licenseExpression = licenseExpression.get(0);
+        }
+    }
+
     public String getCopyright() {
         return copyright;
     }
 
-    @XmlElement(name = "copyright", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "copyright", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCopyright(String copyright) {
         this.copyright = copyright;
     }
 
+    @Deprecated
     public String getCpe() {
         return cpe;
     }
 
-    @XmlElement(name = "cpe", namespace = CycloneDxSchema.NS_BOM)
+    @Deprecated
+    @XmlElement(name = "cpe", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCpe(String cpe) {
         this.cpe = cpe;
     }
@@ -172,7 +187,7 @@ public class Component {
         return purl;
     }
 
-    @XmlElement(name = "purl", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "purl", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPurl(String purl) {
         this.purl = purl;
     }
@@ -185,7 +200,7 @@ public class Component {
         return modified;
     }
 
-    @XmlElement(name = "modified", required = true, namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "modified", required = true, namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setModified(boolean modified) {
         this.modified = modified;
     }
@@ -194,8 +209,8 @@ public class Component {
         return components;
     }
 
-    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM)
-    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setComponents(List<Component> components) {
         this.components = components;
     }

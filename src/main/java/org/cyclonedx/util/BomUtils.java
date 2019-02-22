@@ -20,8 +20,9 @@ package org.cyclonedx.util;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.cyclonedx.model.Hash;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,19 +42,19 @@ public final class BomUtils {
             return null;
         }
         final List<Hash> hashes = new ArrayList<>();
-        try (FileInputStream fis = new FileInputStream(file)) {
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.MD5, DigestUtils.md5Hex(fis)));
         }
-        try (FileInputStream fis = new FileInputStream(file)) {
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA1, DigestUtils.sha1Hex(fis)));
         }
-        try (FileInputStream fis = new FileInputStream(file)) {
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA_256, DigestUtils.sha256Hex(fis)));
         }
-        try (FileInputStream fis = new FileInputStream(file)) {
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA_384, DigestUtils.sha384Hex(fis)));
         }
-        try (FileInputStream fis = new FileInputStream(file)) {
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA_512, DigestUtils.sha512Hex(fis)));
         }
         return hashes;

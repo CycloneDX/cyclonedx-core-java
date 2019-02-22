@@ -22,17 +22,21 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
-@XmlRootElement(name = "license", namespace = CycloneDxSchema.NS_BOM)
+@XmlRootElement(name = "license", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class License {
 
     private String id;
     private String name;
+    private String text;
+    private String url;
+    private String contentType;
+    private String encoding;
 
     public String getId() {
         return id;
     }
 
-    @XmlElement(name = "id", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "id", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setId(String id) {
         this.id = id;
     }
@@ -41,9 +45,45 @@ public class License {
         return name;
     }
 
-    @XmlElement(name = "name", namespace = CycloneDxSchema.NS_BOM)
+    @XmlElement(name = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    @XmlElement(name = "text", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    @XmlElement(name = "url", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    @XmlElement(name = "content-type", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    @XmlElement(name = "encoding", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
     @Override
@@ -52,11 +92,15 @@ public class License {
         if (o == null || getClass() != o.getClass()) return false;
         License license = (License) o;
         return Objects.equals(id, license.id) &&
-                Objects.equals(name, license.name);
+                Objects.equals(name, license.name) &&
+                Objects.equals(text, license.text) &&
+                Objects.equals(url, license.url) &&
+                Objects.equals(contentType, license.contentType) &&
+                Objects.equals(encoding, license.encoding);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, text, url, contentType, encoding);
     }
 }
