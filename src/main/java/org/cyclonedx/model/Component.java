@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 @XmlRootElement(name = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Component {
 
@@ -43,6 +44,8 @@ public class Component {
     private String cpe;
     private String purl;
     private boolean modified;
+    private Pedigree pedigree;
+    private List<ExternalReference> externalReferences;
     private List<Component> components;
     private String type;
 
@@ -50,6 +53,7 @@ public class Component {
         APPLICATION("application"),
         FRAMEWORK("framework"),
         LIBRARY("library"),
+        FILE("file"),
         OPERATING_SYSTEM("operating-system"),
         DEVICE("device");
 
@@ -203,6 +207,32 @@ public class Component {
     @XmlElement(name = "modified", required = true, namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setModified(boolean modified) {
         this.modified = modified;
+    }
+
+    public Pedigree getPedigree() {
+        return pedigree;
+    }
+
+    @XmlElement(name = "pedigree", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setPedigree(Pedigree pedigree) {
+        this.pedigree = pedigree;
+    }
+
+    public List<ExternalReference> getExternalReferences() {
+        return externalReferences;
+    }
+
+    public void addExternalReference(ExternalReference externalReference) {
+        if (externalReferences == null) {
+            externalReferences = new ArrayList<>();
+        }
+        externalReferences.add(externalReference);
+    }
+
+    @XmlElementWrapper(name = "externalReferences", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @XmlElement(name = "reference", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setExternalReferences(List<ExternalReference> externalReferences) {
+        this.externalReferences = externalReferences;
     }
 
     public List<Component> getComponents() {

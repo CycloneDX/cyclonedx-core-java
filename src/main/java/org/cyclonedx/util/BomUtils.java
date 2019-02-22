@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public final class BomUtils {
 
     private BomUtils() { }

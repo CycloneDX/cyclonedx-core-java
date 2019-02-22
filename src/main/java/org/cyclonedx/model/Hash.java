@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 @XmlRootElement(name = "hash", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Hash {
 
