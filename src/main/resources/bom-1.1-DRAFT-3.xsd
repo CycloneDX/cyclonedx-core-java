@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+CycloneDX Software Bill-of-Material (SBoM) Specification
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
            xmlns:bom="http://cyclonedx.org/schema/bom/1.1"
            xmlns:spdx="http://cyclonedx.org/schema/spdx"
-           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
            elementFormDefault="qualified"
            targetNamespace="http://cyclonedx.org/schema/bom/1.1"
            vc:minVersion="1.0"
@@ -11,7 +25,18 @@
            version="1.1-DRAFT-3">
 
     <xs:import namespace="http://cyclonedx.org/schema/spdx" schemaLocation="http://cyclonedx.org/schema/spdx"/>
-    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+
+    <xs:annotation>
+        <xs:documentation>
+            <name>CycloneDX Software Bill-of-Material Specification</name>
+            <url>https://cyclonedx.org/</url>
+            <license uri="http://www.apache.org/licenses/LICENSE-2.0"
+                     version="2.0">Apache License, Version 2.0</license>
+            <authors>
+                <author>Steve Springett</author>
+            </authors>
+        </xs:documentation>
+    </xs:annotation>
 
     <xs:complexType name="componentsType">
         <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -24,7 +49,7 @@
             </xs:annotation>
         </xs:anyAttribute>
     </xs:complexType>
-    
+
     <xs:complexType name="component">
         <xs:sequence>
             <xs:element name="publisher" type="xs:normalizedString" minOccurs="0" maxOccurs="1">
@@ -120,7 +145,7 @@
             </xs:element>
             <xs:element name="externalReferences" type="bom:externalReferences" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation>Provides the ability to document external references related to the 
+                    <xs:documentation>Provides the ability to document external references related to the
                         component or to the project the component describes.</xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -137,6 +162,15 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Allows any undeclared elements in the component element as long as the element is
+                        placed in a different namespace. This may include support for digital signatures
+                        using the ds:Signature element or any other element from an external namespace.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:any>
         </xs:sequence>
         <xs:attribute name="type" type="bom:classification" use="required">
             <xs:annotation>
@@ -235,8 +269,8 @@
             <xs:enumeration value="excluded">
                 <xs:annotation>
                     <xs:documentation>Components that are excluded provide the ability to document component usage
-                    for test and other non-runtime purposes. Excluded components are not reachable within a call
-                    graph at runtime.</xs:documentation>
+                        for test and other non-runtime purposes. Excluded components are not reachable within a call
+                        graph at runtime.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
         </xs:restriction>
@@ -270,7 +304,7 @@
             <xs:pattern value="([a-fA-F0-9]{32})|([a-fA-F0-9]{40})|([a-fA-F0-9]{64})|([a-fA-F0-9]{96})|([a-fA-F0-9]{128})"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="encoding">
         <xs:restriction base="xs:string">
             <xs:enumeration value="base64"/>
@@ -379,7 +413,7 @@
             </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:complexType name="externalReferences">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -423,7 +457,7 @@
             </xs:annotation>
         </xs:anyAttribute>
     </xs:complexType>
-    
+
     <xs:complexType name="commitsType">
         <xs:annotation>
             <xs:documentation xml:lang="en">Zero or more commits can be specified.</xs:documentation>
@@ -436,12 +470,12 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="commitType">
         <xs:sequence>
             <xs:element name="uid" type="xs:normalizedString" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation xml:lang="en">A unique identifier of the commit. This may be version control 
+                    <xs:documentation xml:lang="en">A unique identifier of the commit. This may be version control
                         specific. For example, Subversion uses revision numbers whereas git uses commit hashes.
                     </xs:documentation>
                 </xs:annotation>
@@ -470,7 +504,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="identifiableActionType">
         <xs:sequence>
             <xs:element name="timestamp" type="xs:dateTime" minOccurs="0" maxOccurs="1">
@@ -490,7 +524,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="pedigreeType">
         <xs:annotation>
             <xs:documentation xml:lang="en">
@@ -515,7 +549,7 @@
             <xs:element name="descendants" type="bom:componentsType" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation xml:lang="en">Descendants are the exact opposite of ancestors. This provides a
-                    way to document all forks (and their forks) of an original or root component.
+                        way to document all forks (and their forks) of an original or root component.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -531,23 +565,38 @@
             <xs:element name="commits" type="bom:commitsType" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation xml:lang="en">A list of zero or more commits which provide a trail describing
-                    how the component deviates from an ancestor, descendant, or variant.</xs:documentation>
+                        how the component deviates from an ancestor, descendant, or variant.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="notes" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Notes, observations, and other non-structured commentary
+                        describing the components pedigree.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:element name="bom">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="components" type="bom:componentsType"/>
                 <xs:element name="externalReferences" type="bom:externalReferences" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
-                        <xs:documentation>Provides the ability to document external references related to the BOM or 
+                        <xs:documentation>Provides the ability to document external references related to the BOM or
                             to the project the BOM describes.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
-                <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Allows any undeclared elements in the component element as long as the element is
+                            placed in a different namespace. This may include support for digital signatures
+                            using the ds:Signature element or any other element from an external namespace.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:any>
             </xs:sequence>
             <xs:attribute name="version" type="xs:integer" default="1">
                 <xs:annotation>

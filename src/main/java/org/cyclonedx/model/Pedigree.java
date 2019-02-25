@@ -32,6 +32,7 @@ public class Pedigree {
     private List<Component> descendants;
     private List<Component> variants;
     private List<Commit> commits;
+    private String notes;
 
     public List<Component> getAncestors() {
         return ancestors;
@@ -99,5 +100,14 @@ public class Pedigree {
     @XmlElement(name = "commit", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCommits(List<Commit> commits) {
         this.commits = commits;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    @XmlElement(name = "notes", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
