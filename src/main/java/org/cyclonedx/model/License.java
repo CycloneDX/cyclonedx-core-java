@@ -28,10 +28,8 @@ public class License {
 
     private String id;
     private String name;
-    private String text;
     private String url;
-    private String contentType;
-    private String encoding;
+    private LicenseText licenseText;
 
     public String getId() {
         return id;
@@ -51,15 +49,6 @@ public class License {
         this.name = name;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    @XmlElement(name = "text", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public String getUrl() {
         return url;
     }
@@ -69,22 +58,13 @@ public class License {
         this.url = url;
     }
 
-    public String getContentType() {
-        return contentType;
+    public LicenseText getLicenseText() {
+        return licenseText;
     }
 
-    @XmlElement(name = "content-type", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public String getEncoding() {
-        return encoding;
-    }
-
-    @XmlElement(name = "encoding", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
+    @XmlElement(name = "text", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setLicenseText(LicenseText licenseText) {
+        this.licenseText = licenseText;
     }
 
     @Override
@@ -94,14 +74,12 @@ public class License {
         License license = (License) o;
         return Objects.equals(id, license.id) &&
                 Objects.equals(name, license.name) &&
-                Objects.equals(text, license.text) &&
                 Objects.equals(url, license.url) &&
-                Objects.equals(contentType, license.contentType) &&
-                Objects.equals(encoding, license.encoding);
+                Objects.equals(licenseText, license.licenseText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, text, url, contentType, encoding);
+        return Objects.hash(id, name, url, licenseText);
     }
 }

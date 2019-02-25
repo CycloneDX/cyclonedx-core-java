@@ -19,23 +19,22 @@ package org.cyclonedx.model;
 
 import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @SuppressWarnings("unused")
 //@XmlRootElement(name = "author", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class IdentifiableActionType {
 
-    private LocalDateTime timestamp;
+    private Date timestamp;
     private String name;
     private String email;
 
-    public LocalDateTime getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
     @XmlElement(name = "timestamp", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
