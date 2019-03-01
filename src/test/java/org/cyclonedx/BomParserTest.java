@@ -64,7 +64,7 @@ public class BomParserTest {
         Assert.assertEquals("pkg:maven/com.example/myapplication@1.0.0?packaging=war", c1.getPurl());
         Assert.assertEquals("An example application", c1.getDescription());
         Assert.assertEquals("Copyright Example Inc. All rights reserved.", c1.getCopyright());
-        Assert.assertEquals("Apache-2.0", c1.getLicenses().get(0).getId());
+        Assert.assertEquals("Apache-2.0", c1.getLicenseChoice().getLicenses().get(0).getId());
         Assert.assertEquals(2, c1.getComponents().size());
     }
 
@@ -91,10 +91,10 @@ public class BomParserTest {
         Assert.assertEquals("f498a8ff2dd007e29c2074f5e4b01a9a01775c3ff3aeaf6906ea503bc5791b7b", c1.getHashes().get(2).getValue());
         Assert.assertEquals("e8f33e424f3f4ed6db76a482fde1a5298970e442c531729119e37991884bdffab4f9426b7ee11fccd074eeda0634d71697d6f88a460dce0ac8d627a29f7d1282", c1.getHashes().get(3).getValue());
         Assert.assertEquals("pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar", c1.getPurl());
-        Assert.assertEquals("Apache-2.0", c1.getLicenses().get(0).getId());
-        Assert.assertTrue(c1.getLicenses().get(0).getLicenseText().getText().startsWith("CiAgICA"));
-        Assert.assertEquals("text/plain", c1.getLicenses().get(0).getLicenseText().getContentType());
-        Assert.assertEquals("base64", c1.getLicenses().get(0).getLicenseText().getEncoding());
+        Assert.assertEquals("Apache-2.0", c1.getLicenseChoice().getLicenses().get(0).getId());
+        Assert.assertTrue(c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getText().startsWith("CiAgICA"));
+        Assert.assertEquals("text/plain", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getContentType());
+        Assert.assertEquals("base64", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getEncoding());
         Assert.assertNotNull(c1.getPedigree());
         Assert.assertEquals(1, c1.getPedigree().getAncestors().size());
         Assert.assertNull(c1.getPedigree().getDescendants());
@@ -110,6 +110,6 @@ public class BomParserTest {
         Assert.assertNotNull(c1.getPedigree().getCommits().get(0).getCommitter().getTimestamp());
         Assert.assertEquals("Initial commit", c1.getPedigree().getCommits().get(0).getMessage());
         Assert.assertEquals("Commentary here", c1.getPedigree().getNotes());
-        //Assert.assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", c2.getLicenseExpression());
+        Assert.assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", c2.getLicenseChoice().getExpression());
     }
 }

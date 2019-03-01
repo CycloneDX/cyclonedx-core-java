@@ -100,11 +100,11 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
                     }
                 }
 
-                if (component.getLicenses() != null) {
+                if (component.getLicenseChoice() != null && component.getLicenseChoice().getLicenses() != null) {
                     // Create the licenses node
                     final Element licensesNode = doc.createElementNS(NS_BOM_11, "licenses");
                     componentNode.appendChild(licensesNode);
-                    for (License license : component.getLicenses()) {
+                    for (License license : component.getLicenseChoice().getLicenses()) {
                         // Create individual license node
                         final Element licenseNode = doc.createElementNS(NS_BOM_11, "license");
                         if (license.getId() != null) {

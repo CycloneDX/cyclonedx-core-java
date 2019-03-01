@@ -38,8 +38,7 @@ public class Component {
     private String description;
     private String scope;
     private List<Hash> hashes;
-    private List<License> licenses;
-    private String licenseExpression;
+    private LicenseChoice licenseChoice;
     private String copyright;
     private String cpe;
     private String purl;
@@ -138,33 +137,13 @@ public class Component {
         this.hashes.add(hash);
     }
 
-    public List<License> getLicenses() {
-        return licenses;
+    public LicenseChoice getLicenseChoice() {
+        return licenseChoice;
     }
 
-    @XmlElementWrapper(name = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @XmlElement(name = "license", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    public void setLicenses(List<License> licenses) {
-        this.licenses = licenses;
-    }
-
-    public void addLicense(License license) {
-        if (this.licenses == null) {
-            this.licenses = new ArrayList<>();
-        }
-        this.licenses.add(license);
-    }
-
-    public String getLicenseExpression() {
-        return licenseExpression;
-    }
-
-    @XmlElementWrapper(name = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @XmlElement(name = "expression", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    public void setLicenseExpression(List<String> licenseExpression) {
-        if (licenseExpression != null && licenseExpression.size() == 1) {
-            this.licenseExpression = licenseExpression.get(0);
-        }
+    @XmlElement(name = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    public void setLicenseChoice(LicenseChoice licenseChoice) {
+        this.licenseChoice = licenseChoice;
     }
 
     public String getCopyright() {
@@ -267,7 +246,7 @@ public class Component {
 
     @Override
     public int hashCode() {
-        return Objects.hash(publisher, group, name, version, description, scope, hashes, licenses, copyright, cpe, purl, modified, components, type);
+        return Objects.hash(publisher, group, name, version, description, scope, hashes, licenseChoice, copyright, cpe, purl, modified, components, type);
     }
 
     @Override
@@ -283,7 +262,7 @@ public class Component {
                 Objects.equals(description, component.description) &&
                 Objects.equals(scope, component.scope) &&
                 Objects.equals(hashes, component.hashes) &&
-                Objects.equals(licenses, component.licenses) &&
+                Objects.equals(licenseChoice, component.licenseChoice) &&
                 Objects.equals(copyright, component.copyright) &&
                 Objects.equals(cpe, component.cpe) &&
                 Objects.equals(purl, component.purl) &&
