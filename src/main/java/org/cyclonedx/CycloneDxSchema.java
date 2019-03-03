@@ -89,7 +89,7 @@ public abstract class CycloneDxSchema {
         // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
         final Source[] schemaFiles = {
                 new StreamSource(this.getClass().getClassLoader().getResourceAsStream("spdx.xsd")),
-                new StreamSource(this.getClass().getClassLoader().getResourceAsStream("bom-1.1-DRAFT-3.xsd"))
+                new StreamSource(this.getClass().getClassLoader().getResourceAsStream("bom-1.1.xsd"))
         };
         return schemaFactory.newSchema(schemaFiles);
     }
