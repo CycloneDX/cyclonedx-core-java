@@ -45,6 +45,7 @@ public class LicenseChoice {
             this.licenses = new ArrayList<>();
         }
         this.licenses.add(license);
+        this.expression = null;
     }
 
     public String getExpression() {
@@ -55,6 +56,14 @@ public class LicenseChoice {
     public void setExpression(String expression) {
         this.expression = expression;
         this.licenses = null;
+    }
+
+    public boolean isExpression() {
+        return expression != null;
+    }
+
+    public boolean isResolved() {
+        return licenses != null && !licenses.isEmpty();
     }
 
     @Override
