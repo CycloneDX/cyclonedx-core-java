@@ -68,6 +68,14 @@ public class LicenseResolverTest {
     public void fuzzyMatchingTest() {
         LicenseChoice c1 = LicenseResolver.resolve("The Apache Software License, Version 2.0");
         Assert.assertEquals("Apache-2.0", c1.getLicenses().get(0).getId());
-        //TODO build this up
+        LicenseChoice c2 = LicenseResolver.resolve("Apache License (v2.0)");
+        Assert.assertEquals("Apache-2.0", c2.getLicenses().get(0).getId());
+        LicenseChoice c3 = LicenseResolver.resolve("Apache Public License 2.0");
+        Assert.assertEquals("Apache-2.0", c3.getLicenses().get(0).getId());
+        LicenseChoice c4 = LicenseResolver.resolve("Modified BSD License");
+        Assert.assertEquals("BSD-3-Clause", c4.getLicenses().get(0).getId());
+        LicenseChoice c5 = LicenseResolver.resolve("CDDL + GPLv2 with classpath exception");
+        Assert.assertEquals("(CDDL-1.0 OR GPL-2.0-with-classpath-exception)", c5.getExpression());
+        Assert.assertNull(c5.getLicenses());
     }
 }
