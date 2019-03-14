@@ -48,16 +48,16 @@ public final class LicenseResolver {
 
     private static Map<String, List<String>> mappings = new HashMap<>();
     static {
-        InputStream is = LicenseResolver.class.getResourceAsStream("/license-mapping.json");
+        final InputStream is = LicenseResolver.class.getResourceAsStream("/license-mapping.json");
         try {
-            String jsonTxt = IOUtils.toString(is, "UTF-8");
-            JSONArray json = new JSONArray(jsonTxt);
+            final String jsonTxt = IOUtils.toString(is, "UTF-8");
+            final JSONArray json = new JSONArray(jsonTxt);
             for (int i = 0; i < json.length(); i++) {
-                JSONObject mapping = json.getJSONObject(i);
+                final JSONObject mapping = json.getJSONObject(i);
                 if (!mappings.containsKey(mapping.getString("exp"))) {
                     mappings.put(mapping.getString("exp"), new ArrayList<>());
                 }
-                List<String> names = mappings.get(mapping.getString("exp"));
+                final List<String> names = mappings.get(mapping.getString("exp"));
                 for (int n = 0; n < mapping.getJSONArray("names").length(); n++) {
                     names.add(mapping.getJSONArray("names").getString(n));
                 }
@@ -186,7 +186,7 @@ public final class LicenseResolver {
      * @return a CycloneDX License object
      */
     private static License createLicenseObject(SpdxListedLicense spdxListedLicense) {
-        License license = new License();
+        final License license = new License();
         license.setId(spdxListedLicense.getLicenseId());
         license.setName(spdxListedLicense.getName());
         if (spdxListedLicense.getSeeAlso() != null && spdxListedLicense.getSeeAlso().length > 0) {
@@ -212,10 +212,10 @@ public final class LicenseResolver {
             return null;
         }
         try {
-            for (Map.Entry<String, List<String>> mapping : mappings.entrySet()) {
-                List<String> names = mapping.getValue();
+            for (final Map.Entry<String, List<String>> mapping : mappings.entrySet()) {
+                final List<String> names = mapping.getValue();
                 if (names != null) {
-                    for (String name: names) {
+                    for (final String name: names) {
                         if (licenseString.equalsIgnoreCase(name)) {
                             return resolveSpdxLicenseString(mapping.getKey());
                         }
@@ -227,5 +227,4 @@ public final class LicenseResolver {
         }
         return null;
     }
-
 }

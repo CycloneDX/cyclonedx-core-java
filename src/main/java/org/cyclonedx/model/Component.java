@@ -22,13 +22,11 @@ import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-@XmlRootElement(name = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Component {
 
     private String publisher;
@@ -155,11 +153,18 @@ public class Component {
         this.copyright = copyright;
     }
 
+    /**
+     * @deprecated CPE will be removed in a future version of the CycloneDX specification/
+     * @return the Common Platform Enumeration of the component
+     */
     @Deprecated
     public String getCpe() {
         return cpe;
     }
 
+    /**
+     * @deprecated CPE will be removed in a future version of the CycloneDX specification/
+     */
     @Deprecated
     @XmlElement(name = "cpe", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCpe(String cpe) {

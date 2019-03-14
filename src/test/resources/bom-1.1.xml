@@ -70,7 +70,7 @@
                 <hash alg="SHA-512">387b7ae16b9cae45f830671541539bf544202faae5aac544a93b7b0a04f5f846fa2f4e81ef3f1677e13aed7496408a441f5657ab6d54423e56bf6f38da124aef</hash>
             </hashes>
             <licenses>
-                <expression>EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0</expression>
+                <expression>EPL-2.0 OR GPL-2.0-with-classpath-exception</expression>
             </licenses>
             <copyright>Copyright Example Inc. All rights reserved.</copyright>
             <cpe>cpe:/a:example:myapplication:1.0.0</cpe>

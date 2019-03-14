@@ -110,6 +110,6 @@ public class BomParserTest {
         Assert.assertNotNull(c1.getPedigree().getCommits().get(0).getCommitter().getTimestamp());
         Assert.assertEquals("Initial commit", c1.getPedigree().getCommits().get(0).getMessage());
         Assert.assertEquals("Commentary here", c1.getPedigree().getNotes());
-        Assert.assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", c2.getLicenseChoice().getExpression());
+        Assert.assertEquals("EPL-2.0 OR GPL-2.0-with-classpath-exception", c2.getLicenseChoice().getExpression());
     }
 }

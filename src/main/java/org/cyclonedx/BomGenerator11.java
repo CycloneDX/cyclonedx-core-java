@@ -23,6 +23,8 @@ import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -142,7 +144,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
         final StringWriter writer = new StringWriter();
         final StreamResult result = new StreamResult(writer);
         final TransformerFactory tf = TransformerFactory.newInstance();
-
+        tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         final Transformer transformer = tf.newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");

@@ -20,10 +20,8 @@ package org.cyclonedx.model;
 import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @SuppressWarnings("unused")
-@XmlRootElement(name = "reference", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class ExternalReference {
 
     private String url;

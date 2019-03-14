@@ -45,6 +45,7 @@ public class NamespaceStreamReaderDelegate extends StreamReaderDelegate {
         return ns;
     }
 
+    @Override
     public String getNamespacePrefix(int index) {
         String ns = super.getNamespacePrefix(index);
         if (CycloneDxSchema.NS_BOM_10.equals(ns)) {

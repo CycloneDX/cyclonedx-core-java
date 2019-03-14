@@ -24,10 +24,10 @@ import java.util.Date;
 
 public class DateAdapter extends XmlAdapter<String, Date> {
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
 
     public Date unmarshal(String v) throws Exception {
-        return DATE_FORMAT.parse(v);
+        return dateFormat.parse(v);
     }
 
     public String marshal(Date v) throws Exception {

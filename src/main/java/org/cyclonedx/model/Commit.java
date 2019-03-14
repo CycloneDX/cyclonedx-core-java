@@ -19,10 +19,8 @@ package org.cyclonedx.model;
 
 import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @SuppressWarnings("unused")
-@XmlRootElement(name = "commit", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Commit {
 
     private String uid;

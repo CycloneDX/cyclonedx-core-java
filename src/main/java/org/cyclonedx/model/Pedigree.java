@@ -20,12 +20,10 @@ package org.cyclonedx.model;
 import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-@XmlRootElement(name = "pedigree", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Pedigree {
 
     private List<Component> ancestors;

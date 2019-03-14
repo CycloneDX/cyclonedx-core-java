@@ -19,12 +19,10 @@ package org.cyclonedx.model;
 
 import org.cyclonedx.CycloneDxSchema;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@XmlRootElement(name = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class LicenseChoice {
 
     private List<License> licenses;
@@ -56,14 +54,6 @@ public class LicenseChoice {
     public void setExpression(String expression) {
         this.expression = expression;
         this.licenses = null;
-    }
-
-    public boolean isExpression() {
-        return expression != null;
-    }
-
-    public boolean isResolved() {
-        return licenses != null && !licenses.isEmpty();
     }
 
     @Override

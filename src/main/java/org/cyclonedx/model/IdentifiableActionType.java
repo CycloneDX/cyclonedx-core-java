@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
 
 @SuppressWarnings("unused")
-//@XmlRootElement(name = "author", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class IdentifiableActionType {
 
     private Date timestamp;

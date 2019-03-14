@@ -22,6 +22,9 @@ import java.util.Set;
 
 public class BomGeneratorFactory {
 
+    private BomGeneratorFactory() {
+    }
+
     public static BomGenerator create(CycloneDxSchema.Version version, Set<Component> components) {
         if (CycloneDxSchema.Version.VERSION_10 == version) {
             return new BomGenerator10(components);
