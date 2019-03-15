@@ -72,18 +72,18 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
 
     void createLicenseNode(Node parent, LicenseChoice licenseChoice, boolean expressionSupport) {
         if (licenseChoice != null) {
-            final Element licensesNode = doc.createElementNS(NS_BOM_11, "licenses");
+            final Element licensesNode = doc.createElement("licenses");
             if (licenseChoice.getLicenses() != null) {
                 parent.appendChild(licensesNode);
                 for (License license : licenseChoice.getLicenses()) {
                     // Create individual license node
-                    final Element licenseNode = doc.createElementNS(NS_BOM_11, "license");
+                    final Element licenseNode = doc.createElement("license");
                     if (license.getId() != null) {
-                        final Element licenseIdNode = doc.createElementNS(NS_BOM_11, "id");
+                        final Element licenseIdNode = doc.createElement("id");
                         licenseIdNode.appendChild(doc.createTextNode(license.getId()));
                         licenseNode.appendChild(licenseIdNode);
                     } else if (license.getName() != null) {
-                        final Element licenseNameNode = doc.createElementNS(NS_BOM_11, "name");
+                        final Element licenseNameNode = doc.createElement("name");
                         licenseNameNode.appendChild(doc.createTextNode(license.getName()));
                         licenseNode.appendChild(licenseNameNode);
                     }

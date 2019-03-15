@@ -24,6 +24,7 @@ import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.IdentifiableActionType;
 import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.Scope;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -96,7 +97,11 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
                 createElement(componentNode, "name", stripBreaks(component.getName()));
                 createElement(componentNode, "version", stripBreaks(component.getVersion()));
                 createElement(componentNode, "description", stripBreaks(component.getDescription()));
-                createElement(componentNode, "scope", stripBreaks(component.getScope()));
+                if (component.getScope() == null) {
+                    createElement(componentNode, "scope", Scope.REQUIRED.getScopeName());
+                } else {
+                    createElement(componentNode, "scope", component.getScope().getScopeName());
+                }
                 createHashesNode(componentNode, component.getHashes());
                 createLicenseNode(componentNode, component.getLicenseChoice(), true);
                 createElement(componentNode, "copyright", stripBreaks(component.getCopyright()));
@@ -163,9 +168,11 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
         if (references != null && !references.isEmpty()) {
             final Element externalReferencesNode = createElement(parent, "externalReferences");
             for (ExternalReference reference: references) {
-                final Element referenceNode = createElement(externalReferencesNode, "reference", null, new Attribute("type", reference.getType()));
-                createElement(referenceNode, "url", stripBreaks(reference.getUrl()));
-                createElement(referenceNode, "comment", stripBreaks(reference.getUrl()));
+                if (reference.getType() != null) {
+                    final Element referenceNode = createElement(externalReferencesNode, "reference", null, new Attribute("type", reference.getType().getTypeName()));
+                    createElement(referenceNode, "url", stripBreaks(reference.getUrl()));
+                    createElement(referenceNode, "comment", stripBreaks(reference.getUrl()));
+                }
             }
         }
     }

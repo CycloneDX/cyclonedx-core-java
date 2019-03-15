@@ -15,20 +15,26 @@
  *
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-package org.cyclonedx;
+package org.cyclonedx.model;
 
-import org.w3c.dom.Document;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 
-public interface BomGenerator {
+@XmlEnum
+@SuppressWarnings("unused")
+public enum Scope {
 
-    CycloneDxSchema.Version getSchemaVersion();
+    @XmlEnumValue("required") REQUIRED("required"),
+    @XmlEnumValue("optional") OPTIONAL("optional"),
+    @XmlEnumValue("excluded") EXCLUDED("excluded");
 
-    Document generate() throws ParserConfigurationException;
+    private String name;
 
-    String toXmlString() throws TransformerException;
+    public String getScopeName() {
+        return this.name;
+    }
 
-    String toString();
-
+    Scope(String name) {
+        this.name = name;
+    }
 }

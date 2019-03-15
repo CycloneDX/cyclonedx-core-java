@@ -20,6 +20,7 @@ package org.cyclonedx;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Scope;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -85,7 +86,11 @@ public class BomGenerator10 extends AbstractBomGenerator implements BomGenerator
                 createElement(componentNode, "name", stripBreaks(component.getName()));
                 createElement(componentNode, "version", stripBreaks(component.getVersion()));
                 createElement(componentNode, "description", stripBreaks(component.getDescription()));
-                createElement(componentNode, "scope", stripBreaks(component.getScope()));
+                if (component.getScope() == null) {
+                    createElement(componentNode, "scope", Scope.REQUIRED.getScopeName());
+                } else if (component.getScope() != Scope.EXCLUDED) { // Excluded was introduced in v1.1
+                    createElement(componentNode, "scope", component.getScope().getScopeName());
+                }
                 createHashesNode(componentNode, component.getHashes());
                 createLicenseNode(componentNode, component.getLicenseChoice(), false);
                 createElement(componentNode, "copyright", stripBreaks(component.getCopyright()));

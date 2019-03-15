@@ -85,7 +85,7 @@ public class BomParserTest {
         Assert.assertEquals("9.0.14", c1.getVersion());
         Assert.assertEquals("Modified version of Apache Catalina", c1.getDescription());
         Assert.assertEquals(Component.Classification.APPLICATION.getValue(), c1.getType());
-        Assert.assertEquals("required", c1.getScope());
+        Assert.assertEquals("required", c1.getScope().getScopeName());
         Assert.assertEquals("3942447fac867ae5cdb3229b658f4d48", c1.getHashes().get(0).getValue());
         Assert.assertEquals("e6b1000b94e835ffd37f4c6dcbdad43f4b48a02a", c1.getHashes().get(1).getValue());
         Assert.assertEquals("f498a8ff2dd007e29c2074f5e4b01a9a01775c3ff3aeaf6906ea503bc5791b7b", c1.getHashes().get(2).getValue());

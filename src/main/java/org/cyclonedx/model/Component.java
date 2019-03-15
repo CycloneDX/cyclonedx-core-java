@@ -34,7 +34,7 @@ public class Component {
     private String name;
     private String version;
     private String description;
-    private String scope;
+    private Scope scope;
     private List<Hash> hashes;
     private LicenseChoice licenseChoice;
     private String copyright;
@@ -109,12 +109,12 @@ public class Component {
         this.description = description;
     }
 
-    public String getScope() {
+    public Scope getScope() {
         return scope;
     }
 
     @XmlElement(name = "scope", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    public void setScope(String scope) {
+    public void setScope(Scope scope) {
         this.scope = scope;
     }
 
