@@ -17,19 +17,18 @@
  */
 package org.cyclonedx;
 
-import org.cyclonedx.model.Component;
-import java.util.Set;
+import org.cyclonedx.model.Bom;
 
 public class BomGeneratorFactory {
 
     private BomGeneratorFactory() {
     }
 
-    public static BomGenerator create(CycloneDxSchema.Version version, Set<Component> components) {
+    public static BomGenerator create(CycloneDxSchema.Version version, Bom bom) {
         if (CycloneDxSchema.Version.VERSION_10 == version) {
-            return new BomGenerator10(components);
+            return new BomGenerator10(bom);
         } else {
-            return new BomGenerator11(components);
+            return new BomGenerator11(bom);
         }
     }
 }

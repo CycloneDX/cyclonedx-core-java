@@ -31,7 +31,7 @@ public class Bom {
 
     private List<Component> components;
     private List<ExternalReference> externalReferences;
-    private int version;
+    private int version = 1;
     private String serialNumber;
 
     public List<Component> getComponents() {

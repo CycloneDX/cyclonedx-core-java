@@ -18,25 +18,21 @@
 package org.cyclonedx;
 
 import org.cyclonedx.model.Attribute;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
-import org.cyclonedx.model.Hash;
-import org.cyclonedx.model.License;
+import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.IdentifiableActionType;
+import org.cyclonedx.model.Pedigree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import javax.xml.XMLConstants;
+import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * BomGenerator creates a CycloneDX bill-of-material document from a set of
@@ -46,15 +42,15 @@ import java.util.Set;
  */
 public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator {
 
-    private final Set<Component> components;
-    private Document doc;
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+    private final Bom bom;
 
     /**
-     * Constructs a new BomGenerator object for the specified components.
-     * @param components a BomGenerator object
+     * Constructs a new BomGenerator object.
+     * @param bom the BOM to generate
      */
-    BomGenerator11(final Set<Component> components) {
-        this.components = components;
+    BomGenerator11(final Bom bom) {
+        this.bom = bom;
     }
 
     /**
@@ -74,101 +70,103 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
         final DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware(true);
         final DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        final Document doc = docBuilder.newDocument();
+        this.doc = docBuilder.newDocument();
         doc.setXmlStandalone(true);
 
         // Create root <bom> node
-        final Element bomNode = createRootElement(doc, "bom", null,
+        final Element bomNode = createRootElement("bom", null,
                 new Attribute("xmlns", NS_BOM_11),
-                new Attribute("version", "1"));
-
-        final Element componentsNode = createElement(doc, bomNode, "components");
-
-        if (components != null) {
-            for (Component component : components) {
-                final Element componentNode = createElement(doc, componentsNode, "component", null, new Attribute("type", component.getType()));
-
-                createElement(doc, componentNode, "publisher", stripBreaks(component.getPublisher()));
-                createElement(doc, componentNode, "group", stripBreaks(component.getGroup()));
-                createElement(doc, componentNode, "name", stripBreaks(component.getName()));
-                createElement(doc, componentNode, "version", stripBreaks(component.getVersion()));
-                createElement(doc, componentNode, "description", stripBreaks(component.getDescription()));
-
-                if (component.getHashes() != null) {
-                    // Create the hashes node
-                    final Element hashesNode = createElement(doc, componentNode, "hashes");
-                    for (Hash hash : component.getHashes()) {
-                        createElement(doc, hashesNode, "hash", hash.getValue(), new Attribute("alg", hash.getAlgorithm()));
-                    }
-                }
-
-                if (component.getLicenseChoice() != null && component.getLicenseChoice().getLicenses() != null) {
-                    // Create the licenses node
-                    final Element licensesNode = doc.createElementNS(NS_BOM_11, "licenses");
-                    componentNode.appendChild(licensesNode);
-                    for (License license : component.getLicenseChoice().getLicenses()) {
-                        // Create individual license node
-                        final Element licenseNode = doc.createElementNS(NS_BOM_11, "license");
-                        if (license.getId() != null) {
-                            final Element licenseIdNode = doc.createElementNS(NS_BOM_11, "id");
-                            licenseIdNode.appendChild(doc.createTextNode(license.getId()));
-                            licenseNode.appendChild(licenseIdNode);
-                        } else if (license.getName() != null) {
-                            final Element licenseNameNode = doc.createElementNS(NS_BOM_11, "name");
-                            licenseNameNode.appendChild(doc.createTextNode(license.getName()));
-                            licenseNode.appendChild(licenseNameNode);
-                        }
-                        licensesNode.appendChild(licenseNode);
-                    }
-                }
-                createElement(doc, componentNode, "cpe", stripBreaks(component.getCpe()));
-                createElement(doc, componentNode, "purl", stripBreaks(component.getPurl()));
-                createElement(doc, componentNode, "modified", String.valueOf(component.isModified()));
-            }
+                new Attribute("version", String.valueOf(bom.getVersion())));
+        if (bom.getSerialNumber() != null) {
+            bomNode.setAttribute("serialNumber", bom.getSerialNumber());
         }
-        this.doc = doc;
+
+        final Element componentsNode = createElement(bomNode, "components");
+        createComponentsNode(componentsNode, bom.getComponents());
+        createExternalReferencesNode(bomNode, bom.getExternalReferences());
         return doc;
     }
 
-    /**
-     * Creates a text representation of a CycloneDX BoM Document.
-     * @return a String of the BoM
-     * @throws TransformerException an TransformerException
-     * @since 1.1.0
-     */
-    public String toXmlString() throws TransformerException {
-        if (this.doc == null) {
-            return null;
+    private void createComponentsNode(Node parent, List<Component> components) {
+        if (components != null && !components.isEmpty()) {
+            for (Component component : components) {
+                final Element componentNode = createElement(parent, "component", null, new Attribute("type", component.getType()));
+                createElement(componentNode, "publisher", stripBreaks(component.getPublisher()));
+                createElement(componentNode, "group", stripBreaks(component.getGroup()));
+                createElement(componentNode, "name", stripBreaks(component.getName()));
+                createElement(componentNode, "version", stripBreaks(component.getVersion()));
+                createElement(componentNode, "description", stripBreaks(component.getDescription()));
+                createElement(componentNode, "scope", stripBreaks(component.getScope()));
+                createHashesNode(componentNode, component.getHashes());
+                createLicenseNode(componentNode, component.getLicenseChoice(), true);
+                createElement(componentNode, "copyright", stripBreaks(component.getCopyright()));
+                createElement(componentNode, "cpe", stripBreaks(component.getCpe()));
+                createElement(componentNode, "purl", stripBreaks(component.getPurl()));
+                createPedigreeNode(componentNode, component.getPedigree());
+                createExternalReferencesNode(componentNode, component.getExternalReferences());
+                if (component.getComponents() != null && !component.getComponents().isEmpty()) {
+                    final Element subComponentsNode = createElement(componentNode, "components");
+                    createComponentsNode(subComponentsNode, component.getComponents());
+                }
+            }
         }
-        final DOMSource domSource = new DOMSource(this.doc);
-        final StringWriter writer = new StringWriter();
-        final StreamResult result = new StreamResult(writer);
-        final TransformerFactory tf = TransformerFactory.newInstance();
-        tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        final Transformer transformer = tf.newTransformer();
-        transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-        transformer.transform(domSource, result);
-
-        return writer.toString();
     }
 
-    /**
-     * Creates a text representation of a CycloneDX BoM Document. This method
-     * calls {@link #toXmlString()} and will return null if {@link #toXmlString()}
-     * throws an exception. Its preferred to call {@link #toXmlString()} directly
-     * so that exceptions can be caught.
-     * @return a String of the BoM
-     * @since 1.1.0
-     */
-    @Override
-    public String toString() {
-        try {
-            return toXmlString();
-        } catch (TransformerException e) {
-            return null;
+    private void createPedigreeNode(Node parent, Pedigree pedigree) {
+        if (pedigree != null) {
+            final Element pedigreeNode = createElement(parent, "pedigree");
+            if (pedigree.getAncestors() != null && !pedigree.getAncestors().isEmpty()) {
+                final Element ancestorsNode = createElement(pedigreeNode, "ancestors");
+                createComponentsNode(ancestorsNode, pedigree.getAncestors());
+            }
+            if (pedigree.getDescendants() != null && !pedigree.getDescendants().isEmpty()) {
+                final Element descendantsNode = createElement(pedigreeNode, "descendants");
+                createComponentsNode(descendantsNode, pedigree.getDescendants());
+            }
+            if (pedigree.getVariants() != null && !pedigree.getVariants().isEmpty()) {
+                final Element variantsNode = createElement(pedigreeNode, "variants");
+                createComponentsNode(variantsNode, pedigree.getVariants());
+            }
+            if (pedigree.getCommits() != null && !pedigree.getCommits().isEmpty()) {
+                final Element commitsNode = createElement(pedigreeNode, "commits");
+                createCommitsNode(commitsNode, pedigree.getCommits());
+            }
+            createElement(pedigreeNode, "notes", stripBreaks(pedigree.getNotes()));
+        }
+    }
+
+    private void createCommitsNode(Node parent, List<Commit> commits) {
+        if (commits != null) {
+            for (Commit commit: commits) {
+                final Element commitNode = createElement(parent, "commit");
+                createElement(commitNode, "uid", stripBreaks(commit.getUid()));
+                createElement(commitNode, "url", stripBreaks(commit.getUrl()));
+                createActorNode(commitNode, "author", commit.getAuthor());
+                createActorNode(commitNode, "committer", commit.getCommitter());
+                createElement(commitNode, "message", stripBreaks(commit.getMessage()));
+            }
+        }
+    }
+
+    private void createActorNode(Node parent, String nodeName, IdentifiableActionType actor) {
+        if (actor != null) {
+            final Element authorNode = createElement(parent, nodeName);
+            if (actor.getTimestamp() != null) {
+                createElement(authorNode, "timestamp", dateFormat.format(actor.getTimestamp()));
+            }
+            createElement(authorNode, "name", stripBreaks(actor.getName()));
+            createElement(authorNode, "email", stripBreaks(actor.getEmail()));
+        }
+    }
+
+    private void createExternalReferencesNode(Node parent, List<ExternalReference> references) {
+        if (references != null && !references.isEmpty()) {
+            final Element externalReferencesNode = createElement(parent, "externalReferences");
+            for (ExternalReference reference: references) {
+                final Element referenceNode = createElement(externalReferencesNode, "reference", null, new Attribute("type", reference.getType()));
+                createElement(referenceNode, "url", stripBreaks(reference.getUrl()));
+                createElement(referenceNode, "comment", stripBreaks(reference.getUrl()));
+            }
         }
     }
 }
