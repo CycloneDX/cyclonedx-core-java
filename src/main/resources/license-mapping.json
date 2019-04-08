@@ -175,5 +175,11 @@
     "names": [
       "MPL 1.1"
     ]
+  },
+  {
+    "exp": "NetCDF",
+    "names": [
+      "(MIT-style) netCDF C library license"
+    ]
   }
 ]
