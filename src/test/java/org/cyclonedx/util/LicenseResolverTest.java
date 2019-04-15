@@ -26,11 +26,11 @@ public class LicenseResolverTest {
 
     @Test
     public void parseLicenseByUrlTest() throws Exception {
-        License l1 = LicenseResolver.parseLicenseByUrl("http://www.opensource.org/licenses/GPL-3.0");
-        License l2 = LicenseResolver.parseLicenseByUrl("http://www.gnu.org/licenses/gpl-3.0-standalone.html");
-        License l3 = LicenseResolver.parseLicenseByUrl("http://www.opensource.org/licenses/MIT");
-        License l4 = LicenseResolver.parseLicenseByUrl("http://www.opensource.org/licenses/Apache-2.0");
-        License l5 = LicenseResolver.parseLicenseByUrl("http://www.apache.org/licenses/LICENSE-2.0");
+        License l1 = LicenseResolver.parseLicenseByUrl("https://www.opensource.org/licenses/GPL-3.0");
+        License l2 = LicenseResolver.parseLicenseByUrl("https://www.gnu.org/licenses/gpl-3.0-standalone.html");
+        License l3 = LicenseResolver.parseLicenseByUrl("https://www.opensource.org/licenses/MIT");
+        License l4 = LicenseResolver.parseLicenseByUrl("https://www.opensource.org/licenses/Apache-2.0");
+        License l5 = LicenseResolver.parseLicenseByUrl("https://www.apache.org/licenses/LICENSE-2.0");
         Assert.assertEquals("GPL-3.0-only", l1.getId());
         Assert.assertEquals("GPL-3.0-only", l2.getId());
         Assert.assertEquals("MIT", l3.getId());
@@ -44,7 +44,7 @@ public class LicenseResolverTest {
         Assert.assertEquals(1, c1.getLicenses().size());
         Assert.assertEquals("GPL-3.0", c1.getLicenses().get(0).getId());
         Assert.assertEquals("GNU General Public License v3.0 only", c1.getLicenses().get(0).getName());
-        Assert.assertEquals("http://www.gnu.org/licenses/gpl-3.0-standalone.html", c1.getLicenses().get(0).getUrl());
+        Assert.assertEquals("https://opensource.org/licenses/GPL-3.0", c1.getLicenses().get(0).getUrl());
         Assert.assertTrue(c1.getLicenses().get(0).getLicenseText().getText().endsWith("="));
         Assert.assertEquals("plain/text", c1.getLicenses().get(0).getLicenseText().getContentType());
         Assert.assertEquals("base64", c1.getLicenses().get(0).getLicenseText().getEncoding());
