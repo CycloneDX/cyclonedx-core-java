@@ -17,8 +17,9 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.CycloneDxSchema;
-import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,8 @@ public class LicenseChoice {
         return licenses;
     }
 
-    @XmlElement(name = "license", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlElementWrapper(localName = "license", useWrapping = false, namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "license", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setLicenses(List<License> licenses) {
         this.licenses = licenses;
         this.expression = null;
@@ -50,7 +52,7 @@ public class LicenseChoice {
         return expression;
     }
 
-    @XmlElement(name = "expression", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "expression", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setExpression(String expression) {
         this.expression = expression;
         this.licenses = null;

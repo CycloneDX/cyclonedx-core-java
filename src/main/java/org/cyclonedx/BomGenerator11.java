@@ -120,17 +120,17 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
     private void createPedigreeNode(Node parent, Pedigree pedigree) {
         if (pedigree != null) {
             final Element pedigreeNode = createElement(parent, "pedigree");
-            if (pedigree.getAncestors() != null && !pedigree.getAncestors().isEmpty()) {
+            if (pedigree.getAncestors() != null && !pedigree.getAncestors().getComponents().isEmpty()) {
                 final Element ancestorsNode = createElement(pedigreeNode, "ancestors");
-                createComponentsNode(ancestorsNode, pedigree.getAncestors());
+                createComponentsNode(ancestorsNode, pedigree.getAncestors().getComponents());
             }
-            if (pedigree.getDescendants() != null && !pedigree.getDescendants().isEmpty()) {
+            if (pedigree.getDescendants() != null && !pedigree.getDescendants().getComponents().isEmpty()) {
                 final Element descendantsNode = createElement(pedigreeNode, "descendants");
-                createComponentsNode(descendantsNode, pedigree.getDescendants());
+                createComponentsNode(descendantsNode, pedigree.getDescendants().getComponents());
             }
-            if (pedigree.getVariants() != null && !pedigree.getVariants().isEmpty()) {
+            if (pedigree.getVariants() != null && !pedigree.getVariants().getComponents().isEmpty()) {
                 final Element variantsNode = createElement(pedigreeNode, "variants");
-                createComponentsNode(variantsNode, pedigree.getVariants());
+                createComponentsNode(variantsNode, pedigree.getVariants().getComponents());
             }
             if (pedigree.getCommits() != null && !pedigree.getCommits().isEmpty()) {
                 final Element commitsNode = createElement(pedigreeNode, "commits");

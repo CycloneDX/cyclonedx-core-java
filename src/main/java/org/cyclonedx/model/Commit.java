@@ -17,8 +17,8 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.CycloneDxSchema;
-import javax.xml.bind.annotation.XmlElement;
 
 @SuppressWarnings("unused")
 public class Commit {
@@ -33,7 +33,7 @@ public class Commit {
         return uid;
     }
 
-    @XmlElement(name = "uid", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "uid", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setUid(String uid) {
         this.uid = uid;
     }
@@ -42,7 +42,7 @@ public class Commit {
         return url;
     }
 
-    @XmlElement(name = "url", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "url", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setUrl(String url) {
         this.url = url;
     }
@@ -51,7 +51,7 @@ public class Commit {
         return author;
     }
 
-    @XmlElement(name = "author", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "author", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setAuthor(IdentifiableActionType author) {
         this.author = author;
     }
@@ -60,7 +60,7 @@ public class Commit {
         return committer;
     }
 
-    @XmlElement(name = "committer", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "committer", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCommitter(IdentifiableActionType committer) {
         this.committer = committer;
     }
@@ -69,7 +69,7 @@ public class Commit {
         return message;
     }
 
-    @XmlElement(name = "message", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "message", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setMessage(String message) {
         this.message = message;
     }

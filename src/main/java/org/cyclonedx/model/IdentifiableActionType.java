@@ -17,8 +17,8 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.CycloneDxSchema;
-import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
 
 @SuppressWarnings("unused")
@@ -32,7 +32,7 @@ public class IdentifiableActionType {
         return timestamp;
     }
 
-    @XmlElement(name = "timestamp", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "timestamp", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
@@ -41,7 +41,7 @@ public class IdentifiableActionType {
         return name;
     }
 
-    @XmlElement(name = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setName(String name) {
         this.name = name;
     }
@@ -50,7 +50,7 @@ public class IdentifiableActionType {
         return email;
     }
 
-    @XmlElement(name = "email", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "email", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setEmail(String email) {
         this.email = email;
     }

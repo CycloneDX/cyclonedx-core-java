@@ -17,16 +17,15 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.CycloneDxSchema;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-@XmlRootElement(name = "bom", namespace = CycloneDxSchema.NS_BOM_LATEST)
+@JacksonXmlRootElement(localName = "bom", namespace = CycloneDxSchema.NS_BOM_LATEST)
 public class Bom {
 
     private List<Component> components;
@@ -38,8 +37,8 @@ public class Bom {
         return components;
     }
 
-    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlElementWrapper(localName = "components", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setComponents(List<Component> components) {
         this.components = components;
     }
@@ -62,8 +61,8 @@ public class Bom {
         externalReferences.add(externalReference);
     }
 
-    @XmlElementWrapper(name = "externalReferences", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @XmlElement(name = "reference", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlElementWrapper(localName = "externalReferences", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "reference", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setExternalReferences(List<ExternalReference> externalReferences) {
         this.externalReferences = externalReferences;
     }
@@ -72,7 +71,7 @@ public class Bom {
         return version;
     }
 
-    @XmlAttribute(name = "version")
+    @JacksonXmlProperty(localName = "version")
     public void setVersion(int version) {
         this.version = version;
     }
@@ -81,7 +80,7 @@ public class Bom {
         return serialNumber;
     }
 
-    @XmlAttribute(name = "serialNumber")
+    @JacksonXmlProperty(localName = "serialNumber")
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }

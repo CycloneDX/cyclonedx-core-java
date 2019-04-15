@@ -17,8 +17,8 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.CycloneDxSchema;
-import javax.xml.bind.annotation.XmlElement;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -33,7 +33,7 @@ public class License {
         return id;
     }
 
-    @XmlElement(name = "id", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "id", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setId(String id) {
         this.id = id;
     }
@@ -42,7 +42,7 @@ public class License {
         return name;
     }
 
-    @XmlElement(name = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setName(String name) {
         this.name = name;
     }
@@ -51,7 +51,7 @@ public class License {
         return url;
     }
 
-    @XmlElement(name = "url", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "url", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setUrl(String url) {
         this.url = url;
     }
@@ -60,7 +60,7 @@ public class License {
         return licenseText;
     }
 
-    @XmlElement(name = "text", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "text", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setLicenseText(LicenseText licenseText) {
         this.licenseText = licenseText;
     }

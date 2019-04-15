@@ -17,11 +17,10 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.github.packageurl.PackageURL;
 import org.cyclonedx.CycloneDxSchema;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -68,7 +67,7 @@ public class Component {
         return publisher;
     }
 
-    @XmlElement(name = "publisher", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "publisher", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -77,7 +76,7 @@ public class Component {
         return group;
     }
 
-    @XmlElement(name = "group", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "group", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setGroup(String group) {
         this.group = group;
     }
@@ -86,7 +85,7 @@ public class Component {
         return name;
     }
 
-    @XmlElement(name = "name", required = true, namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setName(String name) {
         this.name = name;
     }
@@ -95,7 +94,7 @@ public class Component {
         return version;
     }
 
-    @XmlElement(name = "version", required = true, namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "version", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setVersion(String version) {
         this.version = version;
     }
@@ -104,7 +103,7 @@ public class Component {
         return description;
     }
 
-    @XmlElement(name = "description", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "description", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setDescription(String description) {
         this.description = description;
     }
@@ -113,7 +112,7 @@ public class Component {
         return scope;
     }
 
-    @XmlElement(name = "scope", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "scope", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setScope(Scope scope) {
         this.scope = scope;
     }
@@ -122,8 +121,8 @@ public class Component {
         return hashes;
     }
 
-    @XmlElementWrapper(name = "hashes", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @XmlElement(name = "hash", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlElementWrapper(localName = "hashes", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "hash", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setHashes(List<Hash> hashes) {
         this.hashes = hashes;
     }
@@ -139,7 +138,7 @@ public class Component {
         return licenseChoice;
     }
 
-    @XmlElement(name = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setLicenseChoice(LicenseChoice licenseChoice) {
         this.licenseChoice = licenseChoice;
     }
@@ -148,7 +147,7 @@ public class Component {
         return copyright;
     }
 
-    @XmlElement(name = "copyright", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "copyright", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCopyright(String copyright) {
         this.copyright = copyright;
     }
@@ -166,7 +165,7 @@ public class Component {
      * @deprecated CPE will be removed in a future version of the CycloneDX specification/
      */
     @Deprecated
-    @XmlElement(name = "cpe", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "cpe", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCpe(String cpe) {
         this.cpe = cpe;
     }
@@ -175,7 +174,7 @@ public class Component {
         return purl;
     }
 
-    @XmlElement(name = "purl", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "purl", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPurl(String purl) {
         this.purl = purl;
     }
@@ -188,7 +187,7 @@ public class Component {
         return modified;
     }
 
-    @XmlElement(name = "modified", required = true, namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "modified", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setModified(boolean modified) {
         this.modified = modified;
     }
@@ -197,7 +196,7 @@ public class Component {
         return pedigree;
     }
 
-    @XmlElement(name = "pedigree", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "pedigree", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPedigree(Pedigree pedigree) {
         this.pedigree = pedigree;
     }
@@ -213,8 +212,8 @@ public class Component {
         externalReferences.add(externalReference);
     }
 
-    @XmlElementWrapper(name = "externalReferences", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @XmlElement(name = "reference", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlElementWrapper(localName = "externalReferences", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "reference", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setExternalReferences(List<ExternalReference> externalReferences) {
         this.externalReferences = externalReferences;
     }
@@ -223,8 +222,8 @@ public class Component {
         return components;
     }
 
-    @XmlElementWrapper(name = "components", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @XmlElement(name = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlElementWrapper(localName = "components", namespace = CycloneDxSchema.NS_BOM_LATEST)
+    @JacksonXmlProperty(localName = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setComponents(List<Component> components) {
         this.components = components;
     }
@@ -240,7 +239,7 @@ public class Component {
         return type;
     }
 
-    @XmlAttribute(name = "type", required = true)
+    @JacksonXmlProperty(localName = "type", isAttribute = true)
     public void setType(String type) {
         this.type = type;
     }

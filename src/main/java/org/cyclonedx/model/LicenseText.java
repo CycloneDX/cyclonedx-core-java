@@ -17,8 +17,8 @@
  */
 package org.cyclonedx.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlValue;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -32,7 +32,7 @@ public class LicenseText {
         return contentType;
     }
 
-    @XmlAttribute(name = "content-type")
+    @JacksonXmlProperty(localName = "content-type", isAttribute = true)
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
@@ -41,7 +41,7 @@ public class LicenseText {
         return encoding;
     }
 
-    @XmlAttribute(name = "encoding")
+    @JacksonXmlProperty(localName = "encoding", isAttribute = true)
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
@@ -50,7 +50,7 @@ public class LicenseText {
         return text;
     }
 
-    @XmlValue
+    @JacksonXmlText
     public void setText(String text) {
         this.text = text;
     }

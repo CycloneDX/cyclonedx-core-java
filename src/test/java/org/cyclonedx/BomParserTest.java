@@ -96,7 +96,7 @@ public class BomParserTest {
         Assert.assertEquals("text/plain", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getContentType());
         Assert.assertEquals("base64", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getEncoding());
         Assert.assertNotNull(c1.getPedigree());
-        Assert.assertEquals(1, c1.getPedigree().getAncestors().size());
+        Assert.assertEquals(1, c1.getPedigree().getAncestors().getComponents().size());
         Assert.assertNull(c1.getPedigree().getDescendants());
         Assert.assertNull(c1.getPedigree().getVariants());
         Assert.assertEquals(1, c1.getPedigree().getCommits().size());

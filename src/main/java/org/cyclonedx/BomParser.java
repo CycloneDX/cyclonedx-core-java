@@ -17,14 +17,12 @@
  */
 package org.cyclonedx;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -79,11 +77,7 @@ public class BomParser extends CycloneDxSchema {
     private Bom parse(StreamSource streamSource) throws ParseException {
         try {
             final Schema schema = getXmlSchema(CycloneDxSchema.Version.VERSION_11);
-
-            // Parse the native bom
-            final JAXBContext jaxbContext = JAXBContext.newInstance(Bom.class);
-            final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            unmarshaller.setSchema(schema);
+            final XmlMapper mapper = new XmlMapper();
 
             // Prevent XML External Entity Injection
             final XMLInputFactory xif = XMLInputFactory.newFactory();
@@ -91,8 +85,10 @@ public class BomParser extends CycloneDxSchema {
             xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
             final XMLStreamReader xsr = new NamespaceStreamReaderDelegate(
                     xif.createXMLStreamReader(streamSource));
-            return (Bom) unmarshaller.unmarshal(xsr);
-        } catch (JAXBException | XMLStreamException | SAXException e) {
+            final Bom bom = mapper.readValue(xsr, Bom.class);
+            xsr.close();
+            return bom;
+        } catch (IOException | XMLStreamException | SAXException e) {
             throw new ParseException(e);
         }
     }

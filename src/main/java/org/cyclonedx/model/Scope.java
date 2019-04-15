@@ -17,19 +17,18 @@
  */
 package org.cyclonedx.model;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@XmlEnum
 @SuppressWarnings("unused")
 public enum Scope {
 
-    @XmlEnumValue("required") REQUIRED("required"),
-    @XmlEnumValue("optional") OPTIONAL("optional"),
-    @XmlEnumValue("excluded") EXCLUDED("excluded");
+    REQUIRED("required"),
+    OPTIONAL("optional"),
+    EXCLUDED("excluded");
 
     private String name;
 
+    @JsonValue
     public String getScopeName() {
         return this.name;
     }

@@ -124,17 +124,11 @@
             <artifactId>packageurl-java</artifactId>
             <version>1.1.0</version>
         </dependency>
-        <!-- JAXB Dependencies -->
+        <!-- Jackson  -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.1</version>
-            <scope>runtime</scope>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.9.8</version>
         </dependency>
         <!-- XML Parser -->
         <dependency>
