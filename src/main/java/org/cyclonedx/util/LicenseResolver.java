@@ -155,6 +155,7 @@ public final class LicenseResolver {
      * @throws InvalidLicenseStringException an exception while parsing the license URL
      */
     public static License parseLicenseByUrl(String licenseUrl) throws InvalidLicenseStringException {
+        final String protocolExcludedUrl = licenseUrl.replace("http://", "").replace("https://", "");
         final ListedLicenses ll = ListedLicenses.getListedLicenses();
         // Check cache. If hit, return, otherwise go through the native SPDX model which is terribly slow
         License license = resolvedByUrl.get(licenseUrl);
@@ -166,9 +167,10 @@ public final class LicenseResolver {
             if (licenseInfo instanceof SpdxListedLicense) {
                 final SpdxListedLicense spdxListedLicense = (SpdxListedLicense) licenseInfo;
                 for (final String seeAlso: spdxListedLicense.getSeeAlso()) {
+                    final String protocolExcludedSeeAlsoUrl = seeAlso.replace("http://", "").replace("https://", "");
                     // Attempt to account for .txt, .html, and other extensions in the URLs being compared
-                    if (licenseUrl.toLowerCase().contains(seeAlso.toLowerCase())
-                            || seeAlso.toLowerCase().contains(licenseUrl.toLowerCase())) {
+                    if (protocolExcludedUrl.toLowerCase().contains(protocolExcludedSeeAlsoUrl.toLowerCase())
+                            || protocolExcludedSeeAlsoUrl.toLowerCase().contains(protocolExcludedUrl.toLowerCase())) {
                         license = createLicenseObject(spdxListedLicense);
                         // Lazily cache the mapping for future performance improvements
                         resolvedByUrl.put(licenseUrl, license);
