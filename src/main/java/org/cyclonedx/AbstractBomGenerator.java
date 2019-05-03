@@ -17,7 +17,10 @@
  */
 package org.cyclonedx;
 
-import org.cyclonedx.model.*;
+import org.cyclonedx.model.Attribute;
+import org.cyclonedx.model.Hash;
+import org.cyclonedx.model.License;
+import org.cyclonedx.model.LicenseChoice;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
