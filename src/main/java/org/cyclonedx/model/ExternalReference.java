@@ -17,6 +17,8 @@
  */
 package org.cyclonedx.model;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class ExternalReference {
 
@@ -74,5 +76,20 @@ public class ExternalReference {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExternalReference)) return false;
+        ExternalReference reference = (ExternalReference) o;
+        return Objects.equals(url, reference.url) &&
+                type == reference.type &&
+                Objects.equals(comment, reference.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(url, type, comment);
     }
 }

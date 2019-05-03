@@ -19,6 +19,7 @@ package org.cyclonedx.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Bom {
@@ -72,5 +73,21 @@ public class Bom {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bom)) return false;
+        Bom bom = (Bom) o;
+        return version == bom.version &&
+                Objects.equals(components, bom.components) &&
+                Objects.equals(externalReferences, bom.externalReferences) &&
+                Objects.equals(serialNumber, bom.serialNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(components, externalReferences, version, serialNumber);
     }
 }

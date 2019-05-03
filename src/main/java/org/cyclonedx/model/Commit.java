@@ -17,6 +17,8 @@
  */
 package org.cyclonedx.model;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Commit {
 
@@ -64,5 +66,22 @@ public class Commit {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Commit)) return false;
+        Commit commit = (Commit) o;
+        return Objects.equals(uid, commit.uid) &&
+                Objects.equals(url, commit.url) &&
+                Objects.equals(author, commit.author) &&
+                Objects.equals(committer, commit.committer) &&
+                Objects.equals(message, commit.message);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uid, url, author, committer, message);
     }
 }

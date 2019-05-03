@@ -18,6 +18,7 @@
 package org.cyclonedx.model;
 
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Pedigree {
@@ -66,5 +67,22 @@ public class Pedigree {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pedigree)) return false;
+        Pedigree pedigree = (Pedigree) o;
+        return Objects.equals(ancestors, pedigree.ancestors) &&
+                Objects.equals(descendants, pedigree.descendants) &&
+                Objects.equals(variants, pedigree.variants) &&
+                Objects.equals(commits, pedigree.commits) &&
+                Objects.equals(notes, pedigree.notes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ancestors, descendants, variants, commits, notes);
     }
 }

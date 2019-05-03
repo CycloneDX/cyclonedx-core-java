@@ -18,6 +18,7 @@
 package org.cyclonedx.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class IdentifiableActionType {
@@ -48,5 +49,20 @@ public class IdentifiableActionType {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof IdentifiableActionType)) return false;
+        IdentifiableActionType that = (IdentifiableActionType) o;
+        return Objects.equals(timestamp, that.timestamp) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timestamp, name, email);
     }
 }
