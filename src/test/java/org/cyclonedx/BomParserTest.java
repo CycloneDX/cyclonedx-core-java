@@ -55,7 +55,7 @@ public class BomParserTest {
         Component c1 = components.get(0);
         Assert.assertEquals("org.example", c1.getGroup());
         Assert.assertEquals("1.0.0", c1.getVersion());
-        Assert.assertEquals(Component.Classification.APPLICATION.getValue(), c1.getType());
+        Assert.assertEquals(Component.Type.APPLICATION, c1.getType());
         Assert.assertEquals("2342c2eaf1feb9a80195dbaddf2ebaa3", c1.getHashes().get(0).getValue());
         Assert.assertEquals("68b78babe00a053f9e35ec6a2d9080f5b90122b0", c1.getHashes().get(1).getValue());
         Assert.assertEquals("708f1f53b41f11f02d12a11b1a38d2905d47b099afc71a0f1124ef8582ec7313", c1.getHashes().get(2).getValue());
@@ -84,7 +84,7 @@ public class BomParserTest {
         Assert.assertEquals("tomcat-catalina", c1.getName());
         Assert.assertEquals("9.0.14", c1.getVersion());
         Assert.assertEquals("Modified version of Apache Catalina", c1.getDescription());
-        Assert.assertEquals(Component.Classification.APPLICATION.getValue(), c1.getType());
+        Assert.assertEquals(Component.Type.APPLICATION, c1.getType());
         Assert.assertEquals("required", c1.getScope().getScopeName());
         Assert.assertEquals("3942447fac867ae5cdb3229b658f4d48", c1.getHashes().get(0).getValue());
         Assert.assertEquals("e6b1000b94e835ffd37f4c6dcbdad43f4b48a02a", c1.getHashes().get(1).getValue());
@@ -96,7 +96,7 @@ public class BomParserTest {
         Assert.assertEquals("text/plain", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getContentType());
         Assert.assertEquals("base64", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getEncoding());
         Assert.assertNotNull(c1.getPedigree());
-        Assert.assertEquals(1, c1.getPedigree().getAncestors().getComponents().size());
+        Assert.assertEquals(1, c1.getPedigree().getAncestors().size());
         Assert.assertNull(c1.getPedigree().getDescendants());
         Assert.assertNull(c1.getPedigree().getVariants());
         Assert.assertEquals(1, c1.getPedigree().getCommits().size());

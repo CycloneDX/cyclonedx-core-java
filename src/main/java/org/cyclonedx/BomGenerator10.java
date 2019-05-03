@@ -20,7 +20,6 @@ package org.cyclonedx;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
-import org.cyclonedx.model.Scope;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -80,15 +79,15 @@ public class BomGenerator10 extends AbstractBomGenerator implements BomGenerator
     private void createComponentsNode(Node parent, List<Component> components) {
         if (components != null && !components.isEmpty()) {
             for (Component component : components) {
-                final Element componentNode = createElement(parent, "component", null, new Attribute("type", component.getType()));
+                final Element componentNode = createElement(parent, "component", null, new Attribute("type", component.getType().getTypeName()));
                 createElement(componentNode, "publisher", stripBreaks(component.getPublisher()));
                 createElement(componentNode, "group", stripBreaks(component.getGroup()));
                 createElement(componentNode, "name", stripBreaks(component.getName()));
                 createElement(componentNode, "version", stripBreaks(component.getVersion()));
                 createElement(componentNode, "description", stripBreaks(component.getDescription()));
                 if (component.getScope() == null) {
-                    createElement(componentNode, "scope", Scope.REQUIRED.getScopeName());
-                } else if (component.getScope() != Scope.EXCLUDED) { // Excluded was introduced in v1.1
+                    createElement(componentNode, "scope", Component.Scope.REQUIRED.getScopeName());
+                } else if (component.getScope() != Component.Scope.EXCLUDED) { // Excluded was introduced in v1.1
                     createElement(componentNode, "scope", component.getScope().getScopeName());
                 }
                 createHashesNode(componentNode, component.getHashes());

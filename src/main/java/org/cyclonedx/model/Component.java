@@ -17,16 +17,48 @@
  */
 package org.cyclonedx.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.github.packageurl.PackageURL;
-import org.cyclonedx.CycloneDxSchema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Component {
+
+    public enum Type {
+        APPLICATION("application"),
+        FRAMEWORK("framework"),
+        LIBRARY("library"),
+        OPERATING_SYSTEM("operating-system"),
+        DEVICE("device"),
+        FILE("file");
+
+        private String name;
+
+        public String getTypeName() {
+            return this.name;
+        }
+
+        Type(String name) {
+            this.name = name;
+        }
+    }
+
+    public enum Scope {
+        REQUIRED("required"),
+        OPTIONAL("optional"),
+        EXCLUDED("excluded");
+
+        private String name;
+
+        public String getScopeName() {
+            return this.name;
+        }
+
+        Scope(String name) {
+            this.name = name;
+        }
+    }
 
     private String publisher;
     private String group;
@@ -43,31 +75,12 @@ public class Component {
     private Pedigree pedigree;
     private List<ExternalReference> externalReferences;
     private List<Component> components;
-    private String type;
-
-    public enum Classification {
-        APPLICATION("application"),
-        FRAMEWORK("framework"),
-        LIBRARY("library"),
-        FILE("file"),
-        OPERATING_SYSTEM("operating-system"),
-        DEVICE("device");
-
-        private String value;
-        Classification(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
+    private Type type;
 
     public String getPublisher() {
         return publisher;
     }
 
-    @JacksonXmlProperty(localName = "publisher", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -76,7 +89,6 @@ public class Component {
         return group;
     }
 
-    @JacksonXmlProperty(localName = "group", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setGroup(String group) {
         this.group = group;
     }
@@ -85,7 +97,6 @@ public class Component {
         return name;
     }
 
-    @JacksonXmlProperty(localName = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setName(String name) {
         this.name = name;
     }
@@ -94,7 +105,6 @@ public class Component {
         return version;
     }
 
-    @JacksonXmlProperty(localName = "version", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setVersion(String version) {
         this.version = version;
     }
@@ -103,7 +113,6 @@ public class Component {
         return description;
     }
 
-    @JacksonXmlProperty(localName = "description", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setDescription(String description) {
         this.description = description;
     }
@@ -112,7 +121,6 @@ public class Component {
         return scope;
     }
 
-    @JacksonXmlProperty(localName = "scope", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setScope(Scope scope) {
         this.scope = scope;
     }
@@ -121,8 +129,6 @@ public class Component {
         return hashes;
     }
 
-    @JacksonXmlElementWrapper(localName = "hashes", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @JacksonXmlProperty(localName = "hash", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setHashes(List<Hash> hashes) {
         this.hashes = hashes;
     }
@@ -138,7 +144,6 @@ public class Component {
         return licenseChoice;
     }
 
-    @JacksonXmlProperty(localName = "licenses", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setLicenseChoice(LicenseChoice licenseChoice) {
         this.licenseChoice = licenseChoice;
     }
@@ -147,7 +152,6 @@ public class Component {
         return copyright;
     }
 
-    @JacksonXmlProperty(localName = "copyright", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCopyright(String copyright) {
         this.copyright = copyright;
     }
@@ -165,7 +169,6 @@ public class Component {
      * @deprecated CPE will be removed in a future version of the CycloneDX specification/
      */
     @Deprecated
-    @JacksonXmlProperty(localName = "cpe", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCpe(String cpe) {
         this.cpe = cpe;
     }
@@ -174,7 +177,6 @@ public class Component {
         return purl;
     }
 
-    @JacksonXmlProperty(localName = "purl", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPurl(String purl) {
         this.purl = purl;
     }
@@ -187,7 +189,6 @@ public class Component {
         return modified;
     }
 
-    @JacksonXmlProperty(localName = "modified", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setModified(boolean modified) {
         this.modified = modified;
     }
@@ -196,7 +197,6 @@ public class Component {
         return pedigree;
     }
 
-    @JacksonXmlProperty(localName = "pedigree", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setPedigree(Pedigree pedigree) {
         this.pedigree = pedigree;
     }
@@ -212,8 +212,6 @@ public class Component {
         externalReferences.add(externalReference);
     }
 
-    @JacksonXmlElementWrapper(localName = "externalReferences", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @JacksonXmlProperty(localName = "reference", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setExternalReferences(List<ExternalReference> externalReferences) {
         this.externalReferences = externalReferences;
     }
@@ -222,8 +220,6 @@ public class Component {
         return components;
     }
 
-    @JacksonXmlElementWrapper(localName = "components", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @JacksonXmlProperty(localName = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setComponents(List<Component> components) {
         this.components = components;
     }
@@ -235,17 +231,12 @@ public class Component {
         this.components.add(component);
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    @JacksonXmlProperty(localName = "type", isAttribute = true)
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
-    }
-
-    public void setType(Classification classification) {
-        this.type = classification.value;
     }
 
     @Override

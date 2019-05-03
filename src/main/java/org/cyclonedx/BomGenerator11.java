@@ -24,7 +24,6 @@ import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.IdentifiableActionType;
 import org.cyclonedx.model.Pedigree;
-import org.cyclonedx.model.Scope;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -91,14 +90,14 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
     private void createComponentsNode(Node parent, List<Component> components) {
         if (components != null && !components.isEmpty()) {
             for (Component component : components) {
-                final Element componentNode = createElement(parent, "component", null, new Attribute("type", component.getType()));
+                final Element componentNode = createElement(parent, "component", null, new Attribute("type", component.getType().getTypeName()));
                 createElement(componentNode, "publisher", stripBreaks(component.getPublisher()));
                 createElement(componentNode, "group", stripBreaks(component.getGroup()));
                 createElement(componentNode, "name", stripBreaks(component.getName()));
                 createElement(componentNode, "version", stripBreaks(component.getVersion()));
                 createElement(componentNode, "description", stripBreaks(component.getDescription()));
                 if (component.getScope() == null) {
-                    createElement(componentNode, "scope", Scope.REQUIRED.getScopeName());
+                    createElement(componentNode, "scope", Component.Scope.REQUIRED.getScopeName());
                 } else {
                     createElement(componentNode, "scope", component.getScope().getScopeName());
                 }
@@ -120,17 +119,17 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
     private void createPedigreeNode(Node parent, Pedigree pedigree) {
         if (pedigree != null) {
             final Element pedigreeNode = createElement(parent, "pedigree");
-            if (pedigree.getAncestors() != null && !pedigree.getAncestors().getComponents().isEmpty()) {
+            if (pedigree.getAncestors() != null && !pedigree.getAncestors().isEmpty()) {
                 final Element ancestorsNode = createElement(pedigreeNode, "ancestors");
-                createComponentsNode(ancestorsNode, pedigree.getAncestors().getComponents());
+                createComponentsNode(ancestorsNode, pedigree.getAncestors());
             }
-            if (pedigree.getDescendants() != null && !pedigree.getDescendants().getComponents().isEmpty()) {
+            if (pedigree.getDescendants() != null && !pedigree.getDescendants().isEmpty()) {
                 final Element descendantsNode = createElement(pedigreeNode, "descendants");
-                createComponentsNode(descendantsNode, pedigree.getDescendants().getComponents());
+                createComponentsNode(descendantsNode, pedigree.getDescendants());
             }
-            if (pedigree.getVariants() != null && !pedigree.getVariants().getComponents().isEmpty()) {
+            if (pedigree.getVariants() != null && !pedigree.getVariants().isEmpty()) {
                 final Element variantsNode = createElement(pedigreeNode, "variants");
-                createComponentsNode(variantsNode, pedigree.getVariants().getComponents());
+                createComponentsNode(variantsNode, pedigree.getVariants());
             }
             if (pedigree.getCommits() != null && !pedigree.getCommits().isEmpty()) {
                 final Element commitsNode = createElement(pedigreeNode, "commits");

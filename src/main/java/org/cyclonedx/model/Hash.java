@@ -17,9 +17,6 @@
  */
 package org.cyclonedx.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -39,16 +36,12 @@ public class Hash {
             this.spec = spec;
         }
 
-        @JsonValue
         public String getSpec() {
             return spec;
         }
     }
 
-    @JacksonXmlProperty(localName = "alg", isAttribute = true)
     private String algorithm;
-
-    @JacksonXmlText
     private String value;
 
     public Hash() { }

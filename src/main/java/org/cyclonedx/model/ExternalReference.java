@@ -17,10 +17,6 @@
  */
 package org.cyclonedx.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.CycloneDxSchema;
-
 @SuppressWarnings("unused")
 public class ExternalReference {
 
@@ -43,7 +39,6 @@ public class ExternalReference {
 
         private String name;
 
-        @JsonValue
         public String getTypeName() {
             return this.name;
         }
@@ -61,7 +56,6 @@ public class ExternalReference {
         return url;
     }
 
-    @JacksonXmlProperty(localName = "url", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setUrl(String url) {
         this.url = url;
     }
@@ -70,7 +64,6 @@ public class ExternalReference {
         return type;
     }
 
-    @JacksonXmlProperty(localName = "type", isAttribute = true)
     public void setType(Type type) {
         this.type = type;
     }
@@ -79,7 +72,6 @@ public class ExternalReference {
         return comment;
     }
 
-    @JacksonXmlProperty(localName = "comment", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setComment(String comment) {
         this.comment = comment;
     }

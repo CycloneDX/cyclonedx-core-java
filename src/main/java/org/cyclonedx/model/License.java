@@ -17,8 +17,6 @@
  */
 package org.cyclonedx.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.CycloneDxSchema;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -33,7 +31,6 @@ public class License {
         return id;
     }
 
-    @JacksonXmlProperty(localName = "id", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setId(String id) {
         this.id = id;
     }
@@ -42,7 +39,6 @@ public class License {
         return name;
     }
 
-    @JacksonXmlProperty(localName = "name", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setName(String name) {
         this.name = name;
     }
@@ -51,7 +47,6 @@ public class License {
         return url;
     }
 
-    @JacksonXmlProperty(localName = "url", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setUrl(String url) {
         this.url = url;
     }
@@ -60,7 +55,6 @@ public class License {
         return licenseText;
     }
 
-    @JacksonXmlProperty(localName = "text", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setLicenseText(LicenseText licenseText) {
         this.licenseText = licenseText;
     }

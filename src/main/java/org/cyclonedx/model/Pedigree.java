@@ -17,115 +17,45 @@
  */
 package org.cyclonedx.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.CycloneDxSchema;
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class Pedigree {
 
-    @JacksonXmlProperty(localName = "ancestors", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    private Ancestors ancestors;
-
-    @JacksonXmlProperty(localName = "descendants", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    private Descendants descendants;
-
-    @JacksonXmlProperty(localName = "variants", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    private Variants variants;
-
+    private List<Component> ancestors;
+    private List<Component> descendants;
+    private List<Component> variants;
     private List<Commit> commits;
     private String notes;
 
-    public Ancestors getAncestors() {
+    public List<Component> getAncestors() {
         return ancestors;
     }
 
-    public Descendants getDescendants() {
+    public void setAncestors(List<Component> ancestors) {
+        this.ancestors = ancestors;
+    }
+
+    public List<Component> getDescendants() {
         return descendants;
     }
 
-    public Variants getVariants() {
+    public void setDescendants(List<Component> descendants) {
+        this.descendants = descendants;
+    }
+
+    public List<Component> getVariants() {
         return variants;
     }
 
-    public static class Ancestors {
-        private List<Component> components;
-
-        public List<Component> getComponents() {
-            return components;
-        }
-
-        public void addComponent(Component component) {
-            if (this.components == null) {
-                this.components = new ArrayList<>();
-            }
-            this.components.add(component);
-        }
-
-        @JacksonXmlElementWrapper(useWrapping = false)
-        @JacksonXmlProperty(localName = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
-        public void setComponents(List<Component> ancestors) {
-            this.components = ancestors;
-        }
-    }
-
-    public static class Descendants {
-        private List<Component> components;
-
-        public List<Component> getComponents() {
-            return components;
-        }
-
-        public void addComponent(Component component) {
-            if (this.components == null) {
-                this.components = new ArrayList<>();
-            }
-            this.components.add(component);
-        }
-
-        @JacksonXmlElementWrapper(useWrapping = false)
-        @JacksonXmlProperty(localName = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
-        public void setComponents(List<Component> ancestors) {
-            this.components = ancestors;
-        }
-    }
-
-    public static class Variants {
-        private List<Component> components;
-
-        public List<Component> getComponents() {
-            return components;
-        }
-
-        public void addComponent(Component component) {
-            if (this.components == null) {
-                this.components = new ArrayList<>();
-            }
-            this.components.add(component);
-        }
-
-        @JacksonXmlElementWrapper(useWrapping = false)
-        @JacksonXmlProperty(localName = "component", namespace = CycloneDxSchema.NS_BOM_LATEST)
-        public void setComponents(List<Component> ancestors) {
-            this.components = ancestors;
-        }
+    public void setVariants(List<Component> variants) {
+        this.variants = variants;
     }
 
     public List<Commit> getCommits() {
         return commits;
     }
 
-    public void addCommit(Commit commit) {
-        if (this.commits == null) {
-            this.commits = new ArrayList<>();
-        }
-        this.commits.add(commit);
-    }
-
-    @JacksonXmlElementWrapper(localName = "commits", namespace = CycloneDxSchema.NS_BOM_LATEST)
-    @JacksonXmlProperty(localName = "commit", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setCommits(List<Commit> commits) {
         this.commits = commits;
     }
@@ -134,7 +64,6 @@ public class Pedigree {
         return notes;
     }
 
-    @JacksonXmlProperty(localName = "notes", namespace = CycloneDxSchema.NS_BOM_LATEST)
     public void setNotes(String notes) {
         this.notes = notes;
     }
