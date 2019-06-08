@@ -4,6 +4,7 @@
     "names": [
       "Apache 2",
       "Apache 2.0",
+      "Apache 2.0 License",
       "Apache Software License, Version 2.0",
       "The Apache Software License, Version 2.0",
       "Apache License (v2.0)",
@@ -16,10 +17,24 @@
     ]
   },
   {
+    "exp": "BSD-2-Clause",
+    "names": [
+      "BSD 2 Clause",
+      "BSD 2-Clause",
+      "BSD-2-Clause",
+      "BSD 2-Clause License",
+      "The BSD 2-Clause License",
+      "The 2-Clause BSD License"
+    ]
+  },
+  {
     "exp": "BSD-3-Clause",
     "names": [
       "BSD 3 Clause",
       "BSD 3-Clause",
+      "BSD-3-Clause",
+      "BSD 3-Clause License",
+      "The BSD 3-Clause License",
       "BSD 3-Clause \"New\" or \"Revised\" License (BSD-3-Clause)",
       "Eclipse Distribution License (New BSD License)",
       "New BSD License",
@@ -61,13 +76,16 @@
       "Eclipse Public License - Version 1.0",
       "Eclipse Public License (EPL) 1.0",
       "Eclipse Public License v1.0",
-      "Eclipse Public License, Version 1.0"
+      "Eclipse Public License, Version 1.0",
+      "Eclipse Public License - v 1.0",
+      "Eclipse Public License - v1.0"
     ]
   },
   {
     "exp": "EPL-2.0",
     "names": [
-      "Eclipse Public License - Version 2.0"
+      "Eclipse Public License - Version 2.0",
+      "EPL 2.0"
     ]
   },
   {
@@ -182,6 +200,13 @@
     "exp": "NetCDF",
     "names": [
       "(MIT-style) netCDF C library license"
+    ]
+  },
+  {
+    "exp": "JSON",
+    "names": [
+      "The JSON License",
+      "JSON License"
     ]
   }
 ]
