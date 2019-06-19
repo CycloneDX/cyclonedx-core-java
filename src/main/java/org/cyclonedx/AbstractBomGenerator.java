@@ -102,8 +102,6 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
         Element node = null;
         if (value != null || attributes.length > 0) {
             node = doc.createElementNS(getSchemaVersion().getNamespace(), name);
-            node.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            node.setAttribute("xsi:schemaLocation", getSchemaVersion().getNamespace() + " " + getSchemaVersion().getNamespace());
             for (Attribute attribute: attributes) {
                 node.setAttribute(attribute.getKey(), attribute.getValue());
             }
