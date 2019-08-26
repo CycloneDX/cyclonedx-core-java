@@ -28,6 +28,7 @@ public class Bom {
     private List<ExternalReference> externalReferences;
     private int version = 1;
     private String serialNumber;
+    private String schemaVersion;
 
     public List<Component> getComponents() {
         return components;
@@ -73,6 +74,14 @@ public class Bom {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public String getSchemaVersion() {
+        return schemaVersion;
+    }
+
+    public void setSchemaVersion(String schemaVersion) {
+        this.schemaVersion = schemaVersion;
     }
 
     @Override

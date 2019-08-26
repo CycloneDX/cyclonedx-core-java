@@ -35,7 +35,10 @@ import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Pedigree;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import javax.xml.namespace.QName;
@@ -43,8 +46,15 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
@@ -71,9 +81,13 @@ public class BomParser extends CycloneDxSchema {
      */
     public Bom parse(File file) throws ParseException {
         try {
-            XStream xstream = mapDefaultObjectModel(createXStream());
-            return (Bom) xstream.fromXML(file);
-        } catch (XStreamException e) {
+            final String schemaVersion = identifySchemaVersion(
+                    extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
+            final XStream xstream = mapDefaultObjectModel(createXStream());
+            final Bom bom = (Bom) xstream.fromXML(file);
+            bom.setSchemaVersion(schemaVersion);
+            return bom;
+        } catch (XStreamException | XPathExpressionException | FileNotFoundException e) {
             throw new ParseException(e);
         }
     }
@@ -88,9 +102,13 @@ public class BomParser extends CycloneDxSchema {
      */
     public Bom parse(byte[] bomBytes) throws ParseException {
         try {
-            XStream xstream = mapDefaultObjectModel(createXStream());
-            return (Bom)xstream.fromXML(new ByteArrayInputStream(bomBytes));
-        } catch (XStreamException e) {
+            final String schemaVersion = identifySchemaVersion(
+                    extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
+            final XStream xstream = mapDefaultObjectModel(createXStream());
+            final Bom bom = (Bom)xstream.fromXML(new ByteArrayInputStream(bomBytes));
+            bom.setSchemaVersion(schemaVersion);
+            return bom;
+        } catch (XStreamException | XPathExpressionException e) {
             throw new ParseException(e);
         }
     }
@@ -105,9 +123,13 @@ public class BomParser extends CycloneDxSchema {
      */
     public Bom parse(URL url) throws ParseException {
         try {
-            XStream xstream = mapDefaultObjectModel(createXStream());
-            return (Bom) xstream.fromXML(url);
-        } catch (XStreamException e) {
+            final String schemaVersion = identifySchemaVersion(
+                    extractAllNamespaceDeclarations(new InputSource(url.openStream())));
+            final XStream xstream = mapDefaultObjectModel(createXStream());
+            final Bom bom = (Bom) xstream.fromXML(url);
+            bom.setSchemaVersion(schemaVersion);
+            return bom;
+        } catch (XStreamException | XPathExpressionException | IOException e) {
             throw new ParseException(e);
         }
     }
@@ -194,6 +216,26 @@ public class BomParser extends CycloneDxSchema {
      */
     public boolean isValid(File file, CycloneDxSchema.Version schemaVersion) {
         return validate(file, schemaVersion).isEmpty();
+    }
+
+    private String identifySchemaVersion(final NodeList nodeList) {
+        for (int i=0; i<nodeList.getLength(); i++) {
+            final Node node = nodeList.item(i);
+            for (final Version version: Version.values()) {
+                if (version.getNamespace().equals(node.getNodeValue()))  {
+                    return version.getVersionString();
+                }
+            }
+        }
+        return null;
+    }
+
+    private NodeList extractAllNamespaceDeclarations(InputSource in) throws XPathExpressionException {
+        final XPathFactory xPathFactory = XPathFactory.newInstance();
+        final XPath xPath = xPathFactory.newXPath();
+        final XPathExpression xPathExpression = xPath.compile("//namespace::*");
+        final NodeList nodeList = (NodeList) xPathExpression.evaluate(in, XPathConstants.NODESET);
+        return nodeList;
     }
 
     private Map<String, Component.Type> getComponentTypeMapping() {

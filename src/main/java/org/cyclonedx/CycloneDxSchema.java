@@ -23,6 +23,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.InputStream;
 
 /**
  * CycloneDxSchema is a base class that provides schema information to
@@ -37,14 +38,19 @@ public abstract class CycloneDxSchema {
     public static final String NS_BOM_LATEST = NS_BOM_11;
 
     public enum Version {
-        VERSION_10(CycloneDxSchema.NS_BOM_10),
-        VERSION_11(CycloneDxSchema.NS_BOM_11);
+        VERSION_10(CycloneDxSchema.NS_BOM_10, "1.0"),
+        VERSION_11(CycloneDxSchema.NS_BOM_11, "1.1");
         private String namespace;
+        private String versionString;
         public String getNamespace() {
             return this.namespace;
         }
-        Version(String namespace) {
+        public String getVersionString() {
+            return versionString;
+        }
+        Version(String namespace, String versionString) {
             this.namespace = namespace;
+            this.versionString = versionString;
         }
     }
 
@@ -62,6 +68,7 @@ public abstract class CycloneDxSchema {
             return getXmlSchema11();
         }
     }
+
     /**
      * Returns the CycloneDX XML Schema from the specifications XSD.
      * @return a Schema
@@ -69,13 +76,11 @@ public abstract class CycloneDxSchema {
      * @since 1.1.0
      */
     private Schema getXmlSchema10() throws SAXException {
-        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
-        final Source[] schemaFiles = {
-                new StreamSource(this.getClass().getClassLoader().getResourceAsStream("spdx.xsd")),
-                new StreamSource(this.getClass().getClassLoader().getResourceAsStream("bom-1.0.xsd"))
-        };
-        return schemaFactory.newSchema(schemaFiles);
+        return getXmlSchema(
+                this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.0.xsd")
+        );
     }
 
     /**
@@ -85,12 +90,19 @@ public abstract class CycloneDxSchema {
      * @since 2.0.0
      */
     private Schema getXmlSchema11() throws SAXException {
-        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
-        final Source[] schemaFiles = {
-                new StreamSource(this.getClass().getClassLoader().getResourceAsStream("spdx.xsd")),
-                new StreamSource(this.getClass().getClassLoader().getResourceAsStream("bom-1.1.xsd"))
-        };
+        return getXmlSchema(
+                this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.1.xsd")
+        );
+    }
+
+    public Schema getXmlSchema(InputStream... inputStreams) throws SAXException {
+        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final Source[] schemaFiles = new Source[inputStreams.length];
+        for (int i=0; i<inputStreams.length; i++) {
+            schemaFiles[i] = new StreamSource(inputStreams[i]);
+        }
         return schemaFactory.newSchema(schemaFiles);
     }
 }
