@@ -170,7 +170,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
                 if (reference.getType() != null) {
                     final Element referenceNode = createElement(externalReferencesNode, "reference", null, new Attribute("type", reference.getType().getTypeName()));
                     createElement(referenceNode, "url", stripBreaks(reference.getUrl()));
-                    createElement(referenceNode, "comment", stripBreaks(reference.getUrl()));
+                    createElement(referenceNode, "comment", stripBreaks(reference.getComment()));
                 }
             }
         }
