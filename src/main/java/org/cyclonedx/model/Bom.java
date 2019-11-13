@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
 package org.cyclonedx.model;
 
+import org.cyclonedx.model.ext.dependencyGraph.Dependency;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +31,9 @@ public class Bom {
     private int version = 1;
     private String serialNumber;
     private String schemaVersion;
+
+    // Extension models
+    private List<Dependency> dependencies;
 
     public List<Component> getComponents() {
         return components;
@@ -76,12 +81,23 @@ public class Bom {
         this.serialNumber = serialNumber;
     }
 
+    /**
+     * Returns the CycloneDX schema version of a Bom. The schema version will
+     * only be populated when paring a bom via {@link org.cyclonedx.BomParser}.
+     * It has no affect on bom generation or any other functionality.
+     * @return the String version representation of the schema version
+     */
     public String getSchemaVersion() {
         return schemaVersion;
     }
 
-    public void setSchemaVersion(String schemaVersion) {
-        this.schemaVersion = schemaVersion;
+    // Extension models
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
     }
 
     @Override

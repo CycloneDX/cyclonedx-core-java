@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
 package org.cyclonedx;
@@ -35,6 +36,7 @@ import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.ext.dependencyGraph.Dependency;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -57,6 +59,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -85,8 +88,7 @@ public class BomParser extends CycloneDxSchema {
                     extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
             final XStream xstream = mapDefaultObjectModel(createXStream());
             final Bom bom = (Bom) xstream.fromXML(file);
-            bom.setSchemaVersion(schemaVersion);
-            return bom;
+            return injectSchemaVersion(bom, schemaVersion);
         } catch (XStreamException | XPathExpressionException | FileNotFoundException e) {
             throw new ParseException(e);
         }
@@ -106,8 +108,7 @@ public class BomParser extends CycloneDxSchema {
                     extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
             final XStream xstream = mapDefaultObjectModel(createXStream());
             final Bom bom = (Bom)xstream.fromXML(new ByteArrayInputStream(bomBytes));
-            bom.setSchemaVersion(schemaVersion);
-            return bom;
+            return injectSchemaVersion(bom, schemaVersion);
         } catch (XStreamException | XPathExpressionException e) {
             throw new ParseException(e);
         }
@@ -127,8 +128,7 @@ public class BomParser extends CycloneDxSchema {
                     extractAllNamespaceDeclarations(new InputSource(url.openStream())));
             final XStream xstream = mapDefaultObjectModel(createXStream());
             final Bom bom = (Bom) xstream.fromXML(url);
-            bom.setSchemaVersion(schemaVersion);
-            return bom;
+            return injectSchemaVersion(bom, schemaVersion);
         } catch (XStreamException | XPathExpressionException | IOException e) {
             throw new ParseException(e);
         }
@@ -149,6 +149,27 @@ public class BomParser extends CycloneDxSchema {
         } catch (XStreamException e) {
             throw new ParseException(e);
         }
+    }
+
+    /**
+     * Uses reflection to set the schemaVersion field inside a Bom instance.
+     * The schemaVersion is 'not user serviceable' so no methods for setting
+     * it are provided, other than the constructor, which xstream does not
+     * use.
+     * @param bom the Bom to set the schemaVersion for
+     * @param schemaVersion the value of the schema version
+     * @return the updated Bom
+     * @since 2.5.0
+     */
+    private Bom injectSchemaVersion(Bom bom, String schemaVersion) {
+        try {
+            final Field field = Bom.class.getDeclaredField("schemaVersion");
+            field.setAccessible(true);
+            field.set(bom, schemaVersion);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // throw it away
+        }
+        return bom;
     }
 
     /**
@@ -307,7 +328,7 @@ public class BomParser extends CycloneDxSchema {
         };
         XStream.setupDefaultSecurity(xstream);
         xstream.allowTypesByWildcard(new String[] {
-                "org.cyclonedx.model.**"
+                "org.cyclonedx.model.**", "org.cyclonedx.model.ext.dependencyGraph.**"
         });
         return xstream;
     }
@@ -339,6 +360,11 @@ public class BomParser extends CycloneDxSchema {
         xstream.aliasField("text", License.class, "licenseText");
 
         xstream.alias("pedigree", Pedigree.class);
+
+        xstream.addImplicitCollection(Dependency.class, "dependencies");
+        xstream.alias("dependency", Dependency.class);
+        xstream.aliasAttribute(Dependency.class, "ref", "ref");
+
         return xstream;
     }
 }
