@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
 package org.cyclonedx.model;
@@ -60,6 +61,7 @@ public class Component {
         }
     }
 
+    private String bomRef;
     private String publisher;
     private String group;
     private String name;
@@ -76,6 +78,14 @@ public class Component {
     private List<ExternalReference> externalReferences;
     private List<Component> components;
     private Type type;
+
+    public String getBomRef() {
+        return bomRef;
+    }
+
+    public void setBomRef(String bomRef) {
+        this.bomRef = bomRef;
+    }
 
     public String getPublisher() {
         return publisher;
