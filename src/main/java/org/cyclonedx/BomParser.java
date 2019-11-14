@@ -340,6 +340,7 @@ public class BomParser extends CycloneDxSchema {
 
         xstream.alias("component", Component.class);
         xstream.aliasAttribute(Component.class, "type", "type");
+        xstream.aliasAttribute(Component.class, "bomRef", "bom-ref");
         xstream.aliasAttribute(Component.class, "scope", "scope");
         xstream.registerConverter(new EnumToStringConverter<>(Component.Type.class, getComponentTypeMapping()));
         xstream.registerConverter(new EnumToStringConverter<>(Component.Scope.class, getComponentScopeMapping()));
