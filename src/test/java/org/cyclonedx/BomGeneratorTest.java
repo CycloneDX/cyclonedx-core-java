@@ -68,6 +68,17 @@ public class BomGeneratorTest {
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
+    @Test
+    public void schema11WithDependencyGraphGenerationTest() throws Exception {
+        BomGenerator generator = BomGeneratorFactory.create(CycloneDxSchema.Version.VERSION_11, createCommonBom("/bom-1.1-dependency-graph-1.0.xml"));
+        generator.generate();
+        Assert.assertTrue(generator instanceof BomGenerator11);
+        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        BomParser parser = new BomParser();
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+    }
+
     private File writeToFile(String xmlString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
             writer.write(xmlString);
@@ -76,7 +87,11 @@ public class BomGeneratorTest {
     }
 
     private Bom createCommonBom() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.1.xml"));
+        return createCommonBom("/bom-1.1.xml");
+    }
+
+    private Bom createCommonBom(String resource) throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
         BomParser parser = new BomParser();
         return parser.parse(bomBytes);
     }

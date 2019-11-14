@@ -41,7 +41,7 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
     Document doc;
 
     Element createElement(Node parent, String name) {
-        final Element node = doc.createElementNS(getSchemaVersion().getNamespace(), name);
+        final Element node = doc.createElement(name);
         parent.appendChild(node);
         return node;
     }
@@ -53,7 +53,11 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
     Element createElement(Node parent, String name, Object value, Attribute... attributes) {
         Element node = null;
         if (value != null || attributes.length > 0) {
-            node = doc.createElementNS(getSchemaVersion().getNamespace(), name);
+            if (name.contains(":")) {
+                node = doc.createElement(name);
+            } else {
+                node = doc.createElementNS(getSchemaVersion().getNamespace(), name);
+            }
             for (Attribute attribute: attributes) {
                 node.setAttribute(attribute.getKey(), attribute.getValue());
             }

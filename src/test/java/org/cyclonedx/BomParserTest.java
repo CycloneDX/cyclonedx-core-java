@@ -160,7 +160,7 @@ public class BomParserTest {
         Dependency d11 = d1.getDependencies().get(0);
         Assert.assertEquals("pkg:maven/org.example.acme/common-util@3.0.0", d11.getRef());
         Assert.assertNull(d11.getDependencies());
-        Assert.assertEquals(2, d2.getDependencies().size());
+        Assert.assertEquals(1, d2.getDependencies().size());
         Assert.assertNull(d3.getDependencies());
 
     }

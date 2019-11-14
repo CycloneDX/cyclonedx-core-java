@@ -25,6 +25,7 @@ import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.IdentifiableActionType;
 import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.ext.dependencyGraph.Dependency;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,6 +34,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,10 +76,15 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
         this.doc = docBuilder.newDocument();
         doc.setXmlStandalone(true);
 
+        final List<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("xmlns", NS_BOM_11));
+        attributes.add(new Attribute("version", String.valueOf(bom.getVersion())));
+        if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
+            attributes.add(new Attribute("xmlns:dg", NS_DEPENDENCY_GRAPH_10));
+        }
+
         // Create root <bom> node
-        final Element bomNode = createRootElement("bom", null,
-                new Attribute("xmlns", NS_BOM_11),
-                new Attribute("version", String.valueOf(bom.getVersion())));
+        final Element bomNode = createRootElement("bom", null, attributes.toArray(new Attribute[0]));
         if (bom.getSerialNumber() != null) {
             bomNode.setAttribute("serialNumber", bom.getSerialNumber());
         }
@@ -85,13 +92,23 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
         final Element componentsNode = createElement(bomNode, "components");
         createComponentsNode(componentsNode, bom.getComponents());
         createExternalReferencesNode(bomNode, bom.getExternalReferences());
+
+        if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
+            final Element dependenciesNode = createElement(bomNode, "dg:dependencies");
+            createDependenciesNode(dependenciesNode, bom.getDependencies());
+        }
         return doc;
     }
 
     private void createComponentsNode(Node parent, List<Component> components) {
         if (components != null && !components.isEmpty()) {
             for (Component component : components) {
-                final Element componentNode = createElement(parent, "component", null, new Attribute("type", component.getType().getTypeName()));
+                final List<Attribute> componentAttrs = new ArrayList<>();
+                componentAttrs.add(new Attribute("type", component.getType().getTypeName()));
+                if (component.getBomRef() != null) {
+                    componentAttrs.add(new Attribute("bom-ref", component.getBomRef()));
+                }
+                final Element componentNode = createElement(parent, "component", null, componentAttrs.toArray(new Attribute[0]));
                 createElement(componentNode, "publisher", stripBreaks(component.getPublisher()));
                 createElement(componentNode, "group", stripBreaks(component.getGroup()));
                 createElement(componentNode, "name", stripBreaks(component.getName()));
@@ -172,6 +189,17 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
                     final Element referenceNode = createElement(externalReferencesNode, "reference", null, new Attribute("type", reference.getType().getTypeName()));
                     createElement(referenceNode, "url", stripBreaks(reference.getUrl()));
                     createElement(referenceNode, "comment", stripBreaks(reference.getComment()));
+                }
+            }
+        }
+    }
+
+    private void createDependenciesNode(Node parent, List<Dependency> dependencies) {
+        if (dependencies != null && !dependencies.isEmpty()) {
+            for (Dependency dependency : dependencies) {
+                final Element dependencyNode = createElement(parent, "dg:dependency", null, new Attribute("ref", dependency.getRef()));
+                if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+                    createDependenciesNode(dependencyNode, dependency.getDependencies());
                 }
             }
         }

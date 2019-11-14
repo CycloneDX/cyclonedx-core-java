@@ -26,10 +26,9 @@
     <dg:dependencies>
         <dg:dependency ref="pkg:maven/org.example.acme/web-framework@1.0.0">
             <dg:dependency ref="pkg:maven/org.example.acme/common-util@3.0.0"/>
-            <dg:dependency ref="pkg:maven/org.example.acme/common-util@3.0.0"/>
+            <dg:dependency ref="pkg:maven/org.example.acme/common-persistence@3.0.0"/>
         </dg:dependency>
         <dg:dependency ref="pkg:maven/org.example.acme/persistence@3.1.0">
-            <dg:dependency ref="pkg:maven/org.example.acme/common-util@3.0.0"/>
             <dg:dependency ref="pkg:maven/org.example.acme/common-util@3.0.0"/>
         </dg:dependency>
         <dg:dependency ref="pkg:maven/org.example.acme/common-util@3.0.0"/>
