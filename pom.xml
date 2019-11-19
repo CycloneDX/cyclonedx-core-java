@@ -31,7 +31,7 @@
     <inceptionYear>2017</inceptionYear>
     <organization>
         <name>CycloneDX</name>
-        <url>http://cyclonedx.org</url>
+        <url>https://cyclonedx.org</url>
     </organization>
 
     <licenses>
@@ -46,7 +46,7 @@
             <name>Steve Springett</name>
             <email>Steve.Springett@owasp.org</email>
             <organization>OWASP</organization>
-            <organizationUrl>http://www.owasp.org/</organizationUrl>
+            <organizationUrl>https://www.owasp.org/</organizationUrl>
             <roles>
                 <role>Architect</role>
                 <role>Developer</role>
@@ -79,8 +79,8 @@
     </issueManagement>
 
     <ciManagement>
-        <system>travis-ci</system>
-        <url>https://travis-ci.org/CycloneDX/cyclonedx-core-java</url>
+        <system>GitHub</system>
+        <url>https://github.com/CycloneDX/cyclonedx-core-java/actions</url>
     </ciManagement>
 
     <distributionManagement>
