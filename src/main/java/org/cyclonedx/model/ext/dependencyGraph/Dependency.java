@@ -18,28 +18,51 @@
  */
 package org.cyclonedx.model.ext.dependencyGraph;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Dependency {
 
-    private String ref;
+    private final String ref;
     private List<Dependency> dependencies;
+
+    public Dependency(final String ref) {
+        this.ref = ref;
+    }
 
     public String getRef() {
         return ref;
     }
 
-    public void setRef(String ref) {
-        this.ref = ref;
-    }
-
-
     public List<Dependency> getDependencies() {
         return dependencies;
     }
 
-    public void setDependencies(List<Dependency> dependencies) {
+    public void setDependencies(final List<Dependency> dependencies) {
         this.dependencies = dependencies;
     }
 
+    public void addDependency(final Dependency dependency) {
+        if (dependencies == null) {
+            dependencies = new ArrayList<>();
+        }
+        boolean found = dependencies.stream().anyMatch(d -> d.getRef().equals(dependency.getRef()));
+        if (!found) {
+            dependencies.add(dependency);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Dependency)) return false;
+        Dependency that = (Dependency) o;
+        return Objects.equals(ref, that.ref);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ref);
+    }
 }
