@@ -18,6 +18,7 @@
  */
 package org.cyclonedx;
 
+import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
@@ -163,5 +164,12 @@ public class BomParserTest {
         Assert.assertEquals(1, d2.getDependencies().size());
         Assert.assertNull(d3.getDependencies());
 
+    }
+
+    @Test
+    public void testLoadingSchemaFromExt() {
+        final BomParser parser = new BomParser();
+        List<InputStream> streams = parser.loadSchemaFromExtensions("test-ext");
+        Assert.assertEquals(2, streams.size());
     }
 }
