@@ -18,6 +18,16 @@
  */
 package org.cyclonedx;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.stream.Stream;
 import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -107,16 +117,45 @@ public abstract class CycloneDxSchema {
         streams.add(this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"));
         streams.add(this.getClass().getClassLoader().getResourceAsStream("bom-1.1.xsd"));
         // Automatically load all schema extensions from 'resources/ext' directory
-        try {
-            final Enumeration<URL> urls = this.getClass().getClassLoader().getResources("ext");
-            while (urls.hasMoreElements()) {
-                final URL url = urls.nextElement();
-                streams.add(url.openStream());
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "An error occurred attempting to load schema extensions", e);
-        }
+        streams.addAll(loadSchemaFromExtensions("ext"));
+
         return getXmlSchema(streams.toArray(new InputStream[0]));
+    }
+
+    public List<InputStream> loadSchemaFromExtensions(String extLocation) {
+        final List<InputStream> streams = new ArrayList<>();
+        try {
+            URL url = this.getClass().getClassLoader().getResource(extLocation);
+            if (url != null ) {
+                URI uri = url.toURI();
+                if (uri.getScheme().equals("jar")) {
+                    LOGGER.log(Level.FINE, "Provided location loaded as a jar", uri.toASCIIString());
+                    FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
+                    Stream<Path> walk = Files.list(fileSystem.getPath(extLocation));
+                    for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
+                        Path p = it.next();
+                        LOGGER.log(Level.FINE, "Reading resource ", p.getFileName().toString());
+                        streams.add(this.getClass().getClassLoader().getResourceAsStream(p.getFileName().toString()));
+                    }
+                    fileSystem.close();
+                } else {
+                    LOGGER.log(Level.FINE, "Provided location loaded as a regular file ", uri.toASCIIString());
+                    Stream<Path> walk = Files.list(Paths.get(uri));
+                    for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
+                        Path p = it.next();
+                        LOGGER.log(Level.FINE, "Reading resource ", p.getFileName().toString());
+                        streams.add(this.getClass().getClassLoader().getResourceAsStream(p.getFileName().toString()));
+                    }
+                }
+            } else {
+                LOGGER.log(Level.WARNING, "Unable to load the requested resource from url");
+            }
+        } catch(URISyntaxException use){
+            LOGGER.log(Level.WARNING, "An error occurred attempting to load schema extensions", use);
+        } catch(IOException io) {
+            LOGGER.log(Level.WARNING, "An error occurred attempting to load schema extensions", io);
+        }
+        return streams;
     }
 
     public Schema getXmlSchema(InputStream... inputStreams) throws SAXException {
