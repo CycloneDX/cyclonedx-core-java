@@ -95,6 +95,30 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
                         licenseNameNode.appendChild(doc.createTextNode(license.getName()));
                         licenseNode.appendChild(licenseNameNode);
                     }
+                    if (Version.VERSION_10 != this.getSchemaVersion()) {
+                        if (license.getLicenseText() != null && license.getLicenseText().getText() != null) {
+                            final Element licenseTextNode = doc.createElement("text");
+                            if (license.getLicenseText().getContentType() != null) {
+                                licenseTextNode.setAttribute("content-type", license.getLicenseText().getContentType());
+                            }
+                            if (license.getLicenseText().getEncoding() != null) {
+                                licenseTextNode.setAttribute("encoding", license.getLicenseText().getEncoding());
+                                if ("base64".equals(license.getLicenseText().getEncoding())) {
+                                    licenseTextNode.appendChild(doc.createTextNode(license.getLicenseText().getText()));
+                                } else {
+                                    licenseTextNode.appendChild(doc.createCDATASection(license.getLicenseText().getText()));
+                                }
+                            } else {
+                                licenseTextNode.appendChild(doc.createCDATASection(license.getLicenseText().getText()));
+                            }
+                            licenseNode.appendChild(licenseTextNode);
+                        }
+                        if (license.getUrl() != null) {
+                            final Element licenseUrlNode = doc.createElement("url");
+                            licenseUrlNode.appendChild(doc.createTextNode(license.getUrl()));
+                            licenseNode.appendChild(licenseUrlNode);
+                        }
+                    }
                     licensesNode.appendChild(licenseNode);
                 }
             } else if (expressionSupport && licenseChoice.getExpression() != null) {
