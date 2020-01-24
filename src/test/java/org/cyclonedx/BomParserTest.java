@@ -63,14 +63,6 @@ public class BomParserTest {
     }
 
     @Test
-    public void testValid11BomWithBomDescriptor10() throws Exception {
-        final File file = new File(this.getClass().getResource("/bom-1.1-bom-descriptor-1.0.xml").getFile());
-        final BomParser parser = new BomParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
-        Assert.assertTrue(valid);
-    }
-
-    @Test
     public void testParsedObjects10Bom() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.0.xml"));
         final BomParser parser = new BomParser();
