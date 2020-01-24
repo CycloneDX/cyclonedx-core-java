@@ -31,7 +31,7 @@ import java.util.List;
 public class BomParserTest {
 
     @Test
-    public void testValid10Bom() {
+    public void testValid10Bom() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.0.xml").getFile());
         final BomParser parser = new BomParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_10);
@@ -39,7 +39,7 @@ public class BomParserTest {
     }
 
     @Test
-    public void testValid11Bom() {
+    public void testValid11Bom() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.1.xml").getFile());
         final BomParser parser = new BomParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
@@ -47,7 +47,7 @@ public class BomParserTest {
     }
 
     @Test
-    public void testValid11BomWithDependencyGraph10() {
+    public void testValid11BomWithDependencyGraph10() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.1-dependency-graph-1.0.xml").getFile());
         final BomParser parser = new BomParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
@@ -55,8 +55,16 @@ public class BomParserTest {
     }
 
     @Test
-    public void testValid11BomWithVulnerability10() {
+    public void testValid11BomWithVulnerability10() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.1-vulnerability-1.0.xml").getFile());
+        final BomParser parser = new BomParser();
+        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
+        Assert.assertTrue(valid);
+    }
+
+    @Test
+    public void testValid11BomWithBomDescriptor10() throws Exception {
+        final File file = new File(this.getClass().getResource("/bom-1.1-bom-descriptor-1.0.xml").getFile());
         final BomParser parser = new BomParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
         Assert.assertTrue(valid);
