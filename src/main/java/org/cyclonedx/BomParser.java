@@ -179,7 +179,7 @@ public class BomParser extends CycloneDxSchema {
      * @return a List of SAXParseExceptions. If the size of the list is 0, validation was successful
      * @since 1.1.0
      */
-    public List<SAXParseException> validate(File file) {
+    public List<Exception> validate(File file) {
         return validate(file, CycloneDxSchema.Version.VERSION_11);
     }
 
@@ -190,9 +190,9 @@ public class BomParser extends CycloneDxSchema {
      * @return a List of SAXParseExceptions. If the size of the list is 0, validation was successful
      * @since 2.0.0
      */
-    public List<SAXParseException> validate(File file, CycloneDxSchema.Version schemaVersion) {
+    public List<Exception> validate(File file, CycloneDxSchema.Version schemaVersion) {
         final Source xmlFile = new StreamSource(file);
-        final List<SAXParseException> exceptions = new LinkedList<>();
+        final List<Exception> exceptions = new LinkedList<>();
         try {
             final Schema schema = getXmlSchema(schemaVersion);
             final Validator validator = schema.newValidator();
@@ -212,7 +212,7 @@ public class BomParser extends CycloneDxSchema {
             });
             validator.validate(xmlFile);
         } catch (IOException | SAXException e) {
-            // throw it away
+            exceptions.add(e);
         }
         return exceptions;
     }

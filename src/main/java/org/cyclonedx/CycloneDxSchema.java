@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,6 +57,7 @@ public abstract class CycloneDxSchema {
     public static final String NS_BOM_LATEST = NS_BOM_11;
     public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
     public static final String NS_VULNERABILITY_10 = "http://cyclonedx.org/schema/ext/vulnerability/1.0";
+    public static final String NS_BOM_DESCRIPTOR_10 = "http://cyclonedx.org/schema/ext/bom-descriptor/1.0";
 
     public enum Version {
         VERSION_10(CycloneDxSchema.NS_BOM_10, "1.0"),
@@ -122,7 +122,7 @@ public abstract class CycloneDxSchema {
         return getXmlSchema(streams.toArray(new InputStream[0]));
     }
 
-    public List<InputStream> loadSchemaFromExtensions(String extLocation) {
+    protected List<InputStream> loadSchemaFromExtensions(String extLocation) {
         final List<InputStream> streams = new ArrayList<>();
         try {
             URL url = this.getClass().getClassLoader().getResource(extLocation);
@@ -144,7 +144,7 @@ public abstract class CycloneDxSchema {
                     for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
                         Path p = it.next();
                         LOGGER.log(Level.FINE, "Reading resource ", p.getFileName().toString());
-                        streams.add(this.getClass().getClassLoader().getResourceAsStream(p.getFileName().toString()));
+                        streams.add(this.getClass().getClassLoader().getResourceAsStream(extLocation + "/" + p.getFileName().toString()));
                     }
                 }
             } else {
