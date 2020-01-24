@@ -135,7 +135,7 @@ public abstract class CycloneDxSchema {
                     for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
                         Path p = it.next();
                         LOGGER.log(Level.FINE, "Reading resource ", p.getFileName().toString());
-                        streams.add(this.getClass().getClassLoader().getResourceAsStream(p.getFileName().toString()));
+                        streams.add(this.getClass().getClassLoader().getResourceAsStream(extLocation + "/" + p.getFileName().toString()));
                     }
                     fileSystem.close();
                 } else {
