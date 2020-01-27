@@ -92,9 +92,12 @@ public final class LicenseResolver {
             try {
                 new URL(licenseString);
                 // We want to throw an exception if its not a valid URL, as the remaining block may impact performance
-                final LicenseChoice choice = new LicenseChoice();
-                choice.addLicense(parseLicenseByUrl(licenseString));
-                return choice;
+                final License parsedLicense = parseLicenseByUrl(licenseString);
+                if (parsedLicense != null) {
+                    final LicenseChoice choice = new LicenseChoice();
+                    choice.addLicense(parsedLicense);
+                    return choice;
+                }
             } catch (MalformedURLException | InvalidLicenseStringException e2) {
                 // throw it away
             }
