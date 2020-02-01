@@ -22,6 +22,7 @@ import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.util.BomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -113,7 +114,7 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
                             }
                             licenseNode.appendChild(licenseTextNode);
                         }
-                        if (license.getUrl() != null) {
+                        if (BomUtils.validateUrlString(license.getUrl())) {
                             final Element licenseUrlNode = doc.createElement("url");
                             licenseUrlNode.appendChild(doc.createTextNode(license.getUrl()));
                             licenseNode.appendChild(licenseUrlNode);

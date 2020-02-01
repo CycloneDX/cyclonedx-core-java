@@ -19,7 +19,7 @@
 package org.cyclonedx;
 
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,6 +71,36 @@ public class BomGeneratorTest {
     @Test
     public void schema11WithDependencyGraphGenerationTest() throws Exception {
         BomGenerator generator = BomGeneratorFactory.create(CycloneDxSchema.Version.VERSION_11, createCommonBom("/bom-1.1-dependency-graph-1.0.xml"));
+        generator.generate();
+        Assert.assertTrue(generator instanceof BomGenerator11);
+        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        BomParser parser = new BomParser();
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+    }
+
+    @Test
+    public void invalidUrlTest() throws Exception {
+        Component c = new Component();
+        c.setName("Component-A");
+        c.setType(Component.Type.LIBRARY);
+        c.setVersion("1.0.0");
+
+        License l = new License();
+        l.setId("Apache-2.0");
+        l.setUrl("jklr3qm,lafuio43,a,fjal"); // invalid URL
+        LicenseChoice lc = new LicenseChoice();
+        lc.addLicense(l);
+        c.setLicenseChoice(lc);
+
+        ExternalReference r = new ExternalReference();
+        r.setType(ExternalReference.Type.MAILING_LIST);
+        r.setUrl("http://www.mail-archive.com/dev%karaf.apache.org/"); // invalid URL - violates rfc
+        c.addExternalReference(r);
+
+        Bom bom = new Bom();
+        bom.addComponent(c);
+        BomGenerator generator = BomGeneratorFactory.create(CycloneDxSchema.Version.VERSION_11, bom);
         generator.generate();
         Assert.assertTrue(generator instanceof BomGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());

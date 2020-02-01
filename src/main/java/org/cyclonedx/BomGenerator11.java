@@ -26,6 +26,7 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.IdentifiableActionType;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.ext.dependencyGraph.Dependency;
+import org.cyclonedx.util.BomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -185,7 +186,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
         if (references != null && !references.isEmpty()) {
             final Element externalReferencesNode = createElement(parent, "externalReferences");
             for (ExternalReference reference: references) {
-                if (reference.getType() != null) {
+                if (reference.getType() != null && BomUtils.validateUrlString(reference.getUrl())) {
                     final Element referenceNode = createElement(externalReferencesNode, "reference", null, new Attribute("type", reference.getType().getTypeName()));
                     createElement(referenceNode, "url", stripBreaks(reference.getUrl()));
                     createElement(referenceNode, "comment", stripBreaks(reference.getComment()));
