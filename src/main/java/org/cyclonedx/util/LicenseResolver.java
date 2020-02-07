@@ -79,20 +79,21 @@ public final class LicenseResolver {
      * Attempts to resolve the specified license string via SPDX license identifier and expression
      * parsing first. If SPDX resolution is not successful, the method will attempt fuzzy matching.
      * @param licenseString the license string to resolve
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a LicenseChoice object if resolution was successful, or null if unresolved
      */
-    public static LicenseChoice resolve(String licenseString) {
+    public static LicenseChoice resolve(String licenseString, boolean includeLicenseText) {
         try {
-            return resolveSpdxLicenseString(licenseString);
+            return resolveSpdxLicenseString(licenseString, includeLicenseText);
         } catch (InvalidLicenseStringException e1) {
-            final LicenseChoice licenseChoice = resolveViaAlternativeMapping(licenseString);
+            final LicenseChoice licenseChoice = resolveViaAlternativeMapping(licenseString, includeLicenseText);
             if (licenseChoice != null) {
                 return licenseChoice;
             }
             try {
                 new URL(licenseString);
                 // We want to throw an exception if its not a valid URL, as the remaining block may impact performance
-                final License parsedLicense = parseLicenseByUrl(licenseString);
+                final License parsedLicense = parseLicenseByUrl(licenseString, includeLicenseText);
                 if (parsedLicense != null) {
                     final LicenseChoice choice = new LicenseChoice();
                     choice.addLicense(parsedLicense);
@@ -106,25 +107,36 @@ public final class LicenseResolver {
     }
 
     /**
+     * Attempts to resolve the specified license string via SPDX license identifier and expression
+     * parsing first. If SPDX resolution is not successful, the method will attempt fuzzy matching.
+     * @param licenseString the license string to resolve
+     * @return a LicenseChoice object if resolution was successful, or null if unresolved
+     */
+    public static LicenseChoice resolve(String licenseString) {
+        return resolve(licenseString, true);
+    }
+
+    /**
      * Given an SPDX license ID or expression, this method will resolve the license(s) and
      * return a LicenseChoice object.
      * @param licenseString the license string to resolve
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a LicenseChoice object if resolved, or null
      * @throws InvalidLicenseStringException an exception while parsing the license string
      */
-    public static LicenseChoice resolveSpdxLicenseString(String licenseString) throws InvalidLicenseStringException {
+    public static LicenseChoice resolveSpdxLicenseString(String licenseString, boolean includeLicenseText) throws InvalidLicenseStringException {
         final LicenseChoice choice;
         final AnyLicenseInfo licenseInfo = LicenseInfoFactory.parseSPDXLicenseString(licenseString);
         if (licenseInfo instanceof SpdxListedLicense) {
             final SpdxListedLicense spdxListedLicense = (SpdxListedLicense)licenseInfo;
             choice = new LicenseChoice();
-            choice.addLicense(createLicenseObject(spdxListedLicense));
+            choice.addLicense(createLicenseObject(spdxListedLicense, includeLicenseText));
             return choice;
         } else if (licenseInfo instanceof OrLaterOperator) {
             final OrLaterOperator orLaterOperator = (OrLaterOperator)licenseInfo;
             final SpdxListedLicense spdxListedLicense = (SpdxListedLicense)orLaterOperator.getLicense();
             choice = new LicenseChoice();
-            choice.addLicense(createLicenseObject(spdxListedLicense));
+            choice.addLicense(createLicenseObject(spdxListedLicense, includeLicenseText));
             return choice;
         } else if (licenseInfo instanceof LicenseSet) {
             choice = new LicenseChoice();
@@ -135,16 +147,38 @@ public final class LicenseResolver {
     }
 
     /**
+     * Given an SPDX license ID or expression, this method will resolve the license(s) and
+     * return a LicenseChoice object.
+     * @param licenseString the license string to resolve
+     * @return a LicenseChoice object if resolved, or null
+     * @throws InvalidLicenseStringException an exception while parsing the license string
+     */
+    public static LicenseChoice resolveSpdxLicenseString(String licenseString) throws InvalidLicenseStringException {
+        return resolveSpdxLicenseString(licenseString, true);
+    }
+
+    /**
+     * Given a valid SPDX license ID, this method will return a LicenseChoice object.
+     * @param licenseId a valid SPDX license ID
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
+     * @return a LicenseChoice object
+     * @throws InvalidSPDXAnalysisException an exception while parsing the license ID
+     */
+    public static LicenseChoice resolveSpdxLicenseId(String licenseId, boolean includeLicenseText) throws InvalidSPDXAnalysisException {
+        final SpdxListedLicense spdxLicense = LicenseInfoFactory.getListedLicenseById(licenseId);
+        final LicenseChoice choice = new LicenseChoice();
+        choice.addLicense(createLicenseObject(spdxLicense, includeLicenseText));
+        return choice;
+    }
+
+    /**
      * Given a valid SPDX license ID, this method will return a LicenseChoice object.
      * @param licenseId a valid SPDX license ID
      * @return a LicenseChoice object
      * @throws InvalidSPDXAnalysisException an exception while parsing the license ID
      */
     public static LicenseChoice resolveSpdxLicenseId(String licenseId) throws InvalidSPDXAnalysisException {
-        final SpdxListedLicense spdxLicense = LicenseInfoFactory.getListedLicenseById(licenseId);
-        final LicenseChoice choice = new LicenseChoice();
-        choice.addLicense(createLicenseObject(spdxLicense));
-        return choice;
+        return resolveSpdxLicenseId(licenseId, true);
     }
 
     /**
@@ -155,10 +189,11 @@ public final class LicenseResolver {
      * This method will cache resolved licenses and their URLs for faster access on subsequent
      * calls.
      * @param licenseUrl the URL to the license
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a License object
      * @throws InvalidLicenseStringException an exception while parsing the license URL
      */
-    public static License parseLicenseByUrl(String licenseUrl) throws InvalidLicenseStringException {
+    public static License parseLicenseByUrl(String licenseUrl, boolean includeLicenseText) throws InvalidLicenseStringException {
         final String protocolExcludedUrl = licenseUrl.replace("http://", "").replace("https://", "");
         final ListedLicenses ll = ListedLicenses.getListedLicenses();
         // Check cache. If hit, return, otherwise go through the native SPDX model which is terribly slow
@@ -175,7 +210,7 @@ public final class LicenseResolver {
                     // Attempt to account for .txt, .html, and other extensions in the URLs being compared
                     if (protocolExcludedUrl.toLowerCase().contains(protocolExcludedSeeAlsoUrl.toLowerCase())
                             || protocolExcludedSeeAlsoUrl.toLowerCase().contains(protocolExcludedUrl.toLowerCase())) {
-                        license = createLicenseObject(spdxListedLicense);
+                        license = createLicenseObject(spdxListedLicense, includeLicenseText);
                         // Lazily cache the mapping for future performance improvements
                         resolvedByUrl.put(licenseUrl, license);
                         return license;
@@ -187,18 +222,34 @@ public final class LicenseResolver {
     }
 
     /**
+     * Given a URL, this method will attempt to resolve the SPDX license. This method will
+     * not retrieve the URL, rather, it will interrogate it's internal list of SPDX licenses
+     * and the URLs defined for each. This method may impact performance for URLs that are
+     * not associated with an SPDX license or otherwise have not been queried on previously.
+     * This method will cache resolved licenses and their URLs for faster access on subsequent
+     * calls.
+     * @param licenseUrl the URL to the license
+     * @return a License object
+     * @throws InvalidLicenseStringException an exception while parsing the license URL
+     */
+    public static License parseLicenseByUrl(String licenseUrl) throws InvalidLicenseStringException {
+        return parseLicenseByUrl(licenseUrl, true);
+    }
+
+    /**
      * Creates a License object from the specified SpdxListedLicense object.
      * @param spdxListedLicense the object to convert
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a CycloneDX License object
      */
-    private static License createLicenseObject(SpdxListedLicense spdxListedLicense) {
+    private static License createLicenseObject(SpdxListedLicense spdxListedLicense, boolean includeLicenseText) {
         final License license = new License();
         license.setId(spdxListedLicense.getLicenseId());
         license.setName(spdxListedLicense.getName());
         if (spdxListedLicense.getSeeAlso() != null && spdxListedLicense.getSeeAlso().length > 0) {
             license.setUrl(spdxListedLicense.getSeeAlso()[0]);
         }
-        if (spdxListedLicense.getLicenseText() != null) {
+        if (includeLicenseText && spdxListedLicense.getLicenseText() != null) {
             final LicenseText text = new LicenseText();
             text.setContentType("plain/text");
             text.setEncoding("base64");
@@ -211,9 +262,10 @@ public final class LicenseResolver {
     /**
      * Attempts to perform high-confidence license resolution with unstructured text as input.
      * @param licenseString the license string (not the actual license text)
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a LicenseChoice object if resolved, otherwise null
      */
-    private static LicenseChoice resolveViaAlternativeMapping(String licenseString) {
+    private static LicenseChoice resolveViaAlternativeMapping(String licenseString, boolean includeLicenseText) {
         if (licenseString == null) {
             return null;
         }
@@ -223,7 +275,7 @@ public final class LicenseResolver {
                 if (names != null) {
                     for (final String name: names) {
                         if (licenseString.equalsIgnoreCase(name)) {
-                            return resolveSpdxLicenseString(mapping.getKey());
+                            return resolveSpdxLicenseString(mapping.getKey(), includeLicenseText);
                         }
                     }
                 }
