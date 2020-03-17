@@ -127,7 +127,13 @@ public class BomGeneratorTest {
 
         Bom bom = new Bom();
         bom.addComponent(c);
-        bom.addExtensibleType(new ExtensibleType("foo", "bom-bar", "my-bom-value"));
+        ExtensibleType t1 = new ExtensibleType("foo", "bom-bar-1");
+        ExtensibleType t2 = new ExtensibleType("foo", "bom-bar-2");
+        ExtensibleType t3 = new ExtensibleType("foo", "bom-bar-3", "my-foo-3-value");
+        t2.addExtensibleType(t3);
+        t1.addExtensibleType(t2);
+        bom.addExtensibleType(t1);
+
         BomGenerator generator = BomGeneratorFactory.create(CycloneDxSchema.Version.VERSION_11, bom);
         generator.generate();
         Assert.assertTrue(generator instanceof BomGenerator11);

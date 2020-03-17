@@ -49,6 +49,12 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
         return node;
     }
 
+    Element createElementNS(Node parent, String namespace, String name) {
+        final Element node = doc.createElementNS(namespace, name);
+        parent.appendChild(node);
+        return node;
+    }
+
     Element createElement(Node parent, String name, Object value) {
         return createElement(parent, name, value, new Attribute[0]);
     }
@@ -135,7 +141,7 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
     protected void processExtensions(final Node node, final ExtensibleElement extensibleElement) {
         if (extensibleElement != null && extensibleElement.getExtensibleTypes() != null) {
             for (final ExtensibleType t: extensibleElement.getExtensibleTypes()) {
-                final Element e = doc.createElementNS(t.getNamespace(), t.getName());
+                final Element e = createElementNS(node, t.getNamespace(), t.getName());
                 if (t.getAttributes() != null) {
                     for (Attribute attr: t.getAttributes()) {
                         e.setAttribute(attr.getKey(), attr.getValue());
@@ -143,10 +149,12 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
                 }
                 if (t.getValue() != null) {
                     e.appendChild(doc.createTextNode(t.getValue()));
-                } else if (t.getChildren() != null && t.getChildren().size() > 0) {
-                    // todo: recursive
+                } else if (t.getExtensibleTypes() != null) {
+                    for (final ExtensibleType childType: t.getExtensibleTypes()) {
+                        final Element childNode = createElementNS(e, childType.getNamespace(), childType.getName());
+                        processExtensions(childNode, childType);
+                    }
                 }
-                node.appendChild(e);
             }
         }
     }

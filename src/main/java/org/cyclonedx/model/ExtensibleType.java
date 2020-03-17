@@ -20,13 +20,12 @@ package org.cyclonedx.model;
 
 import java.util.List;
 
-public class ExtensibleType {
+public class ExtensibleType extends ExtensibleElement {
 
     private final String namespace;
     private final String name;
     private List<Attribute> attributes;
     private String value;
-    private List<ExtensibleType> children;
 
     public ExtensibleType(final String namespace, final String name, final List<Attribute> attributes, final String value) {
         this.namespace = namespace;
@@ -35,11 +34,10 @@ public class ExtensibleType {
         this.value = value;
     }
 
-    public ExtensibleType(final String namespace, final String name, final List<Attribute> attributes, final List<ExtensibleType> children) {
+    public ExtensibleType(final String namespace, final String name, final List<Attribute> attributes) {
         this.namespace = namespace;
         this.name = name;
         this.attributes = attributes;
-        this.children = children;
     }
 
     public ExtensibleType(final String namespace, final String name, final String value) {
@@ -48,10 +46,9 @@ public class ExtensibleType {
         this.value = value;
     }
 
-    public ExtensibleType(final String namespace, final String name, final List<ExtensibleType> children) {
+    public ExtensibleType(final String namespace, final String name) {
         this.namespace = namespace;
         this.name = name;
-        this.children = children;
     }
 
     public String getNamespace() {
@@ -67,10 +64,10 @@ public class ExtensibleType {
     }
 
     public String getValue() {
-        return value;
-    }
-
-    public List<ExtensibleType> getChildren() {
-        return children;
+        if (super.getExtensibleTypes() != null && super.getExtensibleTypes().size() > 0) {
+            return null;
+        } else {
+            return value;
+        }
     }
 }
