@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class IdentifiableActionType {
+public class IdentifiableActionType extends ExtensibleElement {
 
     private Date timestamp;
     private String name;

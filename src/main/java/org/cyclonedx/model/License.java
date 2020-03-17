@@ -21,7 +21,7 @@ package org.cyclonedx.model;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class License {
+public class License extends ExtensibleElement {
 
     private String id;
     private String name;

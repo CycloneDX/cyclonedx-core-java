@@ -109,6 +109,34 @@ public class BomGeneratorTest {
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
+    @Test
+    public void extensionPointTest() throws Exception {
+        Component c = new Component();
+        c.setName("Component-A");
+        c.setType(Component.Type.LIBRARY);
+        c.setVersion("1.0.0");
+        c.addExtensibleType(new ExtensibleType("foo", "comp-bar", "my-comp-value"));
+
+        License l = new License();
+        l.setId("Apache-2.0");
+        ExtensibleType et = new ExtensibleType("ort", "origin", "license-scanner");
+        l.addExtensibleType(et);
+        LicenseChoice lc = new LicenseChoice();
+        lc.addLicense(l);
+        c.setLicenseChoice(lc);
+
+        Bom bom = new Bom();
+        bom.addComponent(c);
+        bom.addExtensibleType(new ExtensibleType("foo", "bom-bar", "my-bom-value"));
+        BomGenerator generator = BomGeneratorFactory.create(CycloneDxSchema.Version.VERSION_11, bom);
+        generator.generate();
+        Assert.assertTrue(generator instanceof BomGenerator11);
+        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        BomParser parser = new BomParser();
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+    }
+
     private File writeToFile(String xmlString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
             writer.write(xmlString);

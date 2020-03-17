@@ -21,7 +21,7 @@ package org.cyclonedx.model;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class Commit {
+public class Commit extends ExtensibleElement {
 
     private String uid;
     private String url;

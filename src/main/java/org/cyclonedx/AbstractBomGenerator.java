@@ -19,6 +19,8 @@
 package org.cyclonedx;
 
 import org.cyclonedx.model.Attribute;
+import org.cyclonedx.model.ExtensibleElement;
+import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
@@ -119,11 +121,32 @@ abstract class AbstractBomGenerator extends CycloneDxSchema implements BomGenera
                             licenseUrlNode.appendChild(doc.createTextNode(license.getUrl()));
                             licenseNode.appendChild(licenseUrlNode);
                         }
+
+                        processExtensions(licenseNode, license);
                     }
                     licensesNode.appendChild(licenseNode);
                 }
             } else if (expressionSupport && licenseChoice.getExpression() != null) {
                 createElement(licensesNode, "expression", stripBreaks(licenseChoice.getExpression()));
+            }
+        }
+    }
+
+    protected void processExtensions(final Node node, final ExtensibleElement extensibleElement) {
+        if (extensibleElement != null && extensibleElement.getExtensibleTypes() != null) {
+            for (final ExtensibleType t: extensibleElement.getExtensibleTypes()) {
+                final Element e = doc.createElementNS(t.getNamespace(), t.getName());
+                if (t.getAttributes() != null) {
+                    for (Attribute attr: t.getAttributes()) {
+                        e.setAttribute(attr.getKey(), attr.getValue());
+                    }
+                }
+                if (t.getValue() != null) {
+                    e.appendChild(doc.createTextNode(t.getValue()));
+                } else if (t.getChildren() != null && t.getChildren().size() > 0) {
+                    // todo: recursive
+                }
+                node.appendChild(e);
             }
         }
     }

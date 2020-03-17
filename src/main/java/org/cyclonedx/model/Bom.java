@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class Bom {
+public class Bom extends ExtensibleElement {
 
     private List<Component> components;
     private List<ExternalReference> externalReferences;

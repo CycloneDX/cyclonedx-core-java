@@ -98,6 +98,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
             final Element dependenciesNode = createElement(bomNode, "dg:dependencies");
             createDependenciesNode(dependenciesNode, bom.getDependencies());
         }
+        processExtensions(bomNode, bom);
         return doc;
     }
 
@@ -131,6 +132,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
                     final Element subComponentsNode = createElement(componentNode, "components");
                     createComponentsNode(subComponentsNode, component.getComponents());
                 }
+                processExtensions(componentNode, component);
             }
         }
     }
@@ -155,6 +157,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
                 createCommitsNode(commitsNode, pedigree.getCommits());
             }
             createElement(pedigreeNode, "notes", stripBreaks(pedigree.getNotes()));
+            processExtensions(pedigreeNode, pedigree);
         }
     }
 
@@ -167,6 +170,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
                 createActorNode(commitNode, "author", commit.getAuthor());
                 createActorNode(commitNode, "committer", commit.getCommitter());
                 createElement(commitNode, "message", stripBreaks(commit.getMessage()));
+                processExtensions(commitNode, commit);
             }
         }
     }
@@ -179,6 +183,7 @@ public class BomGenerator11 extends AbstractBomGenerator implements BomGenerator
             }
             createElement(authorNode, "name", stripBreaks(actor.getName()));
             createElement(authorNode, "email", stripBreaks(actor.getEmail()));
+            processExtensions(authorNode, actor);
         }
     }
 

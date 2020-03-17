@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class Component {
+public class Component extends ExtensibleElement {
 
     public enum Type {
         APPLICATION("application"),

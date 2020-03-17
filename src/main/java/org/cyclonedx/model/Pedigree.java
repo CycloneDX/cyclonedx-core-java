@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class Pedigree {
+public class Pedigree extends ExtensibleElement {
 
     private List<Component> ancestors;
     private List<Component> descendants;
