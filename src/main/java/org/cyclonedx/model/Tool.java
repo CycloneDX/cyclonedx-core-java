@@ -18,22 +18,22 @@
  */
 package org.cyclonedx.model;
 
+import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("unused")
-public class License extends ExtensibleElement {
+public class Tool extends ExtensibleElement {
 
-    private String id;
+    private String vendor;
     private String name;
-    private String url;
-    private AttachmentText attachmentText;
+    private String version;
+    private List<Hash> hashes;
 
-    public String getId() {
-        return id;
+    public String getVendor() {
+        return vendor;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
     }
 
     public String getName() {
@@ -44,35 +44,35 @@ public class License extends ExtensibleElement {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getVersion() {
+        return version;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-    public AttachmentText getAttachmentText() {
-        return attachmentText;
+    public List<Hash> getHashes() {
+        return hashes;
     }
 
-    public void setLicenseText(AttachmentText attachmentText) {
-        this.attachmentText = attachmentText;
+    public void setHashes(List<Hash> hashes) {
+        this.hashes = hashes;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        License license = (License) o;
-        return Objects.equals(id, license.id) &&
-                Objects.equals(name, license.name) &&
-                Objects.equals(url, license.url) &&
-                Objects.equals(attachmentText, license.attachmentText);
+        Tool tool = (Tool) o;
+        return Objects.equals(vendor, tool.vendor) &&
+                Objects.equals(name, tool.name) &&
+                Objects.equals(version, tool.version) &&
+                Objects.equals(hashes, tool.hashes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText);
+        return Objects.hash(vendor, name, version, hashes);
     }
 }

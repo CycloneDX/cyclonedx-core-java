@@ -30,8 +30,10 @@ public class Component extends ExtensibleElement {
         APPLICATION("application"),
         FRAMEWORK("framework"),
         LIBRARY("library"),
+        CONTAINER("container"),
         OPERATING_SYSTEM("operating-system"),
         DEVICE("device"),
+        FIRMWARE("firmware"),
         FILE("file");
 
         private String name;
@@ -62,6 +64,8 @@ public class Component extends ExtensibleElement {
     }
 
     private String bomRef;
+    private String mimeType;
+    private String author;
     private String publisher;
     private String group;
     private String name;
@@ -73,6 +77,7 @@ public class Component extends ExtensibleElement {
     private String copyright;
     private String cpe;
     private String purl;
+    private Swid swid;
     private boolean modified;
     private Pedigree pedigree;
     private List<ExternalReference> externalReferences;
@@ -85,6 +90,22 @@ public class Component extends ExtensibleElement {
 
     public void setBomRef(String bomRef) {
         this.bomRef = bomRef;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getPublisher() {
@@ -195,6 +216,14 @@ public class Component extends ExtensibleElement {
         this.purl = purl.canonicalize();
     }
 
+    public Swid getSwid() {
+        return swid;
+    }
+
+    public void setSwid(Swid swid) {
+        this.swid = swid;
+    }
+
     public boolean isModified() {
         return modified;
     }
@@ -251,7 +280,7 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(publisher, group, name, version, description, scope, hashes, licenseChoice, copyright, cpe, purl, modified, components, type);
+        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenseChoice, copyright, cpe, purl, swid, modified, components, type);
     }
 
     @Override
@@ -260,6 +289,7 @@ public class Component extends ExtensibleElement {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return modified == component.modified &&
+                Objects.equals(author, component.author) &&
                 Objects.equals(publisher, component.publisher) &&
                 Objects.equals(group, component.group) &&
                 Objects.equals(name, component.name) &&
@@ -271,6 +301,7 @@ public class Component extends ExtensibleElement {
                 Objects.equals(copyright, component.copyright) &&
                 Objects.equals(cpe, component.cpe) &&
                 Objects.equals(purl, component.purl) &&
+                Objects.equals(swid, component.swid) &&
                 Objects.equals(components, component.components) &&
                 Objects.equals(type, component.type);
     }

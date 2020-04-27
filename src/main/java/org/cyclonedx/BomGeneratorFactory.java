@@ -18,18 +18,35 @@
  */
 package org.cyclonedx;
 
+import org.cyclonedx.generators.json.BomJsonGenerator12;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.generators.json.BomJsonGenerator;
+import org.cyclonedx.generators.xml.BomXmlGenerator;
+import org.cyclonedx.generators.xml.BomXmlGenerator10;
+import org.cyclonedx.generators.xml.BomXmlGenerator11;
+import org.cyclonedx.generators.xml.BomXmlGenerator12;
 
 public class BomGeneratorFactory {
 
     private BomGeneratorFactory() {
     }
 
-    public static BomGenerator create(CycloneDxSchema.Version version, Bom bom) {
+    @Deprecated
+    public static BomXmlGenerator create(CycloneDxSchema.Version version, Bom bom) {
+        return createXml(version, bom);
+    }
+
+    public static BomXmlGenerator createXml(CycloneDxSchema.Version version, Bom bom) {
         if (CycloneDxSchema.Version.VERSION_10 == version) {
-            return new BomGenerator10(bom);
+            return new BomXmlGenerator10(bom);
+        } else if (CycloneDxSchema.Version.VERSION_11 == version) {
+            return new BomXmlGenerator11(bom);
         } else {
-            return new BomGenerator11(bom);
+            return new BomXmlGenerator12(bom);
         }
+    }
+
+    public static BomJsonGenerator createJson(CycloneDxSchema.Version version, Bom bom) {
+        return new BomJsonGenerator12(bom);
     }
 }

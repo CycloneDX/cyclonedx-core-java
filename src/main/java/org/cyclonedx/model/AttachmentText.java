@@ -21,7 +21,7 @@ package org.cyclonedx.model;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class LicenseText {
+public class AttachmentText {
 
     private String contentType;
     private String encoding;
@@ -55,10 +55,10 @@ public class LicenseText {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LicenseText licenseText = (LicenseText) o;
-        return Objects.equals(contentType, licenseText.contentType) &&
-                Objects.equals(encoding, licenseText.encoding) &&
-                Objects.equals(text, licenseText.text);
+        AttachmentText attachmentText = (AttachmentText) o;
+        return Objects.equals(contentType, attachmentText.contentType) &&
+                Objects.equals(encoding, attachmentText.encoding) &&
+                Objects.equals(text, attachmentText.text);
     }
 
     @Override

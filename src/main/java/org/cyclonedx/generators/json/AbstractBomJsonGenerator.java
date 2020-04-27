@@ -16,20 +16,24 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-package org.cyclonedx;
+package org.cyclonedx.generators.json;
 
-import org.w3c.dom.Document;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import org.cyclonedx.CycloneDxSchema;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
-public interface BomGenerator {
+abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
-    CycloneDxSchema.Version getSchemaVersion();
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
 
-    Document generate() throws ParserConfigurationException;
 
-    String toXmlString() throws TransformerException;
+    public String toJsonString() {
+        return null; // TODO
+    }
 
-    String toString();
+    @Override
+    public String toString() {
+        return toJsonString(); // TODO
+    }
 
 }

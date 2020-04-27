@@ -20,21 +20,11 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
-@SuppressWarnings("unused")
-public class License extends ExtensibleElement {
+public class OrganizationalEntity extends ExtensibleElement {
 
-    private String id;
     private String name;
     private String url;
-    private AttachmentText attachmentText;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private OrganizationalContact contact;
 
     public String getName() {
         return name;
@@ -52,27 +42,26 @@ public class License extends ExtensibleElement {
         this.url = url;
     }
 
-    public AttachmentText getAttachmentText() {
-        return attachmentText;
+    public OrganizationalContact getContact() {
+        return contact;
     }
 
-    public void setLicenseText(AttachmentText attachmentText) {
-        this.attachmentText = attachmentText;
+    public void setContact(OrganizationalContact contact) {
+        this.contact = contact;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        License license = (License) o;
-        return Objects.equals(id, license.id) &&
-                Objects.equals(name, license.name) &&
-                Objects.equals(url, license.url) &&
-                Objects.equals(attachmentText, license.attachmentText);
+        OrganizationalEntity that = (OrganizationalEntity) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(url, that.url) &&
+                Objects.equals(contact, that.contact);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText);
+        return Objects.hash(name, url, contact);
     }
 }

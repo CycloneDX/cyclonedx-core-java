@@ -20,21 +20,11 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
-@SuppressWarnings("unused")
-public class License extends ExtensibleElement {
+public class OrganizationalContact extends ExtensibleElement {
 
-    private String id;
     private String name;
-    private String url;
-    private AttachmentText attachmentText;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String email;
+    private String phone;
 
     public String getName() {
         return name;
@@ -44,35 +34,34 @@ public class License extends ExtensibleElement {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public AttachmentText getAttachmentText() {
-        return attachmentText;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setLicenseText(AttachmentText attachmentText) {
-        this.attachmentText = attachmentText;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        License license = (License) o;
-        return Objects.equals(id, license.id) &&
-                Objects.equals(name, license.name) &&
-                Objects.equals(url, license.url) &&
-                Objects.equals(attachmentText, license.attachmentText);
+        OrganizationalContact that = (OrganizationalContact) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(phone, that.phone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText);
+        return Objects.hash(name, email, phone);
     }
 }

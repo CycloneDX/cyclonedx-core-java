@@ -18,11 +18,10 @@
  */
 package org.cyclonedx;
 
-import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
-import org.cyclonedx.model.ext.dependencyGraph.Dependency;
+import org.cyclonedx.model.Dependency;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.File;
@@ -113,9 +112,9 @@ public class BomParserTest {
         Assert.assertEquals("e8f33e424f3f4ed6db76a482fde1a5298970e442c531729119e37991884bdffab4f9426b7ee11fccd074eeda0634d71697d6f88a460dce0ac8d627a29f7d1282", c1.getHashes().get(3).getValue());
         Assert.assertEquals("pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar", c1.getPurl());
         Assert.assertEquals("Apache-2.0", c1.getLicenseChoice().getLicenses().get(0).getId());
-        Assert.assertTrue(c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getText().startsWith("CiAgICA"));
-        Assert.assertEquals("text/plain", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getContentType());
-        Assert.assertEquals("base64", c1.getLicenseChoice().getLicenses().get(0).getLicenseText().getEncoding());
+        Assert.assertTrue(c1.getLicenseChoice().getLicenses().get(0).getAttachmentText().getText().startsWith("CiAgICA"));
+        Assert.assertEquals("text/plain", c1.getLicenseChoice().getLicenses().get(0).getAttachmentText().getContentType());
+        Assert.assertEquals("base64", c1.getLicenseChoice().getLicenses().get(0).getAttachmentText().getEncoding());
         Assert.assertNotNull(c1.getPedigree());
         Assert.assertEquals(1, c1.getPedigree().getAncestors().size());
         Assert.assertNull(c1.getPedigree().getDescendants());
@@ -164,12 +163,5 @@ public class BomParserTest {
         Assert.assertEquals(1, d2.getDependencies().size());
         Assert.assertNull(d3.getDependencies());
 
-    }
-
-    @Test
-    public void testLoadingSchemaFromExt() {
-        final BomParser parser = new BomParser();
-        List<InputStream> streams = parser.loadSchemaFromExtensions("test-ext");
-        Assert.assertEquals(2, streams.size());
     }
 }

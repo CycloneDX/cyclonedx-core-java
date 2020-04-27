@@ -21,7 +21,7 @@ package org.cyclonedx.util;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
-import org.cyclonedx.model.LicenseText;
+import org.cyclonedx.model.AttachmentText;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.spdx.rdfparser.InvalidSPDXAnalysisException;
@@ -250,7 +250,7 @@ public final class LicenseResolver {
             license.setUrl(spdxListedLicense.getSeeAlso()[0]);
         }
         if (includeLicenseText && spdxListedLicense.getLicenseText() != null) {
-            final LicenseText text = new LicenseText();
+            final AttachmentText text = new AttachmentText();
             text.setContentType("plain/text");
             text.setEncoding("base64");
             text.setText(Base64.getEncoder().encodeToString(spdxListedLicense.getLicenseText().getBytes()));

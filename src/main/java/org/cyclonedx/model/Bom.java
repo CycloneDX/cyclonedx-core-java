@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.model;
 
-import org.cyclonedx.model.ext.dependencyGraph.Dependency;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,14 +25,21 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class Bom extends ExtensibleElement {
 
+    private Metadata metadata;
     private List<Component> components;
+    private List<Dependency> dependencies;
     private List<ExternalReference> externalReferences;
     private int version = 1;
     private String serialNumber;
     private String schemaVersion;
 
-    // Extension models
-    private List<Dependency> dependencies;
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
 
     public List<Component> getComponents() {
         return components;
@@ -48,6 +54,21 @@ public class Bom extends ExtensibleElement {
             components = new ArrayList<>();
         }
         components.add(component);
+    }
+
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
+    }
+
+    public void addDependency(Dependency dependency) {
+        if (dependencies == null) {
+            dependencies = new ArrayList<>();
+        }
+        dependencies.add(dependency);
     }
 
     public List<ExternalReference> getExternalReferences() {
@@ -91,28 +112,22 @@ public class Bom extends ExtensibleElement {
         return schemaVersion;
     }
 
-    // Extension models
-    public List<Dependency> getDependencies() {
-        return dependencies;
-    }
-
-    public void setDependencies(List<Dependency> dependencies) {
-        this.dependencies = dependencies;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Bom)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Bom bom = (Bom) o;
         return version == bom.version &&
+                Objects.equals(metadata, bom.metadata) &&
                 Objects.equals(components, bom.components) &&
+                Objects.equals(dependencies, bom.dependencies) &&
                 Objects.equals(externalReferences, bom.externalReferences) &&
-                Objects.equals(serialNumber, bom.serialNumber);
+                Objects.equals(serialNumber, bom.serialNumber) &&
+                Objects.equals(schemaVersion, bom.schemaVersion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(components, externalReferences, version, serialNumber);
+        return Objects.hash(metadata, components, dependencies, externalReferences, version, serialNumber, schemaVersion);
     }
 }

@@ -20,20 +20,21 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
-@SuppressWarnings("unused")
-public class License extends ExtensibleElement {
+public class Swid {
 
-    private String id;
+    private String tagId;
     private String name;
-    private String url;
+    private String version;
+    private int tagVersion;
+    private boolean patch;
     private AttachmentText attachmentText;
 
-    public String getId() {
-        return id;
+    public String getTagId() {
+        return tagId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
     }
 
     public String getName() {
@@ -44,19 +45,35 @@ public class License extends ExtensibleElement {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getVersion() {
+        return version;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public int getTagVersion() {
+        return tagVersion;
+    }
+
+    public void setTagVersion(int tagVersion) {
+        this.tagVersion = tagVersion;
+    }
+
+    public boolean isPatch() {
+        return patch;
+    }
+
+    public void setPatch(boolean patch) {
+        this.patch = patch;
     }
 
     public AttachmentText getAttachmentText() {
         return attachmentText;
     }
 
-    public void setLicenseText(AttachmentText attachmentText) {
+    public void setAttachmentText(AttachmentText attachmentText) {
         this.attachmentText = attachmentText;
     }
 
@@ -64,15 +81,17 @@ public class License extends ExtensibleElement {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        License license = (License) o;
-        return Objects.equals(id, license.id) &&
-                Objects.equals(name, license.name) &&
-                Objects.equals(url, license.url) &&
-                Objects.equals(attachmentText, license.attachmentText);
+        Swid swid = (Swid) o;
+        return Objects.equals(tagId, swid.tagId) &&
+                Objects.equals(name, swid.name) &&
+                Objects.equals(version, swid.version) &&
+                Objects.equals(tagVersion, swid.tagVersion) &&
+                Objects.equals(patch, swid.patch) &&
+                Objects.equals(attachmentText, swid.attachmentText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText);
+        return Objects.hash(tagId, name, version, tagVersion, patch, attachmentText);
     }
 }

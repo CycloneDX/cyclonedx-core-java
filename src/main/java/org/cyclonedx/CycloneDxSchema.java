@@ -18,61 +18,51 @@
  */
 package org.cyclonedx;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.stream.Stream;
+import org.cyclonedx.generators.json.BomJsonGenerator;
+import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * CycloneDxSchema is a base class that provides schema information to
- * {@link BomGenerator10} and {@link BomParser}. The class can be extended
- * for other implementations as well.
+ * {@link BomXmlGenerator}, {@link BomJsonGenerator}, and {@link BomParser}.
+ * The class can be extended for other implementations as well.
  * @since 1.1.0
  */
 public abstract class CycloneDxSchema {
 
-    private static final Logger LOGGER = Logger.getLogger(CycloneDxSchema.class.getName());
-
     public static final String NS_BOM_10 = "http://cyclonedx.org/schema/bom/1.0";
     public static final String NS_BOM_11 = "http://cyclonedx.org/schema/bom/1.1";
-    public static final String NS_BOM_LATEST = NS_BOM_11;
+    public static final String NS_BOM_12 = "http://cyclonedx.org/schema/bom/1.2";
     public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
-    public static final String NS_VULNERABILITY_10 = "http://cyclonedx.org/schema/ext/vulnerability/1.0";
-    public static final String NS_BOM_DESCRIPTOR_10 = "http://cyclonedx.org/schema/ext/bom-descriptor/1.0";
+    public static final String NS_BOM_LATEST = NS_BOM_12;
+    public static final Version VERSION_LATEST = Version.VERSION_12;
 
     public enum Version {
-        VERSION_10(CycloneDxSchema.NS_BOM_10, "1.0"),
-        VERSION_11(CycloneDxSchema.NS_BOM_11, "1.1");
+        VERSION_10(CycloneDxSchema.NS_BOM_10, "1.0", 1.0),
+        VERSION_11(CycloneDxSchema.NS_BOM_11, "1.1", 1.1),
+        VERSION_12(CycloneDxSchema.NS_BOM_12, "1.2", 1.2);
         private String namespace;
         private String versionString;
+        private double version;
         public String getNamespace() {
             return this.namespace;
         }
         public String getVersionString() {
             return versionString;
         }
-        Version(String namespace, String versionString) {
+        public double getVersion() {
+            return version;
+        }
+        Version(String namespace, String versionString, double version) {
             this.namespace = namespace;
             this.versionString = versionString;
+            this.version = version;
         }
     }
 
@@ -86,8 +76,10 @@ public abstract class CycloneDxSchema {
     public Schema getXmlSchema(CycloneDxSchema.Version schemaVersion) throws SAXException {
         if (CycloneDxSchema.Version.VERSION_10 == schemaVersion) {
             return getXmlSchema10();
-        } else {
+        } else if (CycloneDxSchema.Version.VERSION_11 == schemaVersion) {
             return getXmlSchema11();
+        } else {
+            return getXmlSchema12();
         }
     }
 
@@ -113,49 +105,24 @@ public abstract class CycloneDxSchema {
      */
     private Schema getXmlSchema11() throws SAXException {
         // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
-        final List<InputStream> streams = new ArrayList<>();
-        streams.add(this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"));
-        streams.add(this.getClass().getClassLoader().getResourceAsStream("bom-1.1.xsd"));
-        // Automatically load all schema extensions from 'resources/ext' directory
-        streams.addAll(loadSchemaFromExtensions("ext"));
-
-        return getXmlSchema(streams.toArray(new InputStream[0]));
+        return getXmlSchema(
+                this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.1.xsd")
+        );
     }
 
-    protected List<InputStream> loadSchemaFromExtensions(String extLocation) {
-        final List<InputStream> streams = new ArrayList<>();
-        try {
-            URL url = this.getClass().getClassLoader().getResource(extLocation);
-            if (url != null ) {
-                URI uri = url.toURI();
-                if (uri.getScheme().equals("jar")) {
-                    LOGGER.log(Level.FINE, "Provided location loaded as a jar", uri.toASCIIString());
-                    FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
-                    Stream<Path> walk = Files.list(fileSystem.getPath(extLocation));
-                    for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
-                        Path p = it.next();
-                        LOGGER.log(Level.FINE, "Reading resource ", p.getFileName().toString());
-                        streams.add(this.getClass().getClassLoader().getResourceAsStream(extLocation + "/" + p.getFileName().toString()));
-                    }
-                    fileSystem.close();
-                } else {
-                    LOGGER.log(Level.FINE, "Provided location loaded as a regular file ", uri.toASCIIString());
-                    Stream<Path> walk = Files.list(Paths.get(uri));
-                    for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
-                        Path p = it.next();
-                        LOGGER.log(Level.FINE, "Reading resource ", p.getFileName().toString());
-                        streams.add(this.getClass().getClassLoader().getResourceAsStream(extLocation + "/" + p.getFileName().toString()));
-                    }
-                }
-            } else {
-                LOGGER.log(Level.WARNING, "Unable to load the requested resource from url");
-            }
-        } catch(URISyntaxException use){
-            LOGGER.log(Level.WARNING, "An error occurred attempting to load schema extensions", use);
-        } catch(IOException io) {
-            LOGGER.log(Level.WARNING, "An error occurred attempting to load schema extensions", io);
-        }
-        return streams;
+    /**
+     * Returns the CycloneDX XML Schema from the specifications XSD.
+     * @return a Schema
+     * @throws SAXException a SAXException
+     * @since 2.8.0
+     */
+    private Schema getXmlSchema12() throws SAXException {
+        // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
+        return getXmlSchema(
+                this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.2-SNAPSHOT.xsd")
+        );
     }
 
     public Schema getXmlSchema(InputStream... inputStreams) throws SAXException {

@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-package org.cyclonedx.model.ext.dependencyGraph;
+package org.cyclonedx.model;
 
 import java.util.ArrayList;
 import java.util.List;

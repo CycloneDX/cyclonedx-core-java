@@ -46,9 +46,9 @@ public class LicenseResolverTest {
         Assert.assertEquals("GPL-3.0", c1.getLicenses().get(0).getId());
         Assert.assertEquals("GNU General Public License v3.0 only", c1.getLicenses().get(0).getName());
         Assert.assertEquals("https://opensource.org/licenses/GPL-3.0", c1.getLicenses().get(0).getUrl());
-        Assert.assertTrue(c1.getLicenses().get(0).getLicenseText().getText().endsWith("="));
-        Assert.assertEquals("plain/text", c1.getLicenses().get(0).getLicenseText().getContentType());
-        Assert.assertEquals("base64", c1.getLicenses().get(0).getLicenseText().getEncoding());
+        Assert.assertTrue(c1.getLicenses().get(0).getAttachmentText().getText().endsWith("="));
+        Assert.assertEquals("plain/text", c1.getLicenses().get(0).getAttachmentText().getContentType());
+        Assert.assertEquals("base64", c1.getLicenses().get(0).getAttachmentText().getEncoding());
     }
 
     @Test

@@ -23,21 +23,21 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.cyclonedx.model.LicenseText;
+import org.cyclonedx.model.AttachmentText;
 
-public class LicenseTextConverter implements Converter {
+public class AttachmentTextConverter implements Converter {
 
     @Override
     public void marshal(Object object, HierarchicalStreamWriter writer, MarshallingContext context) {
-        final LicenseText licenseText = (LicenseText)object;
-        writer.addAttribute("content-type", licenseText.getContentType());
-        writer.addAttribute("encoding", licenseText.getEncoding());
-        writer.setValue(licenseText.getText());
+        final AttachmentText attachmentText = (AttachmentText)object;
+        writer.addAttribute("content-type", attachmentText.getContentType());
+        writer.addAttribute("encoding", attachmentText.getEncoding());
+        writer.setValue(attachmentText.getText());
     }
 
     @Override
     public boolean canConvert(Class clazz) {
-        return clazz.equals(LicenseText.class);
+        return clazz.equals(AttachmentText.class);
     }
 
     @Override
@@ -45,10 +45,10 @@ public class LicenseTextConverter implements Converter {
         final String contentType = reader.getAttribute("content-type");
         final String encoding = reader.getAttribute("encoding");
         final String text = (reader.getValue());
-        final LicenseText licenseText = new LicenseText();
-        licenseText.setContentType(contentType);
-        licenseText.setEncoding(encoding);
-        licenseText.setText(text);
-        return licenseText;
+        final AttachmentText attachmentText = new AttachmentText();
+        attachmentText.setContentType(contentType);
+        attachmentText.setEncoding(encoding);
+        attachmentText.setText(text);
+        return attachmentText;
     }
 }

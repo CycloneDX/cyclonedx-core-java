@@ -26,17 +26,22 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.cyclonedx.converters.HashConverter;
-import org.cyclonedx.converters.LicenseTextConverter;
+import org.cyclonedx.converters.AttachmentTextConverter;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalContact;
+import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
-import org.cyclonedx.model.ext.dependencyGraph.Dependency;
+import org.cyclonedx.model.Swid;
+import org.cyclonedx.model.Tool;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -180,7 +185,7 @@ public class BomParser extends CycloneDxSchema {
      * @since 1.1.0
      */
     public List<SAXParseException> validate(File file) throws IOException, SAXException {
-        return validate(file, CycloneDxSchema.Version.VERSION_11);
+        return validate(file, CycloneDxSchema.VERSION_LATEST);
     }
 
     /**
@@ -260,7 +265,9 @@ public class BomParser extends CycloneDxSchema {
         map.put(Component.Type.APPLICATION.getTypeName(), Component.Type.APPLICATION);
         map.put(Component.Type.FRAMEWORK.getTypeName(), Component.Type.FRAMEWORK);
         map.put(Component.Type.LIBRARY.getTypeName(), Component.Type.LIBRARY);
+        map.put(Component.Type.CONTAINER.getTypeName(), Component.Type.CONTAINER);
         map.put(Component.Type.OPERATING_SYSTEM.getTypeName(), Component.Type.OPERATING_SYSTEM);
+        map.put(Component.Type.FIRMWARE.getTypeName(), Component.Type.FIRMWARE);
         map.put(Component.Type.DEVICE.getTypeName(), Component.Type.DEVICE);
         map.put(Component.Type.FILE.getTypeName(), Component.Type.FILE);
         return map;
@@ -344,6 +351,15 @@ public class BomParser extends CycloneDxSchema {
         xstream.alias("hash", Hash.class);
         xstream.registerConverter(new HashConverter());
 
+        xstream.alias("swid", Swid.class);
+        xstream.aliasAttribute(Swid.class, "tagId", "tagId");
+        xstream.aliasAttribute(Swid.class, "name", "name");
+        xstream.aliasAttribute(Swid.class, "version", "version");
+        xstream.aliasAttribute(Swid.class, "tagVersion", "tagVersion");
+        xstream.aliasAttribute(Swid.class, "patch", "patch");
+        xstream.registerConverter(new AttachmentTextConverter());
+        xstream.aliasField("text", Swid.class, "attachmentText");
+
         xstream.alias("commit", Commit.class);
 
         xstream.alias("reference", ExternalReference.class);
@@ -353,14 +369,20 @@ public class BomParser extends CycloneDxSchema {
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);
         xstream.addImplicitCollection(LicenseChoice.class, "licenses");
-        xstream.registerConverter(new LicenseTextConverter());
-        xstream.aliasField("text", License.class, "licenseText");
+        xstream.registerConverter(new AttachmentTextConverter());
+        xstream.aliasField("text", License.class, "attachmentText");
 
         xstream.alias("pedigree", Pedigree.class);
 
         xstream.addImplicitCollection(Dependency.class, "dependencies");
         xstream.alias("dependency", Dependency.class);
         xstream.aliasAttribute(Dependency.class, "ref", "ref");
+
+        xstream.alias("metadata", Metadata.class);
+        xstream.alias("tool", Tool.class);
+        xstream.alias("author", OrganizationalContact.class);
+        xstream.alias("manufacture", OrganizationalEntity.class);
+        xstream.alias("supplier", OrganizationalEntity.class);
 
         return xstream;
     }
