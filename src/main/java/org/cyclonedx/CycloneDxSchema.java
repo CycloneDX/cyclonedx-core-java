@@ -20,12 +20,15 @@ package org.cyclonedx;
 
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -64,6 +67,16 @@ public abstract class CycloneDxSchema {
             this.versionString = versionString;
             this.version = version;
         }
+    }
+
+    /**
+     * Returns the CycloneDX JSON Schema for the specified schema version.
+     * @param schemaVersion The version to return the schema for
+     * @return a Schema
+     * @since 3.0.0
+     */
+    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion) throws IOException {
+        return getJsonSchema12();
     }
 
     /**
@@ -132,5 +145,14 @@ public abstract class CycloneDxSchema {
             schemaFiles[i] = new StreamSource(inputStreams[i]);
         }
         return schemaFactory.newSchema(schemaFiles);
+    }
+
+    private org.everit.json.schema.Schema getJsonSchema12() throws IOException {
+        return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema-SNAPSHOT.json"));
+    }
+
+    private org.everit.json.schema.Schema getJsonSchema(InputStream inputStream) throws IOException {
+            final JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+            return org.everit.json.schema.loader.SchemaLoader.load(rawSchema);
     }
 }
