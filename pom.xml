@@ -96,6 +96,14 @@
     </distributionManagement>
 
     <repositories>
+        <repository>
+            <id>maven-central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
         <!-- Resolve snapshot releases -->
         <repository>
             <id>ossrh-snapshot</id>
@@ -103,16 +111,6 @@
             <snapshots>
                 <updatePolicy>always</updatePolicy>
                 <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
             </snapshots>
         </repository>
     </repositories>
