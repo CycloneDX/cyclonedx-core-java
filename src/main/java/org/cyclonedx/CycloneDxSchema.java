@@ -72,11 +72,12 @@ public abstract class CycloneDxSchema {
     /**
      * Returns the CycloneDX JSON Schema for the specified schema version.
      * @param schemaVersion The version to return the schema for
+     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return a Schema
      * @since 3.0.0
      */
-    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion) throws IOException {
-        return getJsonSchema12();
+    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+        return getJsonSchema12(strict);
     }
 
     /**
@@ -147,8 +148,12 @@ public abstract class CycloneDxSchema {
         return schemaFactory.newSchema(schemaFiles);
     }
 
-    private org.everit.json.schema.Schema getJsonSchema12() throws IOException {
-        return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema-SNAPSHOT.json"));
+    private org.everit.json.schema.Schema getJsonSchema12(boolean strict) throws IOException {
+        if (strict) {
+            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema-SNAPSHOT.json"));
+        } else {
+            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema-SNAPSHOT.json"));
+        }
     }
 
     private org.everit.json.schema.Schema getJsonSchema(InputStream inputStream) throws IOException {

@@ -248,46 +248,50 @@ public class BomParser extends CycloneDxSchema {
      * Verifies a CycloneDX BoM conforms to the latest version of the specification
      * through JSON validation.
      * @param file the CycloneDX BoM file to validate
+     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true is the file is a valid BoM, false if not
      * @since 3.0.0
      */
-    public boolean isValidJson(File file) throws IOException {
-        return isValidJson(file, VERSION_LATEST);
+    public boolean isValidJson(File file, boolean strict) throws IOException {
+        return isValidJson(file, VERSION_LATEST, strict);
     }
 
     /**
      * Verifies a CycloneDX BoM conforms to the latest version of the specification
      * through JSON validation.
      * @param json the CycloneDX BoM JSON String to validate
+     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true is the file is a valid BoM, false if not
      * @since 3.0.0
      */
-    public boolean isValidJson(String json) throws IOException {
-        return isValidJson(json, VERSION_LATEST);
+    public boolean isValidJson(String json, boolean strict) throws IOException {
+        return isValidJson(json, VERSION_LATEST, strict);
     }
 
     /**
      * Verifies a CycloneDX BoM conforms to the specification through JSON validation.
      * @param file the CycloneDX BoM file to validate
      * @param schemaVersion the schema version to validate against
+     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true is the file is a valid BoM, false if not
      * @since 3.0.0
      */
-    public boolean isValidJson(File file, CycloneDxSchema.Version schemaVersion) throws IOException {
-        return isValidJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), schemaVersion);
+    public boolean isValidJson(File file, CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+        return isValidJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), schemaVersion, strict);
     }
 
     /**
      * Verifies a CycloneDX BoM conforms to the specification through JSON validation.
      * @param jsonString the CycloneDX BoM JSON String to validate
      * @param schemaVersion the schema version to validate against
+     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true is the file is a valid BoM, false if not
      * @since 3.0.0
      */
-    public boolean isValidJson(String jsonString, CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValidJson(String jsonString, CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
         try {
             final JSONObject json = new JSONObject(jsonString);
-            getJsonSchema(schemaVersion).validate(json);
+            getJsonSchema(schemaVersion, strict).validate(json);
             return true;
         } catch (ValidationException e) {
             return false;
