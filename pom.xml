@@ -148,7 +148,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20190722</version>
+            <version>20200518</version>
         </dependency>
         <!-- JSON Schema library -->
         <dependency>
