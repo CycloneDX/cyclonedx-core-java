@@ -22,7 +22,7 @@ limitations under the License.
            targetNamespace="http://cyclonedx.org/schema/bom/1.2"
            vc:minVersion="1.0"
            vc:maxVersion="1.1"
-           version="1.2-SNAPSHOT">
+           version="1.2">
 
     <xs:import namespace="http://cyclonedx.org/schema/spdx" schemaLocation="http://cyclonedx.org/schema/spdx"/>
 
@@ -427,13 +427,13 @@ limitations under the License.
             </xs:choice>
             <xs:element name="text" type="bom:attachedTextType" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation>Specifies the optional full text of the license</xs:documentation>
+                    <xs:documentation>Specifies the optional full text of the attachment</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="url" type="xs:anyURI" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation>The URL to the license file. If specified, a 'license'
-                        externalReference should also be specified for completeness.</xs:documentation>
+                    <xs:documentation>The URL to the attachment file. If the attachment is a license or BOM,
+                        an externalReference should also be specified for completeness.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
@@ -512,45 +512,45 @@ limitations under the License.
     <xs:simpleType name="classification">
         <xs:restriction base="xs:string">
             <xs:enumeration value="application">
-                <xs:annotation>
-                    <xs:documentation>A software application. Refer to https://en.wikipedia.org/wiki/Application_software
+                    <xs:annotation>
+                        <xs:documentation>A software application. Refer to https://en.wikipedia.org/wiki/Application_software
                         for information about applications.</xs:documentation>
-                </xs:annotation>
+                    </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="framework">
                 <xs:annotation>
                     <xs:documentation>A software framework. Refer to https://en.wikipedia.org/wiki/Software_framework
-                        for information on how frameworks vary slightly from libraries.</xs:documentation>
+                    for information on how frameworks vary slightly from libraries.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="library">
                 <xs:annotation>
                     <xs:documentation>A software library. Refer to https://en.wikipedia.org/wiki/Library_(computing)
-                        for information about libraries. All third-party and open source reusable components will likely
-                        be a library. If the library also has key features of a framework, then it should be classified
-                        as a framework. If not, or is unknown, then specifying library is recommended.</xs:documentation>
+                    for information about libraries. All third-party and open source reusable components will likely
+                    be a library. If the library also has key features of a framework, then it should be classified
+                    as a framework. If not, or is unknown, then specifying library is recommended.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="container">
                 <xs:annotation>
                     <xs:documentation>A packaging and/or runtime format, not specific to any particular technology,
-                        which isolates software inside the container from software outside of a container through
-                        virtualization technology. Refer to https://en.wikipedia.org/wiki/OS-level_virtualization</xs:documentation>
+                    which isolates software inside the container from software outside of a container through
+                    virtualization technology. Refer to https://en.wikipedia.org/wiki/OS-level_virtualization</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="operating-system">
                 <xs:annotation>
                     <xs:documentation>A software operating system without regard to deployment model
-                        (i.e. installed on physical hardware, virtual machine, container image, etc) Refer to
-                        https://en.wikipedia.org/wiki/Operating_system</xs:documentation>
+                    (i.e. installed on physical hardware, virtual machine, image, etc) Refer to
+                    https://en.wikipedia.org/wiki/Operating_system</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="device">
                 <xs:annotation>
                     <xs:documentation>A hardware device such as a processor, or chip-set. A hardware device
-                        containing firmware should include a component for the physical hardware itself, and another
-                        component of type 'firmware' or 'operating-system' (whichever is relevant), describing
-                        information about the software running on the device.</xs:documentation>
+                    containing firmware should include a component for the physical hardware itself, and another
+                    component of type 'firmware' or 'operating-system' (whichever is relevant), describing
+                    information about the software running on the device.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="firmware">
@@ -562,7 +562,7 @@ limitations under the License.
             <xs:enumeration value="file">
                 <xs:annotation>
                     <xs:documentation>A computer file. Refer to https://en.wikipedia.org/wiki/Computer_file
-                        for information about files.</xs:documentation>
+                    for information about files.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
         </xs:restriction>
@@ -927,7 +927,7 @@ limitations under the License.
             <xs:enumeration value="backport">
                 <xs:annotation>
                     <xs:documentation>A patch which takes code from a newer version of software and applies
-                        it to older versions of the same software. Refer to https://en.wikipedia.org/wiki/Backporting</xs:documentation>
+                    it to older versions of the same software. Refer to https://en.wikipedia.org/wiki/Backporting</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="cherry-pick">
@@ -1146,7 +1146,7 @@ limitations under the License.
         </xs:sequence>
         <xs:attribute name="ref" type="xs:string" use="required">
             <xs:annotation>
-                <xs:documentation>References a component by the components bom-ref attribute</xs:documentation>
+                <xs:documentation>References a component or service by the its bom-ref attribute</xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:anyAttribute namespace="##other" processContents="lax">

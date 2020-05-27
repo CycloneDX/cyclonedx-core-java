@@ -135,7 +135,7 @@ public abstract class CycloneDxSchema {
         // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
         return getXmlSchema(
                 this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
-                this.getClass().getClassLoader().getResourceAsStream("bom-1.2-SNAPSHOT.xsd")
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.2.xsd")
         );
     }
 
@@ -150,9 +150,9 @@ public abstract class CycloneDxSchema {
 
     private org.everit.json.schema.Schema getJsonSchema12(boolean strict) throws IOException {
         if (strict) {
-            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema-SNAPSHOT.json"));
+            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json"));
         } else {
-            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema-SNAPSHOT.json"));
+            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json"));
         }
     }
 
