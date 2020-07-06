@@ -95,7 +95,15 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         return createElement(parent, name, value, new Attribute[0]);
     }
 
+    Element createElement(Node parent, String name, Object value, boolean insideCDATA) {
+        return createElement(parent, name, value, insideCDATA, new Attribute[0]);
+    }
+
     Element createElement(Node parent, String name, Object value, Attribute... attributes) {
+        return createElement(parent, name, value, false, attributes);
+    }
+
+    Element createElement(Node parent, String name, Object value, boolean insideCDATA, Attribute... attributes) {
         Element node = null;
         if (value != null || attributes.length > 0) {
             if (name.contains(":")) {
@@ -107,7 +115,11 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
                 node.setAttribute(attribute.getKey(), attribute.getValue());
             }
             if (value != null) {
-                node.appendChild(doc.createTextNode(value.toString()));
+                if (insideCDATA) {
+                    node.appendChild(doc.createCDATASection(value.toString()));
+                } else {
+                    node.appendChild(doc.createTextNode(value.toString()));
+                }
             }
             parent.appendChild(node);
         }
@@ -136,7 +148,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         createElement(componentNode, "group", stripBreaks(component.getGroup()));
         createElement(componentNode, "name", stripBreaks(component.getName()));
         createElement(componentNode, "version", stripBreaks(component.getVersion()));
-        createElement(componentNode, "description", stripBreaks(component.getDescription()));
+        createElement(componentNode, "description", stripBreaks(component.getDescription()), true);
         if (component.getScope() == null) {
             createElement(componentNode, "scope", Component.Scope.REQUIRED.getScopeName());
         } else {
