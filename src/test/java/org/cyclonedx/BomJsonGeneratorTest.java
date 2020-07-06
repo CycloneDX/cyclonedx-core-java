@@ -3,14 +3,11 @@ package org.cyclonedx;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.json.BomJsonGenerator12;
-import org.cyclonedx.generators.xml.BomXmlGenerator;
-import org.cyclonedx.generators.xml.BomXmlGenerator12;
 import org.cyclonedx.model.Bom;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
