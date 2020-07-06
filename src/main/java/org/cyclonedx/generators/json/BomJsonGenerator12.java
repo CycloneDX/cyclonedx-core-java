@@ -21,7 +21,14 @@ package org.cyclonedx.generators.json;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.Metadata;
 import org.json.JSONObject;
+
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BomGenerator creates a CycloneDX bill-of-material document from a set of
@@ -50,11 +57,20 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
     }
 
     /**
-     * Creates a CycloneDX BoM from a set of Components.
+     * Creates a CycloneDX BOM from a set of Components.
      * @return an XML Document representing a CycloneDX BoM
      * @since 3.0.0
      */
     public JSONObject generate() {
-        return null;
+        doc.put("bomFormat", "CycloneDX");
+        doc.put("specVersion", Version.VERSION_12.getVersionString());
+        if (bom.getSerialNumber() != null) {
+            doc.put("serialNumber", bom.getSerialNumber());
+        }
+        doc.put("version", bom.getVersion());
+        createMetadataNode(doc, bom.getMetadata());
+        createComponentsNode(doc, bom.getComponents());
+        createExternalReferencesNode(doc, bom.getExternalReferences());
+        return doc;
     }
 }
