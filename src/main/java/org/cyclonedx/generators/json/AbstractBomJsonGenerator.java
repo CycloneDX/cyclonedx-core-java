@@ -88,18 +88,60 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         json.put("name", component.getName());
         json.put("version", component.getVersion());
         json.put("description", component.getDescription());
-        json.put("scope", component.getScope());
-        //json.put("hashes", component.getHashes());
+        if (component.getScope() == null) {
+            json.put("scope", Component.Scope.REQUIRED.getScopeName());
+        } else {
+            json.put("scope", component.getScope().getScopeName());
+        }
+        createHashesNode(json, component.getHashes());
         //json.put("licenses", component.getLicenseChoice());
         json.put("copyright", component.getCopyright());
         json.put("cpe", component.getCpe());
         json.put("purl", component.getPurl());
-        //json.put("swid", component.getSwid());
-        json.put("modified", component.isModified()); // TODO
+        createSwidNode(json, component.getSwid());
+        if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified()) {
+            json.put("modified", component.isModified());
+        }
         //json.put("pedigree", component.getPedigree());
         //json.put("externalReferences", component.getExternalReferences());
         //json.put("components", component.getComponents());
         return json;
+    }
+
+    private void createHashesNode(final JSONObject jsonComponent, final List<Hash> hashes) {
+        if (hashes != null && !hashes.isEmpty()) {
+            final JSONArray jsonHashes = new JSONArray();
+            for (Hash hash : hashes) {
+                final JSONObject jsonHash = OrderedJSONObjectFactory.create();
+                jsonHash.put("alg", hash.getAlgorithm());
+                jsonHash.put("content", hash.getValue());
+                jsonHashes.put(jsonHash);
+            }
+            jsonComponent.put("hashes", jsonHashes);
+        }
+    }
+
+    private void createSwidNode(final JSONObject jsonComponent, final Swid swid) {
+        if (swid != null) {
+            final JSONObject jsonSwid = OrderedJSONObjectFactory.create();
+            jsonSwid.put("tagId", swid.getTagId());
+            jsonSwid.put("name", swid.getName());
+            jsonSwid.put("version", swid.getVersion());
+            jsonSwid.put("tagVersion", swid.getTagVersion());
+            jsonSwid.put("patch", swid.isPatch());
+            createAttachmentTextNode(jsonSwid, swid.getAttachmentText());
+            jsonComponent.put("swid", jsonSwid);
+        }
+    }
+
+    private void createAttachmentTextNode(final JSONObject json, final AttachmentText attachment) {
+        if (attachment != null && attachment.getText() != null) {
+            JSONObject jsonAttachment = OrderedJSONObjectFactory.create();
+            jsonAttachment.put("contentType", attachment.getContentType());
+            jsonAttachment.put("encoding", attachment.getEncoding());
+            jsonAttachment.put("content", attachment.getText());
+            json.put("text", jsonAttachment);
+        }
     }
 
     void createExternalReferencesNode(final JSONObject doc, final List<ExternalReference> references) {
