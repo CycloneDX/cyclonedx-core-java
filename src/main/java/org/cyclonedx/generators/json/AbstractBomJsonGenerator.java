@@ -48,7 +48,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
                     jsonTool.put("vendor", tool.getVendor());
                     jsonTool.put("name", tool.getName());
                     jsonTool.put("version", tool.getVersion());
-                    // TODO add hashes
+                    createHashesNode(jsonTool, tool.getHashes());
                     jsonTools.put(jsonTool);
                 }
                 mdo.put("tools", jsonTools);
@@ -71,9 +71,13 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         }
     }
 
-    void createComponentsNode(final JSONObject doc, final List<Component> components) {
-        if (components != null && components.size() > 0) {
-
+    void createComponentsNode(final JSONObject json, final List<Component> components) {
+        if (components != null && !components.isEmpty()) {
+            final JSONArray jsonComponents = new JSONArray();
+            for (Component component: components) {
+                jsonComponents.put(createComponentNode(component));
+            }
+            json.put("components", jsonComponents);
         }
     }
 
@@ -103,12 +107,12 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             json.put("modified", component.isModified());
         }
         //json.put("pedigree", component.getPedigree());
-        //json.put("externalReferences", component.getExternalReferences());
-        //json.put("components", component.getComponents());
+        createExternalReferencesNode(json, component.getExternalReferences());
+        createComponentsNode(json, component.getComponents());
         return json;
     }
 
-    private void createHashesNode(final JSONObject jsonComponent, final List<Hash> hashes) {
+    private void createHashesNode(final JSONObject parent, final List<Hash> hashes) {
         if (hashes != null && !hashes.isEmpty()) {
             final JSONArray jsonHashes = new JSONArray();
             for (Hash hash : hashes) {
@@ -117,7 +121,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
                 jsonHash.put("content", hash.getValue());
                 jsonHashes.put(jsonHash);
             }
-            jsonComponent.put("hashes", jsonHashes);
+            parent.put("hashes", jsonHashes);
         }
     }
 
@@ -144,9 +148,17 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         }
     }
 
-    void createExternalReferencesNode(final JSONObject doc, final List<ExternalReference> references) {
-        if (references != null && references.size() > 0) {
-
+    void createExternalReferencesNode(final JSONObject parent, final List<ExternalReference> references) {
+        if (references != null && !references.isEmpty()) {
+            final JSONArray jsonReferences = new JSONArray();
+            for (ExternalReference reference : references) {
+                final JSONObject jsonReference = OrderedJSONObjectFactory.create();
+                jsonReference.put("type", reference.getType().getTypeName());
+                jsonReference.put("url", reference.getUrl());
+                jsonReference.put("comment", reference.getComment());
+                jsonReferences.put(jsonReference);
+            }
+            parent.put("externalReferences", jsonReferences);
         }
     }
 
