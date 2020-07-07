@@ -162,6 +162,25 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         }
     }
 
+    void createDependenciesNode(final JSONObject parent, final List<Dependency> dependencies) {
+        if (dependencies != null && !dependencies.isEmpty()) {
+            final JSONArray jsonDependencies = new JSONArray();
+            for (Dependency dependency : dependencies) {
+                final JSONObject dependencyNode = OrderedJSONObjectFactory.create();
+                dependencyNode.put("ref", dependency.getRef());
+                if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+                    final JSONArray jsonDependsOn = new JSONArray();
+                    for (Dependency dependsOn : dependency.getDependencies()) {
+                        jsonDependsOn.put(dependsOn.getRef());
+                    }
+                    dependencyNode.put("dependsOn", jsonDependsOn);
+                }
+                jsonDependencies.put(dependencyNode);
+            }
+            parent.put("dependencies", jsonDependencies);
+        }
+    }
+
     public String toJsonString() {
         return doc.toString(2);
     }
