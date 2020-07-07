@@ -19,7 +19,18 @@
 package org.cyclonedx.generators.json;
 
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.model.*;
+import org.cyclonedx.model.AttachmentText;
+import org.cyclonedx.model.Commit;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.Hash;
+import org.cyclonedx.model.IdentifiableActionType;
+import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalContact;
+import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.Swid;
+import org.cyclonedx.model.Tool;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.text.DateFormat;
@@ -71,13 +82,13 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         }
     }
 
-    void createComponentsNode(final JSONObject json, final List<Component> components) {
+    void createComponentsNode(final JSONObject json, final List<Component> components, final String nodeName) {
         if (components != null && !components.isEmpty()) {
             final JSONArray jsonComponents = new JSONArray();
             for (Component component: components) {
                 jsonComponents.put(createComponentNode(component));
             }
-            json.put("components", jsonComponents);
+            json.put(nodeName, jsonComponents);
         }
     }
 
@@ -106,9 +117,9 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified()) {
             json.put("modified", component.isModified());
         }
-        //json.put("pedigree", component.getPedigree());
+        createPedigreeNode(json, component.getPedigree());
         createExternalReferencesNode(json, component.getExternalReferences());
-        createComponentsNode(json, component.getComponents());
+        createComponentsNode(json, component.getComponents(), "components");
         return json;
     }
 
@@ -159,6 +170,52 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
                 jsonReferences.put(jsonReference);
             }
             parent.put("externalReferences", jsonReferences);
+        }
+    }
+
+    private void createPedigreeNode(final JSONObject parent, final Pedigree pedigree) {
+        if (pedigree != null) {
+            final JSONObject jsonPedigree = OrderedJSONObjectFactory.create();
+            if (pedigree.getAncestors() != null && !pedigree.getAncestors().isEmpty()) {
+                createComponentsNode(jsonPedigree, pedigree.getAncestors(), "ancestors");
+            }
+            if (pedigree.getDescendants() != null && !pedigree.getDescendants().isEmpty()) {
+                createComponentsNode(jsonPedigree, pedigree.getDescendants(), "descendants");
+            }
+            if (pedigree.getVariants() != null && !pedigree.getVariants().isEmpty()) {
+                createComponentsNode(jsonPedigree, pedigree.getVariants(), "variants");
+            }
+            if (pedigree.getCommits() != null && !pedigree.getCommits().isEmpty()) {
+                createCommitsNode(jsonPedigree, pedigree.getCommits());
+            }
+            jsonPedigree.put("notes", pedigree.getNotes());
+            parent.put("pedigree", jsonPedigree);
+        }
+    }
+
+    private void createCommitsNode(final JSONObject parent, List<Commit> commits) {
+        if (commits != null && !commits.isEmpty()) {
+            final JSONArray jsonCommits = new JSONArray();
+            for (Commit commit: commits) {
+                final JSONObject jsonCommit = OrderedJSONObjectFactory.create();
+                jsonCommit.put("uid", commit.getUid());
+                jsonCommit.put("url", commit.getUrl());
+                createActorNode(jsonCommit, "author", commit.getAuthor());
+                createActorNode(jsonCommit, "committer", commit.getCommitter());
+                jsonCommit.put("message", commit.getMessage());
+                jsonCommits.put(jsonCommit);
+            }
+            parent.put("commits", jsonCommits);
+        }
+    }
+
+    private void createActorNode(final JSONObject parent, final String nodeName, final IdentifiableActionType actor) {
+        if (actor != null) {
+            final JSONObject json = OrderedJSONObjectFactory.create();
+            json.put("timestamp", dateFormat.format(actor.getTimestamp()));
+            json.put("name", actor.getName());
+            json.put("email", actor.getEmail());
+            parent.put(nodeName, json);
         }
     }
 

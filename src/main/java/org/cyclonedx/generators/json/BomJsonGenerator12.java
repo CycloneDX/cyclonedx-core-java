@@ -62,7 +62,7 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
         }
         doc.put("version", bom.getVersion());
         createMetadataNode(doc, bom.getMetadata());
-        createComponentsNode(doc, bom.getComponents());
+        createComponentsNode(doc, bom.getComponents(), "components");
         createExternalReferencesNode(doc, bom.getExternalReferences());
         createDependenciesNode(doc, bom.getDependencies());
         return doc;
