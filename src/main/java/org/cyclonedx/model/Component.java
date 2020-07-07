@@ -36,7 +36,7 @@ public class Component extends ExtensibleElement {
         FIRMWARE("firmware"),
         FILE("file");
 
-        private String name;
+        private final String name;
 
         public String getTypeName() {
             return this.name;
@@ -52,7 +52,7 @@ public class Component extends ExtensibleElement {
         OPTIONAL("optional"),
         EXCLUDED("excluded");
 
-        private String name;
+        private final String name;
 
         public String getScopeName() {
             return this.name;
@@ -65,6 +65,7 @@ public class Component extends ExtensibleElement {
 
     private String bomRef;
     private String mimeType;
+    private OrganizationalEntity supplier;
     private String author;
     private String publisher;
     private String group;
@@ -98,6 +99,14 @@ public class Component extends ExtensibleElement {
 
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
+    }
+
+    public OrganizationalEntity getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(OrganizationalEntity supplier) {
+        this.supplier = supplier;
     }
 
     public String getAuthor() {
@@ -289,6 +298,7 @@ public class Component extends ExtensibleElement {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return modified == component.modified &&
+                Objects.equals(supplier, component.supplier) &&
                 Objects.equals(author, component.author) &&
                 Objects.equals(publisher, component.publisher) &&
                 Objects.equals(group, component.group) &&
@@ -303,6 +313,7 @@ public class Component extends ExtensibleElement {
                 Objects.equals(purl, component.purl) &&
                 Objects.equals(swid, component.swid) &&
                 Objects.equals(components, component.components) &&
+                Objects.equals(mimeType, component.mimeType) &&
                 Objects.equals(type, component.type);
     }
 }

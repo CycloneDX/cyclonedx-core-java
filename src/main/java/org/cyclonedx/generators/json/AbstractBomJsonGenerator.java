@@ -30,6 +30,7 @@ import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
+import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
@@ -37,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -69,17 +71,15 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             if (metadata.getAuthors() != null && metadata.getAuthors().size() > 0) {
                 final JSONArray jsonAuthors = new JSONArray();
                 for (final OrganizationalContact author: metadata.getAuthors()) {
-                    final JSONObject jsonAuthor = OrderedJSONObjectFactory.create();
-                    jsonAuthor.put("name", author.getName());
-                    jsonAuthor.put("email", author.getEmail());
-                    jsonAuthor.put("phone", author.getPhone());
-                    jsonAuthors.put(jsonAuthor);
+                    jsonAuthors.put(createOrganizationalContactNode(author));
                 }
                 mdo.put("authors", jsonAuthors);
             }
             if (metadata.getComponent() != null) {
                 mdo.put("component", createComponentNode(metadata.getComponent()));
             }
+            mdo.put("manufacture", createOrganizationalEntityNode(metadata.getManufacture()));
+            mdo.put("supplier", createOrganizationalEntityNode(metadata.getSupplier()));
             doc.put("metadata", mdo);
         }
     }
@@ -99,7 +99,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         json.put("type", component.getType().getTypeName());
         json.put("bom-ref", component.getBomRef());
         json.put("mime-type", component.getMimeType());
-        //json.put("supplier", component.getSupplier());
+        json.put("supplier", createOrganizationalEntityNode(component.getSupplier()));
         json.put("author", component.getAuthor());
         json.put("publisher", component.getPublisher());
         json.put("group", component.getGroup());
@@ -247,6 +247,30 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             json.put("name", actor.getName());
             json.put("email", actor.getEmail());
             parent.put(nodeName, json);
+        }
+    }
+
+    private JSONObject createOrganizationalContactNode(final OrganizationalContact contact) {
+        if (contact != null) {
+            final JSONObject jsonContact = OrderedJSONObjectFactory.create();
+            jsonContact.put("name", contact.getName());
+            jsonContact.put("email", contact.getEmail());
+            jsonContact.put("phone", contact.getPhone());
+            return jsonContact;
+        } else {
+            return null;
+        }
+    }
+
+    private JSONObject createOrganizationalEntityNode(final OrganizationalEntity entity) {
+        if (entity != null) {
+            final JSONObject jsonEntity = OrderedJSONObjectFactory.create();
+            jsonEntity.put("name", entity.getName());
+            jsonEntity.put("url", Collections.singletonList(entity.getUrl()));
+            jsonEntity.put("contact", Collections.singletonList(createOrganizationalContactNode(entity.getContact())));
+            return jsonEntity;
+        } else {
+            return null;
         }
     }
 

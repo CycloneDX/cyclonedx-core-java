@@ -145,6 +145,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         }
         final Element componentNode = createElement(parent, "component", null, componentAttrs.toArray(new Attribute[0]));
         if (this.getSchemaVersion().getVersion() >= 1.2) {
+            createOrganizationalEntityNode(componentNode, component.getSupplier(), "supplier");
             createElement(componentNode, "author", stripBreaks(component.getAuthor()));
         }
         createElement(componentNode, "publisher", stripBreaks(component.getPublisher()));
