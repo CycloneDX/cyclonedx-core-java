@@ -98,6 +98,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         final JSONObject json = OrderedJSONObjectFactory.create();
         json.put("type", component.getType().getTypeName());
         json.put("bom-ref", component.getBomRef());
+        json.put("mime-type", component.getMimeType());
         //json.put("supplier", component.getSupplier());
         json.put("author", component.getAuthor());
         json.put("publisher", component.getPublisher());

@@ -140,6 +140,9 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         if (component.getBomRef() != null) {
             componentAttrs.add(new Attribute("bom-ref", component.getBomRef()));
         }
+        if (component.getMimeType() != null && this.getSchemaVersion().getVersion() >= 1.2) {
+            componentAttrs.add(new Attribute("mime-type", component.getMimeType()));
+        }
         final Element componentNode = createElement(parent, "component", null, componentAttrs.toArray(new Attribute[0]));
         if (this.getSchemaVersion().getVersion() >= 1.2) {
             createElement(componentNode, "author", stripBreaks(component.getAuthor()));
