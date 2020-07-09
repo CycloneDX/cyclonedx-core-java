@@ -64,13 +64,13 @@ public final class BomUtils {
         }
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA3_256, DigestUtils.sha3_256Hex(fis)));
-        }
+        } catch (Exception e) { /* Not available in Java 8 */ }
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA3_384, DigestUtils.sha3_384Hex(fis)));
-        }
+        } catch (Exception e) { /* Not available in Java 8 */ }
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA3_512, DigestUtils.sha3_512Hex(fis)));
-        }
+        } catch (Exception e) { /* Not available in Java 8 */ }
         return hashes;
     }
 
