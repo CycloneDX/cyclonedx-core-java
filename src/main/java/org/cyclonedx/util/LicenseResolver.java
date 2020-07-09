@@ -24,28 +24,15 @@ import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.AttachmentText;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.spdx.rdfparser.InvalidSPDXAnalysisException;
-import org.spdx.rdfparser.license.AnyLicenseInfo;
-import org.spdx.rdfparser.license.LicenseInfoFactory;
-import org.spdx.rdfparser.license.LicenseSet;
-import org.spdx.rdfparser.license.ListedLicenses;
-import org.spdx.rdfparser.license.OrLaterOperator;
-import org.spdx.rdfparser.license.SpdxListedLicense;
-import org.spdx.spdxspreadsheet.InvalidLicenseStringException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class LicenseResolver {
-
-    private static final Map<String, License> resolvedByUrl = new ConcurrentHashMap<>();
 
     private static Map<String, List<String>> mappings = new HashMap<>();
     static {
@@ -84,26 +71,14 @@ public final class LicenseResolver {
      */
     public static LicenseChoice resolve(String licenseString, boolean includeLicenseText) {
         try {
-            return resolveSpdxLicenseString(licenseString, includeLicenseText);
-        } catch (InvalidLicenseStringException e1) {
-            final LicenseChoice licenseChoice = resolveViaAlternativeMapping(licenseString, includeLicenseText);
-            if (licenseChoice != null) {
-                return licenseChoice;
+            LicenseChoice licenseChoice = resolveSpdxLicenseString(licenseString, includeLicenseText);
+            if (licenseChoice == null) {
+                licenseChoice = resolveViaAlternativeMapping(licenseString, includeLicenseText);
             }
-            try {
-                new URL(licenseString);
-                // We want to throw an exception if its not a valid URL, as the remaining block may impact performance
-                final License parsedLicense = parseLicenseByUrl(licenseString, includeLicenseText);
-                if (parsedLicense != null) {
-                    final LicenseChoice choice = new LicenseChoice();
-                    choice.addLicense(parsedLicense);
-                    return choice;
-                }
-            } catch (MalformedURLException | InvalidLicenseStringException e2) {
-                // throw it away
-            }
+            return licenseChoice;
+        } catch (IOException e) {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -122,98 +97,35 @@ public final class LicenseResolver {
      * @param licenseString the license string to resolve
      * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a LicenseChoice object if resolved, or null
-     * @throws InvalidLicenseStringException an exception while parsing the license string
+     * @throws IOException an exception while parsing the license string
      */
-    public static LicenseChoice resolveSpdxLicenseString(String licenseString, boolean includeLicenseText) throws InvalidLicenseStringException {
-        final LicenseChoice choice;
-        final AnyLicenseInfo licenseInfo = LicenseInfoFactory.parseSPDXLicenseString(licenseString);
-        if (licenseInfo instanceof SpdxListedLicense) {
-            final SpdxListedLicense spdxListedLicense = (SpdxListedLicense)licenseInfo;
-            choice = new LicenseChoice();
-            choice.addLicense(createLicenseObject(spdxListedLicense, includeLicenseText));
-            return choice;
-        } else if (licenseInfo instanceof OrLaterOperator) {
-            final OrLaterOperator orLaterOperator = (OrLaterOperator)licenseInfo;
-            final SpdxListedLicense spdxListedLicense = (SpdxListedLicense)orLaterOperator.getLicense();
-            choice = new LicenseChoice();
-            choice.addLicense(createLicenseObject(spdxListedLicense, includeLicenseText));
-            return choice;
-        } else if (licenseInfo instanceof LicenseSet) {
-            choice = new LicenseChoice();
-            choice.setExpression(licenseString);
-            return choice;
-        }
-        return null;
-    }
-
-    /**
-     * Given an SPDX license ID or expression, this method will resolve the license(s) and
-     * return a LicenseChoice object.
-     * @param licenseString the license string to resolve
-     * @return a LicenseChoice object if resolved, or null
-     * @throws InvalidLicenseStringException an exception while parsing the license string
-     */
-    public static LicenseChoice resolveSpdxLicenseString(String licenseString) throws InvalidLicenseStringException {
-        return resolveSpdxLicenseString(licenseString, true);
-    }
-
-    /**
-     * Given a valid SPDX license ID, this method will return a LicenseChoice object.
-     * @param licenseId a valid SPDX license ID
-     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
-     * @return a LicenseChoice object
-     * @throws InvalidSPDXAnalysisException an exception while parsing the license ID
-     */
-    public static LicenseChoice resolveSpdxLicenseId(String licenseId, boolean includeLicenseText) throws InvalidSPDXAnalysisException {
-        final SpdxListedLicense spdxLicense = LicenseInfoFactory.getListedLicenseById(licenseId);
-        final LicenseChoice choice = new LicenseChoice();
-        choice.addLicense(createLicenseObject(spdxLicense, includeLicenseText));
-        return choice;
-    }
-
-    /**
-     * Given a valid SPDX license ID, this method will return a LicenseChoice object.
-     * @param licenseId a valid SPDX license ID
-     * @return a LicenseChoice object
-     * @throws InvalidSPDXAnalysisException an exception while parsing the license ID
-     */
-    public static LicenseChoice resolveSpdxLicenseId(String licenseId) throws InvalidSPDXAnalysisException {
-        return resolveSpdxLicenseId(licenseId, true);
-    }
-
-    /**
-     * Given a URL, this method will attempt to resolve the SPDX license. This method will
-     * not retrieve the URL, rather, it will interrogate it's internal list of SPDX licenses
-     * and the URLs defined for each. This method may impact performance for URLs that are
-     * not associated with an SPDX license or otherwise have not been queried on previously.
-     * This method will cache resolved licenses and their URLs for faster access on subsequent
-     * calls.
-     * @param licenseUrl the URL to the license
-     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
-     * @return a License object
-     * @throws InvalidLicenseStringException an exception while parsing the license URL
-     */
-    public static License parseLicenseByUrl(String licenseUrl, boolean includeLicenseText) throws InvalidLicenseStringException {
-        final String protocolExcludedUrl = licenseUrl.replace("http://", "").replace("https://", "");
-        final ListedLicenses ll = ListedLicenses.getListedLicenses();
-        // Check cache. If hit, return, otherwise go through the native SPDX model which is terribly slow
-        License license = resolvedByUrl.get(licenseUrl);
-        if (license != null) {
-            return license;
-        }
-        for (final String licenseId: ll.getSpdxListedLicenseIds()) {
-            final AnyLicenseInfo licenseInfo = LicenseInfoFactory.parseSPDXLicenseString(licenseId);
-            if (licenseInfo instanceof SpdxListedLicense) {
-                final SpdxListedLicense spdxListedLicense = (SpdxListedLicense) licenseInfo;
-                for (final String seeAlso: spdxListedLicense.getSeeAlso()) {
-                    final String protocolExcludedSeeAlsoUrl = seeAlso.replace("http://", "").replace("https://", "");
-                    // Attempt to account for .txt, .html, and other extensions in the URLs being compared
-                    if (protocolExcludedUrl.toLowerCase().contains(protocolExcludedSeeAlsoUrl.toLowerCase())
-                            || protocolExcludedSeeAlsoUrl.toLowerCase().contains(protocolExcludedUrl.toLowerCase())) {
-                        license = createLicenseObject(spdxListedLicense, includeLicenseText);
-                        // Lazily cache the mapping for future performance improvements
-                        resolvedByUrl.put(licenseUrl, license);
-                        return license;
+    private static LicenseChoice resolveSpdxLicenseString(String licenseString, boolean includeLicenseText) throws IOException {
+        final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/licenses.json");
+        final String licenseStringModified = urlNormalize(licenseString);
+        final String jsonTxt = IOUtils.toString(is, "UTF-8");
+        final JSONObject json = new JSONObject(jsonTxt);
+        final JSONArray licenses = json.getJSONArray("licenses");
+        for (int i = 0; i < licenses.length(); i++) {
+            final JSONObject license = licenses.getJSONObject(i);
+            final boolean isDeprecatedLicenseId = license.getBoolean("isDeprecatedLicenseId");
+            final String licenseId = license.getString("licenseId");
+            final String name = license.getString("name");
+            final JSONArray seeAlso = license.optJSONArray("seeAlso");
+            final String primaryLicenseUrl = (seeAlso != null && seeAlso.length() > 0) ? seeAlso.getString(0) : null;
+            if (licenseString.trim().equalsIgnoreCase(licenseId)) {
+                return createLicenseChoice(licenseId, primaryLicenseUrl, isDeprecatedLicenseId, includeLicenseText);
+            } else if (licenseString.trim().equalsIgnoreCase(name)) {
+                return createLicenseChoice(licenseId, primaryLicenseUrl, isDeprecatedLicenseId, includeLicenseText);
+            } else {
+                if (isDeprecatedLicenseId) {
+                    continue;
+                }
+                for (int s = 0; s < seeAlso.length(); s++) {
+                    final String url = seeAlso.getString(s);
+                    if (url != null) {
+                        if (licenseStringModified.equalsIgnoreCase(urlNormalize(url))) {
+                            return createLicenseChoice(licenseId, url, isDeprecatedLicenseId, includeLicenseText);
+                        }
                     }
                 }
             }
@@ -221,42 +133,32 @@ public final class LicenseResolver {
         return null;
     }
 
-    /**
-     * Given a URL, this method will attempt to resolve the SPDX license. This method will
-     * not retrieve the URL, rather, it will interrogate it's internal list of SPDX licenses
-     * and the URLs defined for each. This method may impact performance for URLs that are
-     * not associated with an SPDX license or otherwise have not been queried on previously.
-     * This method will cache resolved licenses and their URLs for faster access on subsequent
-     * calls.
-     * @param licenseUrl the URL to the license
-     * @return a License object
-     * @throws InvalidLicenseStringException an exception while parsing the license URL
-     */
-    public static License parseLicenseByUrl(String licenseUrl) throws InvalidLicenseStringException {
-        return parseLicenseByUrl(licenseUrl, true);
+    private static String urlNormalize(String input) {
+        return input.trim()
+                .replace("https://www.", "")
+                .replace("http://www.", "")
+                .replace("https://", "")
+                .replace("http://", "");
     }
 
-    /**
-     * Creates a License object from the specified SpdxListedLicense object.
-     * @param spdxListedLicense the object to convert
-     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
-     * @return a CycloneDX License object
-     */
-    private static License createLicenseObject(SpdxListedLicense spdxListedLicense, boolean includeLicenseText) {
+    private static LicenseChoice createLicenseChoice(String licenseId, String primaryLicenseUrl, boolean isDeprecatedLicenseId, boolean includeLicenseText) throws IOException {
+        final LicenseChoice choice = new LicenseChoice();
         final License license = new License();
-        license.setId(spdxListedLicense.getLicenseId());
-        license.setName(spdxListedLicense.getName());
-        if (spdxListedLicense.getSeeAlso() != null && spdxListedLicense.getSeeAlso().length > 0) {
-            license.setUrl(spdxListedLicense.getSeeAlso()[0]);
+        license.setId(licenseId);
+        license.setUrl(primaryLicenseUrl);
+        if (!isDeprecatedLicenseId && includeLicenseText) {
+            final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/" + licenseId + ".txt");
+            if (is != null) {
+                final String text = IOUtils.toString(is, "UTF-8");
+                final AttachmentText attachment = new AttachmentText();
+                attachment.setContentType("plain/text");
+                attachment.setEncoding("base64");
+                attachment.setText(Base64.getEncoder().encodeToString(text.getBytes()));
+                license.setLicenseText(attachment);
+            }
         }
-        if (includeLicenseText && spdxListedLicense.getLicenseText() != null) {
-            final AttachmentText text = new AttachmentText();
-            text.setContentType("plain/text");
-            text.setEncoding("base64");
-            text.setText(Base64.getEncoder().encodeToString(spdxListedLicense.getLicenseText().getBytes()));
-            license.setLicenseText(text);
-        }
-        return license;
+        choice.addLicense(license);
+        return choice;
     }
 
     /**
@@ -265,23 +167,19 @@ public final class LicenseResolver {
      * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a LicenseChoice object if resolved, otherwise null
      */
-    private static LicenseChoice resolveViaAlternativeMapping(String licenseString, boolean includeLicenseText) {
+    private static LicenseChoice resolveViaAlternativeMapping(String licenseString, boolean includeLicenseText) throws IOException {
         if (licenseString == null) {
             return null;
         }
-        try {
-            for (final Map.Entry<String, List<String>> mapping : mappings.entrySet()) {
-                final List<String> names = mapping.getValue();
-                if (names != null) {
-                    for (final String name: names) {
-                        if (licenseString.equalsIgnoreCase(name)) {
-                            return resolveSpdxLicenseString(mapping.getKey(), includeLicenseText);
-                        }
+        for (final Map.Entry<String, List<String>> mapping : mappings.entrySet()) {
+            final List<String> names = mapping.getValue();
+            if (names != null) {
+                for (final String name: names) {
+                    if (licenseString.equalsIgnoreCase(name)) {
+                        return createLicenseChoice(mapping.getKey(), null, false, includeLicenseText);
                     }
                 }
             }
-        } catch (InvalidLicenseStringException e) {
-            // throw it away
         }
         return null;
     }

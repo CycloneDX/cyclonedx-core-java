@@ -32,7 +32,8 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void schema12GenerationTest() throws Exception {
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(CycloneDxSchema.Version.VERSION_12, createCommonBom("/bom-1.2.xml"));
+        Bom bom =  createCommonBom("/bom-1.2.xml");
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(CycloneDxSchema.Version.VERSION_12, bom);
         generator.generate();
         Assert.assertTrue(generator instanceof BomJsonGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
