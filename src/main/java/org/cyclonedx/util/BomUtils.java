@@ -62,6 +62,15 @@ public final class BomUtils {
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA_512, DigestUtils.sha512Hex(fis)));
         }
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
+            hashes.add(new Hash(Hash.Algorithm.SHA3_256, DigestUtils.sha3_256Hex(fis)));
+        }
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
+            hashes.add(new Hash(Hash.Algorithm.SHA3_384, DigestUtils.sha3_384Hex(fis)));
+        }
+        try (InputStream fis = Files.newInputStream(file.toPath())) {
+            hashes.add(new Hash(Hash.Algorithm.SHA3_512, DigestUtils.sha3_512Hex(fis)));
+        }
         return hashes;
     }
 
