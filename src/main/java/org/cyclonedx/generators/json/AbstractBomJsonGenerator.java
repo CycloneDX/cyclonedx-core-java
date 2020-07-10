@@ -60,9 +60,9 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
                 final JSONArray jsonTools = new JSONArray();
                 for (final Tool tool: metadata.getTools()) {
                     final JSONObject jsonTool = OrderedJSONObjectFactory.create();
-                    jsonTool.put("vendor", tool.getVendor());
-                    jsonTool.put("name", tool.getName());
-                    jsonTool.put("version", tool.getVersion());
+                    jsonTool.put("vendor", stripBreaks(tool.getVendor()));
+                    jsonTool.put("name", stripBreaks(tool.getName()));
+                    jsonTool.put("version", stripBreaks(tool.getVersion()));
                     createHashesNode(jsonTool, tool.getHashes());
                     jsonTools.put(jsonTool);
                 }
@@ -97,25 +97,23 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     JSONObject createComponentNode(final Component component) {
         final JSONObject json = OrderedJSONObjectFactory.create();
         json.put("type", component.getType().getTypeName());
-        json.put("bom-ref", component.getBomRef());
-        json.put("mime-type", component.getMimeType());
+        json.put("bom-ref", stripBreaks(component.getBomRef()));
+        json.put("mime-type", stripBreaks(component.getMimeType()));
         json.put("supplier", createOrganizationalEntityNode(component.getSupplier()));
-        json.put("author", component.getAuthor());
-        json.put("publisher", component.getPublisher());
-        json.put("group", component.getGroup());
-        json.put("name", component.getName());
-        json.put("version", component.getVersion());
-        json.put("description", component.getDescription());
-        if (component.getScope() == null) {
-            json.put("scope", Component.Scope.REQUIRED.getScopeName());
-        } else {
+        json.put("author", stripBreaks(component.getAuthor()));
+        json.put("publisher", stripBreaks(component.getPublisher()));
+        json.put("group", stripBreaks(component.getGroup()));
+        json.put("name", stripBreaks(component.getName()));
+        json.put("version", stripBreaks(component.getVersion()));
+        json.put("description", stripBreaks(component.getDescription()));
+        if (component.getScope() != null) {
             json.put("scope", component.getScope().getScopeName());
         }
         createHashesNode(json, component.getHashes());
         createLicenseNode(json, component.getLicenseChoice());
-        json.put("copyright", component.getCopyright());
-        json.put("cpe", component.getCpe());
-        json.put("purl", component.getPurl());
+        json.put("copyright", stripBreaks(component.getCopyright()));
+        json.put("cpe", stripBreaks(component.getCpe()));
+        json.put("purl", stripBreaks(component.getPurl()));
         createSwidNode(json, component.getSwid());
         if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified()) {
             json.put("modified", component.isModified());
@@ -149,18 +147,18 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
                     if (license.getId() != null) {
                         jsonLicense.put("id", license.getId());
                     } else if (license.getName() != null) {
-                        jsonLicense.put("name", license.getName());
+                        jsonLicense.put("name", stripBreaks(license.getName()));
                     }
                     if (license.getAttachmentText() != null && license.getAttachmentText().getText() != null) {
                         createAttachmentTextNode(jsonLicense, license.getAttachmentText());
                     }
-                    jsonLicense.put("url", license.getUrl());
+                    jsonLicense.put("url", stripBreaks(license.getUrl()));
                     wrapper.put("license", jsonLicense);
                     jsonLicenses.put(wrapper);
                 }
             } else if (licenseChoice.getExpression() != null) {
                 final JSONObject jsonLicense = OrderedJSONObjectFactory.create();
-                jsonLicense.put("expression", licenseChoice.getExpression());
+                jsonLicense.put("expression", stripBreaks(licenseChoice.getExpression()));
                 jsonLicenses.put(jsonLicense);
             }
             parent.put("licenses", jsonLicenses);
@@ -170,9 +168,9 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     private void createSwidNode(final JSONObject jsonComponent, final Swid swid) {
         if (swid != null) {
             final JSONObject jsonSwid = OrderedJSONObjectFactory.create();
-            jsonSwid.put("tagId", swid.getTagId());
-            jsonSwid.put("name", swid.getName());
-            jsonSwid.put("version", swid.getVersion());
+            jsonSwid.put("tagId", stripBreaks(swid.getTagId()));
+            jsonSwid.put("name", stripBreaks(swid.getName()));
+            jsonSwid.put("version", stripBreaks(swid.getVersion()));
             jsonSwid.put("tagVersion", swid.getTagVersion());
             jsonSwid.put("patch", swid.isPatch());
             createAttachmentTextNode(jsonSwid, swid.getAttachmentText());
@@ -183,8 +181,8 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     private void createAttachmentTextNode(final JSONObject json, final AttachmentText attachment) {
         if (attachment != null && attachment.getText() != null) {
             final JSONObject jsonAttachment = OrderedJSONObjectFactory.create();
-            jsonAttachment.put("contentType", attachment.getContentType());
-            jsonAttachment.put("encoding", attachment.getEncoding());
+            jsonAttachment.put("contentType", stripBreaks(attachment.getContentType()));
+            jsonAttachment.put("encoding", stripBreaks(attachment.getEncoding()));
             jsonAttachment.put("content", attachment.getText());
             json.put("text", jsonAttachment);
         }
@@ -196,8 +194,8 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             for (ExternalReference reference : references) {
                 final JSONObject jsonReference = OrderedJSONObjectFactory.create();
                 jsonReference.put("type", reference.getType().getTypeName());
-                jsonReference.put("url", reference.getUrl());
-                jsonReference.put("comment", reference.getComment());
+                jsonReference.put("url", stripBreaks(reference.getUrl()));
+                jsonReference.put("comment", stripBreaks(reference.getComment()));
                 jsonReferences.put(jsonReference);
             }
             parent.put("externalReferences", jsonReferences);
@@ -219,7 +217,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             if (pedigree.getCommits() != null && !pedigree.getCommits().isEmpty()) {
                 createCommitsNode(jsonPedigree, pedigree.getCommits());
             }
-            jsonPedigree.put("notes", pedigree.getNotes());
+            jsonPedigree.put("notes", stripBreaks(pedigree.getNotes()));
             parent.put("pedigree", jsonPedigree);
         }
     }
@@ -229,11 +227,11 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             final JSONArray jsonCommits = new JSONArray();
             for (Commit commit: commits) {
                 final JSONObject jsonCommit = OrderedJSONObjectFactory.create();
-                jsonCommit.put("uid", commit.getUid());
-                jsonCommit.put("url", commit.getUrl());
+                jsonCommit.put("uid", stripBreaks(commit.getUid()));
+                jsonCommit.put("url", stripBreaks(commit.getUrl()));
                 createActorNode(jsonCommit, "author", commit.getAuthor());
                 createActorNode(jsonCommit, "committer", commit.getCommitter());
-                jsonCommit.put("message", commit.getMessage());
+                jsonCommit.put("message", stripBreaks(commit.getMessage()));
                 jsonCommits.put(jsonCommit);
             }
             parent.put("commits", jsonCommits);
@@ -244,8 +242,8 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         if (actor != null) {
             final JSONObject json = OrderedJSONObjectFactory.create();
             json.put("timestamp", dateFormat.format(actor.getTimestamp()));
-            json.put("name", actor.getName());
-            json.put("email", actor.getEmail());
+            json.put("name", stripBreaks(actor.getName()));
+            json.put("email", stripBreaks(actor.getEmail()));
             parent.put(nodeName, json);
         }
     }
@@ -253,9 +251,9 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     private JSONObject createOrganizationalContactNode(final OrganizationalContact contact) {
         if (contact != null) {
             final JSONObject jsonContact = OrderedJSONObjectFactory.create();
-            jsonContact.put("name", contact.getName());
-            jsonContact.put("email", contact.getEmail());
-            jsonContact.put("phone", contact.getPhone());
+            jsonContact.put("name", stripBreaks(contact.getName()));
+            jsonContact.put("email", stripBreaks(contact.getEmail()));
+            jsonContact.put("phone", stripBreaks(contact.getPhone()));
             return jsonContact;
         } else {
             return null;
@@ -265,8 +263,8 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     private JSONObject createOrganizationalEntityNode(final OrganizationalEntity entity) {
         if (entity != null) {
             final JSONObject jsonEntity = OrderedJSONObjectFactory.create();
-            jsonEntity.put("name", entity.getName());
-            jsonEntity.put("url", Collections.singletonList(entity.getUrl()));
+            jsonEntity.put("name", stripBreaks(entity.getName()));
+            jsonEntity.put("url", Collections.singletonList(stripBreaks(entity.getUrl())));
             jsonEntity.put("contact", Collections.singletonList(createOrganizationalContactNode(entity.getContact())));
             return jsonEntity;
         } else {
@@ -291,6 +289,13 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             }
             parent.put("dependencies", jsonDependencies);
         }
+    }
+
+    static String stripBreaks(String in) {
+        if (in == null) {
+            return null;
+        }
+        return in.trim().replace("\r\n", " ").replace("\n", " ").replace("\t", " ").replace("\r", " ").replaceAll(" +", " ");
     }
 
     public String toJsonString() {

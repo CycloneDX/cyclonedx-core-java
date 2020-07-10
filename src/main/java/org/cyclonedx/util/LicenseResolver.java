@@ -176,7 +176,13 @@ public final class LicenseResolver {
             if (names != null) {
                 for (final String name: names) {
                     if (licenseString.equalsIgnoreCase(name)) {
-                        return createLicenseChoice(mapping.getKey(), null, false, includeLicenseText);
+                        if (mapping.getKey().startsWith("(") && mapping.getKey().endsWith(")")) {
+                            final LicenseChoice lc = new LicenseChoice();
+                            lc.setExpression(mapping.getKey());
+                            return lc;
+                        } else {
+                            return createLicenseChoice(mapping.getKey(), null, false, includeLicenseText);
+                        }
                     }
                 }
             }
