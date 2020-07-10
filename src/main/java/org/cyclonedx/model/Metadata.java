@@ -18,13 +18,14 @@
  */
 package org.cyclonedx.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 public class Metadata extends ExtensibleElement {
 
-    private Date timestamp;
+    private Date timestamp = new Date();
     private List<Tool> tools;
     private List<OrganizationalContact> authors;
     private Component component;
@@ -47,12 +48,26 @@ public class Metadata extends ExtensibleElement {
         this.tools = tools;
     }
 
+    public void addTool(Tool tool) {
+        if (this.tools == null) {
+            this.tools = new ArrayList<>();
+        }
+        this.tools.add(tool);
+    }
+
     public List<OrganizationalContact> getAuthors() {
         return authors;
     }
 
     public void setAuthors(List<OrganizationalContact> authors) {
         this.authors = authors;
+    }
+
+    public void addAuthor(OrganizationalContact author) {
+        if (this.authors == null) {
+            this.authors = new ArrayList<>();
+        }
+        this.authors.add(author);
     }
 
     public Component getComponent() {
