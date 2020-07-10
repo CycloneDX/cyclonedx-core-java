@@ -112,12 +112,23 @@
                 <updatePolicy>always</updatePolicy>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>ossrh-snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+                <enabled>true</enabled>
+            </snapshots>
             <releases>
                 <updatePolicy>always</updatePolicy>
                 <enabled>true</enabled>
             </releases>
-        </repository>
-    </repositories>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <!-- Apache Commons -->
