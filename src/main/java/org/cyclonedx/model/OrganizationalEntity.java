@@ -18,13 +18,18 @@
  */
 package org.cyclonedx.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class OrganizationalEntity extends ExtensibleElement {
 
     private String name;
     private String url;
-    private OrganizationalContact contact;
+    @JSONField(name = "contact")
+    private List<OrganizationalContact> contacts;
 
     public String getName() {
         return name;
@@ -42,12 +47,19 @@ public class OrganizationalEntity extends ExtensibleElement {
         this.url = url;
     }
 
-    public OrganizationalContact getContact() {
-        return contact;
+    public List<OrganizationalContact> getContacts() {
+        return contacts;
     }
 
-    public void setContact(OrganizationalContact contact) {
-        this.contact = contact;
+    public void setContacts(List<OrganizationalContact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void addContact(OrganizationalContact contact) {
+        if (this.contacts == null) {
+            this.contacts = new ArrayList<>();
+        }
+        this.contacts.add(contact);
     }
 
     @Override
@@ -57,11 +69,11 @@ public class OrganizationalEntity extends ExtensibleElement {
         OrganizationalEntity that = (OrganizationalEntity) o;
         return Objects.equals(name, that.name) &&
                 Objects.equals(url, that.url) &&
-                Objects.equals(contact, that.contact);
+                Objects.equals(contacts, that.contacts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, url, contact);
+        return Objects.hash(name, url, contacts);
     }
 }

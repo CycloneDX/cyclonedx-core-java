@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -47,7 +48,10 @@ public class Hash {
         }
     }
 
+    @JSONField(name = "alg")
     private String algorithm;
+
+    @JSONField(name = "content")
     private String value;
 
     public Hash() { }

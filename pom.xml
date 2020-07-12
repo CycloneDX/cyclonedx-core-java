@@ -171,6 +171,12 @@
             <artifactId>org.everit.json.schema</artifactId>
             <version>1.12.1</version>
         </dependency>
+        <!-- JSON Serialization / Deserialization -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.70</version>
+        </dependency>
         <!-- Unit Test -->
         <dependency>
             <groupId>junit</groupId>

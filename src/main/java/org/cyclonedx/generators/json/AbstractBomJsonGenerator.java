@@ -260,12 +260,24 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         }
     }
 
+    private JSONArray createOrganizationalContactsNode(final List<OrganizationalContact> contacts) {
+        if (contacts != null) {
+            final JSONArray array = new JSONArray();
+            for (OrganizationalContact contact: contacts) {
+                array.put(createOrganizationalContactNode(contact));
+            }
+            return array;
+        } else {
+            return null;
+        }
+    }
+
     private JSONObject createOrganizationalEntityNode(final OrganizationalEntity entity) {
         if (entity != null) {
             final JSONObject jsonEntity = OrderedJSONObjectFactory.create();
             jsonEntity.put("name", stripBreaks(entity.getName()));
             jsonEntity.put("url", Collections.singletonList(stripBreaks(entity.getUrl())));
-            jsonEntity.put("contact", Collections.singletonList(createOrganizationalContactNode(entity.getContact())));
+            jsonEntity.put("contact", createOrganizationalContactsNode(entity.getContacts()));
             return jsonEntity;
         } else {
             return null;
