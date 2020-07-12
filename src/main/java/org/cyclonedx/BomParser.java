@@ -172,7 +172,7 @@ public class BomParser extends CycloneDxSchema {
      */
     private Bom injectSchemaVersion(Bom bom, String schemaVersion) {
         try {
-            final Field field = Bom.class.getDeclaredField("schemaVersion");
+            final Field field = Bom.class.getDeclaredField("specVersion");
             field.setAccessible(true);
             field.set(bom, schemaVersion);
         } catch (NoSuchFieldException | IllegalAccessException e) {

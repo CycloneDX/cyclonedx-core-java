@@ -66,7 +66,7 @@ public class BomParserTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.0.xml"));
         final BomParser parser = new BomParser();
         final Bom bom = parser.parse(bomBytes);
-        Assert.assertEquals("1.0", bom.getSchemaVersion());
+        Assert.assertEquals("1.0", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getComponents().size());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
@@ -92,7 +92,7 @@ public class BomParserTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.1.xml"));
         final BomParser parser = new BomParser();
         final Bom bom = parser.parse(bomBytes);
-        Assert.assertEquals("1.1", bom.getSchemaVersion());
+        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(3, bom.getComponents().size());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
@@ -138,7 +138,7 @@ public class BomParserTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.1-dependency-graph-1.0.xml"));
         final BomParser parser = new BomParser();
         final Bom bom = parser.parse(bomBytes);
-        Assert.assertEquals("1.1", bom.getSchemaVersion());
+        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(3, bom.getComponents().size());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();

@@ -31,7 +31,7 @@ public class Bom extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     private int version = 1;
     private String serialNumber;
-    private String schemaVersion;
+    private String specVersion;
 
     public Metadata getMetadata() {
         return metadata;
@@ -103,13 +103,13 @@ public class Bom extends ExtensibleElement {
     }
 
     /**
-     * Returns the CycloneDX schema version of a Bom. The schema version will
+     * Returns the CycloneDX spec version of a Bom. The spec version will
      * only be populated when paring a bom via {@link org.cyclonedx.BomParser}.
      * It has no affect on bom generation or any other functionality.
-     * @return the String version representation of the schema version
+     * @return the String version representation of the spec version
      */
-    public String getSchemaVersion() {
-        return schemaVersion;
+    public String getSpecVersion() {
+        return specVersion;
     }
 
     @Override
@@ -123,11 +123,11 @@ public class Bom extends ExtensibleElement {
                 Objects.equals(dependencies, bom.dependencies) &&
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
-                Objects.equals(schemaVersion, bom.schemaVersion);
+                Objects.equals(specVersion, bom.specVersion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, version, serialNumber, schemaVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, version, serialNumber, specVersion);
     }
 }
