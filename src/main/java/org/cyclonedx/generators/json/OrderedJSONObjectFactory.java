@@ -32,9 +32,9 @@ public class OrderedJSONObjectFactory {
      */
     public static JSONObject create() {
         try {
-            Class<JSONObject> cls = (Class<JSONObject>) Class.forName("org.json.JSONObject");
-            JSONObject jsonObject = new JSONObject();
-            Field field = cls.getDeclaredField("map");
+            final Class<JSONObject> cls = JSONObject.class;
+            final JSONObject jsonObject = new JSONObject();
+            final Field field = cls.getDeclaredField("map");
             field.setAccessible(true);
             field.set(jsonObject, new LinkedHashMap<String, Object>());
             field.setAccessible(false);

@@ -145,6 +145,7 @@ public interface Parser {
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
      * @param file the CycloneDX BOM file to validate
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(File file) throws IOException;
@@ -154,6 +155,7 @@ public interface Parser {
      * @param file the CycloneDX BOM file to validate
      * @param schemaVersion the schema version to validate against
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(File file, CycloneDxSchema.Version schemaVersion) throws IOException;
@@ -162,6 +164,7 @@ public interface Parser {
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
      * @param bomBytes the byte array to validate
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(byte[] bomBytes) throws IOException;
@@ -171,6 +174,7 @@ public interface Parser {
      * @param bomBytes the byte array to validate
      * @param schemaVersion the schema version to validate against
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(byte[] bomBytes, CycloneDxSchema.Version schemaVersion) throws IOException;
@@ -179,6 +183,7 @@ public interface Parser {
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
      * @param reader the Reader from which to validate
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(Reader reader) throws IOException;
@@ -188,6 +193,7 @@ public interface Parser {
      * @param reader the Reader from which to validate
      * @param schemaVersion the schema version to validate against
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(Reader reader, CycloneDxSchema.Version schemaVersion) throws IOException;
@@ -196,6 +202,7 @@ public interface Parser {
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
      * @param inputStream the InputStream from which to validate
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(InputStream inputStream) throws IOException;
@@ -205,6 +212,7 @@ public interface Parser {
      * @param inputStream the InputStream from which to validate
      * @param schemaVersion the schema version to validate against
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     boolean isValid(InputStream inputStream, CycloneDxSchema.Version schemaVersion) throws IOException;

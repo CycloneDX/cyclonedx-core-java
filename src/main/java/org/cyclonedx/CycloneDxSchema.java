@@ -33,7 +33,7 @@ import java.io.InputStream;
 
 /**
  * CycloneDxSchema is a base class that provides schema information to
- * {@link BomXmlGenerator}, {@link BomJsonGenerator}, and {@link BomParser}.
+ * {@link BomXmlGenerator}, {@link BomJsonGenerator}, and {@link org.cyclonedx.parsers.Parser}.
  * The class can be extended for other implementations as well.
  * @since 1.1.0
  */
@@ -74,6 +74,7 @@ public abstract class CycloneDxSchema {
      * @param schemaVersion The version to return the schema for
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return a Schema
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {

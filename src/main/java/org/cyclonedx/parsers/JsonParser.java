@@ -26,6 +26,7 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.everit.json.schema.ValidationException;
+import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -203,12 +204,26 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @param schemaVersion the schema version to validate against
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true is the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     public List<ParseException> validate (final String bomString, final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+        return validate(new JSONObject(bomString), schemaVersion, strict);
+    }
+
+    /**
+     * Verifies a CycloneDX BOM conforms to the specification through JSON validation.
+     * @param bomJson the CycloneDX BOM to validate
+     * @param schemaVersion the schema version to validate against
+     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
+     * @return true is the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
+     * @since 3.0.0
+     */
+    public List<ParseException> validate (final JSONObject bomJson, final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
         final List<ParseException> exceptions = new ArrayList<>();
         try {
-            getJsonSchema(schemaVersion, strict).validate(bomString);
+            getJsonSchema(schemaVersion, strict).validate(bomJson);
         } catch (ValidationException e) {
             exceptions.add(new ParseException(e.getMessage(), e));
         }
@@ -235,6 +250,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @param schemaVersion the schema version to validate against
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     public boolean isValid(final File file, final CycloneDxSchema.Version schemaVersion, final boolean strict) throws IOException {
@@ -261,6 +277,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @param schemaVersion the schema version to validate against
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     public boolean isValid(final byte[] bomBytes, final CycloneDxSchema.Version schemaVersion, final boolean strict) throws IOException {
@@ -287,6 +304,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @param schemaVersion the schema version to validate against
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     public boolean isValid(final Reader reader, final CycloneDxSchema.Version schemaVersion, final boolean strict) throws IOException {
@@ -313,6 +331,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @param schemaVersion the schema version to validate against
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return true if the file is a valid BOM, false if not
+     * @throws IOException when errors are encountered
      * @since 3.0.0
      */
     public boolean isValid(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion, final boolean strict) throws IOException {

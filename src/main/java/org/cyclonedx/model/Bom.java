@@ -104,7 +104,7 @@ public class Bom extends ExtensibleElement {
 
     /**
      * Returns the CycloneDX spec version of a Bom. The spec version will
-     * only be populated when paring a bom via {@link org.cyclonedx.BomParser}.
+     * only be populated when paring a bom via {@link org.cyclonedx.parsers.Parser}.
      * It has no affect on bom generation or any other functionality.
      * @return the String version representation of the spec version
      */

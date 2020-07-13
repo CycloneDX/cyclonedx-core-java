@@ -389,7 +389,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         };
         XStream.setupDefaultSecurity(xstream);
         xstream.allowTypesByWildcard(new String[] {
-                "org.cyclonedx.model.**", "org.cyclonedx.model.ext.dependencyGraph.**"
+                "org.cyclonedx.model.**"
         });
         return xstream;
     }
@@ -441,6 +441,8 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.alias("author", OrganizationalContact.class);
         xstream.alias("manufacture", OrganizationalEntity.class);
         xstream.alias("supplier", OrganizationalEntity.class);
+        xstream.alias("contact", OrganizationalContact.class);
+        xstream.addImplicitCollection(OrganizationalEntity.class, "contacts");
 
         return xstream;
     }
