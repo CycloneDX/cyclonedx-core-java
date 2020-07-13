@@ -16,9 +16,10 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-package org.cyclonedx;
+package org.cyclonedx.parsers;
 
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -27,12 +28,12 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
-public class BomParserTest {
+public class XmlParserTest {
 
     @Test
     public void testValid10Bom() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.0.xml").getFile());
-        final BomParser parser = new BomParser();
+        final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_10);
         Assert.assertTrue(valid);
     }
@@ -40,7 +41,7 @@ public class BomParserTest {
     @Test
     public void testValid11Bom() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.1.xml").getFile());
-        final BomParser parser = new BomParser();
+        final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
         Assert.assertTrue(valid);
     }
@@ -48,7 +49,7 @@ public class BomParserTest {
     @Test
     public void testValid11BomWithDependencyGraph10() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.1-dependency-graph-1.0.xml").getFile());
-        final BomParser parser = new BomParser();
+        final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
         Assert.assertTrue(valid);
     }
@@ -56,7 +57,7 @@ public class BomParserTest {
     @Test
     public void testValid11BomWithVulnerability10() throws Exception {
         final File file = new File(this.getClass().getResource("/bom-1.1-vulnerability-1.0.xml").getFile());
-        final BomParser parser = new BomParser();
+        final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
         Assert.assertTrue(valid);
     }
@@ -64,7 +65,7 @@ public class BomParserTest {
     @Test
     public void testParsedObjects10Bom() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.0.xml"));
-        final BomParser parser = new BomParser();
+        final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals("1.0", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getComponents().size());
@@ -90,7 +91,7 @@ public class BomParserTest {
     @Test
     public void testParsedObjects11Bom() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.1.xml"));
-        final BomParser parser = new BomParser();
+        final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(3, bom.getComponents().size());
@@ -136,7 +137,7 @@ public class BomParserTest {
     @Test
     public void testParsedObjects11BomWithDependencyGraph10() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.1-dependency-graph-1.0.xml"));
-        final BomParser parser = new BomParser();
+        final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(3, bom.getComponents().size());
@@ -162,6 +163,5 @@ public class BomParserTest {
         Assert.assertNull(d11.getDependencies());
         Assert.assertEquals(1, d2.getDependencies().size());
         Assert.assertNull(d3.getDependencies());
-
     }
 }

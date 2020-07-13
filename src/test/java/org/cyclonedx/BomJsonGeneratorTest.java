@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.json.BomJsonGenerator12;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.parsers.JsonParser;
+import org.cyclonedx.parsers.XmlParser;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,8 +40,8 @@ public class BomJsonGeneratorTest {
         Assert.assertTrue(generator instanceof BomJsonGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
-        BomParser parser = new BomParser();
-        Assert.assertTrue(parser.isValidJson(file, CycloneDxSchema.Version.VERSION_12, true));
+        JsonParser parser = new JsonParser();
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
     }
 
     private File writeToFile(String jsonString) throws Exception {
@@ -51,7 +53,7 @@ public class BomJsonGeneratorTest {
 
     private Bom createCommonBom(String resource) throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
     }
 }

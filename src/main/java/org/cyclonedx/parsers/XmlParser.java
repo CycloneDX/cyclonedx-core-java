@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-package org.cyclonedx;
+package org.cyclonedx.parsers;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
@@ -25,7 +25,7 @@ import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
-import org.apache.commons.io.FileUtils;
+import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.converters.HashConverter;
 import org.cyclonedx.converters.AttachmentTextConverter;
 import org.cyclonedx.exception.ParseException;
@@ -43,8 +43,6 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
-import org.everit.json.schema.ValidationException;
-import org.json.JSONObject;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -66,32 +64,26 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * BomParser is responsible for validating and parsing CycloneDX bill-of-material
- * documents and returning a high-level {@link Bom} object with all its components.
- * @since 1.1.0
+ * XmlParser is responsible for validating and parsing CycloneDX bill-of-material
+ * XML documents and returning a {@link Bom} object.
+ * @since 3.0.0
  */
 @SuppressWarnings("unused")
-public class BomParser extends CycloneDxSchema {
+public class XmlParser extends CycloneDxSchema implements Parser {
 
     /**
-     * Parses a CycloneDX BOM.
-     *
-     * @param file the BOM
-     * @return an Bom object
-     * @throws ParseException when errors are encountered
-     * @since 1.1.0
+     * {@inheritDoc}
      */
-    public Bom parse(File file) throws ParseException {
+    public Bom parse(final File file) throws ParseException {
         try {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
@@ -104,14 +96,9 @@ public class BomParser extends CycloneDxSchema {
     }
 
     /**
-     * Parses a CycloneDX BOM.
-     *
-     * @param bomBytes the BOM
-     * @return an Bom object
-     * @throws ParseException when errors are encountered
-     * @since 1.1.0
+     * {@inheritDoc}
      */
-    public Bom parse(byte[] bomBytes) throws ParseException {
+    public Bom parse(final byte[] bomBytes) throws ParseException {
         try {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
@@ -124,34 +111,21 @@ public class BomParser extends CycloneDxSchema {
     }
 
     /**
-     * Parses a CycloneDX BOM.
-     *
-     * @param url to the BOM
-     * @return an Bom object
-     * @throws ParseException when errors are encountered
-     * @since 2.0.0
+     * {@inheritDoc}
      */
-    public Bom parse(URL url) throws ParseException {
+    public Bom parse(final InputStream inputStream) throws ParseException {
         try {
-            final String schemaVersion = identifySchemaVersion(
-                    extractAllNamespaceDeclarations(new InputSource(url.openStream())));
-            final XStream xstream = mapDefaultObjectModel(createXStream());
-            final Bom bom = (Bom) xstream.fromXML(url);
-            return injectSchemaVersion(bom, schemaVersion);
-        } catch (XStreamException | XPathExpressionException | IOException e) {
+            XStream xstream = mapDefaultObjectModel(createXStream());
+            return (Bom) xstream.fromXML(inputStream);
+        } catch (XStreamException e) {
             throw new ParseException(e);
         }
     }
 
     /**
-     * Parses a CycloneDX BOM.
-     *
-     * @param reader a Reader object
-     * @return an Bom object
-     * @throws ParseException when errors are encountered
-     * @since 2.0.0
+     * {@inheritDoc}
      */
-    public Bom parse(Reader reader) throws ParseException {
+    public Bom parse(final Reader reader) throws ParseException {
         try {
             XStream xstream = mapDefaultObjectModel(createXStream());
             return (Bom) xstream.fromXML(reader);
@@ -168,9 +142,9 @@ public class BomParser extends CycloneDxSchema {
      * @param bom the Bom to set the schemaVersion for
      * @param schemaVersion the value of the schema version
      * @return the updated Bom
-     * @since 2.5.0
+     * @since 3.0.0
      */
-    private Bom injectSchemaVersion(Bom bom, String schemaVersion) {
+    private Bom injectSchemaVersion(final Bom bom, final String schemaVersion) {
         try {
             final Field field = Bom.class.getDeclaredField("specVersion");
             field.setAccessible(true);
@@ -182,120 +156,147 @@ public class BomParser extends CycloneDxSchema {
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the latest version of the specification
-     * through XML validation.
-     * @param file the CycloneDX BoM file to validate
-     * @return a List of SAXParseExceptions. If the size of the list is 0, validation was successful
-     * @since 1.1.0
+     * {@inheritDoc}
      */
-    public List<SAXParseException> validate(File file) throws IOException, SAXException {
+    public List<ParseException> validate(final File file) throws IOException {
         return validate(file, CycloneDxSchema.VERSION_LATEST);
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the specification through XML validation.
-     * @param file the CycloneDX BoM file to validate
-     * @param schemaVersion the schema version to validate against
-     * @return a List of SAXParseExceptions. If the size of the list is 0, validation was successful
-     * @since 2.0.0
+     * {@inheritDoc}
      */
-    public List<SAXParseException> validate(File file, CycloneDxSchema.Version schemaVersion) throws IOException, SAXException {
-        final Source xmlFile = new StreamSource(file);
-        final List<SAXParseException> exceptions = new LinkedList<>();
-        final Schema schema = getXmlSchema(schemaVersion);
-        final Validator validator = schema.newValidator();
-        validator.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void warning(SAXParseException exception) {
-                exceptions.add(exception);
-            }
-            @Override
-            public void fatalError(SAXParseException exception) {
-                exceptions.add(exception);
-            }
-            @Override
-            public void error(SAXParseException exception) {
-                exceptions.add(exception);
-            }
-        });
-        validator.validate(xmlFile);
+    public List<ParseException> validate(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        final Source source = new StreamSource(file);
+        return validate(source, schemaVersion);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ParseException> validate(final byte[] bomBytes) throws IOException {
+        return validate(bomBytes, CycloneDxSchema.VERSION_LATEST);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ParseException> validate(final byte[] bomBytes, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        final Source source = new StreamSource(new ByteArrayInputStream(bomBytes));
+        return validate(source, schemaVersion);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ParseException> validate(final Reader reader) throws IOException {
+        return validate(reader, CycloneDxSchema.VERSION_LATEST);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ParseException> validate(final Reader reader, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        final Source source = new StreamSource(reader);
+        return validate(source, schemaVersion);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ParseException> validate(final InputStream inputStream) throws IOException {
+        return validate(inputStream, CycloneDxSchema.VERSION_LATEST);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ParseException> validate(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        final Source source = new StreamSource(inputStream);
+        return validate(source, schemaVersion);
+    }
+
+    public List<ParseException> validate(final Source source, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        final List<ParseException> exceptions = new LinkedList<>();
+        try {
+            final Schema schema = getXmlSchema(schemaVersion);
+            final Validator validator = schema.newValidator();
+            validator.setErrorHandler(new ErrorHandler() {
+                @Override
+                public void warning(SAXParseException e) {
+                    exceptions.add(new ParseException(e.getMessage(), e));
+                }
+
+                @Override
+                public void fatalError(SAXParseException e) {
+                    exceptions.add(new ParseException(e.getMessage(), e));
+                }
+
+                @Override
+                public void error(SAXParseException e) {
+                    exceptions.add(new ParseException(e.getMessage(), e));
+                }
+            });
+            validator.validate(source);
+        } catch (SAXException e) {
+            exceptions.add(new ParseException(e.getMessage(), e));
+        }
         return exceptions;
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the latest version of the specification
-     * through XML validation.
-     * @param file the CycloneDX BoM file to validate
-     * @return true is the file is a valid BoM, false if not
-     * @since 1.1.0
+     * {@inheritDoc}
      */
-    public boolean isValid(File file) throws IOException, SAXException {
+    public boolean isValid(final File file) throws IOException {
         return validate(file).isEmpty();
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the specification through XML validation.
-     * @param file the CycloneDX BoM file to validate
-     * @param schemaVersion the schema version to validate against
-     * @return true is the file is a valid BoM, false if not
-     * @since 2.0.0
+     * {@inheritDoc}
      */
-    public boolean isValid(File file, CycloneDxSchema.Version schemaVersion) throws IOException, SAXException {
+    public boolean isValid(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
         return validate(file, schemaVersion).isEmpty();
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the latest version of the specification
-     * through JSON validation.
-     * @param file the CycloneDX BoM file to validate
-     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
-     * @return true is the file is a valid BoM, false if not
-     * @since 3.0.0
+     * {@inheritDoc}
      */
-    public boolean isValidJson(File file, boolean strict) throws IOException {
-        return isValidJson(file, VERSION_LATEST, strict);
+    public boolean isValid(final byte[] bomBytes) throws IOException {
+        return validate(bomBytes).isEmpty();
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the latest version of the specification
-     * through JSON validation.
-     * @param json the CycloneDX BoM JSON String to validate
-     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
-     * @return true is the file is a valid BoM, false if not
-     * @since 3.0.0
+     * {@inheritDoc}
      */
-    public boolean isValidJson(String json, boolean strict) throws IOException {
-        return isValidJson(json, VERSION_LATEST, strict);
+    public boolean isValid(final byte[] bomBytes, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        return validate(bomBytes, schemaVersion).isEmpty();
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the specification through JSON validation.
-     * @param file the CycloneDX BoM file to validate
-     * @param schemaVersion the schema version to validate against
-     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
-     * @return true is the file is a valid BoM, false if not
-     * @since 3.0.0
+     * {@inheritDoc}
      */
-    public boolean isValidJson(File file, CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
-        return isValidJson(FileUtils.readFileToString(file, StandardCharsets.UTF_8), schemaVersion, strict);
+    public boolean isValid(final Reader reader) throws IOException {
+        return validate(reader).isEmpty();
     }
 
     /**
-     * Verifies a CycloneDX BoM conforms to the specification through JSON validation.
-     * @param jsonString the CycloneDX BoM JSON String to validate
-     * @param schemaVersion the schema version to validate against
-     * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
-     * @return true is the file is a valid BoM, false if not
-     * @since 3.0.0
+     * {@inheritDoc}
      */
-    public boolean isValidJson(String jsonString, CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
-        try {
-            final JSONObject json = new JSONObject(jsonString);
-            getJsonSchema(schemaVersion, strict).validate(json);
-            return true;
-        } catch (ValidationException e) {
-            return false;
-        }
+    public boolean isValid(final Reader reader, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        return validate(reader, schemaVersion).isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isValid(final InputStream inputStream) throws IOException {
+        return validate(inputStream).isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isValid(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion) throws IOException {
+        return validate(inputStream, schemaVersion).isEmpty();
     }
 
     private String identifySchemaVersion(final NodeList nodeList) {
@@ -310,16 +311,15 @@ public class BomParser extends CycloneDxSchema {
         return null;
     }
 
-    private NodeList extractAllNamespaceDeclarations(InputSource in) throws XPathExpressionException {
+    private NodeList extractAllNamespaceDeclarations(final InputSource in) throws XPathExpressionException {
         final XPathFactory xPathFactory = XPathFactory.newInstance();
         final XPath xPath = xPathFactory.newXPath();
         final XPathExpression xPathExpression = xPath.compile("//namespace::*");
-        final NodeList nodeList = (NodeList) xPathExpression.evaluate(in, XPathConstants.NODESET);
-        return nodeList;
+        return (NodeList) xPathExpression.evaluate(in, XPathConstants.NODESET);
     }
 
     private Map<String, Component.Type> getComponentTypeMapping() {
-        Map<String, Component.Type> map = new HashMap<>();
+        final Map<String, Component.Type> map = new HashMap<>();
         map.put(Component.Type.APPLICATION.getTypeName(), Component.Type.APPLICATION);
         map.put(Component.Type.FRAMEWORK.getTypeName(), Component.Type.FRAMEWORK);
         map.put(Component.Type.LIBRARY.getTypeName(), Component.Type.LIBRARY);
@@ -332,7 +332,7 @@ public class BomParser extends CycloneDxSchema {
     }
 
     private Map<String, Component.Scope> getComponentScopeMapping() {
-        Map<String, Component.Scope> map = new HashMap<>();
+        final Map<String, Component.Scope> map = new HashMap<>();
         map.put(Component.Scope.REQUIRED.getScopeName(), Component.Scope.REQUIRED);
         map.put(Component.Scope.EXCLUDED.getScopeName(), Component.Scope.EXCLUDED);
         map.put(Component.Scope.OPTIONAL.getScopeName(), Component.Scope.OPTIONAL);
@@ -340,7 +340,7 @@ public class BomParser extends CycloneDxSchema {
     }
 
     private Map<String, ExternalReference.Type> getExternalReferenceTypeMapping() {
-        Map<String, ExternalReference.Type> map = new HashMap<>();
+        final Map<String, ExternalReference.Type> map = new HashMap<>();
         map.put(ExternalReference.Type.VCS.getTypeName(), ExternalReference.Type.VCS);
         map.put(ExternalReference.Type.ISSUE_TRACKER.getTypeName(), ExternalReference.Type.ISSUE_TRACKER);
         map.put(ExternalReference.Type.WEBSITE.getTypeName(), ExternalReference.Type.WEBSITE);
@@ -360,11 +360,11 @@ public class BomParser extends CycloneDxSchema {
     }
 
     private XStream createXStream() {
-        QName qname = new QName(CycloneDxSchema.NS_BOM_LATEST);
-        QNameMap nsm = new QNameMap();
+        final QName qname = new QName(CycloneDxSchema.NS_BOM_LATEST);
+        final QNameMap nsm = new QNameMap();
         nsm.registerMapping(qname, Bom.class);
         nsm.setDefaultNamespace(CycloneDxSchema.NS_BOM_LATEST);
-        XStream xstream = new XStream(new StaxDriver(nsm)) {
+        final XStream xstream = new XStream(new StaxDriver(nsm)) {
             @Override
             protected MapperWrapper wrapMapper(MapperWrapper next) {
                 return new MapperWrapper(next) {
@@ -394,7 +394,7 @@ public class BomParser extends CycloneDxSchema {
         return xstream;
     }
 
-    private XStream mapDefaultObjectModel(XStream xstream) {
+    private XStream mapDefaultObjectModel(final XStream xstream) {
         xstream.alias("bom", Bom.class);
         xstream.aliasAttribute(Bom.class, "version", "version");
         xstream.aliasAttribute(Bom.class, "serialNumber", "serialNumber");

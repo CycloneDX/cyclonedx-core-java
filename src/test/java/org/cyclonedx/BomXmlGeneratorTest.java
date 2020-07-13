@@ -19,11 +19,17 @@
 package org.cyclonedx;
 
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.model.*;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator10;
 import org.cyclonedx.generators.xml.BomXmlGenerator11;
 import org.cyclonedx.generators.xml.BomXmlGenerator12;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.ExtensibleType;
+import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.License;
+import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.parsers.XmlParser;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,7 +63,7 @@ public class BomXmlGeneratorTest {
         Assert.assertTrue(generator instanceof BomXmlGenerator10);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_10, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_10));
     }
 
@@ -68,7 +74,7 @@ public class BomXmlGeneratorTest {
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
@@ -79,7 +85,7 @@ public class BomXmlGeneratorTest {
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
@@ -90,7 +96,7 @@ public class BomXmlGeneratorTest {
         Assert.assertTrue(generator instanceof BomXmlGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
 
@@ -101,7 +107,7 @@ public class BomXmlGeneratorTest {
         Assert.assertTrue(generator instanceof BomXmlGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
 
@@ -131,7 +137,7 @@ public class BomXmlGeneratorTest {
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
@@ -165,7 +171,7 @@ public class BomXmlGeneratorTest {
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
@@ -182,7 +188,7 @@ public class BomXmlGeneratorTest {
 
     private Bom createCommonBom(String resource) throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
-        BomParser parser = new BomParser();
+        XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
     }
 }
