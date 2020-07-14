@@ -89,9 +89,9 @@ public class JsonParserTest {
         Dependency d1 = bom.getDependencies().get(0);
         Assert.assertNotNull(d1);
         Assert.assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
-        //Assert.assertEquals(2, d1.getDependencies().size());
-        //Dependency d11 = d1.getDependencies().get(0);
-        //Assert.assertEquals("pkg:maven/org.acme/web-framework@1.0.0", d11.getRef());
-        //Assert.assertNull(d11.getDependencies());
+        Assert.assertEquals(1, d1.getDependencies().size());
+        Dependency d11 = d1.getDependencies().get(0);
+        Assert.assertEquals("pkg:npm/acme/common@1.0.0", d11.getRef());
+        Assert.assertNull(d11.getDependencies());
     }
 }

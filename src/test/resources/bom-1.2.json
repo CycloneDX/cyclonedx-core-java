@@ -170,7 +170,7 @@
     {
       "ref": "pkg:npm/acme/component@1.0.0",
       "dependsOn": [
-        "pkg:npm/acme/component@1.0.0"
+        "pkg:npm/acme/common@1.0.0"
       ]
     }
   ]
