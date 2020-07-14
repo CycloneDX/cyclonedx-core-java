@@ -21,9 +21,21 @@ Maven Usage
 <dependency>
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
-    <version>2.7.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
+
+## CycloneDX Schema Support
+
+The following table provides information on the version of this node module, the CycloneDX schema version supported, 
+as well as the output format options. Use the latest possible version of this node module that is the compatible with 
+the CycloneDX version supported by the target system.
+
+| Version | Schema Version | Format(s) |
+| ------- | ----------------- | --------- |
+| 3.x | CycloneDX v1.2 | XML/JSON |
+| 2.x | CycloneDX v1.1 | XML |
+| 1.x | CycloneDX v1.0 | XML |
 
 Copyright & License
 -------------------
