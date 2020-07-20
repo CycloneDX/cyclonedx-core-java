@@ -19,6 +19,7 @@
 package org.cyclonedx.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Hash;
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public final class BomUtils {
      * @throws IOException an IOException
      * @since 1.0.0
      */
-    public static List<Hash> calculateHashes(File file) throws IOException {
+    public static List<Hash> calculateHashes(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
         if (file == null || !file.exists() || !file.canRead()) {
             return null;
         }
@@ -56,8 +57,10 @@ public final class BomUtils {
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA_256, DigestUtils.sha256Hex(fis)));
         }
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.SHA_384, DigestUtils.sha384Hex(fis)));
+        if (schemaVersion.getVersion() >= 1.2) {
+            try (InputStream fis = Files.newInputStream(file.toPath())) {
+                hashes.add(new Hash(Hash.Algorithm.SHA_384, DigestUtils.sha384Hex(fis)));
+            }
         }
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA_512, DigestUtils.sha512Hex(fis)));
@@ -65,9 +68,11 @@ public final class BomUtils {
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA3_256, DigestUtils.sha3_256Hex(fis)));
         } catch (Exception e) { /* Not available in Java 8 */ }
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.SHA3_384, DigestUtils.sha3_384Hex(fis)));
-        } catch (Exception e) { /* Not available in Java 8 */ }
+        if (schemaVersion.getVersion() >= 1.2) {
+            try (InputStream fis = Files.newInputStream(file.toPath())) {
+                hashes.add(new Hash(Hash.Algorithm.SHA3_384, DigestUtils.sha3_384Hex(fis)));
+            } catch (Exception e) { /* Not available in Java 8 */ }
+        }
         try (InputStream fis = Files.newInputStream(file.toPath())) {
             hashes.add(new Hash(Hash.Algorithm.SHA3_512, DigestUtils.sha3_512Hex(fis)));
         } catch (Exception e) { /* Not available in Java 8 */ }

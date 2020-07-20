@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.util;
 
+import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Hash;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class BomUtilsTest {
     @Test
     public void calculateHashesTest() throws Exception {
         File file = new File(this.getClass().getResource("/hashtest.txt").toURI());
-        List<Hash> hashes = BomUtils.calculateHashes(file);
+        List<Hash> hashes = BomUtils.calculateHashes(file, CycloneDxSchema.Version.VERSION_12);
         Assert.assertTrue(hashes.size() > 0);
         for (Hash hash: hashes) {
             if (hash.getAlgorithm().equals(Hash.Algorithm.MD5.getSpec())) {
