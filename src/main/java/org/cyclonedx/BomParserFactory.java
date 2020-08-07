@@ -26,6 +26,7 @@ import org.cyclonedx.parsers.XmlParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class BomParserFactory {
 
@@ -34,15 +35,29 @@ public class BomParserFactory {
     public static Parser createParser(final File file) throws ParseException {
         try {
             final byte[] bytes = IOUtils.toByteArray(new FileInputStream(file), 1);
-            if (bytes[0] == 123) {
-                return new JsonParser();
-            } else if (bytes[0] == 60) {
-                return new XmlParser();
-            } else {
-                throw new ParseException("The specified BOM is not in a supported format. Supported formats are XML and JSON");
-            }
+            return createParser(bytes);
         } catch (IOException e) {
             throw new ParseException("An error occurred creating parser from file", e);
         }
+    }
+
+    public static Parser createParser(final byte[] bytes) throws ParseException {
+        if (bytes[0] == 123) {
+            return new JsonParser();
+        } else if (bytes[0] == 60) {
+            return new XmlParser();
+        } else {
+            throw new ParseException("The specified BOM is not in a supported format. Supported formats are XML and JSON");
+        }
+    }
+
+    public static boolean looksLikeCycloneDX(final byte[] bytes) {
+        final String bomString = new String(bytes, StandardCharsets.UTF_8);
+        if (bomString.startsWith("<?xml") && bomString.contains("<bom") && bomString.contains("http://cyclonedx.org/schema/bom")) {
+            return true;
+        } else if (bomString.startsWith("{") && bomString.contains("bomFormat") && bomString.contains("CycloneDX")) {
+            return true;
+        }
+        return false;
     }
 }
