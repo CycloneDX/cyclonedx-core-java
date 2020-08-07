@@ -136,6 +136,9 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
     @SuppressWarnings("deprecation")
     private void createComponentNode(Node parent, Component component) {
+        if (component == null) {
+            return;
+        }
         final List<Attribute> componentAttrs = new ArrayList<>();
         componentAttrs.add(new Attribute("type", component.getType().getTypeName()));
         if (component.getBomRef() != null) {

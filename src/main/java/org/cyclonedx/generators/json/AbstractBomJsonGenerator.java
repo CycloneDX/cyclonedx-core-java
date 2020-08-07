@@ -96,6 +96,9 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
     @SuppressWarnings("deprecation")
     JSONObject createComponentNode(final Component component) {
+        if (component == null) {
+            return null;
+        }
         final JSONObject json = OrderedJSONObjectFactory.create();
         json.put("type", component.getType().getTypeName());
         json.put("bom-ref", stripBreaks(component.getBomRef()));
