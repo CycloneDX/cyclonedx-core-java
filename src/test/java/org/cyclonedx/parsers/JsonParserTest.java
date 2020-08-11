@@ -19,6 +19,7 @@
 package org.cyclonedx.parsers;
 
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -34,6 +35,7 @@ public class JsonParserTest {
         final File file = new File(this.getClass().getResource("/bom-1.2.json").getFile());
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
         System.out.println(bom.getSerialNumber());
     }
 

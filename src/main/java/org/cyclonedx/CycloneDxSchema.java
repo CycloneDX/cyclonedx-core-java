@@ -20,6 +20,7 @@ package org.cyclonedx;
 
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
+import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xml.sax.SAXException;
@@ -30,6 +31,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * CycloneDxSchema is a base class that provides schema information to
@@ -75,9 +78,10 @@ public abstract class CycloneDxSchema {
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return a Schema
      * @throws IOException when errors are encountered
+     * @throws URISyntaxException when errors are encountered
      * @since 3.0.0
      */
-    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException, URISyntaxException {
         return getJsonSchema12(strict);
     }
 
@@ -149,7 +153,7 @@ public abstract class CycloneDxSchema {
         return schemaFactory.newSchema(schemaFiles);
     }
 
-    private org.everit.json.schema.Schema getJsonSchema12(boolean strict) throws IOException {
+    private org.everit.json.schema.Schema getJsonSchema12(boolean strict) throws IOException, URISyntaxException {
         if (strict) {
             return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json"));
         } else {
@@ -157,8 +161,14 @@ public abstract class CycloneDxSchema {
         }
     }
 
-    private org.everit.json.schema.Schema getJsonSchema(InputStream inputStream) throws IOException {
-            final JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
-            return org.everit.json.schema.loader.SchemaLoader.load(rawSchema);
+    private org.everit.json.schema.Schema getJsonSchema(InputStream inputStream) throws IOException, URISyntaxException {
+        final JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+        final InputStream spdxInstream = this.getClass().getClassLoader().getResourceAsStream("spdx.schema.json");
+        final JSONObject spdxSchema = new JSONObject(new JSONTokener(spdxInstream));
+        final SchemaLoader schemaLoader = SchemaLoader.builder()
+                .registerSchemaByURI(new URI("http://cyclonedx.org/schema/spdx.schema.json"), spdxSchema)
+                .schemaJson(rawSchema)
+                .build();
+        return schemaLoader.load().build();
     }
 }

@@ -32,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -224,7 +225,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
         final List<ParseException> exceptions = new ArrayList<>();
         try {
             getJsonSchema(schemaVersion, strict).validate(bomJson);
-        } catch (ValidationException e) {
+        } catch (ValidationException | URISyntaxException e) {
             exceptions.add(new ParseException(e.getMessage(), e));
         }
         return exceptions;
