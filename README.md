@@ -28,7 +28,7 @@ Maven Usage
 ## CycloneDX Schema Support
 
 The following table provides information on the version of this node module, the CycloneDX schema version supported, 
-as well as the output format options. Use the latest possible version of this node module that is the compatible with 
+as well as the output format options. Use the latest possible version of this library that is the compatible with 
 the CycloneDX version supported by the target system.
 
 | Version | Schema Version | Format(s) |
