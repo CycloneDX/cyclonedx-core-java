@@ -21,6 +21,7 @@ package org.cyclonedx.parsers;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
+import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
@@ -434,14 +435,19 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.aliasAttribute(Vulnerability.class, "ref", "ref");
 
         xstream.alias("cwe", Cwe.class);
+        xstream.processAnnotations(Cwe.class);
 
         xstream.alias("advisory", Advisory.class);
+        xstream.processAnnotations(Advisory.class);
 
         xstream.alias("recommendation", Recommendation.class);
+        xstream.processAnnotations(Recommendation.class);
 
         xstream.alias("score", Score.class);
 
         xstream.alias("rating", Rating.class);
+
+        xstream.alias("source", Source.class);
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);
