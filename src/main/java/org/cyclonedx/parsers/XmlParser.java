@@ -43,6 +43,12 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.Vulnerability;
+import org.cyclonedx.model.Vulnerability.Advisory;
+import org.cyclonedx.model.Vulnerability.Cwe;
+import org.cyclonedx.model.Vulnerability.Rating;
+import org.cyclonedx.model.Vulnerability.Recommendation;
+import org.cyclonedx.model.Vulnerability.Score;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -423,6 +429,19 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.alias("reference", ExternalReference.class);
         xstream.aliasAttribute(ExternalReference.class, "type", "type");
         xstream.registerConverter(new EnumToStringConverter<>(ExternalReference.Type.class, getExternalReferenceTypeMapping()));
+
+        xstream.alias("vulnerability", Vulnerability.class);
+        xstream.aliasAttribute(Vulnerability.class, "ref", "ref");
+
+        xstream.alias("cwe", Cwe.class);
+
+        xstream.alias("advisory", Advisory.class);
+
+        xstream.alias("recommendation", Recommendation.class);
+
+        xstream.alias("score", Score.class);
+
+        xstream.alias("rating", Rating.class);
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);

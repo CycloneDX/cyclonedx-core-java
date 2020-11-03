@@ -84,6 +84,7 @@ public class Component extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     private List<Component> components;
     private Type type;
+    private List<Vulnerability> vulnerabilities;
 
     public String getBomRef() {
         return bomRef;
@@ -178,6 +179,21 @@ public class Component extends ExtensibleElement {
             this.hashes = new ArrayList<>();
         }
         this.hashes.add(hash);
+    }
+
+    public List<Vulnerability> getVulnerabilities() {
+        return this.vulnerabilities;
+    }
+
+    public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
+        this.vulnerabilities = vulnerabilities;
+    }
+
+    public void addVulnerability(Vulnerability vulnerability) {
+        if (this.vulnerabilities == null) {
+            this.vulnerabilities = new ArrayList<>();
+        }
+        this.vulnerabilities.add(vulnerability);
     }
 
     public LicenseChoice getLicenseChoice() {

@@ -60,6 +60,7 @@ public class XmlParserTest {
         final File file = new File(this.getClass().getResource("/bom-1.1-vulnerability-1.0.xml").getFile());
         final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
+        final Bom bom = parser.parse(file);
         Assert.assertTrue(valid);
     }
 
