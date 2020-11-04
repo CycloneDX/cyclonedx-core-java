@@ -217,46 +217,43 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         if (vulnerability.getRatings() != null && !vulnerability.getRatings().isEmpty()) {
             final Element ratings = createElement(vulnNode, "v:ratings");
             for (Rating rating : vulnerability.getRatings()) {
-                final Element ratingNode = createElement(ratings, "v:rating");
+               final Element ratingNode = createElement(ratings, "v:rating");
                 final Element score = createElement(ratingNode, "v:score");
-                final Element base = createElement(score, "v:base");
-                base.setTextContent(rating.getScore().getBase());
-                final Element impact = createElement(score, "v:impact");
-                impact.setTextContent(rating.getScore().getImpact());
-                final Element exploitability = createElement(score, "v:exploitability");
-                exploitability.setTextContent(rating.getScore().getExploitability());
-                final Element severity = createElement(ratingNode, "v:severity");
-                severity.setTextContent(rating.getSeverity());
-                final Element method = createElement(ratingNode, "v:method");
-                method.setTextContent(rating.getMethod());
-                final Element vector = createElement(ratingNode, "v:vector");
-                vector.setTextContent(rating.getVector());
+
+                createNodeElement(score, "v:base", rating.getScore().getBase());
+                createNodeElement(score, "v:impact", rating.getScore().getImpact());
+                createNodeElement(score, "v:exploitability", rating.getScore().getExploitability());
+                createNodeElement(ratingNode, "v:severity", rating.getSeverity());
+                createNodeElement(ratingNode, "v:method", rating.getMethod());
+                createNodeElement(ratingNode, "v:vector", rating.getVector());
             }
         }
 
         if (vulnerability.getCwes() != null && !vulnerability.getCwes().isEmpty()) {
             final Element cwes = createElement(vulnNode, "v:cwes");
             for (Cwe cwe : vulnerability.getCwes()) {
-                final Element cweNode = createElement(cwes, "v:cwe");
-                cweNode.setTextContent(cwe.getText());
+                createNodeElement(cwes, "v:cwe", cwe.getText());
             }
         }
 
         if (vulnerability.getRecommendations() != null && !vulnerability.getRecommendations().isEmpty()) {
             final Element recommendations = createElement(vulnNode, "v:recommendations");
             for (Recommendation recommendation : vulnerability.getRecommendations()) {
-                final Element recommendationNode = createElement(recommendations, "v:recommendation");
-                recommendationNode.setTextContent(recommendation.getText());
+                createNodeElement(recommendations, "v:recommendation", recommendation.getText());
             }
         }
 
         if (vulnerability.getAdvisories() != null && !vulnerability.getAdvisories().isEmpty()) {
             final Element advisories = createElement(vulnNode, "v:advisories");
             for (Advisory advisory : vulnerability.getAdvisories()) {
-                final Element advisoryNode = createElement(advisories, "v:advisory");
-                advisoryNode.setTextContent(advisory.getText());
+                createNodeElement(advisories, "v:advisory", advisory.getText());
             }
         }
+    }
+
+    private void createNodeElement(final Element mainElement, String nameElement, String elementText) {
+        final Element elementNode = createElement(mainElement, nameElement);
+        elementNode.setTextContent(elementText);
     }
 
     private void createHashesNode(Node parent, List<Hash> hashes) {
