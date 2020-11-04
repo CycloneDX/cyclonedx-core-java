@@ -172,7 +172,6 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         createElement(componentNode, "copyright", stripBreaks(component.getCopyright()));
         createElement(componentNode, "cpe", stripBreaks(component.getCpe()));
         createElement(componentNode, "purl", stripBreaks(component.getPurl()));
-        createVulnerabilitiesNode(componentNode, component.getVulnerabilities());
         if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified()) {
             createElement(componentNode, "modified", component.isModified());
         }
@@ -182,6 +181,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         if (this.getSchemaVersion().getVersion() >= 1.1) {
             createPedigreeNode(componentNode, component.getPedigree());
             createExternalReferencesNode(componentNode, component.getExternalReferences());
+            createVulnerabilitiesNode(componentNode, component.getVulnerabilities());
         }
         if (component.getComponents() != null && !component.getComponents().isEmpty()) {
             final Element subComponentsNode = createElement(componentNode, "components");
@@ -190,7 +190,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         processExtensions(componentNode, component);
     }
 
-    private void createVulnerabilitiesNode(Node parent, List<Vulnerability1_0> vulnerabilities) {
+    void createVulnerabilitiesNode(Node parent, List<Vulnerability1_0> vulnerabilities) {
         if (vulnerabilities != null && !vulnerabilities.isEmpty()) {
             final Element vulnsNode = createElement(parent, "v:vulnerabilities");
             for (Vulnerability1_0 vuln : vulnerabilities) {

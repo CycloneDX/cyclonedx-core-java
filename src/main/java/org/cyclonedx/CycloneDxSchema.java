@@ -46,6 +46,7 @@ public abstract class CycloneDxSchema {
     public static final String NS_BOM_11 = "http://cyclonedx.org/schema/bom/1.1";
     public static final String NS_BOM_12 = "http://cyclonedx.org/schema/bom/1.2";
     public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
+    public static final String NS_VULNERABILITY_10 = "http://cyclonedx.org/schema/ext/vulnerability/1.0";
     public static final String NS_BOM_LATEST = NS_BOM_12;
     public static final Version VERSION_LATEST = Version.VERSION_12;
 

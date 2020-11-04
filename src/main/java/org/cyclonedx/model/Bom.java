@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+
 @SuppressWarnings("unused")
 public class Bom extends ExtensibleElement {
 
@@ -29,6 +31,7 @@ public class Bom extends ExtensibleElement {
     private List<Component> components;
     private List<Dependency> dependencies;
     private List<ExternalReference> externalReferences;
+    private List<Vulnerability1_0> vulnerabilities;
     private int version = 1;
     private String serialNumber;
     private String specVersion;
@@ -84,6 +87,21 @@ public class Bom extends ExtensibleElement {
 
     public void setExternalReferences(List<ExternalReference> externalReferences) {
         this.externalReferences = externalReferences;
+    }
+
+    public List<Vulnerability1_0> getVulnerabilities() {
+        return this.vulnerabilities;
+    }
+
+    public void setVulnerabilities(List<Vulnerability1_0> vulnerabilities) {
+        this.vulnerabilities = vulnerabilities;
+    }
+
+    public void addVulnerability(Vulnerability1_0 vulnerability) {
+        if (this.vulnerabilities == null) {
+            this.vulnerabilities = new ArrayList<>();
+        }
+        this.vulnerabilities.add(vulnerability);
     }
 
     public int getVersion() {
