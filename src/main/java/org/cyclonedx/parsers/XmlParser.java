@@ -21,7 +21,6 @@ package org.cyclonedx.parsers;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
-import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
@@ -44,12 +43,12 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
-import org.cyclonedx.model.Vulnerability;
-import org.cyclonedx.model.Vulnerability.Advisory;
-import org.cyclonedx.model.Vulnerability.Cwe;
-import org.cyclonedx.model.Vulnerability.Rating;
-import org.cyclonedx.model.Vulnerability.Recommendation;
-import org.cyclonedx.model.Vulnerability.Score;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Cwe;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Score;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -431,8 +430,8 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.aliasAttribute(ExternalReference.class, "type", "type");
         xstream.registerConverter(new EnumToStringConverter<>(ExternalReference.Type.class, getExternalReferenceTypeMapping()));
 
-        xstream.alias("vulnerability", Vulnerability.class);
-        xstream.aliasAttribute(Vulnerability.class, "ref", "ref");
+        xstream.alias("vulnerability", Vulnerability1_0.class);
+        xstream.aliasAttribute(Vulnerability1_0.class, "ref", "ref");
 
         xstream.alias("cwe", Cwe.class);
         xstream.processAnnotations(Cwe.class);

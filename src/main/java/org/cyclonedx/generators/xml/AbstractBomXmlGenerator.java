@@ -36,6 +36,11 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Cwe;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
 import org.cyclonedx.util.BomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -167,6 +172,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         createElement(componentNode, "copyright", stripBreaks(component.getCopyright()));
         createElement(componentNode, "cpe", stripBreaks(component.getCpe()));
         createElement(componentNode, "purl", stripBreaks(component.getPurl()));
+        createVulnerabilitiesNode(componentNode, component.getVulnerabilities());
         if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified()) {
             createElement(componentNode, "modified", component.isModified());
         }
@@ -182,6 +188,75 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
             createComponentsNode(subComponentsNode, component.getComponents());
         }
         processExtensions(componentNode, component);
+    }
+
+    private void createVulnerabilitiesNode(Node parent, List<Vulnerability1_0> vulnerabilities) {
+        if (vulnerabilities != null && !vulnerabilities.isEmpty()) {
+            final Element vulnsNode = createElement(parent, "v:vulnerabilities");
+            for (Vulnerability1_0 vuln : vulnerabilities) {
+                createVulnerabilityNode(vulnsNode, vuln);
+            }
+        }
+    }
+
+    private void createVulnerabilityNode(Node parent, Vulnerability1_0 vulnerability) {
+        final Element vulnNode = createElement(
+            parent, "v:vulnerability", null, new Attribute("ref", vulnerability.getRef())
+        );
+
+        if (vulnerability.getId() != "") {
+            final Element id = createElement(vulnNode, "v:id");
+            id.setTextContent(vulnerability.getId());
+        }
+
+        if (vulnerability.getDescription() != "") {
+            final Element description = createElement(vulnNode, "v:description");
+            description.setTextContent(vulnerability.getDescription());
+        }
+
+        if (vulnerability.getRatings() != null && !vulnerability.getRatings().isEmpty()) {
+            final Element ratings = createElement(vulnNode, "v:ratings");
+            for (Rating rating : vulnerability.getRatings()) {
+                final Element ratingNode = createElement(ratings, "v:rating");
+                final Element score = createElement(ratingNode, "v:score");
+                final Element base = createElement(score, "v:base");
+                base.setTextContent(rating.getScore().getBase());
+                final Element impact = createElement(score, "v:impact");
+                impact.setTextContent(rating.getScore().getImpact());
+                final Element exploitability = createElement(score, "v:exploitability");
+                exploitability.setTextContent(rating.getScore().getExploitability());
+                final Element severity = createElement(ratingNode, "v:severity");
+                severity.setTextContent(rating.getSeverity());
+                final Element method = createElement(ratingNode, "v:method");
+                method.setTextContent(rating.getMethod());
+                final Element vector = createElement(ratingNode, "v:vector");
+                vector.setTextContent(rating.getVector());
+            }
+        }
+
+        if (vulnerability.getCwes() != null && !vulnerability.getCwes().isEmpty()) {
+            final Element cwes = createElement(vulnNode, "v:cwes");
+            for (Cwe cwe : vulnerability.getCwes()) {
+                final Element cweNode = createElement(cwes, "v:cwe");
+                cweNode.setTextContent(cwe.getText());
+            }
+        }
+
+        if (vulnerability.getRecommendations() != null && !vulnerability.getRecommendations().isEmpty()) {
+            final Element recommendations = createElement(vulnNode, "v:recommendations");
+            for (Recommendation recommendation : vulnerability.getRecommendations()) {
+                final Element recommendationNode = createElement(recommendations, "v:recommendation");
+                recommendationNode.setTextContent(recommendation.getText());
+            }
+        }
+
+        if (vulnerability.getAdvisories() != null && !vulnerability.getAdvisories().isEmpty()) {
+            final Element advisories = createElement(vulnNode, "v:advisories");
+            for (Advisory advisory : vulnerability.getAdvisories()) {
+                final Element advisoryNode = createElement(advisories, "v:advisory");
+                advisoryNode.setTextContent(advisory.getText());
+            }
+        }
     }
 
     private void createHashesNode(Node parent, List<Hash> hashes) {

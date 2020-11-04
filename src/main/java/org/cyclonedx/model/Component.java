@@ -19,6 +19,8 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -84,7 +86,7 @@ public class Component extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     private List<Component> components;
     private Type type;
-    private List<Vulnerability> vulnerabilities;
+    private List<Vulnerability1_0> vulnerabilities;
 
     public String getBomRef() {
         return bomRef;
@@ -181,15 +183,15 @@ public class Component extends ExtensibleElement {
         this.hashes.add(hash);
     }
 
-    public List<Vulnerability> getVulnerabilities() {
+    public List<Vulnerability1_0> getVulnerabilities() {
         return this.vulnerabilities;
     }
 
-    public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
+    public void setVulnerabilities(List<Vulnerability1_0> vulnerabilities) {
         this.vulnerabilities = vulnerabilities;
     }
 
-    public void addVulnerability(Vulnerability vulnerability) {
+    public void addVulnerability(Vulnerability1_0 vulnerability) {
         if (this.vulnerabilities == null) {
             this.vulnerabilities = new ArrayList<>();
         }
