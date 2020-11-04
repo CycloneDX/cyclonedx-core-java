@@ -336,11 +336,8 @@
             </build>
         </profile>
         <profile>
-            <id>mac</id>
+            <id>jdk11plus</id>
             <activation>
-                <os>
-                    <family>mac</family>
-                </os>
                 <jdk>[11,)</jdk>
             </activation>
             <build>
