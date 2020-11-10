@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.generators.json;
 
-import com.alibaba.fastjson.JSON;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Commit;
@@ -42,7 +41,6 @@ import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Element;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
