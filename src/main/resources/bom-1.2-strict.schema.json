@@ -387,33 +387,6 @@
         "name"
       ]
     },
-    "Vulnerabilities":{
-      "type":"object",
-      "title":"Vulnerabilities",
-      "properties":{
-        "vulnerability":{
-          "title":"vulnerability",
-          "allOf":[
-            {
-              "type":"array",
-              "items":{
-                "$ref":"#/definitions/Vulnerability"
-              },
-              "minItems":0
-            }
-          ],
-          "propertyType":"element",
-          "elementName":{
-            "localPart":"vulnerability",
-            "namespaceURI":"http://cyclonedx.org/schema/ext/vulnerability/1.0"
-          }
-        }
-      },
-      "typeType":"classInfo",
-      "propertiesOrder":[
-        "vulnerability"
-      ]
-    },
     "Vulnerability.Advisories":{
       "type":"array",
       "title":"Vulnerability.Advisories",
