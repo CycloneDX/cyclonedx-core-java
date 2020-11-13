@@ -21,6 +21,7 @@ package org.cyclonedx;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.everit.json.schema.loader.SchemaLoader;
+import org.everit.json.schema.loader.SchemaLoader.SchemaLoaderBuilder;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xml.sax.SAXException;
@@ -29,7 +30,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -78,11 +78,10 @@ public abstract class CycloneDxSchema {
      * @param schemaVersion The version to return the schema for
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return a Schema
-     * @throws IOException when errors are encountered
      * @throws URISyntaxException when errors are encountered
      * @since 3.0.0
      */
-    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException, URISyntaxException {
+    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict) throws URISyntaxException {
         return getJsonSchema12(strict);
     }
 
@@ -154,22 +153,32 @@ public abstract class CycloneDxSchema {
         return schemaFactory.newSchema(schemaFiles);
     }
 
-    private org.everit.json.schema.Schema getJsonSchema12(boolean strict) throws IOException, URISyntaxException {
+    private org.everit.json.schema.Schema getJsonSchema12(boolean strict) throws URISyntaxException {
         if (strict) {
-            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json"));
+            return getJsonSchema(
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json"),
+                this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0-strict.schema.json")
+            );
         } else {
-            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json"));
+            return getJsonSchema(
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json"),
+                this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0.schema.json")
+            );
         }
     }
 
-    private org.everit.json.schema.Schema getJsonSchema(InputStream inputStream) throws IOException, URISyntaxException {
-        final JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
-        final InputStream spdxInstream = this.getClass().getClassLoader().getResourceAsStream("spdx.schema.json");
-        final JSONObject spdxSchema = new JSONObject(new JSONTokener(spdxInstream));
-        final SchemaLoader schemaLoader = SchemaLoader.builder()
-                .registerSchemaByURI(new URI("http://cyclonedx.org/schema/spdx.schema.json"), spdxSchema)
-                .schemaJson(rawSchema)
-                .build();
-        return schemaLoader.load().build();
+    private org.everit.json.schema.Schema getJsonSchema(InputStream bomSchemaStream, InputStream... extSchemaStreams) throws URISyntaxException {
+        final JSONObject spdxSchema = new JSONObject(new JSONTokener(
+            this.getClass().getClassLoader().getResourceAsStream("spdx.schema.json")));
+        final SchemaLoaderBuilder schemaLoaderBuilder = SchemaLoader.builder()
+            .registerSchemaByURI(new URI(spdxSchema.get("$id").toString()), spdxSchema);
+
+        for (int i=0; i<extSchemaStreams.length; i++) {
+            final JSONObject extSchema = new JSONObject(new JSONTokener(extSchemaStreams[i]));
+            schemaLoaderBuilder.registerSchemaByURI(new URI(extSchema.get("id").toString()), extSchema);
+        }
+
+        final JSONObject rawSchema = new JSONObject(new JSONTokener(bomSchemaStream));
+        return schemaLoaderBuilder.schemaJson(rawSchema).build().load().build();
     }
 }
