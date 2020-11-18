@@ -867,6 +867,11 @@
         }
       }
     },
+    "vulnerabilities": {
+      "type": "array",
+      "items": {"$ref": "http://cyclonedx.org/schema/ext/vulnerability-1.0-strict.schema.json#/definitions/vulnerability"},
+      "title": "Vulnerabilities"
+    },
     "service": {
       "type": "object",
       "title": "Service Object",

@@ -38,4 +38,10 @@ public class BomParserFactoryTest {
         Parser parser = BomParserFactory.createParser(new File(BomParserFactory.class.getResource("/bom-1.2.json").getFile()));
         Assert.assertTrue(parser instanceof JsonParser);
     }
+
+    @Test
+    public void testJSONFactoryWithVuln() throws Exception {
+        Parser parser = BomParserFactory.createParser(new File(BomParserFactory.class.getResource("/bom-1.2-vulnerability-1.0.json").getFile()));
+        Assert.assertTrue(parser instanceof JsonParser);
+    }
 }
