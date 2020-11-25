@@ -49,20 +49,16 @@ public class ExtensionConverter
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         ArrayList<ExtensibleExtension> list = new ArrayList<>();
         if(reader.getNodeName().equals("vulnerabilities")){
-            Vulnerability1_0 vul=new Vulnerability1_0();
-            String ref=reader.getAttribute(0);
-            vul.setRef(ref);
-
-            while(reader.hasMoreChildren()){
+            while (reader.hasMoreChildren()) {
                 reader.moveDown();
-                reader.moveDown();
-                vul.setId(reader.getValue());
-                list.add(vul);
+                final Object vuln = context.convertAnother(reader, Vulnerability1_0.class);
+                list.add((ExtensibleExtension) vuln);
+                reader.moveUp();
             }
-            reader.moveUp();
         }
         Map<String, List<ExtensibleExtension>> map = new HashMap<>();
         map.put("vulnerabilities", list);
+
         return map;
     }
 }
