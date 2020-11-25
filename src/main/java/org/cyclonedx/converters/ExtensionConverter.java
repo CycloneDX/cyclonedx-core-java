@@ -30,11 +30,18 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cyclonedx.model.ExtensibleExtension;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 
 public class ExtensionConverter
     implements Converter
 {
+    private Class t;
+    private String keyName;
+
+    public ExtensionConverter(final Class t, final String keyName) {
+        this.t = t;
+        this.keyName = keyName;
+    }
+
     @Override
     public void marshal(Object object, HierarchicalStreamWriter writer, MarshallingContext context) {
 
@@ -48,16 +55,16 @@ public class ExtensionConverter
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         ArrayList<ExtensibleExtension> list = new ArrayList<>();
-        if(reader.getNodeName().equals("vulnerabilities")){
+        if(reader.getNodeName().equals(this.keyName)) {
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
-                final Object vuln = context.convertAnother(reader, Vulnerability1_0.class);
+                final Object vuln = context.convertAnother(reader, this.t);
                 list.add((ExtensibleExtension) vuln);
                 reader.moveUp();
             }
         }
         Map<String, List<ExtensibleExtension>> map = new HashMap<>();
-        map.put("vulnerabilities", list);
+        map.put(this.keyName, list);
 
         return map;
     }

@@ -89,7 +89,6 @@ public class Component extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     private List<Component> components;
     private Type type;
-    @XStreamConverter(value=ExtensionConverter.class)
     private Map<String, List<ExtensibleExtension>> extensions;
 
     public String getBomRef() {
