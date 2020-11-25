@@ -58,8 +58,8 @@ public class ExtensionConverter
         if(reader.getNodeName().equals(this.keyName)) {
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
-                final Object vuln = context.convertAnother(reader, this.t);
-                list.add((ExtensibleExtension) vuln);
+                final Object obj = context.convertAnother(reader, this.t);
+                list.add((ExtensibleExtension) obj);
                 reader.moveUp();
             }
         }
