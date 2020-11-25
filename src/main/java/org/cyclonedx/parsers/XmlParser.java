@@ -440,6 +440,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.registerConverter(new EnumToStringConverter<>(ExternalReference.Type.class, getExternalReferenceTypeMapping()));
 
         xstream.aliasField("vulnerabilities", Component.class, "extensions");
+        xstream.aliasField("vulnerabilities", Bom.class, "extensions");
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);

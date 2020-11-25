@@ -19,19 +19,14 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import org.cyclonedx.converters.ExtensionConverter;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import javax.naming.ldap.ExtendedRequest;
 
 @SuppressWarnings("unused")
 public class Component extends ExtensibleElement {
