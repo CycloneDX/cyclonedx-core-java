@@ -34,11 +34,6 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Cwe;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -131,75 +126,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         createPedigreeNode(json, component.getPedigree());
         createExternalReferencesNode(json, component.getExternalReferences());
         createComponentsNode(json, component.getComponents(), "components");
-        if (this.getSchemaVersion().getVersion() >= 1.1) {
-            createVulnerabilitiesNode(json, component.getVulnerabilities());
-        }
         return json;
-    }
-
-    void createVulnerabilitiesNode(final JSONObject parent, final List<Vulnerability1_0> vulnerabilities) {
-        if (vulnerabilities != null && !vulnerabilities.isEmpty()) {
-            final JSONArray jsonVulns = new JSONArray();
-            for (Vulnerability1_0 vuln : vulnerabilities) {
-                createVulnerabilityNode(jsonVulns, vuln);
-            }
-            parent.put("vulnerabilities", jsonVulns);
-        }
-    }
-
-    private void createVulnerabilityNode(final JSONArray parent, Vulnerability1_0 vulnerability) {
-        final JSONObject jsonVuln = OrderedJSONObjectFactory.create();
-        jsonVuln.put("ref", vulnerability.getRef());
-        jsonVuln.put("id", vulnerability.getId());
-        jsonVuln.put("description", vulnerability.getDescription());
-
-        if (vulnerability.getRatings() != null && !vulnerability.getRatings().isEmpty()) {
-            final JSONArray ratings = new JSONArray();
-            for (Rating rating : vulnerability.getRatings()) {
-                final JSONObject ratingNode = OrderedJSONObjectFactory.create();
-                final JSONObject scoreNode = OrderedJSONObjectFactory.create();
-                scoreNode.put("base", rating.getScore().getBase());
-                scoreNode.put("impact", rating.getScore().getImpact());
-                scoreNode.put("exploitability", rating.getScore().getExploitability());
-                ratingNode.put("score", scoreNode);
-                ratingNode.put("severity", rating.getSeverity());
-                ratingNode.put("method", rating.getMethod());
-                ratingNode.put("vector", rating.getVector());
-                ratings.put(ratingNode);
-            }
-            jsonVuln.put("ratings", ratings);
-        }
-
-        if (vulnerability.getCwes() != null && !vulnerability.getCwes().isEmpty()) {
-            final JSONArray cwesArray = new JSONArray();
-            for (Cwe cwe : vulnerability.getCwes()) {
-                final JSONObject cweNode = OrderedJSONObjectFactory.create();
-                cweNode.put("cwe", cwe.getText());
-                cwesArray.put(cweNode);
-            }
-            jsonVuln.put("cwes", cwesArray);
-        }
-
-        if (vulnerability.getRecommendations() != null && !vulnerability.getRecommendations().isEmpty()) {
-            final JSONArray recommendationsArray = new JSONArray();
-            for (Recommendation recommendation : vulnerability.getRecommendations()) {
-                final JSONObject recommendationNode = OrderedJSONObjectFactory.create();
-                recommendationNode.put("recommendation", recommendation.getText());
-                recommendationsArray.put(recommendationNode);
-            }
-            jsonVuln.put("recommendations", recommendationsArray);
-        }
-
-        if (vulnerability.getAdvisories() != null && !vulnerability.getAdvisories().isEmpty()) {
-            final JSONArray advisoriesArray = new JSONArray();
-            for (Advisory advisory : vulnerability.getAdvisories()) {
-                final JSONObject advisoryNode = OrderedJSONObjectFactory.create();
-                advisoryNode.put("advisory", advisory.getText());
-                advisoriesArray.put(advisoryNode);
-            }
-            jsonVuln.put("advisories", advisoriesArray);
-        }
-        parent.put(jsonVuln);
     }
 
     private void createHashesNode(final JSONObject parent, final List<Hash> hashes) {

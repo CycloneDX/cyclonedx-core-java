@@ -23,9 +23,12 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.ExtensibleExtension;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
@@ -60,8 +63,38 @@ public class XmlParserTest {
         final File file = new File(this.getClass().getResource("/bom-1.1-vulnerability-1.0.xml").getFile());
         final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
-        final Bom bom = parser.parse(file);
         Assert.assertTrue(valid);
+    }
+
+    @Test
+    public void testValid12BomWithVulnerability10() throws Exception {
+        final File file = new File(this.getClass().getResource("/bom-1.2-vulnerability-1.0.xml").getFile());
+        final XmlParser parser = new XmlParser();
+        Bom bom = parser.parse(file);
+        bom.getComponents().get(0).getExtensions().get(0);
+        //Assert.assertTrue(bom.getComponents().get(0).getExtensions().get(0) instanceof Vulnerability1_0);
+    }
+
+    @Test
+    public void testValid12BomWithVulnerability1_1() throws Exception {
+        Bom bom=new Bom();
+        Component component=new Component();
+
+        Vulnerability1_0  vuln = new Vulnerability1_0();
+        vuln.setRef("ref");
+        vuln.setId("id");
+        vuln.setDescription("desc");
+
+        List<ExtensibleExtension> vulns =new ArrayList<>();
+        vulns.add(vuln);
+
+        component.addExtension("vulnerability", vulns);
+        bom.addComponent(component);
+
+
+        final XmlParser parser = new XmlParser();
+        parser.parse(bom);
+        System.out.println("HOLA");
     }
 
     @Test

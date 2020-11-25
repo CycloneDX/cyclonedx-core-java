@@ -26,6 +26,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.converters.ExtensionConverter;
 import org.cyclonedx.converters.HashConverter;
 import org.cyclonedx.converters.AttachmentTextConverter;
 import org.cyclonedx.exception.ParseException;
@@ -44,11 +45,6 @@ import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Cwe;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Score;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -97,6 +93,17 @@ public class XmlParser extends CycloneDxSchema implements Parser {
             final Bom bom = (Bom) xstream.fromXML(file);
             return injectSchemaVersion(bom, schemaVersion);
         } catch (XStreamException | XPathExpressionException | FileNotFoundException e) {
+            throw new ParseException(e);
+        }
+    }
+
+    public File parse(final Bom bom) throws ParseException {
+        try {
+            final XStream xstream = mapDefaultObjectModel(createXStream());
+            final File file = new File(xstream.toXML(bom));
+            System.out.println(xstream.toXML(bom));
+            return file;
+        } catch (XStreamException e) {
             throw new ParseException(e);
         }
     }
@@ -387,6 +394,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
                         try {
                             return super.realClass(elementName);
                         } catch(CannotResolveClassException e) {
+                            e.printStackTrace();
                             return null;
                         }
                     }
@@ -397,6 +405,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.allowTypesByWildcard(new String[] {
                 "org.cyclonedx.model.**"
         });
+        xstream.autodetectAnnotations(true);
         return xstream;
     }
 
@@ -430,23 +439,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.aliasAttribute(ExternalReference.class, "type", "type");
         xstream.registerConverter(new EnumToStringConverter<>(ExternalReference.Type.class, getExternalReferenceTypeMapping()));
 
-        xstream.alias("vulnerability", Vulnerability1_0.class);
-        xstream.aliasAttribute(Vulnerability1_0.class, "ref", "ref");
-
-        xstream.alias("cwe", Cwe.class);
-        xstream.processAnnotations(Cwe.class);
-
-        xstream.alias("advisory", Advisory.class);
-        xstream.processAnnotations(Advisory.class);
-
-        xstream.alias("recommendation", Recommendation.class);
-        xstream.processAnnotations(Recommendation.class);
-
-        xstream.alias("score", Score.class);
-
-        xstream.alias("rating", Rating.class);
-
-        xstream.alias("source", Source.class);
+        xstream.aliasField("vulnerabilities", Component.class, "extensions");
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);

@@ -19,11 +19,19 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import org.cyclonedx.converters.ExtensionConverter;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import javax.naming.ldap.ExtendedRequest;
 
 @SuppressWarnings("unused")
 public class Component extends ExtensibleElement {
@@ -86,7 +94,8 @@ public class Component extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     private List<Component> components;
     private Type type;
-    private List<Vulnerability1_0> vulnerabilities;
+    @XStreamConverter(value=ExtensionConverter.class)
+    private Map<String, List<ExtensibleExtension>> extensions;
 
     public String getBomRef() {
         return bomRef;
@@ -181,21 +190,6 @@ public class Component extends ExtensibleElement {
             this.hashes = new ArrayList<>();
         }
         this.hashes.add(hash);
-    }
-
-    public List<Vulnerability1_0> getVulnerabilities() {
-        return this.vulnerabilities;
-    }
-
-    public void setVulnerabilities(List<Vulnerability1_0> vulnerabilities) {
-        this.vulnerabilities = vulnerabilities;
-    }
-
-    public void addVulnerability(Vulnerability1_0 vulnerability) {
-        if (this.vulnerabilities == null) {
-            this.vulnerabilities = new ArrayList<>();
-        }
-        this.vulnerabilities.add(vulnerability);
     }
 
     public LicenseChoice getLicenseChoice() {
@@ -306,6 +300,21 @@ public class Component extends ExtensibleElement {
         this.type = type;
     }
 
+    public Map<String, List<ExtensibleExtension>> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(final Map<String, List<ExtensibleExtension>> extensions) {
+        this.extensions = extensions;
+    }
+
+    public void addExtension(String extensionName, List<ExtensibleExtension> extension) {
+        if (this.extensions == null) {
+            this.extensions = new HashMap<>();
+        }
+        this.extensions.put(extensionName, extension);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenseChoice, copyright, cpe, purl, swid, modified, components, type);
@@ -317,22 +326,22 @@ public class Component extends ExtensibleElement {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return modified == component.modified &&
-                Objects.equals(supplier, component.supplier) &&
-                Objects.equals(author, component.author) &&
-                Objects.equals(publisher, component.publisher) &&
-                Objects.equals(group, component.group) &&
-                Objects.equals(name, component.name) &&
-                Objects.equals(version, component.version) &&
-                Objects.equals(description, component.description) &&
-                Objects.equals(scope, component.scope) &&
-                Objects.equals(hashes, component.hashes) &&
-                Objects.equals(licenseChoice, component.licenseChoice) &&
-                Objects.equals(copyright, component.copyright) &&
-                Objects.equals(cpe, component.cpe) &&
-                Objects.equals(purl, component.purl) &&
-                Objects.equals(swid, component.swid) &&
-                Objects.equals(components, component.components) &&
-                Objects.equals(mimeType, component.mimeType) &&
-                Objects.equals(type, component.type);
+            Objects.equals(supplier, component.supplier) &&
+            Objects.equals(author, component.author) &&
+            Objects.equals(publisher, component.publisher) &&
+            Objects.equals(group, component.group) &&
+            Objects.equals(name, component.name) &&
+            Objects.equals(version, component.version) &&
+            Objects.equals(description, component.description) &&
+            Objects.equals(scope, component.scope) &&
+            Objects.equals(hashes, component.hashes) &&
+            Objects.equals(licenseChoice, component.licenseChoice) &&
+            Objects.equals(copyright, component.copyright) &&
+            Objects.equals(cpe, component.cpe) &&
+            Objects.equals(purl, component.purl) &&
+            Objects.equals(swid, component.swid) &&
+            Objects.equals(components, component.components) &&
+            Objects.equals(mimeType, component.mimeType) &&
+            Objects.equals(type, component.type);
     }
 }

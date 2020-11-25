@@ -72,14 +72,6 @@ public class BomXmlGenerator11 extends AbstractBomXmlGenerator implements BomXml
             attributes.add(new Attribute("xmlns:dg", NS_DEPENDENCY_GRAPH_10));
         }
 
-        if (
-            bom.getComponents() != null &&
-                (bom.getComponents().stream().anyMatch(c -> c.getVulnerabilities() != null && !c.getVulnerabilities().isEmpty()) ||
-                    (bom.getVulnerabilities() != null && !bom.getVulnerabilities().isEmpty()))
-        ) {
-            attributes.add(new Attribute("xmlns:v", NS_VULNERABILITY_10));
-        }
-
         // Create root <bom> node
         final Element bomNode = createRootElement("bom", null, attributes.toArray(new Attribute[0]));
         if (bom.getSerialNumber() != null) {
@@ -93,11 +85,6 @@ public class BomXmlGenerator11 extends AbstractBomXmlGenerator implements BomXml
         if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
             final Element dependenciesNode = createElement(bomNode, "dg:dependencies");
             createDependenciesNode(dependenciesNode, bom.getDependencies());
-        }
-
-        if (bom.getVulnerabilities() != null && !bom.getVulnerabilities().isEmpty()) {
-            final Element vulnsNode = createElement(bomNode, "v:vulnerabilities");
-            createVulnerabilitiesNode(vulnsNode, bom.getVulnerabilities());
         }
 
         processExtensions(bomNode, bom);
