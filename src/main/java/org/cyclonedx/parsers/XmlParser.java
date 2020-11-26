@@ -34,6 +34,8 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.ExtensibleExtension;
+import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
@@ -440,10 +442,11 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.registerConverter(new EnumToStringConverter<>(ExternalReference.Type.class, getExternalReferenceTypeMapping()));
 
         xstream.aliasField("vulnerabilities", Component.class, "extensions");
-        xstream.registerLocalConverter(Component.class, "extensions", new ExtensionConverter(Vulnerability1_0.class, "vulnerabilities"));
+        xstream.registerLocalConverter(Component.class, "extensions", new ExtensionConverter(Vulnerability1_0.class,
+            ExtensionType.VULNERABILITIES));
 
-        //xstream.aliasField("vulnerabilities", Bom.class, "extensions");
-        //xstream.registerLocalConverter(Bom.class, "extensions", new ExtensionConverter<Vulnerability1_0>());
+        xstream.aliasField("vulnerabilities", Bom.class, "extensions");
+        xstream.registerLocalConverter(Bom.class, "extensions", new ExtensionConverter(Vulnerability1_0.class, ExtensionType.VULNERABILITIES));
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);

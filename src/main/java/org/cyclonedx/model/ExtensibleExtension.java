@@ -20,4 +20,16 @@ package org.cyclonedx.model;
 
 public abstract class ExtensibleExtension
 {
+  public enum ExtensionType {
+    VULNERABILITIES("vulnerabilities");
+    private final String type;
+
+    public String getTypeName() {
+      return this.type;
+    }
+
+    ExtensionType(String type) {
+      this.type = type;
+    }
+  }
 }

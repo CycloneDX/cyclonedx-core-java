@@ -20,6 +20,7 @@ package org.cyclonedx.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
@@ -34,6 +35,7 @@ public class Bom extends ExtensibleElement {
     private int version = 1;
     private String serialNumber;
     private String specVersion;
+    private Map<String, List<ExtensibleExtension>> extensions;
 
     public Metadata getMetadata() {
         return metadata;

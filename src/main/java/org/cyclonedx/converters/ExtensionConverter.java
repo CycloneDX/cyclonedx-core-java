@@ -30,16 +30,17 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cyclonedx.model.ExtensibleExtension;
+import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
 
 public class ExtensionConverter
     implements Converter
 {
-    private Class t;
-    private String keyName;
+    private Class type;
+    private ExtensionType extensionType;
 
-    public ExtensionConverter(final Class t, final String keyName) {
-        this.t = t;
-        this.keyName = keyName;
+    public ExtensionConverter(final Class type, final ExtensionType extensionType) {
+        this.type = type;
+        this.extensionType = extensionType;
     }
 
     @Override
@@ -55,17 +56,19 @@ public class ExtensionConverter
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
         ArrayList<ExtensibleExtension> list = new ArrayList<>();
-        if(reader.getNodeName().equals(this.keyName)) {
+        if (reader.getNodeName().equals(extensionType.getTypeName())) {
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
-                final Object obj = context.convertAnother(reader, this.t);
-                list.add((ExtensibleExtension) obj);
+                list.add((ExtensibleExtension) context.convertAnother(reader, type));
                 reader.moveUp();
             }
-        }
-        Map<String, List<ExtensibleExtension>> map = new HashMap<>();
-        map.put(this.keyName, list);
 
-        return map;
+            if(!list.isEmpty()) {
+                Map<String, List<ExtensibleExtension>> map = new HashMap<>();
+                map.put(extensionType.getTypeName(), list);
+                return map;
+            }
+        }
+        return null;
     }
 }
