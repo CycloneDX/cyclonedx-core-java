@@ -106,6 +106,14 @@ public class Bom extends ExtensibleElement {
         this.serialNumber = serialNumber;
     }
 
+    public Map<String, List<ExtensibleExtension>> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(final Map<String, List<ExtensibleExtension>> extensions) {
+        this.extensions = extensions;
+    }
+
     /**
      * Returns the CycloneDX spec version of a Bom. The spec version will
      * only be populated when paring a bom via {@link org.cyclonedx.parsers.Parser}.

@@ -304,39 +304,80 @@ public class XmlParserTest {
         Assert.assertEquals("pkg:maven/org.acme/web-framework@1.0.0", d11.getRef());
         Assert.assertNull(d11.getDependencies());
 
+        //Component Vulnerabilities
         final List<ExtensibleExtension>  vulnsComponent = components.get(2).getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
         Assert.assertEquals(2, vulnsComponent.size());
 
-        Vulnerability1_0 v1 = (Vulnerability1_0)vulnsComponent.get(1);
+        Vulnerability1_0 v1 = (Vulnerability1_0) vulnsComponent.get(1);
         Assert.assertEquals("CVE-2020-123", v1.getId());
         Assert.assertEquals("pkg:maven/com.example/testframework@1.0.0?packaging=war", v1.getRef());
         Assert.assertEquals("myframework vulnerability", v1.getDescription());
 
         Assert.assertEquals(1, v1.getAdvisories().size());
-        Assert.assertEquals("https://github.com/myframework",v1.getAdvisories().get(0).getText());
+        Assert.assertEquals("https://github.com/myframework", v1.getAdvisories().get(0).getText());
 
         Assert.assertEquals(1, v1.getCwes().size());
-        Assert.assertEquals("12345",v1.getCwes().get(0).getText());
+        Assert.assertTrue(12345 == v1.getCwes().get(0).getText());
 
         Assert.assertEquals(1, v1.getRecommendations().size());
-        Assert.assertEquals("Upgrade",v1.getRecommendations().get(0).getText());
+        Assert.assertEquals("Upgrade", v1.getRecommendations().get(0).getText());
 
         Assert.assertEquals(1, v1.getSource().size());
 
-        Assert.assertEquals("NVD",v1.getSource().get(0).getName());
-        Assert.assertEquals(1,v1.getSource().get(0).getUrl().size());
-        Assert.assertEquals(new URL("https://nvd.nist.gov/vuln/detail/CVE-2020-123"),v1.getSource().get(0).getUrl().get(0));
+        Assert.assertEquals("NVD", v1.getSource().get(0).getName());
+        Assert.assertEquals(1, v1.getSource().get(0).getUrl().size());
+        Assert.assertEquals(new URL("https://nvd.nist.gov/vuln/detail/CVE-2020-123"),
+            v1.getSource().get(0).getUrl().get(0));
 
         Assert.assertEquals(1, v1.getRatings().size());
 
         Rating rating = v1.getRatings().get(0);
         Assert.assertEquals(ScoreSource.CVSS3, rating.getMethod());
-        Assert.assertEquals(Severity.CRITICAL,rating.getSeverity());
-        Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",rating.getVector());
+        Assert.assertEquals(Severity.CRITICAL, rating.getSeverity());
+        Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", rating.getVector());
 
         Assert.assertNotNull(rating.getScore());
-        Assert.assertEquals("9.8",rating.getScore().getBase());
-        Assert.assertEquals("3.0",rating.getScore().getExploitability());
-        Assert.assertEquals("5.9",rating.getScore().getImpact());
+        Assert.assertEquals(9.8, rating.getScore().getBase(), 0.0);
+        Assert.assertEquals(3.0, rating.getScore().getExploitability(), 0.0);
+        Assert.assertEquals(5.9, rating.getScore().getImpact(), 0.0);
+
+        //Bom Vulnerabilities
+        final List<ExtensibleExtension>  vulnsBom = bom.getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
+        Assert.assertEquals(1, vulnsBom.size());
+
+        Vulnerability1_0 v = (Vulnerability1_0) vulnsBom.get(0);
+        Assert.assertEquals("CVE-2020-1234", v.getId());
+        Assert.assertEquals("pkg:maven/com.example/myapplication@1.0.1?packaging=war", v.getRef());
+        Assert.assertEquals("vulnerability", v.getDescription());
+
+        Assert.assertEquals(1, v.getAdvisories().size());
+        Assert.assertEquals("https://github.com/myframework1", v.getAdvisories().get(0).getText());
+
+        Assert.assertEquals(2, v.getCwes().size());
+        Assert.assertTrue(123 == v.getCwes().get(0).getText());
+        Assert.assertTrue(456 == v.getCwes().get(1).getText());
+
+        Assert.assertEquals(2, v.getRecommendations().size());
+        Assert.assertEquals("Upgrade", v.getRecommendations().get(0).getText());
+        Assert.assertEquals("Test", v.getRecommendations().get(1).getText());
+
+        Assert.assertEquals(1, v.getSource().size());
+
+        Assert.assertEquals("NVD", v.getSource().get(0).getName());
+        Assert.assertEquals(1, v.getSource().get(0).getUrl().size());
+        Assert.assertEquals(new URL("https://nvd.nist.gov/vuln/detail/CVE-2020-1234"),
+            v.getSource().get(0).getUrl().get(0));
+
+        Assert.assertEquals(1, v.getRatings().size());
+
+        Rating r = v.getRatings().get(0);
+        Assert.assertEquals(ScoreSource.CVSS2, r.getMethod());
+        Assert.assertEquals(Severity.LOW, r.getSeverity());
+        Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L", r.getVector());
+
+        Assert.assertNotNull(r.getScore());
+        Assert.assertEquals(1.0, r.getScore().getBase(), 0.0);
+        Assert.assertEquals(2.0, r.getScore().getExploitability(), 0.0);
+        Assert.assertEquals(1.2, r.getScore().getImpact(), 0.0);
     }
 }
