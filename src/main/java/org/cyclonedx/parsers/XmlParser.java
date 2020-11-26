@@ -396,7 +396,6 @@ public class XmlParser extends CycloneDxSchema implements Parser {
                         try {
                             return super.realClass(elementName);
                         } catch(CannotResolveClassException e) {
-                            e.printStackTrace();
                             return null;
                         }
                     }

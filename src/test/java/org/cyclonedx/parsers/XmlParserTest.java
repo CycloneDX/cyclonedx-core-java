@@ -26,9 +26,13 @@ import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExtensibleExtension;
 import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating.ScoreSource;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating.Severity;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
@@ -321,7 +325,18 @@ public class XmlParserTest {
 
         Assert.assertEquals("NVD",v1.getSource().get(0).getName());
         Assert.assertEquals(1,v1.getSource().get(0).getUrl().size());
+        Assert.assertEquals(new URL("https://nvd.nist.gov/vuln/detail/CVE-2020-123"),v1.getSource().get(0).getUrl().get(0));
 
         Assert.assertEquals(1, v1.getRatings().size());
+
+        Rating rating = v1.getRatings().get(0);
+        Assert.assertEquals(ScoreSource.CVSS3, rating.getMethod());
+        Assert.assertEquals(Severity.CRITICAL,rating.getSeverity());
+        Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",rating.getVector());
+
+        Assert.assertNotNull(rating.getScore());
+        Assert.assertEquals("9.8",rating.getScore().getBase());
+        Assert.assertEquals("3.0",rating.getScore().getExploitability());
+        Assert.assertEquals("5.9",rating.getScore().getImpact());
     }
 }
