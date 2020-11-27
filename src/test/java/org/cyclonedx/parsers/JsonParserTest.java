@@ -142,7 +142,7 @@ public class JsonParserTest {
         Assert.assertEquals("Acme Application", bom.getMetadata().getComponent().getSwid().getName());
         Assert.assertEquals("9.1.1", bom.getMetadata().getComponent().getSwid().getVersion());
         Assert.assertEquals(0, bom.getMetadata().getComponent().getSwid().getTagVersion());
-        Assert.assertEquals(false, bom.getMetadata().getComponent().getSwid().isPatch());
+        Assert.assertFalse(bom.getMetadata().getComponent().getSwid().isPatch());
         Assert.assertEquals("Acme, Inc.", bom.getMetadata().getManufacture().getName());
         Assert.assertEquals("[\"https://example.com\"]", bom.getMetadata().getManufacture().getUrl()); // TODO: fix this
         Assert.assertEquals(1, bom.getMetadata().getManufacture().getContacts().size());

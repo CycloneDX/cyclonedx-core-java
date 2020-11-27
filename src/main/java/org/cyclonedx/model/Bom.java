@@ -25,7 +25,6 @@ import java.util.Objects;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import org.cyclonedx.converters.ExtensionDeserializer;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 
 @SuppressWarnings("unused")
 public class Bom extends ExtensibleElement {

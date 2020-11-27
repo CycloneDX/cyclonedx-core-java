@@ -34,7 +34,6 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
-import org.cyclonedx.model.ExtensibleExtension;
 import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
