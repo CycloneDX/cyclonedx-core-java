@@ -332,7 +332,7 @@ public class XmlParserTest {
         Assert.assertEquals(1, v1.getRatings().size());
 
         Rating rating = v1.getRatings().get(0);
-        Assert.assertEquals(ScoreSource.CVSS3, rating.getMethod());
+        Assert.assertEquals(ScoreSource.CVSSv3, rating.getMethod());
         Assert.assertEquals(Severity.CRITICAL, rating.getSeverity());
         Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", rating.getVector());
 
@@ -371,7 +371,7 @@ public class XmlParserTest {
         Assert.assertEquals(1, v.getRatings().size());
 
         Rating r = v.getRatings().get(0);
-        Assert.assertEquals(ScoreSource.CVSS2, r.getMethod());
+        Assert.assertEquals(ScoreSource.CVSSv2, r.getMethod());
         Assert.assertEquals(Severity.LOW, r.getSeverity());
         Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L", r.getVector());
 

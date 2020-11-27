@@ -18,9 +18,9 @@
  */
 package org.cyclonedx.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.github.packageurl.PackageURL;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
-import org.cyclonedx.converters.ExtensionConverter;
+import org.cyclonedx.converters.ExtensionDeserializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +89,7 @@ public class Component extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     private List<Component> components;
     private Type type;
+    @JSONField(deserializeUsing = ExtensionDeserializer.class, name ="vulnerabilities")
     private Map<String, List<ExtensibleExtension>> extensions;
 
     public String getBomRef() {
