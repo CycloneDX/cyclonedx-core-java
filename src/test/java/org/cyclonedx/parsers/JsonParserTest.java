@@ -204,47 +204,42 @@ public class JsonParserTest {
         Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", rating.getVector());
 
         Assert.assertNotNull(rating.getScore());
-        Assert.assertEquals(9.8, rating.getScore().getBase(), 0.0);
-        Assert.assertEquals(3.0, rating.getScore().getExploitability(), 0.0);
-        Assert.assertEquals(5.9, rating.getScore().getImpact(), 0.0);
+        Assert.assertEquals(1.0, rating.getScore().getBase(), 0.0);
+        Assert.assertEquals(2.0, rating.getScore().getExploitability(), 0.0);
+        Assert.assertEquals(1.2, rating.getScore().getImpact(), 0.0);
 
         //Bom Vulnerabilities
-        //final List<ExtensibleExtension>  vulnsBom = bom.getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
-        //Assert.assertEquals(1, vulnsBom.size());
-        //
-        //Vulnerability1_0 v = (Vulnerability1_0) vulnsBom.get(0);
-        //Assert.assertEquals("CVE-2020-1234", v.getId());
-        //Assert.assertEquals("pkg:maven/com.example/myapplication@1.0.1?packaging=war", v.getRef());
-        //Assert.assertEquals("vulnerability", v.getDescription());
-        //
-        //Assert.assertEquals(1, v.getAdvisories().size());
-        //Assert.assertEquals("https://github.com/myframework1", v.getAdvisories().get(0).getText());
-        //
-        //Assert.assertEquals(2, v.getCwes().size());
-        //Assert.assertTrue(123 == v.getCwes().get(0).getText());
-        //Assert.assertTrue(456 == v.getCwes().get(1).getText());
-        //
-        //Assert.assertEquals(2, v.getRecommendations().size());
-        //Assert.assertEquals("Upgrade", v.getRecommendations().get(0).getText());
-        //Assert.assertEquals("Test", v.getRecommendations().get(1).getText());
-        //
-        //Assert.assertEquals(1, v.getSource().size());
-        //
-        //Assert.assertEquals("NVD", v.getSource().get(0).getName());
-        //Assert.assertEquals(1, v.getSource().get(0).getUrl().size());
-        //Assert.assertEquals(new URL("https://nvd.nist.gov/vuln/detail/CVE-2020-1234"),
-        //    v.getSource().get(0).getUrl().get(0));
-        //
-        //Assert.assertEquals(1, v.getRatings().size());
-        //
-        //Rating r = v.getRatings().get(0);
-        //Assert.assertEquals(ScoreSource.CVSS2, r.getMethod());
-        //Assert.assertEquals(Severity.LOW, r.getSeverity());
-        //Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L", r.getVector());
-        //
-        //Assert.assertNotNull(r.getScore());
-        //Assert.assertEquals(1.0, r.getScore().getBase(), 0.0);
-        //Assert.assertEquals(2.0, r.getScore().getExploitability(), 0.0);
-        //Assert.assertEquals(1.2, r.getScore().getImpact(), 0.0);
+        final List<ExtensibleExtension>  vulnsBom = bom.getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
+        Assert.assertEquals(1, vulnsBom.size());
+
+        Vulnerability1_0 v = (Vulnerability1_0) vulnsBom.get(0);
+        Assert.assertEquals("CVE-2020-12345", v.getId());
+        Assert.assertEquals("pkg:npm/acme/component@1.0.1", v.getRef());
+        Assert.assertEquals("vulnerability", v.getDescription());
+
+        Assert.assertEquals(1, v.getAdvisories().size());
+        Assert.assertEquals("https://github.com/acme/component123", v.getAdvisories().get(0).getText());
+
+        Assert.assertEquals(2, v.getCwes().size());
+        Assert.assertTrue(12345 == v.getCwes().get(0).getText());
+        Assert.assertTrue(123 == v.getCwes().get(1).getText());
+
+        Assert.assertEquals(2, v.getRecommendations().size());
+        Assert.assertEquals("Upgrade", v.getRecommendations().get(1).getText());
+        Assert.assertEquals("Test", v.getRecommendations().get(0).getText());
+
+        Assert.assertNull( v.getSource());
+
+        Assert.assertEquals(1, v.getRatings().size());
+
+        Rating r = v.getRatings().get(0);
+        Assert.assertEquals(ScoreSource.CVSSv2, r.getMethod());
+        Assert.assertEquals(Severity.LOW, r.getSeverity());
+        Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L", r.getVector());
+
+        Assert.assertNotNull(r.getScore());
+        Assert.assertEquals(2.8, r.getScore().getBase(), 0.0);
+        Assert.assertEquals(3.5, r.getScore().getExploitability(), 0.0);
+        Assert.assertEquals(1.1, r.getScore().getImpact(), 0.0);
     }
 }

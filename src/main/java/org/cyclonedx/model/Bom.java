@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.cyclonedx.converters.ExtensionDeserializer;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 
 @SuppressWarnings("unused")
@@ -35,6 +37,7 @@ public class Bom extends ExtensibleElement {
     private int version = 1;
     private String serialNumber;
     private String specVersion;
+    @JSONField(deserializeUsing = ExtensionDeserializer.class, name ="vulnerabilities")
     private Map<String, List<ExtensibleExtension>> extensions;
 
     public Metadata getMetadata() {
