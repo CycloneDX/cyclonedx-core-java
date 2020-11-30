@@ -440,11 +440,26 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.registerConverter(new EnumToStringConverter<>(ExternalReference.Type.class, getExternalReferenceTypeMapping()));
 
         xstream.aliasField("vulnerabilities", Component.class, "extensions");
-        xstream.registerLocalConverter(Component.class, "extensions", new ExtensionConverter(Vulnerability1_0.class,
-            ExtensionType.VULNERABILITIES));
+        xstream.registerLocalConverter(
+            Component.class,
+            "extensions",
+            new ExtensionConverter(
+                Vulnerability1_0.class,
+                ExtensionType.VULNERABILITIES,
+                "http://cyclonedx.org/schema/ext/vulnerability/1.0",
+                "v")
+        );
 
         xstream.aliasField("vulnerabilities", Bom.class, "extensions");
-        xstream.registerLocalConverter(Bom.class, "extensions", new ExtensionConverter(Vulnerability1_0.class, ExtensionType.VULNERABILITIES));
+        xstream.registerLocalConverter(
+            Bom.class,
+            "extensions",
+            new ExtensionConverter(
+                Vulnerability1_0.class,
+                ExtensionType.VULNERABILITIES,
+                "http://cyclonedx.org/schema/ext/vulnerability/1.0",
+                "v")
+        );
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);

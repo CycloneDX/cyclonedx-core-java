@@ -20,8 +20,28 @@ package org.cyclonedx.model;
 
 public abstract class ExtensibleExtension
 {
+  private String name;
+  private String namespaceUri;
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(final String name) {
+    this.name = name;
+  }
+
+  public String getNamespaceUri() {
+    return namespaceUri;
+  }
+
+  public void setNamespaceUri(final String namespaceUri) {
+    this.namespaceUri = namespaceUri;
+  }
+
   public enum ExtensionType {
     VULNERABILITIES("vulnerabilities");
+
     private final String type;
 
     public String getTypeName() {

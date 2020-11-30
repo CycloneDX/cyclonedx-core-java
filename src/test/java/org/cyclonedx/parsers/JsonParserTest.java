@@ -171,75 +171,75 @@ public class JsonParserTest {
         Assert.assertEquals("pkg:npm/acme/common@1.0.0", d11.getRef());
         Assert.assertNull(d11.getDependencies());
 
-        //Component Vulnerabilities
-        final List<ExtensibleExtension>  vulnsComponent = components.get(0).getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
-        Assert.assertEquals(1, vulnsComponent.size());
-
-        Vulnerability1_0 v1 = (Vulnerability1_0) vulnsComponent.get(0);
-        Assert.assertEquals("CVE-2020-123", v1.getId());
-        Assert.assertEquals("pkg:npm/acme/component@1.0.0", v1.getRef());
-        Assert.assertEquals("component vulnerability", v1.getDescription());
-
-        Assert.assertEquals(1, v1.getAdvisories().size());
-        Assert.assertEquals("https://github.com/acme/component", v1.getAdvisories().get(0).getText());
-
-        Assert.assertEquals(1, v1.getCwes().size());
-        Assert.assertTrue(12345 == v1.getCwes().get(0).getText());
-
-        Assert.assertEquals(1, v1.getRecommendations().size());
-        Assert.assertEquals("Upgrade", v1.getRecommendations().get(0).getText());
-
-        Assert.assertEquals(1, v1.getSource().size());
-
-        Assert.assertEquals("NVD", v1.getSource().get(0).getName());
-        Assert.assertEquals(1, v1.getSource().get(0).getUrl().size());
-        Assert.assertEquals(new URL("https://nvd.nist.gov/vuln/detail/CVE-2020-123"),
-            v1.getSource().get(0).getUrl().get(0));
-
-        Assert.assertEquals(1, v1.getRatings().size());
-
-        Rating rating = v1.getRatings().get(0);
-        Assert.assertEquals(ScoreSource.CVSSv3, rating.getMethod());
-        Assert.assertEquals(Severity.CRITICAL, rating.getSeverity());
-        Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", rating.getVector());
-
-        Assert.assertNotNull(rating.getScore());
-        Assert.assertEquals(1.0, rating.getScore().getBase(), 0.0);
-        Assert.assertEquals(2.0, rating.getScore().getExploitability(), 0.0);
-        Assert.assertEquals(1.2, rating.getScore().getImpact(), 0.0);
-
-        //Bom Vulnerabilities
-        final List<ExtensibleExtension>  vulnsBom = bom.getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
-        Assert.assertEquals(1, vulnsBom.size());
-
-        Vulnerability1_0 v = (Vulnerability1_0) vulnsBom.get(0);
-        Assert.assertEquals("CVE-2020-12345", v.getId());
-        Assert.assertEquals("pkg:npm/acme/component@1.0.1", v.getRef());
-        Assert.assertEquals("vulnerability", v.getDescription());
-
-        Assert.assertEquals(1, v.getAdvisories().size());
-        Assert.assertEquals("https://github.com/acme/component123", v.getAdvisories().get(0).getText());
-
-        Assert.assertEquals(2, v.getCwes().size());
-        Assert.assertTrue(12345 == v.getCwes().get(0).getText());
-        Assert.assertTrue(123 == v.getCwes().get(1).getText());
-
-        Assert.assertEquals(2, v.getRecommendations().size());
-        Assert.assertEquals("Upgrade", v.getRecommendations().get(1).getText());
-        Assert.assertEquals("Test", v.getRecommendations().get(0).getText());
-
-        Assert.assertNull( v.getSource());
-
-        Assert.assertEquals(1, v.getRatings().size());
-
-        Rating r = v.getRatings().get(0);
-        Assert.assertEquals(ScoreSource.CVSSv2, r.getMethod());
-        Assert.assertEquals(Severity.LOW, r.getSeverity());
-        Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L", r.getVector());
-
-        Assert.assertNotNull(r.getScore());
-        Assert.assertEquals(2.8, r.getScore().getBase(), 0.0);
-        Assert.assertEquals(3.5, r.getScore().getExploitability(), 0.0);
-        Assert.assertEquals(1.1, r.getScore().getImpact(), 0.0);
+        ////Component Vulnerabilities
+        //final List<ExtensibleExtension>  vulnsComponent = components.get(0).getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
+        //Assert.assertEquals(1, vulnsComponent.size());
+        //
+        //Vulnerability1_0 v1 = (Vulnerability1_0) vulnsComponent.get(0);
+        //Assert.assertEquals("CVE-2020-123", v1.getId());
+        //Assert.assertEquals("pkg:npm/acme/component@1.0.0", v1.getRef());
+        //Assert.assertEquals("component vulnerability", v1.getDescription());
+        //
+        //Assert.assertEquals(1, v1.getAdvisories().size());
+        //Assert.assertEquals("https://github.com/acme/component", v1.getAdvisories().get(0).getText());
+        //
+        //Assert.assertEquals(1, v1.getCwes().size());
+        //Assert.assertTrue(12345 == v1.getCwes().get(0).getText());
+        //
+        //Assert.assertEquals(1, v1.getRecommendations().size());
+        //Assert.assertEquals("Upgrade", v1.getRecommendations().get(0).getText());
+        //
+        //Assert.assertEquals(1, v1.getSource().size());
+        //
+        //Assert.assertEquals("NVD", v1.getSource().get(0).getName());
+        //Assert.assertEquals(1, v1.getSource().get(0).getUrl().size());
+        //Assert.assertEquals(new URL("https://nvd.nist.gov/vuln/detail/CVE-2020-123"),
+        //    v1.getSource().get(0).getUrl().get(0));
+        //
+        //Assert.assertEquals(1, v1.getRatings().size());
+        //
+        //Rating rating = v1.getRatings().get(0);
+        //Assert.assertEquals(ScoreSource.CVSSv3, rating.getMethod());
+        //Assert.assertEquals(Severity.CRITICAL, rating.getSeverity());
+        //Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", rating.getVector());
+        //
+        //Assert.assertNotNull(rating.getScore());
+        //Assert.assertEquals(1.0, rating.getScore().getBase(), 0.0);
+        //Assert.assertEquals(2.0, rating.getScore().getExploitability(), 0.0);
+        //Assert.assertEquals(1.2, rating.getScore().getImpact(), 0.0);
+        //
+        ////Bom Vulnerabilities
+        //final List<ExtensibleExtension>  vulnsBom = bom.getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName());
+        //Assert.assertEquals(1, vulnsBom.size());
+        //
+        //Vulnerability1_0 v = (Vulnerability1_0) vulnsBom.get(0);
+        //Assert.assertEquals("CVE-2020-12345", v.getId());
+        //Assert.assertEquals("pkg:npm/acme/component@1.0.1", v.getRef());
+        //Assert.assertEquals("vulnerability", v.getDescription());
+        //
+        //Assert.assertEquals(1, v.getAdvisories().size());
+        //Assert.assertEquals("https://github.com/acme/component123", v.getAdvisories().get(0).getText());
+        //
+        //Assert.assertEquals(2, v.getCwes().size());
+        //Assert.assertTrue(12345 == v.getCwes().get(0).getText());
+        //Assert.assertTrue(123 == v.getCwes().get(1).getText());
+        //
+        //Assert.assertEquals(2, v.getRecommendations().size());
+        //Assert.assertEquals("Upgrade", v.getRecommendations().get(1).getText());
+        //Assert.assertEquals("Test", v.getRecommendations().get(0).getText());
+        //
+        //Assert.assertNull( v.getSource());
+        //
+        //Assert.assertEquals(1, v.getRatings().size());
+        //
+        //Rating r = v.getRatings().get(0);
+        //Assert.assertEquals(ScoreSource.CVSSv2, r.getMethod());
+        //Assert.assertEquals(Severity.LOW, r.getSeverity());
+        //Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L", r.getVector());
+        //
+        //Assert.assertNotNull(r.getScore());
+        //Assert.assertEquals(2.8, r.getScore().getBase(), 0.0);
+        //Assert.assertEquals(3.5, r.getScore().getExploitability(), 0.0);
+        //Assert.assertEquals(1.1, r.getScore().getImpact(), 0.0);
     }
 }

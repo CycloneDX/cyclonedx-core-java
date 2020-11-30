@@ -21,7 +21,6 @@ package org.cyclonedx.converters;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -31,16 +30,25 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cyclonedx.model.ExtensibleExtension;
 import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
+import org.cyclonedx.model.Extension;
 
 public class ExtensionConverter
     implements Converter
 {
     private Class type;
     private ExtensionType extensionType;
+    private String namespaceUri;
+    private String prefix;
 
-    public ExtensionConverter(final Class type, final ExtensionType extensionType) {
+    public ExtensionConverter(final Class type,
+                              final ExtensionType extensionType,
+                              final String namespaceUri,
+                              final String prefix)
+    {
         this.type = type;
         this.extensionType = extensionType;
+        this.namespaceUri = namespaceUri;
+        this.prefix = prefix;
     }
 
     @Override
@@ -64,8 +72,9 @@ public class ExtensionConverter
             }
 
             if(!list.isEmpty()) {
-                Map<String, List<ExtensibleExtension>> map = new HashMap<>();
-                map.put(extensionType.getTypeName(), list);
+                Map<String, Extension> map = new HashMap<>();
+                Extension ext = new Extension(this.namespaceUri, this.prefix, list);
+                map.put(extensionType.getTypeName(), ext);
                 return map;
             }
         }

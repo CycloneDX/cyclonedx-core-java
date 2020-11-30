@@ -24,7 +24,9 @@ import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExtensibleElement;
+import org.cyclonedx.model.ExtensibleExtension;
 import org.cyclonedx.model.ExtensibleType;
+import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.IdentifiableActionType;
@@ -41,6 +43,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,6 +54,7 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
@@ -56,6 +63,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator {
 
@@ -181,6 +189,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
             final Element subComponentsNode = createElement(componentNode, "components");
             createComponentsNode(subComponentsNode, component.getComponents());
         }
+        processExtensions(componentNode, component.getExtensions());
         processExtensions(componentNode, component);
     }
 
@@ -432,6 +441,37 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
                         processExtensions(childNode, childType);
                     }
                 }
+            }
+        }
+    }
+
+    protected void processExtensions(final Node node, final Map<String, Extension> extensions) {
+        if (extensions != null && extensions.size() > 0) {
+            for (Map.Entry<String, Extension> entry : extensions.entrySet()) {
+                final String namespace = entry.getValue().getNamespaceUri();
+                final String prefix = entry.getValue().getPrefix();
+                final String nodeName = prefix + ":" + entry.getKey();
+                final Element el = createElementNS(node, namespace, nodeName);
+
+                DOMResult res = new DOMResult(el);
+
+                for (ExtensibleExtension ext : entry.getValue().getExtensions()) {
+                    try {
+                        if (ext == null) {
+                            return;
+                        }
+
+                        JAXBContext ctx = JAXBContext.newInstance(ext.getClass());
+                        Marshaller m = ctx.createMarshaller();
+                        m.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", new SbomNamespaceMapper());
+
+                        m.marshal(ext, res);
+                    } catch (JAXBException ex) {
+                        //
+                    }
+                }
+
+                node.appendChild(el);
             }
         }
     }

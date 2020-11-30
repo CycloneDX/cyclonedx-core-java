@@ -90,7 +90,7 @@ public class Component extends ExtensibleElement {
     private List<Component> components;
     private Type type;
     @JSONField(deserializeUsing = ExtensionDeserializer.class, name ="vulnerabilities")
-    private Map<String, List<ExtensibleExtension>> extensions;
+    private Map<String, Extension> extensions;
 
     public String getBomRef() {
         return bomRef;
@@ -295,15 +295,15 @@ public class Component extends ExtensibleElement {
         this.type = type;
     }
 
-    public Map<String, List<ExtensibleExtension>> getExtensions() {
+    public Map<String, Extension> getExtensions() {
         return extensions;
     }
 
-    public void setExtensions(final Map<String, List<ExtensibleExtension>> extensions) {
+    public void setExtensions(final Map<String, Extension> extensions) {
         this.extensions = extensions;
     }
 
-    public void addExtension(String extensionName, List<ExtensibleExtension> extension) {
+    public void addExtension(String extensionName, Extension extension) {
         if (this.extensions == null) {
             this.extensions = new HashMap<>();
         }
