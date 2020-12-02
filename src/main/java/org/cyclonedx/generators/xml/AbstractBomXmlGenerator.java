@@ -42,9 +42,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+
+import javax.xml.bind.JAXB;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -454,19 +453,11 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
                 DOMResult res = new DOMResult(el);
 
                 for (ExtensibleType ext : entry.getValue().getExtensions()) {
-                    try {
-                        if (ext == null) {
-                            return;
-                        }
-
-                        JAXBContext ctx = JAXBContext.newInstance(ext.getClass());
-                        Marshaller m = ctx.createMarshaller();
-                        m.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", new SbomNamespaceMapper());
-
-                        m.marshal(ext, res);
-                    } catch (JAXBException ex) {
-                        //
+                    if (ext == null) {
+                        return;
                     }
+
+                    JAXB.marshal(ext, res);
                 }
 
                 node.appendChild(el);
