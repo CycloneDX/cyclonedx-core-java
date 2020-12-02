@@ -18,6 +18,16 @@
  */
 package org.cyclonedx;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -25,14 +35,6 @@ import org.everit.json.schema.loader.SchemaLoader.SchemaLoaderBuilder;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xml.sax.SAXException;
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * CycloneDxSchema is a base class that provides schema information to
@@ -157,11 +159,13 @@ public abstract class CycloneDxSchema {
         if (strict) {
             return getJsonSchema(
                 this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json"),
+                this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0-types.schema.json"),
                 this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0-strict.schema.json")
             );
         } else {
             return getJsonSchema(
                 this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json"),
+                this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0-types.schema.json"),
                 this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0.schema.json")
             );
         }
