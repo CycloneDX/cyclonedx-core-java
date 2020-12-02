@@ -157,11 +157,13 @@ public abstract class CycloneDxSchema {
         if (strict) {
             return getJsonSchema(
                 this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json"),
+                this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0-types.schema.json"),
                 this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0-strict.schema.json")
             );
         } else {
             return getJsonSchema(
                 this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json"),
+                this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0-types.schema.json"),
                 this.getClass().getClassLoader().getResourceAsStream("ext/vulnerability-1.0.schema.json")
             );
         }

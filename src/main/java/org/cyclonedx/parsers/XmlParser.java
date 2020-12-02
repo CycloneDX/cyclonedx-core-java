@@ -21,6 +21,7 @@ package org.cyclonedx.parsers;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
+import com.thoughtworks.xstream.converters.extended.ISO8601DateConverter;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
@@ -466,6 +467,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.aliasAttribute(Dependency.class, "ref", "ref");
 
         xstream.alias("metadata", Metadata.class);
+        xstream.registerConverter(new ISO8601DateConverter());
         xstream.alias("tool", Tool.class);
         xstream.alias("author", OrganizationalContact.class);
         xstream.alias("manufacture", OrganizationalEntity.class);
