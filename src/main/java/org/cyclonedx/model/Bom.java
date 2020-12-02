@@ -37,7 +37,7 @@ public class Bom extends ExtensibleElement {
     private String serialNumber;
     private String specVersion;
     @JSONField(deserializeUsing = ExtensionDeserializer.class, name ="vulnerabilities")
-    private Map<String, List<ExtensibleExtension>> extensions;
+    private Map<String, Extension> extensions;
 
     public Metadata getMetadata() {
         return metadata;
@@ -108,11 +108,11 @@ public class Bom extends ExtensibleElement {
         this.serialNumber = serialNumber;
     }
 
-    public Map<String, List<ExtensibleExtension>> getExtensions() {
+    public Map<String, Extension> getExtensions() {
         return extensions;
     }
 
-    public void setExtensions(final Map<String, List<ExtensibleExtension>> extensions) {
+    public void setExtensions(final Map<String, Extension> extensions) {
         this.extensions = extensions;
     }
 

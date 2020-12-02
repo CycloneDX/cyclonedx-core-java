@@ -28,27 +28,21 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.cyclonedx.model.ExtensibleExtension;
-import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
+import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
+import org.cyclonedx.model.Extension.ExtensionType;
 
 public class ExtensionConverter
     implements Converter
 {
     private Class type;
     private ExtensionType extensionType;
-    private String namespaceUri;
-    private String prefix;
 
     public ExtensionConverter(final Class type,
-                              final ExtensionType extensionType,
-                              final String namespaceUri,
-                              final String prefix)
+                              final ExtensionType extensionType)
     {
         this.type = type;
         this.extensionType = extensionType;
-        this.namespaceUri = namespaceUri;
-        this.prefix = prefix;
     }
 
     @Override
@@ -63,17 +57,17 @@ public class ExtensionConverter
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        ArrayList<ExtensibleExtension> list = new ArrayList<>();
+        ArrayList<ExtensibleType> list = new ArrayList<>();
         if (reader.getNodeName().equals(extensionType.getTypeName())) {
             while (reader.hasMoreChildren()) {
                 reader.moveDown();
-                list.add((ExtensibleExtension) context.convertAnother(reader, type));
+                list.add((ExtensibleType) context.convertAnother(reader, type));
                 reader.moveUp();
             }
 
             if(!list.isEmpty()) {
                 Map<String, Extension> map = new HashMap<>();
-                Extension ext = new Extension(this.namespaceUri, this.prefix, list);
+                Extension ext = new Extension(extensionType, list);
                 map.put(extensionType.getTypeName(), ext);
                 return map;
             }

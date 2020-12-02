@@ -24,7 +24,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
-import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
+import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 
 public class ExtensionDeserializer

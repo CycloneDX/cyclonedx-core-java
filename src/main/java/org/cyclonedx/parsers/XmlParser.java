@@ -34,7 +34,7 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
-import org.cyclonedx.model.ExtensibleExtension.ExtensionType;
+import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.License;
@@ -443,22 +443,14 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.registerLocalConverter(
             Component.class,
             "extensions",
-            new ExtensionConverter(
-                Vulnerability1_0.class,
-                ExtensionType.VULNERABILITIES,
-                "http://cyclonedx.org/schema/ext/vulnerability/1.0",
-                "v")
+            new ExtensionConverter(Vulnerability1_0.class, ExtensionType.VULNERABILITIES)
         );
 
         xstream.aliasField("vulnerabilities", Bom.class, "extensions");
         xstream.registerLocalConverter(
             Bom.class,
             "extensions",
-            new ExtensionConverter(
-                Vulnerability1_0.class,
-                ExtensionType.VULNERABILITIES,
-                "http://cyclonedx.org/schema/ext/vulnerability/1.0",
-                "v")
+            new ExtensionConverter(Vulnerability1_0.class, ExtensionType.VULNERABILITIES)
         );
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");

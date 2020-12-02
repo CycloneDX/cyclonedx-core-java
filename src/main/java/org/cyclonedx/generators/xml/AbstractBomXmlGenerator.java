@@ -24,7 +24,6 @@ import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExtensibleElement;
-import org.cyclonedx.model.ExtensibleExtension;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.ExternalReference;
@@ -43,7 +42,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -455,7 +453,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
                 DOMResult res = new DOMResult(el);
 
-                for (ExtensibleExtension ext : entry.getValue().getExtensions()) {
+                for (ExtensibleType ext : entry.getValue().getExtensions()) {
                     try {
                         if (ext == null) {
                             return;

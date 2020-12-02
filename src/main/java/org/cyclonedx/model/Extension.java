@@ -2,24 +2,44 @@ package org.cyclonedx.model;
 
 import java.util.List;
 
+import org.cyclonedx.generators.xml.SbomNamespaceMapper;
+
 public class Extension
 {
+  public enum ExtensionType {
+    VULNERABILITIES("vulnerabilities");
+
+    private final String type;
+
+    public String getTypeName() {
+      return this.type;
+    }
+
+    ExtensionType(String type) {
+      this.type = type;
+    }
+  }
+
+
   private String namespaceUri;
   private String prefix;
 
-  private List<ExtensibleExtension> extensions;
+  private List<ExtensibleType> extensions;
 
-  public Extension(final String namespaceUri, final String prefix, final List<ExtensibleExtension> extensions) {
-    this.namespaceUri = namespaceUri;
-    this.prefix = prefix;
+  public Extension(final ExtensionType extensionType, final List<ExtensibleType> extensions) {
+    if(extensionType == ExtensionType.VULNERABILITIES){
+      this.namespaceUri = SbomNamespaceMapper.VULN_URI;
+      this.prefix = SbomNamespaceMapper.VULN_PREFIX;
+    }
+
     this.extensions = extensions;
   }
 
-  public List<ExtensibleExtension> getExtensions() {
+  public List<ExtensibleType> getExtensions() {
     return extensions;
   }
 
-  public void setExtensions(final List<ExtensibleExtension> extensions) {
+  public void setExtensions(final List<ExtensibleType> extensions) {
     this.extensions = extensions;
   }
 
@@ -27,15 +47,8 @@ public class Extension
     return namespaceUri;
   }
 
-  public void setNamespaceUri(final String namespaceUri) {
-    this.namespaceUri = namespaceUri;
-  }
-
   public String getPrefix() {
     return prefix;
   }
 
-  public void setPrefix(final String prefix) {
-    this.prefix = prefix;
-  }
 }
