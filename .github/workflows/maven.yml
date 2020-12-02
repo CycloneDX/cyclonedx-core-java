@@ -4,12 +4,13 @@ on: [push, pull_request]
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
         java: [8, 11]
 
-    nae: Java ${{ matrix.java }} build
-    runs-on: ubuntu-latest
+    name: Java ${{ matrix.java }} build
 
     steps:
     - uses: actions/checkout@v1
