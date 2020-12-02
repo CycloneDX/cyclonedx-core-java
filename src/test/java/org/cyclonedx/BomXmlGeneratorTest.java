@@ -18,6 +18,12 @@
  */
 package org.cyclonedx;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator10;
@@ -34,11 +40,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class BomXmlGeneratorTest {
 
@@ -98,6 +99,17 @@ public class BomXmlGeneratorTest {
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+    }
+
+    @Test
+    public void schema12WithVulnerabilityTest() throws Exception {
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_12, createCommonBom("/bom-1.2-vulnerability-1.0.xml"));
+        generator.generate();
+        Assert.assertTrue(generator instanceof BomXmlGenerator12);
+        Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
 
     @Test
