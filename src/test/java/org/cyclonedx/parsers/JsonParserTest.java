@@ -51,6 +51,15 @@ public class JsonParserTest {
         final File file = new File(this.getClass().getResource("/bom-1.2-vulnerability-1.0.json").getFile());
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, false));
+        System.out.println(bom.getSerialNumber());
+    }
+
+    @Test
+    public void testValid12BomStrictWithVulns() throws Exception {
+        final File file = new File(this.getClass().getResource("/bom-1.2-vulnerability-1.0.json").getFile());
+        final JsonParser parser = new JsonParser();
+        Bom bom = parser.parse(file);
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
         System.out.println(bom.getSerialNumber());
     }
