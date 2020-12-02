@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import javax.xml.XMLConstants;
 
-import javax.xml.bind.JAXB;
+import jakarta.xml.bind.JAXB;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

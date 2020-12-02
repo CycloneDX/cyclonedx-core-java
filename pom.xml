@@ -166,12 +166,6 @@
             <version>3.0.0</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.googlecode.jaxb-namespaceprefixmapper-interfaces</groupId>
-            <artifactId>JAXBNamespacePrefixMapper</artifactId>
-            <version>6.1.0</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- J2EE xml libs (end) -->
         <dependency>
             <groupId>xerces</groupId>
