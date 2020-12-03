@@ -24,6 +24,8 @@ import java.util.List;
 
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
+import org.cyclonedx.model.ExtensibleType;
+import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 
@@ -33,10 +35,12 @@ public class ExtensionDeserializer
     @Override
     public <T> T deserialze(final DefaultJSONParser parser, final Type type, final Object fieldName) {
         if (fieldName.equals(ExtensionType.VULNERABILITIES.getTypeName())) {
-            final List<Vulnerability1_0> vulnerabilityList = parser.parseArray(Vulnerability1_0.class);
+            final List<? extends ExtensibleType> vulnerabilityList =parser.parseArray(Vulnerability1_0.class);
             if (vulnerabilityList != null) {
-                final HashMap<String, List<Vulnerability1_0>> extensions = new HashMap<>();
-                extensions.put((String) fieldName, vulnerabilityList);
+                final HashMap<String, Extension> extensions = new HashMap<>();
+                Extension vulnerabilities = new Extension(ExtensionType.VULNERABILITIES,
+                    (List<ExtensibleType>) vulnerabilityList);
+                extensions.put((String) fieldName, vulnerabilities);
                 return (T) extensions;
             }
         }
