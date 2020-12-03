@@ -321,22 +321,22 @@ public class Component extends ExtensibleElement {
         if (o == null || getClass() != o.getClass()) return false;
         Component component = (Component) o;
         return modified == component.modified &&
-            Objects.equals(supplier, component.supplier) &&
-            Objects.equals(author, component.author) &&
-            Objects.equals(publisher, component.publisher) &&
-            Objects.equals(group, component.group) &&
-            Objects.equals(name, component.name) &&
-            Objects.equals(version, component.version) &&
-            Objects.equals(description, component.description) &&
-            Objects.equals(scope, component.scope) &&
-            Objects.equals(hashes, component.hashes) &&
-            Objects.equals(licenseChoice, component.licenseChoice) &&
-            Objects.equals(copyright, component.copyright) &&
-            Objects.equals(cpe, component.cpe) &&
-            Objects.equals(purl, component.purl) &&
-            Objects.equals(swid, component.swid) &&
-            Objects.equals(components, component.components) &&
-            Objects.equals(mimeType, component.mimeType) &&
-            Objects.equals(type, component.type);
+                Objects.equals(supplier, component.supplier) &&
+                Objects.equals(author, component.author) &&
+                Objects.equals(publisher, component.publisher) &&
+                Objects.equals(group, component.group) &&
+                Objects.equals(name, component.name) &&
+                Objects.equals(version, component.version) &&
+                Objects.equals(description, component.description) &&
+                Objects.equals(scope, component.scope) &&
+                Objects.equals(hashes, component.hashes) &&
+                Objects.equals(licenseChoice, component.licenseChoice) &&
+                Objects.equals(copyright, component.copyright) &&
+                Objects.equals(cpe, component.cpe) &&
+                Objects.equals(purl, component.purl) &&
+                Objects.equals(swid, component.swid) &&
+                Objects.equals(components, component.components) &&
+                Objects.equals(mimeType, component.mimeType) &&
+                Objects.equals(type, component.type);
     }
 }

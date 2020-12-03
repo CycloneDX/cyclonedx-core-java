@@ -36,7 +36,6 @@ import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;

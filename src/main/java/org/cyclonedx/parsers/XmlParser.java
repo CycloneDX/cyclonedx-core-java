@@ -99,17 +99,6 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         }
     }
 
-    public File parse(final Bom bom) throws ParseException {
-        try {
-            final XStream xstream = mapDefaultObjectModel(createXStream());
-            final File file = new File(xstream.toXML(bom));
-            System.out.println(xstream.toXML(bom));
-            return file;
-        } catch (XStreamException e) {
-            throw new ParseException(e);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -440,19 +429,13 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.aliasAttribute(ExternalReference.class, "type", "type");
         xstream.registerConverter(new EnumToStringConverter<>(ExternalReference.Type.class, getExternalReferenceTypeMapping()));
 
+        ExtensionConverter extensionConverter = new ExtensionConverter(Vulnerability1_0.class, ExtensionType.VULNERABILITIES);
+
         xstream.aliasField("vulnerabilities", Component.class, "extensions");
-        xstream.registerLocalConverter(
-            Component.class,
-            "extensions",
-            new ExtensionConverter(Vulnerability1_0.class, ExtensionType.VULNERABILITIES)
-        );
+        xstream.registerLocalConverter(Component.class, "extensions", extensionConverter);
 
         xstream.aliasField("vulnerabilities", Bom.class, "extensions");
-        xstream.registerLocalConverter(
-            Bom.class,
-            "extensions",
-            new ExtensionConverter(Vulnerability1_0.class, ExtensionType.VULNERABILITIES)
-        );
+        xstream.registerLocalConverter(Bom.class, "extensions", extensionConverter);
 
         xstream.aliasField("licenses", Component.class, "licenseChoice");
         xstream.alias("license", License.class);

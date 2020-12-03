@@ -86,7 +86,6 @@ public class BomXmlGenerator11 extends AbstractBomXmlGenerator implements BomXml
             final Element dependenciesNode = createElement(bomNode, "dg:dependencies");
             createDependenciesNode(dependenciesNode, bom.getDependencies());
         }
-
         processExtensions(bomNode, bom);
         return doc;
     }
