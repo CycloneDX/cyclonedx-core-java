@@ -34,7 +34,7 @@ public class ExtensionDeserializer
 
     @Override
     public <T> T deserialze(final DefaultJSONParser parser, final Type type, final Object fieldName) {
-        if (fieldName.equals(ExtensionType.VULNERABILITIES.getTypeName())) {
+        if (ExtensionType.VULNERABILITIES.getTypeName().equals(fieldName)) {
             final List<? extends ExtensibleType> vulnerabilityList =parser.parseArray(Vulnerability1_0.class);
             if (vulnerabilityList != null) {
                 final HashMap<String, Extension> extensions = new HashMap<>();

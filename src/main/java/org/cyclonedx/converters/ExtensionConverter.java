@@ -35,8 +35,8 @@ import org.cyclonedx.model.Extension.ExtensionType;
 public class ExtensionConverter
     implements Converter
 {
-    private Class type;
-    private ExtensionType extensionType;
+    private final Class type;
+    private final ExtensionType extensionType;
 
     public ExtensionConverter(final Class type,
                               final ExtensionType extensionType)
