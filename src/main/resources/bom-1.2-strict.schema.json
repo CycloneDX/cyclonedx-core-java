@@ -78,6 +78,12 @@
       "uniqueItems": true,
       "title": "Dependencies",
       "description": "Provides the ability to document dependency relationships."
+    },
+    "vulnerabilities": {
+      "$id": "#/properties/vulnerabilities",
+      "type": "array",
+      "items": {"$ref": "http://cyclonedx.org/schema/ext/vulnerability-1.0-strict.schema.json#/definitions/vulnerability"},
+      "title": "Vulnerabilities"
     }
   },
   "definitions": {
