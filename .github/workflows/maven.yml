@@ -9,6 +9,8 @@ jobs:
     strategy:
       matrix:
         java: [8, 11]
+      # Run all tests even if one fails
+      fail-fast: false
 
     name: Java ${{ matrix.java }} build
 
