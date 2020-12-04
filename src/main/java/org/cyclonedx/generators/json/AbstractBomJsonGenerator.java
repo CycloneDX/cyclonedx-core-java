@@ -23,6 +23,8 @@ import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.Extension;
+import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.IdentifiableActionType;
@@ -41,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
@@ -94,6 +97,22 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         }
     }
 
+    void createExtensionsNode(final JSONObject json, Map<String, Extension> extensions){
+        if (extensions != null) {
+            for (Map.Entry<String, Extension> extension : extensions.entrySet()) {
+                if (ExtensionType.VULNERABILITIES.getTypeName().equals(extension.getKey())) {
+                    processVulnerabilities(json, extension.getValue(), extension.getKey());
+                }
+            }
+        }
+    }
+
+    private void processVulnerabilities(final JSONObject json, final Extension extension, final String nodeName){
+        if (extension != null && extension.getExtensions() != null && !extension.getExtensions().isEmpty()) {
+            json.put(nodeName,  new JSONArray(extension.getExtensions()));
+        }
+    }
+
     @SuppressWarnings("deprecation")
     JSONObject createComponentNode(final Component component) {
         if (component == null) {
@@ -124,6 +143,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         }
         createPedigreeNode(json, component.getPedigree());
         createExternalReferencesNode(json, component.getExternalReferences());
+        createExtensionsNode(json, component.getExtensions());
         createComponentsNode(json, component.getComponents(), "components");
         return json;
     }
