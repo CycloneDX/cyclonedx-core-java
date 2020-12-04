@@ -20,11 +20,10 @@ package org.cyclonedx.model;
 
 import java.util.List;
 
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+
 public class Extension
 {
-  public static final String VULN_URI = "http://cyclonedx.org/schema/ext/vulnerability/1.0";
-  public static final String VULN_PREFIX = "v";
-
   public enum ExtensionType {
     VULNERABILITIES("vulnerabilities");
 
@@ -39,7 +38,6 @@ public class Extension
     }
   }
 
-
   private String namespaceUri;
   private String prefix;
 
@@ -47,8 +45,8 @@ public class Extension
 
   public Extension(final ExtensionType extensionType, final List<ExtensibleType> extensions) {
     if(extensionType == ExtensionType.VULNERABILITIES){
-      this.namespaceUri = VULN_URI;
-      this.prefix = VULN_PREFIX;
+      this.namespaceUri = Vulnerability1_0.NAMESPACE_URI;
+      this.prefix = Vulnerability1_0.PREFIX;
     }
 
     this.extensions = extensions;
