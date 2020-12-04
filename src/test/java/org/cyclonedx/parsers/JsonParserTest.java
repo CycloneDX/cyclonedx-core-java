@@ -43,7 +43,7 @@ public class JsonParserTest {
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
-        System.out.println(bom.getSerialNumber());
+        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79", bom.getSerialNumber());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class JsonParserTest {
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, false));
-        System.out.println(bom.getSerialNumber());
+        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b80", bom.getSerialNumber());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class JsonParserTest {
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
-        System.out.println(bom.getSerialNumber());
+        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b80", bom.getSerialNumber());
     }
 
     @Test
