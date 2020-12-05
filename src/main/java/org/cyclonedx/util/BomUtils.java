@@ -39,6 +39,7 @@ public final class BomUtils {
     /**
      * Calculates the hashes of the specified file.
      * @param file the File to calculate hashes on
+     * @param schemaVersion enum denoting the schema version in use. Affects hash algorithm selection.
      * @return a List of Hash objets
      * @throws IOException an IOException
      * @since 1.0.0
