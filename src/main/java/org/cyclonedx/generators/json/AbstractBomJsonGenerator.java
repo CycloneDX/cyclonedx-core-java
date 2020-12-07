@@ -312,7 +312,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
     void addUrlNodes(final JSONObject jsonEntity, final List<URL> urls) {
         if (urls != null) {
-            urls.forEach(url -> jsonEntity.put("url", stripBreaks(url.toString())));
+            jsonEntity.put("url", new JSONArray(urls));
         }
     }
 
