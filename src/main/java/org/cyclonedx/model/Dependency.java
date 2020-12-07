@@ -18,8 +18,10 @@
  */
 package org.cyclonedx.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
 import org.cyclonedx.converters.DependencyDeserializer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +29,10 @@ import java.util.Objects;
 public class Dependency {
 
     private String ref;
-    @JSONField(name = "dependsOn", deserializeUsing = DependencyDeserializer.class)
+
+    //@JSONField(name = "dependsOn", deserializeUsing = DependencyDeserializer.class)
+    @SerializedName("dependsOn")
+    @JsonAdapter(DependencyDeserializer.class)
     private List<Dependency> dependencies;
 
     public Dependency(final String ref) {

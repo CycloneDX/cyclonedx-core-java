@@ -38,6 +38,7 @@
         <supplier>
             <name>Acme, Inc.</name>
             <url>https://example.com</url>
+            <url>https://example2.com</url>
             <contact>
                 <name>Acme Distribution</name>
                 <email>distribution@example.com</email>

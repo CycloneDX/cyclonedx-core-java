@@ -413,7 +413,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         if (entity != null) {
             final Element entityNode = createElement(parent, elementName);
             createElement(entityNode, "name", stripBreaks(entity.getName()));
-            createElement(entityNode, "url", stripBreaks(entity.getUrl()));
+            //createElement(entityNode, "url", stripBreaks(entity.getUrl()));
             if (entity.getContacts() != null && entity.getContacts().size() > 0) {
                 createOrganizationalContactNode(entityNode, entity.getContacts().get(0), "contact");
             }

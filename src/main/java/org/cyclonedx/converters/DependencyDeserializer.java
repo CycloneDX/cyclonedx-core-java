@@ -18,29 +18,33 @@
  */
 package org.cyclonedx.converters;
 
-import com.alibaba.fastjson.parser.DefaultJSONParser;
-import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import org.cyclonedx.model.Dependency;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DependencyDeserializer implements ObjectDeserializer {
-
-    @SuppressWarnings("unchecked")
-    public <T> T deserialze(final DefaultJSONParser parser, final Type type, final Object fieldName) {
-        final List<String> parseObjectList = parser.parseArray(String.class);
-        if(parseObjectList != null) {
-            final List<Dependency> dependencies = new ArrayList<>();
-            for(String ref: parseObjectList) {
-                dependencies.add(new Dependency(ref));
-            }
-            return (T)dependencies;
-        }
-        throw new IllegalStateException();
+public class DependencyDeserializer
+    implements JsonDeserializer<List<Dependency>>
+{
+  @Override
+  public List<Dependency> deserialize(
+      final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext)
+      throws JsonParseException
+  {
+    JsonArray parsedArray = jsonElement.getAsJsonArray();
+    if (parsedArray != null) {
+      final List<Dependency> dependencies = new ArrayList<>();
+      for (JsonElement el : parsedArray) {
+        final String ref = el.getAsJsonPrimitive().getAsString();
+        dependencies.add(new Dependency(ref));
+      }
+      return dependencies;
     }
-
-    public int getFastMatchToken() {
-        return 0;
-    }
+    return null;
+  }
 }

@@ -18,7 +18,8 @@
  */
 package org.cyclonedx.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -48,10 +49,10 @@ public class Hash {
         }
     }
 
-    @JSONField(name = "alg")
+    @SerializedName(value = "alg")
     private String algorithm;
 
-    @JSONField(name = "content")
+    @SerializedName(value = "content")
     private String value;
 
     public Hash() { }

@@ -18,14 +18,39 @@
  */
 package org.cyclonedx.parsers;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
+import com.thoughtworks.xstream.converters.extended.ISO8601DateConverter;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.converters.AttachmentTextConverter;
+import org.cyclonedx.converters.ExtensionConverter;
+import org.cyclonedx.converters.HashConverter;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Commit;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Type;
+import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.Extension.ExtensionType;
+import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.Hash;
+import org.cyclonedx.model.License;
+import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalContact;
+import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.Swid;
+import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface Parser {
 
@@ -216,5 +241,4 @@ public interface Parser {
      * @since 3.0.0
      */
     boolean isValid(InputStream inputStream, CycloneDxSchema.Version schemaVersion) throws IOException;
-
 }

@@ -34,6 +34,7 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.ExternalReference;
@@ -322,7 +323,43 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         return (NodeList) xPathExpression.evaluate(in, XPathConstants.NODESET);
     }
 
-    private Map<String, Component.Type> getComponentTypeMapping() {
+    public XStream createXStream() {
+        final QName qname = new QName(CycloneDxSchema.NS_BOM_LATEST);
+        final QNameMap nsm = new QNameMap();
+        nsm.registerMapping(qname, Bom.class);
+        nsm.setDefaultNamespace(CycloneDxSchema.NS_BOM_LATEST);
+        final XStream xstream = new XStream(new StaxDriver(nsm)) {
+            @Override
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new MapperWrapper(next) {
+                    @Override
+                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                        try {
+                            return definedIn != Object.class || realClass(fieldName) != null;
+                        } catch(CannotResolveClassException e) {
+                            return false;
+                        }
+                    }
+                    @Override
+                    public Class realClass(String elementName) {
+                        try {
+                            return super.realClass(elementName);
+                        } catch(CannotResolveClassException e) {
+                            return null;
+                        }
+                    }
+                };
+            }
+        };
+        XStream.setupDefaultSecurity(xstream);
+        xstream.allowTypesByWildcard(new String[] {
+                "org.cyclonedx.model.**"
+        });
+        xstream.autodetectAnnotations(true);
+        return xstream;
+    }
+
+    private Map<String, Type> getComponentTypeMapping() {
         final Map<String, Component.Type> map = new HashMap<>();
         map.put(Component.Type.APPLICATION.getTypeName(), Component.Type.APPLICATION);
         map.put(Component.Type.FRAMEWORK.getTypeName(), Component.Type.FRAMEWORK);
@@ -361,42 +398,6 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         map.put(ExternalReference.Type.BUILD_SYSTEM.getTypeName(), ExternalReference.Type.BUILD_SYSTEM);
         map.put(ExternalReference.Type.OTHER.getTypeName(), ExternalReference.Type.OTHER);
         return map;
-    }
-
-    private XStream createXStream() {
-        final QName qname = new QName(CycloneDxSchema.NS_BOM_LATEST);
-        final QNameMap nsm = new QNameMap();
-        nsm.registerMapping(qname, Bom.class);
-        nsm.setDefaultNamespace(CycloneDxSchema.NS_BOM_LATEST);
-        final XStream xstream = new XStream(new StaxDriver(nsm)) {
-            @Override
-            protected MapperWrapper wrapMapper(MapperWrapper next) {
-                return new MapperWrapper(next) {
-                    @Override
-                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
-                        try {
-                            return definedIn != Object.class || realClass(fieldName) != null;
-                        } catch(CannotResolveClassException e) {
-                            return false;
-                        }
-                    }
-                    @Override
-                    public Class realClass(String elementName) {
-                        try {
-                            return super.realClass(elementName);
-                        } catch(CannotResolveClassException e) {
-                            return null;
-                        }
-                    }
-                };
-            }
-        };
-        XStream.setupDefaultSecurity(xstream);
-        xstream.allowTypesByWildcard(new String[] {
-                "org.cyclonedx.model.**"
-        });
-        xstream.autodetectAnnotations(true);
-        return xstream;
     }
 
     private XStream mapDefaultObjectModel(final XStream xstream) {
@@ -457,6 +458,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         xstream.alias("supplier", OrganizationalEntity.class);
         xstream.alias("contact", OrganizationalContact.class);
         xstream.addImplicitCollection(OrganizationalEntity.class, "contacts");
+        xstream.addImplicitCollection(OrganizationalEntity.class, "url");
 
         return xstream;
     }

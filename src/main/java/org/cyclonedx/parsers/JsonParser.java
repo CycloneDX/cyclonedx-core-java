@@ -18,8 +18,8 @@
  */
 package org.cyclonedx.parsers;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.Feature;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
@@ -51,7 +51,8 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     public Bom parse(final File file) throws ParseException {
         try {
             final String jsonString = IOUtils.toString(new FileInputStream(file), StandardCharsets.UTF_8);
-            return JSON.parseObject(jsonString, Bom.class, Feature.SupportNonPublicField);
+            Gson gson = new Gson();
+            return gson.fromJson(jsonString, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from File", e);
         }
@@ -62,7 +63,9 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final byte[] bomBytes) throws ParseException {
         try {
-            return JSON.parseObject(bomBytes, Bom.class, Feature.SupportNonPublicField);
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            return gson.fromJson(new String(bomBytes), Bom.class);
         } catch (RuntimeException e) {
             throw new ParseException("Unable to parse BOM from byte array", e);
         }
@@ -72,23 +75,16 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public Bom parse(final InputStream inputStream) throws ParseException {
-        try {
-            return JSON.parseObject(inputStream, Bom.class, Feature.SupportNonPublicField);
-        } catch (IOException e) {
-            throw new ParseException("Unable to parse BOM from InputStream", e);
-        }
+        Gson gson = new Gson();
+        return gson.fromJson(String.valueOf(inputStream), Bom.class);
     }
 
     /**
      * {@inheritDoc}
      */
     public Bom parse(final Reader reader) throws ParseException {
-        try {
-            InputStream in = IOUtils.toInputStream(IOUtils.toString(reader), StandardCharsets.UTF_8);
-            return JSON.parseObject(in, Bom.class, Feature.SupportNonPublicField);
-        } catch (IOException e) {
-            throw new ParseException("Unable to parse BOM from Reader", e);
-        }
+        Gson gson = new Gson();
+        return gson.fromJson(reader, Bom.class);
     }
 
     /**

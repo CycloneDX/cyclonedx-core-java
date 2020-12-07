@@ -18,8 +18,6 @@
  */
 package org.cyclonedx.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,8 +25,8 @@ import java.util.Objects;
 public class OrganizationalEntity extends ExtensibleElement {
 
     private String name;
-    private String url;
-    @JSONField(name = "contact")
+    private List<String> url;
+
     private List<OrganizationalContact> contacts;
 
     public String getName() {
@@ -39,12 +37,12 @@ public class OrganizationalEntity extends ExtensibleElement {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public List<String> getUrls() {
+        return this.url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrls(final List<String> urls) {
+        this.url = urls;
     }
 
     public List<OrganizationalContact> getContacts() {

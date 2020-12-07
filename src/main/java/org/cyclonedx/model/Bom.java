@@ -23,12 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import org.cyclonedx.converters.ExtensionDeserializer;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import org.cyclonedx.converters.ExtensionAdapter;
 
 @SuppressWarnings("unused")
 public class Bom extends ExtensibleElement {
-
+    private String bomFormat;
     private Metadata metadata;
     private List<Component> components;
     private List<Dependency> dependencies;
@@ -36,7 +37,8 @@ public class Bom extends ExtensibleElement {
     private int version = 1;
     private String serialNumber;
     private String specVersion;
-    @JSONField(deserializeUsing = ExtensionDeserializer.class, name ="vulnerabilities")
+    @SerializedName(value = "extensions", alternate = {"vulnerabilities"})
+    @JsonAdapter(ExtensionAdapter.class)
     private Map<String, Extension> extensions;
 
     public Metadata getMetadata() {
