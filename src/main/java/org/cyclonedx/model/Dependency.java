@@ -30,7 +30,6 @@ public class Dependency {
 
     private String ref;
 
-    //@JSONField(name = "dependsOn", deserializeUsing = DependencyDeserializer.class)
     @SerializedName("dependsOn")
     @JsonAdapter(DependencyDeserializer.class)
     private List<Dependency> dependencies;

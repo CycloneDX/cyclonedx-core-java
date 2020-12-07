@@ -74,7 +74,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public Bom parse(final InputStream inputStream) throws ParseException {
+    public Bom parse(final InputStream inputStream) {
         Gson gson = new Gson();
         return gson.fromJson(String.valueOf(inputStream), Bom.class);
     }
@@ -82,7 +82,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public Bom parse(final Reader reader) throws ParseException {
+    public Bom parse(final Reader reader) {
         Gson gson = new Gson();
         return gson.fromJson(reader, Bom.class);
     }
