@@ -38,6 +38,8 @@ import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -300,11 +302,17 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         if (entity != null) {
             final JSONObject jsonEntity = OrderedJSONObjectFactory.create();
             jsonEntity.put("name", stripBreaks(entity.getName()));
-            //jsonEntity.put("url", Collections.singletonList(stripBreaks(entity.getUrl())));
+            addUrlNodes(jsonEntity, entity.getUrls());
             jsonEntity.put("contact", createOrganizationalContactsNode(entity.getContacts()));
             return jsonEntity;
         } else {
             return null;
+        }
+    }
+
+    void addUrlNodes(final JSONObject jsonEntity, final List<URL> urls) {
+        if (urls != null) {
+            urls.forEach(url -> jsonEntity.put("url", stripBreaks(url.toString())));
         }
     }
 

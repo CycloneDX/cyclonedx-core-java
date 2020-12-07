@@ -28,8 +28,8 @@ public class ExtensionAdapter
   }
 
   @Override
-  public Map<String, Extension> read(final JsonReader jsonReader) throws IOException {
-    if (jsonReader.getPath().contains("vulnerabilities")) {
+  public Map<String, Extension> read(final JsonReader jsonReader) {
+    if (jsonReader.getPath().contains(ExtensionType.VULNERABILITIES.getTypeName())) {
       Type listType = new TypeToken<ArrayList<Vulnerability1_0>>(){}.getType();
       List<? extends ExtensibleType> vulns = new Gson().fromJson(jsonReader, listType);
 

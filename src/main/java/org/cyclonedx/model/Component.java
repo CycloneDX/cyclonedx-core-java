@@ -33,13 +33,21 @@ import java.util.Objects;
 public class Component extends ExtensibleElement {
 
     public enum Type {
+        @SerializedName("application")
         APPLICATION("application"),
+        @SerializedName("framework")
         FRAMEWORK("framework"),
+        @SerializedName("library")
         LIBRARY("library"),
+        @SerializedName("container")
         CONTAINER("container"),
+        @SerializedName("operating-system")
         OPERATING_SYSTEM("operating-system"),
+        @SerializedName("device")
         DEVICE("device"),
+        @SerializedName("firmware")
         FIRMWARE("firmware"),
+        @SerializedName("file")
         FILE("file");
 
         private final String name;
@@ -54,8 +62,11 @@ public class Component extends ExtensibleElement {
     }
 
     public enum Scope {
+        @SerializedName("required")
         REQUIRED("required"),
+        @SerializedName("optional")
         OPTIONAL("optional"),
+        @SerializedName("excluded")
         EXCLUDED("excluded");
 
         private final String name;

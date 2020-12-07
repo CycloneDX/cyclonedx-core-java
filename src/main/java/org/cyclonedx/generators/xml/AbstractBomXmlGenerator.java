@@ -38,6 +38,7 @@ import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
 import org.cyclonedx.util.BomUtils;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,6 +56,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -413,11 +415,17 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         if (entity != null) {
             final Element entityNode = createElement(parent, elementName);
             createElement(entityNode, "name", stripBreaks(entity.getName()));
-            //createElement(entityNode, "url", stripBreaks(entity.getUrl()));
+            addUrlNodes(entityNode, entity.getUrls());
             if (entity.getContacts() != null && entity.getContacts().size() > 0) {
                 createOrganizationalContactNode(entityNode, entity.getContacts().get(0), "contact");
             }
             processExtensions(entityNode, entity);
+        }
+    }
+
+    void addUrlNodes(final Element entityNode, final List<URL> urls) {
+        if (urls != null) {
+            urls.forEach(url -> createElement(entityNode, "url", stripBreaks(url.toString())));
         }
     }
 

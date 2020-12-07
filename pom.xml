@@ -256,34 +256,6 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.cyclonedx:*</include>
-                                    <include>com.alibaba:fastjson</include>
-                                </includes>
-                            </artifactSet>
-                            <filters>
-                                <filter>
-                                    <artifact>com.alibaba:fastjson</artifact>
-                                    <includes>
-                                        <include>com/alibaba/fastjson/**</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>com/alibaba/fastjson/support/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.alibaba.fastjson</pattern>
-                                    <shadedPattern>org.cyclonedx.internal.fastjson</shadedPattern>
-                                    <excludes>
-                                        <exclude>com.alibaba.fastjson.support</exclude>
-                                    </excludes>
-                                </relocation>
-                            </relocations>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
