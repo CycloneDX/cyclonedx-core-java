@@ -26,7 +26,7 @@ import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Rating;
+import org.cyclonedx.model.vulnerability.Rating;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0.ScoreSource;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0.Severity;
 import org.junit.Assert;
