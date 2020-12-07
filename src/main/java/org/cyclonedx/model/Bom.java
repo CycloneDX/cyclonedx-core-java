@@ -29,7 +29,7 @@ import org.cyclonedx.converters.ExtensionAdapter;
 
 @SuppressWarnings("unused")
 public class Bom extends ExtensibleElement {
-    private String bomFormat;
+
     private Metadata metadata;
     private List<Component> components;
     private List<Dependency> dependencies;
