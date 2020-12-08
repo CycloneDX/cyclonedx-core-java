@@ -23,6 +23,7 @@ import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.ExternalReference;
@@ -36,12 +37,21 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.vulnerability.Rating;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Cwe;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
+import org.cyclonedx.model.vulnerability.Vulnerability1_0.Source;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +120,94 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
     private void processVulnerabilities(final JSONObject json, final Extension extension, final String nodeName){
         if (extension != null && extension.getExtensions() != null && !extension.getExtensions().isEmpty()) {
-            json.put(nodeName,  new JSONArray(extension.getExtensions()));
+            final JSONArray vulnArray = new JSONArray();
+            for (ExtensibleType ext : extension.getExtensions()) {
+                final Vulnerability1_0 vuln = (Vulnerability1_0) ext;
+                final JSONObject vulnJson = OrderedJSONObjectFactory.create();
+                processAdvisories(vulnJson, vuln.getAdvisories());
+                vulnJson.put("ref", vuln.getRef());
+                processRatings(vulnJson, vuln.getRatings());
+                vulnJson.put("description", vuln.getDescription());
+                vulnJson.put("id", vuln.getId());
+                processSource(vulnJson, vuln.getSource());
+                processCwes(vulnJson, vuln.getCwes());
+                processRecommendations(vulnJson, vuln.getRecommendations());
+                vulnArray.put(vulnJson);
+            }
+            json.put(nodeName, vulnArray);
+        }
+    }
+
+    private void processSource(final JSONObject json, final List<Source> sources) {
+        if (sources != null && !sources.isEmpty()) {
+            final JSONArray sourceArray = new JSONArray();
+            for (Source source : sources) {
+                final JSONObject s = OrderedJSONObjectFactory.create();
+                s.put("name", source.getName());
+                s.put("url", source.getUrl());
+                sourceArray.put(s);
+            }
+            json.put("source", sourceArray);
+        }
+    }
+
+    private void processRecommendations(final JSONObject json, final List<Recommendation> recommendations) {
+        if (recommendations != null && !recommendations.isEmpty()) {
+            final JSONArray recommendationArray = new JSONArray();
+            Collections.sort(recommendations);
+            for (Recommendation recommendation : recommendations) {
+                final JSONObject r = OrderedJSONObjectFactory.create();
+                r.put("recommendation", recommendation.getText());
+
+                recommendationArray.put(r);
+            }
+            json.put("recommendations", recommendationArray);
+        }
+    }
+
+    private void processCwes(final JSONObject json, final List<Cwe> cwes) {
+        if (cwes != null && !cwes.isEmpty()) {
+            final JSONArray cweArray = new JSONArray();
+            for (Cwe cwe : cwes) {
+                final JSONObject c = OrderedJSONObjectFactory.create();
+                c.put("cwe", cwe.getText());
+
+                cweArray.put(c);
+            }
+            json.put("cwes", cweArray);
+        }
+    }
+
+    private void processAdvisories(final JSONObject json, final List<Advisory> advisories) {
+        if (advisories != null && !advisories.isEmpty()) {
+            final JSONArray advisoryArray = new JSONArray();
+            for (Advisory advisory : advisories) {
+                final JSONObject a = OrderedJSONObjectFactory.create();
+                a.put("advisory", advisory.getText());
+
+                advisoryArray.put(a);
+            }
+            json.put("advisories", advisoryArray);
+        }
+    }
+
+    private void processRatings(final JSONObject json, final List<Rating> ratings) {
+        if (ratings != null && !ratings.isEmpty()) {
+            final JSONArray ratingArray = new JSONArray();
+            for (Rating rating : ratings) {
+                final JSONObject r = OrderedJSONObjectFactory.create();
+                r.put("severity", rating.getSeverity().getSeverityName());
+                final JSONObject score = OrderedJSONObjectFactory.create();
+                score.put("impact", rating.getScore().getImpact());
+                score.put("exploitability", rating.getScore().getExploitability());
+                score.put("base", rating.getScore().getBase());
+                r.put("score", score);
+                r.put("method", rating.getMethod().getScoreSourceName());
+                r.put("vector", rating.getVector());
+
+                ratingArray.put(r);
+            }
+            json.put("ratings", ratingArray);
         }
     }
 
