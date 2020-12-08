@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -54,6 +55,10 @@ public class BomJsonGeneratorTest {
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, false));
+
+        String expectedJson =  IOUtils.toString(this.getClass().getResourceAsStream("/bom-1.2-vulnerability-1.0.json"),
+            StandardCharsets.UTF_8);
+        Assert.assertEquals(expectedJson, generator.toJsonString());
     }
 
     @Test

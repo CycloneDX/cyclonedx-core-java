@@ -22,6 +22,7 @@ import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension.ExtensionType;
@@ -52,7 +53,7 @@ public class JsonParserTest {
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, false));
-        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b80", bom.getSerialNumber());
+        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79", bom.getSerialNumber());
     }
 
     @Test
@@ -61,7 +62,7 @@ public class JsonParserTest {
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
-        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b80", bom.getSerialNumber());
+        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79", bom.getSerialNumber());
     }
 
     @Test
@@ -128,69 +129,30 @@ public class JsonParserTest {
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals("1.2", bom.getSpecVersion());
-        Assert.assertEquals(2, bom.getComponents().size());
+        Assert.assertEquals(1, bom.getComponents().size());
         Assert.assertEquals(1, bom.getVersion());
-        Assert.assertNotNull(bom.getMetadata());
-        Assert.assertNotNull(bom.getMetadata().getTimestamp());
-        Assert.assertEquals(1, bom.getMetadata().getTools().size());
-        Assert.assertEquals("Awesome Vendor", bom.getMetadata().getTools().get(0).getVendor());
-        Assert.assertEquals("Awesome Tool", bom.getMetadata().getTools().get(0).getName());
-        Assert.assertEquals("9.1.2", bom.getMetadata().getTools().get(0).getVersion());
-        Assert.assertEquals(2, bom.getMetadata().getTools().get(0).getHashes().size());
-        Assert.assertEquals("SHA-1", bom.getMetadata().getTools().get(0).getHashes().get(0).getAlgorithm());
-        Assert.assertEquals("25ed8e31b995bb927966616df2a42b979a2717f0", bom.getMetadata().getTools().get(0).getHashes().get(0).getValue());
-        Assert.assertEquals(1, bom.getMetadata().getAuthors().size());
-        Assert.assertEquals("Samantha Wright", bom.getMetadata().getAuthors().get(0).getName());
-        Assert.assertEquals("samantha.wright@example.com", bom.getMetadata().getAuthors().get(0).getEmail());
-        Assert.assertEquals("800-555-1212", bom.getMetadata().getAuthors().get(0).getPhone());
-        Assert.assertEquals("Acme Application", bom.getMetadata().getComponent().getName());
-        Assert.assertEquals("9.1.1", bom.getMetadata().getComponent().getVersion());
-        Assert.assertEquals(Component.Type.APPLICATION, bom.getMetadata().getComponent().getType());
-        Assert.assertNotNull(bom.getMetadata().getComponent().getSwid());
-        Assert.assertEquals("swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1", bom.getMetadata().getComponent().getSwid().getTagId());
-        Assert.assertEquals("Acme Application", bom.getMetadata().getComponent().getSwid().getName());
-        Assert.assertEquals("9.1.1", bom.getMetadata().getComponent().getSwid().getVersion());
-        Assert.assertEquals(0, bom.getMetadata().getComponent().getSwid().getTagVersion());
-        Assert.assertFalse(bom.getMetadata().getComponent().getSwid().isPatch());
-        Assert.assertEquals("Acme, Inc.", bom.getMetadata().getManufacture().getName());
-        Assert.assertEquals(1, bom.getMetadata().getManufacture().getUrls().size());
-        Assert.assertEquals(1, bom.getMetadata().getManufacture().getContacts().size());
-        Assert.assertEquals("Acme Professional Services", bom.getMetadata().getManufacture().getContacts().get(0).getName());
-        Assert.assertEquals("professional.services@example.com", bom.getMetadata().getManufacture().getContacts().get(0).getEmail());
-        Assert.assertEquals("Acme, Inc.", bom.getMetadata().getSupplier().getName());
-        Assert.assertEquals(1, bom.getMetadata().getSupplier().getUrls().size());
-        Assert.assertEquals(1, bom.getMetadata().getSupplier().getContacts().size());
-        Assert.assertEquals("Acme Distribution", bom.getMetadata().getSupplier().getContacts().get(0).getName());
-        Assert.assertEquals("distribution@example.com", bom.getMetadata().getSupplier().getContacts().get(0).getEmail());
+        Assert.assertNull(bom.getMetadata());
         final List<Component> components = bom.getComponents();
-        Assert.assertEquals(2, components.size());
+        Assert.assertEquals(1, components.size());
         Component c1 = components.get(0);
         Assert.assertEquals("com.acme", c1.getGroup());
         Assert.assertEquals("tomcat-catalina", c1.getName());
         Assert.assertEquals("9.0.14", c1.getVersion());
-        Assert.assertEquals(Component.Type.LIBRARY, c1.getType());
-        Assert.assertEquals("pkg:npm/acme/component@1.0.0", c1.getPurl());
-        Assert.assertEquals(1, bom.getDependencies().size());
-
-        Dependency d1 = bom.getDependencies().get(0);
-        Assert.assertNotNull(d1);
-        Assert.assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
-        Assert.assertEquals(1, d1.getDependencies().size());
-        Dependency d11 = d1.getDependencies().get(0);
-        Assert.assertEquals("pkg:npm/acme/common@1.0.0", d11.getRef());
-        Assert.assertNull(d11.getDependencies());
+        Assert.assertEquals(Type.APPLICATION, c1.getType());
+        Assert.assertEquals("pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar", c1.getPurl());
+        Assert.assertNull(bom.getDependencies());
 
         //Component Vulnerabilities
         final List<ExtensibleType>  vulnsComponent = components.get(0).getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName()).getExtensions();
-        Assert.assertEquals(1, vulnsComponent.size());
+        Assert.assertEquals(2, vulnsComponent.size());
 
         Vulnerability1_0 v1 = (Vulnerability1_0) vulnsComponent.get(0);
         Assert.assertEquals("CVE-2020-123", v1.getId());
-        Assert.assertEquals("pkg:npm/acme/component@1.0.0", v1.getRef());
-        Assert.assertEquals("component vulnerability", v1.getDescription());
+        Assert.assertEquals("pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar", v1.getRef());
+        Assert.assertEquals("myframework vulnerability", v1.getDescription());
 
         Assert.assertEquals(1, v1.getAdvisories().size());
-        Assert.assertEquals("https://github.com/acme/component", v1.getAdvisories().get(0).getText());
+        Assert.assertEquals("https://github.com/myframework", v1.getAdvisories().get(0).getText());
 
         Assert.assertEquals(1, v1.getCwes().size());
         Assert.assertTrue(12345 == v1.getCwes().get(0).getText());
@@ -213,21 +175,21 @@ public class JsonParserTest {
         Assert.assertEquals("AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", rating.getVector());
 
         Assert.assertNotNull(rating.getScore());
-        Assert.assertEquals(1.0, rating.getScore().getBase(), 0.0);
-        Assert.assertEquals(2.0, rating.getScore().getExploitability(), 0.0);
-        Assert.assertEquals(1.2, rating.getScore().getImpact(), 0.0);
+        Assert.assertEquals(9.8, rating.getScore().getBase(), 0.0);
+        Assert.assertEquals(5.9, rating.getScore().getImpact(), 0.0);
+        Assert.assertEquals(3.0, rating.getScore().getExploitability(), 0.0);
 
         //Bom Vulnerabilities
         final List<ExtensibleType>  vulnsBom = bom.getExtensions().get(ExtensionType.VULNERABILITIES.getTypeName()).getExtensions();
         Assert.assertEquals(1, vulnsBom.size());
 
         Vulnerability1_0 v = (Vulnerability1_0) vulnsBom.get(0);
-        Assert.assertEquals("CVE-2020-12345", v.getId());
-        Assert.assertEquals("pkg:npm/acme/component@1.0.1", v.getRef());
+        Assert.assertEquals("CVE-2020-1234", v.getId());
+        Assert.assertEquals("pkg:maven/com.example/myapplication@1.0.1?packaging=war", v.getRef());
         Assert.assertEquals("vulnerability", v.getDescription());
 
         Assert.assertEquals(1, v.getAdvisories().size());
-        Assert.assertEquals("https://github.com/acme/component123", v.getAdvisories().get(0).getText());
+        Assert.assertEquals("https://github.com/myframework1", v.getAdvisories().get(0).getText());
 
         Assert.assertEquals(2, v.getCwes().size());
         Assert.assertTrue(12345 == v.getCwes().get(0).getText());
@@ -237,7 +199,7 @@ public class JsonParserTest {
         Assert.assertEquals("Upgrade", v.getRecommendations().get(1).getText());
         Assert.assertEquals("Test", v.getRecommendations().get(0).getText());
 
-        Assert.assertNull( v.getSource());
+        Assert.assertNull(v.getSource());
 
         Assert.assertEquals(1, v.getRatings().size());
 

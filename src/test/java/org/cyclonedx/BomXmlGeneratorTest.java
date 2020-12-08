@@ -21,6 +21,7 @@ package org.cyclonedx;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -143,6 +144,9 @@ public class BomXmlGeneratorTest {
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+
+        String expectedXml = IOUtils.toString(this.getClass().getResourceAsStream("/bom-1.2-vulnerability-1.0.xml"), StandardCharsets.UTF_8.name());
+        Assert.assertEquals(expectedXml, generator.toXmlString());
     }
 
     @Test
