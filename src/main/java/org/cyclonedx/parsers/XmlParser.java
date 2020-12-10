@@ -92,7 +92,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
                     extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
             final XStream xstream = XStreamUtils.mapObjectModelBom1_2(createXStream());
             final Bom bom = (Bom) xstream.fromXML(file);
-            return injectSchemaVersion(bom, schemaVersion);
+            return bom;
         } catch (XStreamException | XPathExpressionException | FileNotFoundException e) {
             throw new ParseException(e);
         }
@@ -107,7 +107,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
                     extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
             final XStream xstream = XStreamUtils.mapObjectModelBom1_2(createXStream());
             final Bom bom = (Bom)xstream.fromXML(new ByteArrayInputStream(bomBytes));
-            return injectSchemaVersion(bom, schemaVersion);
+            return bom;
         } catch (XStreamException | XPathExpressionException e) {
             throw new ParseException(e);
         }
