@@ -19,7 +19,6 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.ArrayList;
 import java.util.List;
