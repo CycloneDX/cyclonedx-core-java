@@ -23,10 +23,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 public class Metadata extends ExtensibleElement {
 
     private Date timestamp = new Date();
     private List<Tool> tools;
+    @XStreamAlias("author")
     private List<OrganizationalContact> authors;
     private Component component;
     private OrganizationalEntity manufacture;

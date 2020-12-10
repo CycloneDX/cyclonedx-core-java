@@ -19,6 +19,8 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -72,6 +74,7 @@ public class Component extends ExtensibleElement {
     private String name;
     private String version;
     private String description;
+    @XStreamAlias("scope")
     private Scope scope;
     private List<Hash> hashes;
     private LicenseChoice licenseChoice;
@@ -79,6 +82,7 @@ public class Component extends ExtensibleElement {
     private String cpe;
     private String purl;
     private Swid swid;
+    @XStreamAlias("modified")
     private boolean modified;
     private Pedigree pedigree;
     private List<ExternalReference> externalReferences;

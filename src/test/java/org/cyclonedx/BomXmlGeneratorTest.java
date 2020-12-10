@@ -19,6 +19,7 @@
 package org.cyclonedx;
 
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator10;
 import org.cyclonedx.generators.xml.BomXmlGenerator11;
@@ -54,6 +55,18 @@ public class BomXmlGeneratorTest {
     public void after() {
         tempFile.delete();
         tempFile.getParentFile().delete();
+    }
+
+    @Test
+    public void testWithXStream() throws Exception {
+        BomXmlGenerator12 generator =
+            (BomXmlGenerator12) BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom("/bom-1.2.xml"));
+
+        Assert.assertTrue(generator instanceof BomXmlGenerator12);
+        Assert.assertEquals(Version.VERSION_12, generator.getSchemaVersion());
+        File file = writeToFile(generator.getXML());
+        XmlParser parser = new XmlParser();
+        Assert.assertTrue(parser.isValid(file, Version.VERSION_12));
     }
 
     @Test

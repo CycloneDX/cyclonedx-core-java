@@ -26,12 +26,14 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.converters.DateConverter;
 import org.cyclonedx.converters.HashConverter;
 import org.cyclonedx.converters.AttachmentTextConverter;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Scope;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
@@ -359,7 +361,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         return map;
     }
 
-    private XStream createXStream() {
+    public XStream createXStream() {
         final QName qname = new QName(CycloneDxSchema.NS_BOM_LATEST);
         final QNameMap nsm = new QNameMap();
         nsm.registerMapping(qname, Bom.class);
@@ -394,15 +396,16 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         return xstream;
     }
 
-    private XStream mapDefaultObjectModel(final XStream xstream) {
+    public XStream mapDefaultObjectModel(final XStream xstream) {
         xstream.alias("bom", Bom.class);
         xstream.aliasAttribute(Bom.class, "version", "version");
         xstream.aliasAttribute(Bom.class, "serialNumber", "serialNumber");
+        xstream.registerConverter(new DateConverter());
 
         xstream.alias("component", Component.class);
         xstream.aliasAttribute(Component.class, "type", "type");
         xstream.aliasAttribute(Component.class, "bomRef", "bom-ref");
-        xstream.aliasAttribute(Component.class, "scope", "scope");
+        xstream.alias("scope", Scope.class);
         xstream.registerConverter(new EnumToStringConverter<>(Component.Type.class, getComponentTypeMapping()));
         xstream.registerConverter(new EnumToStringConverter<>(Component.Scope.class, getComponentScopeMapping()));
 

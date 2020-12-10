@@ -18,8 +18,10 @@
  */
 package org.cyclonedx.generators.xml;
 
+import com.thoughtworks.xstream.XStream;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Attribute;
+import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -36,6 +38,7 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
+import org.cyclonedx.parsers.XmlParser;
 import org.cyclonedx.util.BomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,6 +80,13 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         factory.setNamespaceAware(true);
         return factory.newDocumentBuilder();
+    }
+
+    public String toXML(final Bom bom) {
+        XmlParser parser = new XmlParser();
+        XStream xStream = parser.mapDefaultObjectModel(parser.createXStream());
+
+        return xStream.toXML(bom);
     }
 
     Element createElement(Node parent, String name) {
