@@ -119,7 +119,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         json.put("cpe", stripBreaks(component.getCpe()));
         json.put("purl", stripBreaks(component.getPurl()));
         createSwidNode(json, component.getSwid());
-        if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified()) {
+        if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified() != null && component.isModified()) {
             json.put("modified", component.isModified());
         }
         createPedigreeNode(json, component.getPedigree());

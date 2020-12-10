@@ -20,31 +20,9 @@ package org.cyclonedx.parsers;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
-import com.thoughtworks.xstream.io.xml.QNameMap;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.mapper.CannotResolveClassException;
-import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.converters.DateConverter;
-import org.cyclonedx.converters.HashConverter;
-import org.cyclonedx.converters.AttachmentTextConverter;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.Commit;
-import org.cyclonedx.model.Component;
-import org.cyclonedx.model.Component.Scope;
-import org.cyclonedx.model.Dependency;
-import org.cyclonedx.model.ExternalReference;
-import org.cyclonedx.model.Hash;
-import org.cyclonedx.model.License;
-import org.cyclonedx.model.LicenseChoice;
-import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.OrganizationalContact;
-import org.cyclonedx.model.OrganizationalEntity;
-import org.cyclonedx.model.Pedigree;
-import org.cyclonedx.model.Swid;
-import org.cyclonedx.model.Tool;
 import org.cyclonedx.util.XStreamUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -52,7 +30,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -70,10 +47,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * XmlParser is responsible for validating and parsing CycloneDX bill-of-material
@@ -90,7 +65,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         try {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
-            final XStream xstream = XStreamUtils.mapObjectModelBom1_2(createXStream());
+            final XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
             final Bom bom = (Bom) xstream.fromXML(file);
             return bom;
         } catch (XStreamException | XPathExpressionException | FileNotFoundException e) {
@@ -105,7 +80,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         try {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
-            final XStream xstream = XStreamUtils.mapObjectModelBom1_2(createXStream());
+            final XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
             final Bom bom = (Bom)xstream.fromXML(new ByteArrayInputStream(bomBytes));
             return bom;
         } catch (XStreamException | XPathExpressionException e) {
@@ -118,7 +93,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final InputStream inputStream) throws ParseException {
         try {
-            XStream xstream = XStreamUtils.mapObjectModelBom1_2(createXStream());
+            XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
             return (Bom) xstream.fromXML(inputStream);
         } catch (XStreamException e) {
             throw new ParseException(e);
@@ -130,7 +105,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final Reader reader) throws ParseException {
         try {
-            XStream xstream = XStreamUtils.mapObjectModelBom1_2(createXStream());
+            XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
             return (Bom) xstream.fromXML(reader);
         } catch (XStreamException e) {
             throw new ParseException(e);
@@ -319,40 +294,5 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         final XPath xPath = xPathFactory.newXPath();
         final XPathExpression xPathExpression = xPath.compile("//namespace::*");
         return (NodeList) xPathExpression.evaluate(in, XPathConstants.NODESET);
-    }
-
-    public XStream createXStream() {
-        final QName qname = new QName(CycloneDxSchema.NS_BOM_LATEST);
-        final QNameMap nsm = new QNameMap();
-        nsm.registerMapping(qname, Bom.class);
-        nsm.setDefaultNamespace(CycloneDxSchema.NS_BOM_LATEST);
-        final XStream xstream = new XStream(new StaxDriver(nsm)) {
-            @Override
-            protected MapperWrapper wrapMapper(MapperWrapper next) {
-                return new MapperWrapper(next) {
-                    @Override
-                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
-                        try {
-                            return definedIn != Object.class || realClass(fieldName) != null;
-                        } catch(CannotResolveClassException e) {
-                            return false;
-                        }
-                    }
-                    @Override
-                    public Class realClass(String elementName) {
-                        try {
-                            return super.realClass(elementName);
-                        } catch(CannotResolveClassException e) {
-                            return null;
-                        }
-                    }
-                };
-            }
-        };
-        XStream.setupDefaultSecurity(xstream);
-        xstream.allowTypesByWildcard(new String[] {
-                "org.cyclonedx.model.**"
-        });
-        return xstream;
     }
 }

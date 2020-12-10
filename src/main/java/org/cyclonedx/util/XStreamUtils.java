@@ -30,9 +30,11 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.converters.AttachmentTextConverter;
 import org.cyclonedx.converters.DateConverter;
 import org.cyclonedx.converters.HashConverter;
+import org.cyclonedx.converters.ModifiedConverter;
 import org.cyclonedx.model.AuthorContact;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
@@ -58,6 +60,7 @@ public class XStreamUtils
     xstream.aliasAttribute(Bom.class, "version", "version");
     xstream.aliasAttribute(Bom.class, "serialNumber", "serialNumber");
     xstream.registerConverter(new DateConverter());
+    xstream.registerLocalConverter(Component.class, "modified", new ModifiedConverter(Version.VERSION_10));
 
     xstream.alias("component", Component.class);
     xstream.aliasAttribute(Component.class, "type", "type");
