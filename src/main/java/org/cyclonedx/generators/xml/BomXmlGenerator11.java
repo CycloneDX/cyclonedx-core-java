@@ -89,4 +89,8 @@ public class BomXmlGenerator11 extends AbstractBomXmlGenerator implements BomXml
         processExtensions(bomNode, bom);
         return doc;
     }
+
+    public String getXML() throws Exception {
+        return toXML(this.bom);
+    }
 }

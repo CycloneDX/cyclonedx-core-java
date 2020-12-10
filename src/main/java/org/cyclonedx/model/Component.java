@@ -19,7 +19,7 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,6 @@ public class Component extends ExtensibleElement {
     private String name;
     private String version;
     private String description;
-    @XStreamAlias("scope")
     private Scope scope;
     private List<Hash> hashes;
     private LicenseChoice licenseChoice;
@@ -82,8 +81,7 @@ public class Component extends ExtensibleElement {
     private String cpe;
     private String purl;
     private Swid swid;
-    @XStreamAlias("modified")
-    private boolean modified;
+    private Boolean modified;
     private Pedigree pedigree;
     private List<ExternalReference> externalReferences;
     private List<Component> components;
@@ -238,11 +236,11 @@ public class Component extends ExtensibleElement {
         this.swid = swid;
     }
 
-    public boolean isModified() {
+    public Boolean isModified() {
         return modified;
     }
 
-    public void setModified(boolean modified) {
+    public void setModified(Boolean modified) {
         this.modified = modified;
     }
 

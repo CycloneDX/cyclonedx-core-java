@@ -89,7 +89,7 @@ public class BomXmlGenerator12 extends AbstractBomXmlGenerator implements BomXml
         return doc;
     }
 
-    public String getXML() {
+    public String getXML() throws Exception {
         return toXML(this.bom);
     }
 }

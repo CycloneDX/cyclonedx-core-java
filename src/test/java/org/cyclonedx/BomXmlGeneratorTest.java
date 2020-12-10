@@ -58,7 +58,7 @@ public class BomXmlGeneratorTest {
     }
 
     @Test
-    public void testWithXStream() throws Exception {
+    public void testWithXStream1_2() throws Exception {
         BomXmlGenerator12 generator =
             (BomXmlGenerator12) BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom("/bom-1.2.xml"));
 
@@ -67,6 +67,30 @@ public class BomXmlGeneratorTest {
         File file = writeToFile(generator.getXML());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, Version.VERSION_12));
+    }
+
+    @Test
+    public void testWithXStream1_1() throws Exception {
+        BomXmlGenerator11 generator =
+            (BomXmlGenerator11) BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBom("/bom-1.1.xml"));
+
+        Assert.assertTrue(generator instanceof BomXmlGenerator11);
+        Assert.assertEquals(Version.VERSION_11, generator.getSchemaVersion());
+        File file = writeToFile(generator.getXML());
+        XmlParser parser = new XmlParser();
+        Assert.assertTrue(parser.isValid(file, Version.VERSION_11));
+    }
+
+    @Test
+    public void testWithXStream1_0() throws Exception {
+        BomXmlGenerator10 generator =
+            (BomXmlGenerator10) BomGeneratorFactory.createXml(Version.VERSION_10, createCommonBom("/bom-1.0.xml"));
+
+        Assert.assertTrue(generator instanceof BomXmlGenerator10);
+        Assert.assertEquals(Version.VERSION_10, generator.getSchemaVersion());
+        File file = writeToFile(generator.getXML());
+        XmlParser parser = new XmlParser();
+        Assert.assertTrue(parser.isValid(file, Version.VERSION_10));
     }
 
     @Test

@@ -23,14 +23,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 public class Metadata extends ExtensibleElement {
 
     private Date timestamp = new Date();
     private List<Tool> tools;
-    @XStreamAlias("author")
-    private List<OrganizationalContact> authors;
+    private List<AuthorContact> authors;
     private Component component;
     private OrganizationalEntity manufacture;
     private OrganizationalEntity supplier;
@@ -58,15 +55,15 @@ public class Metadata extends ExtensibleElement {
         this.tools.add(tool);
     }
 
-    public List<OrganizationalContact> getAuthors() {
+    public List<AuthorContact> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<OrganizationalContact> authors) {
+    public void setAuthors(List<AuthorContact> authors) {
         this.authors = authors;
     }
 
-    public void addAuthor(OrganizationalContact author) {
+    public void addAuthor(AuthorContact author) {
         if (this.authors == null) {
             this.authors = new ArrayList<>();
         }

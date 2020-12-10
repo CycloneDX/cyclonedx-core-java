@@ -72,4 +72,8 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
         createComponentsNode(componentsNode, bom.getComponents());
         return doc;
     }
+
+    public String getXML() throws Exception {
+        return toXML(this.bom);
+    }
 }

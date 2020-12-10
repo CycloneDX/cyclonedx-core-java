@@ -38,8 +38,8 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.Swid;
 import org.cyclonedx.model.Tool;
-import org.cyclonedx.parsers.XmlParser;
 import org.cyclonedx.util.BomUtils;
+import org.cyclonedx.util.XStreamUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -82,9 +82,18 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         return factory.newDocumentBuilder();
     }
 
-    public String toXML(final Bom bom) {
-        XmlParser parser = new XmlParser();
-        XStream xStream = parser.mapDefaultObjectModel(parser.createXStream());
+    public String toXML(final Bom bom) throws Exception {
+        XStream xStream = null;
+
+        if (this.getSchemaVersion().getVersion() == 1.0) {
+            xStream = XStreamUtils.mapObjectModelBom1_0(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_10));
+        } else if (this.getSchemaVersion().getVersion() == 1.1) {
+            xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11));
+        } else if (this.getSchemaVersion().getVersion() == 1.2) {
+            xStream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_12));
+        } else {
+            throw new Exception("Unsupported schema version");
+        }
 
         return xStream.toXML(bom);
     }
@@ -177,7 +186,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         createElement(componentNode, "copyright", stripBreaks(component.getCopyright()));
         createElement(componentNode, "cpe", stripBreaks(component.getCpe()));
         createElement(componentNode, "purl", stripBreaks(component.getPurl()));
-        if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified()) {
+        if (this.getSchemaVersion().getVersion() == 1.0 || component.isModified() != null && component.isModified()) {
             createElement(componentNode, "modified", component.isModified());
         }
         if (this.getSchemaVersion().getVersion() >= 1.2) {
@@ -374,7 +383,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
                 createElement(metadataNode, "timestamp", dateFormat.format(metadata.getTimestamp()));
             }
             createToolsNode(metadataNode, metadata.getTools());
-            createOrganizationalContactsNode(metadataNode, metadata.getAuthors(), "authors", "author");
+            // createOrganizationalContactsNode(metadataNode, metadata.getAuthors(), "authors", "author");
             createComponentNode(metadataNode, metadata.getComponent());
             createOrganizationalEntityNode(metadataNode, metadata.getManufacture(), "manufacture");
             createOrganizationalEntityNode(metadataNode, metadata.getSupplier(), "supplier");

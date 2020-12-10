@@ -25,8 +25,8 @@ public class License extends ExtensibleElement {
 
     private String id;
     private String name;
-    private String url;
     private AttachmentText attachmentText;
+    private String url;
 
     public String getId() {
         return id;
