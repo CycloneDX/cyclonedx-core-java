@@ -21,6 +21,7 @@ package org.cyclonedx.generators.xml;
 import com.thoughtworks.xstream.XStream;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Attribute;
+import org.cyclonedx.model.AuthorContact;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
@@ -383,7 +384,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
                 createElement(metadataNode, "timestamp", dateFormat.format(metadata.getTimestamp()));
             }
             createToolsNode(metadataNode, metadata.getTools());
-            // createOrganizationalContactsNode(metadataNode, metadata.getAuthors(), "authors", "author");
+            createOrganizationalContactsNode(metadataNode, metadata.getAuthors(), "authors", "author");
             createComponentNode(metadataNode, metadata.getComponent());
             createOrganizationalEntityNode(metadataNode, metadata.getManufacture(), "manufacture");
             createOrganizationalEntityNode(metadataNode, metadata.getSupplier(), "supplier");
@@ -405,10 +406,10 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         }
     }
 
-    private void createOrganizationalContactsNode(Node parent, List<OrganizationalContact> contacts, String parentElementName, String elementName) {
+    private void createOrganizationalContactsNode(Node parent, List<AuthorContact> contacts, String parentElementName, String elementName) {
         if (contacts != null && !contacts.isEmpty()) {
             final Element contactsNode = createElement(parent, parentElementName);
-            for (OrganizationalContact contact : contacts) {
+            for (AuthorContact contact : contacts) {
                 createOrganizationalContactNode(contactsNode, contact, elementName);
             }
         }
