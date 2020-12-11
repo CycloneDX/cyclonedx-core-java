@@ -35,7 +35,7 @@ public class DependencyConverter
 
   private void marshalDependencies(final List<Dependency> dependencies, final HierarchicalStreamWriter writer) {
     for (Dependency dependency : dependencies) {
-      writer.startNode("dg:dependency");
+      writer.startNode("dependency");
       writer.addAttribute("ref", dependency.getRef());
       if(dependency.getDependencies()!=null && !dependency.getDependencies().isEmpty()) {
         marshalDependencies(dependency.getDependencies(), writer);

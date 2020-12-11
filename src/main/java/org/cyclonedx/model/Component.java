@@ -19,7 +19,6 @@
 package org.cyclonedx.model;
 
 import com.github.packageurl.PackageURL;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

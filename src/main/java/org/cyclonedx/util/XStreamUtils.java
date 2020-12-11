@@ -18,21 +18,15 @@
  */
 package org.cyclonedx.util;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-
-import com.sun.xml.internal.stream.writers.XMLStreamWriterImpl;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.io.xml.StaxWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.cyclonedx.CycloneDxSchema;
@@ -125,6 +119,7 @@ public class XStreamUtils
     xstream.aliasField("text", License.class, "attachmentText");
 
     xstream.alias("dependency", Dependency.class);
+    xstream.registerLocalConverter(Bom.class, "dependencies", new DependencyConverter());
     xstream.processAnnotations(Bom.class);
 
     return xstream;

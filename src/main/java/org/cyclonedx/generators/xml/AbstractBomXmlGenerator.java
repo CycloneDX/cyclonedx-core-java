@@ -20,7 +20,6 @@ package org.cyclonedx.generators.xml;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.QNameMap;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.AuthorContact;
@@ -95,8 +94,8 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
             if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
                 QNameMap nsm = new QNameMap();
                 QName dependency =
-                    new QName("http://cyclonedx.org/schema/ext/dependency-graph/1.0", "dependency", "dg");
-                QName dependencies = new QName("", "dependencies", "dg");
+                    new QName("", "dependency", "dg");
+                QName dependencies = new QName("http://cyclonedx.org/schema/ext/dependency-graph/1.0", "dependencies", "dg");
                 nsm.registerMapping(dependency, "dependency");
                 nsm.registerMapping(dependencies, "dependencies");
                 xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11, nsm));
