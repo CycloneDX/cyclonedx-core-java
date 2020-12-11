@@ -19,6 +19,8 @@
 package org.cyclonedx.generators.xml;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.QNameMap;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.AuthorContact;
@@ -45,6 +47,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -84,14 +87,17 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
     }
 
     public String toXML(final Bom bom) throws Exception {
-        XStream xStream = null;
-
+        XStream xStream;
         if (this.getSchemaVersion().getVersion() == 1.0) {
-            xStream = XStreamUtils.mapObjectModelBom1_0(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_10));
+            QName dependencies= null;
+            if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
+                dependencies = new QName("http://cyclonedx.org/schema/ext/dependency-graph/1.0", "", "dg");
+            }
+            xStream = XStreamUtils.mapObjectModelBom1_0(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_10, dependencies));
         } else if (this.getSchemaVersion().getVersion() == 1.1) {
-            xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11));
+            xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11, null));
         } else if (this.getSchemaVersion().getVersion() == 1.2) {
-            xStream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_12));
+            xStream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_12, null));
         } else {
             throw new Exception("Unsupported schema version");
         }

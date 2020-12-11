@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
@@ -33,6 +34,7 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.converters.AttachmentTextConverter;
 import org.cyclonedx.converters.DateConverter;
+import org.cyclonedx.converters.DependencyConverter;
 import org.cyclonedx.converters.HashConverter;
 import org.cyclonedx.converters.ModifiedConverter;
 import org.cyclonedx.model.AuthorContact;
@@ -118,6 +120,8 @@ public class XStreamUtils
     xstream.aliasField("text", License.class, "attachmentText");
 
     xstream.alias("pedigree", Pedigree.class);
+
+    xstream.registerLocalConverter(Bom.class, "dependencies", new DependencyConverter());
 
     return xstream;
   }
@@ -219,15 +223,19 @@ public class XStreamUtils
   }
 
   public static XStream createXStream() {
-    return createXStream(CycloneDxSchema.NS_BOM_LATEST);
+    return createXStream(CycloneDxSchema.NS_BOM_LATEST, null);
   }
 
-  public static XStream createXStream(final String namespace) {
+  public static XStream createXStream(final String namespace, QName dependencies) {
     final QName qname = new QName(namespace);
     final QNameMap nsm = new QNameMap();
-    nsm.registerMapping(qname, Bom.class);
+    nsm.registerMapping(dependencies, Bom.class);
+    nsm.registerMapping(dependencies, "dependency");
     nsm.setDefaultNamespace(namespace);
-    final XStream xstream = new XStream(new StaxDriver(nsm)) {
+
+    StaxDriver staxDriver = new StaxDriver(nsm);
+    staxDriver.getInputFactory().setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, true);
+    final XStream xstream = new XStream(staxDriver) {
       @Override
       protected MapperWrapper wrapMapper(MapperWrapper next) {
         return new MapperWrapper(next) {
