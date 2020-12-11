@@ -89,13 +89,21 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
     public String toXML(final Bom bom) throws Exception {
         XStream xStream;
         if (this.getSchemaVersion().getVersion() == 1.0) {
-            QName dependencies= null;
-            if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
-                dependencies = new QName("http://cyclonedx.org/schema/ext/dependency-graph/1.0", "", "dg");
-            }
-            xStream = XStreamUtils.mapObjectModelBom1_0(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_10, dependencies));
+            xStream = XStreamUtils.mapObjectModelBom1_0(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_10, null));
         } else if (this.getSchemaVersion().getVersion() == 1.1) {
-            xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11, null));
+
+            if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
+                QNameMap nsm = new QNameMap();
+                QName dependency =
+                    new QName("http://cyclonedx.org/schema/ext/dependency-graph/1.0", "dependency", "dg");
+                QName dependencies = new QName("", "dependencies", "dg");
+                nsm.registerMapping(dependency, "dependency");
+                nsm.registerMapping(dependencies, "dependencies");
+                xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11, nsm));
+            } else {
+                xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11, null));
+            }
+
         } else if (this.getSchemaVersion().getVersion() == 1.2) {
             xStream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_12, null));
         } else {

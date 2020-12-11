@@ -19,6 +19,7 @@
 package org.cyclonedx.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import org.cyclonedx.converters.DependencyDeserializer;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Objects;
 
 public class Dependency {
 
+    @XStreamAsAttribute
     private String ref;
     @JSONField(name = "dependsOn", deserializeUsing = DependencyDeserializer.class)
     private List<Dependency> dependencies;

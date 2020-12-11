@@ -18,16 +18,21 @@
  */
 package org.cyclonedx.util;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 
+import com.sun.xml.internal.stream.writers.XMLStreamWriterImpl;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumToStringConverter;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.StaxWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.cyclonedx.CycloneDxSchema;
@@ -119,9 +124,8 @@ public class XStreamUtils
     xstream.registerConverter(new AttachmentTextConverter());
     xstream.aliasField("text", License.class, "attachmentText");
 
-    xstream.alias("pedigree", Pedigree.class);
-
-    xstream.registerLocalConverter(Bom.class, "dependencies", new DependencyConverter());
+    xstream.alias("dependency", Dependency.class);
+    xstream.processAnnotations(Bom.class);
 
     return xstream;
   }
@@ -226,12 +230,14 @@ public class XStreamUtils
     return createXStream(CycloneDxSchema.NS_BOM_LATEST, null);
   }
 
-  public static XStream createXStream(final String namespace, QName dependencies) {
+  public static XStream createXStream(final String namespace, QNameMap nsm) {
+    if (nsm == null) {
+      nsm = new QNameMap();
+    }
     final QName qname = new QName(namespace);
-    final QNameMap nsm = new QNameMap();
-    nsm.registerMapping(dependencies, Bom.class);
-    nsm.registerMapping(dependencies, "dependency");
+    nsm.registerMapping(qname, Bom.class);
     nsm.setDefaultNamespace(namespace);
+    nsm.setDefaultPrefix("");
 
     StaxDriver staxDriver = new StaxDriver(nsm);
     staxDriver.getInputFactory().setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, true);
