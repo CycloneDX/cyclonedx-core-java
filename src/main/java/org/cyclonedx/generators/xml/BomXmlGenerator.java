@@ -21,7 +21,6 @@ package org.cyclonedx.generators.xml;
 import org.cyclonedx.CycloneDxSchema;
 import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 public interface BomXmlGenerator {
 
@@ -29,7 +28,7 @@ public interface BomXmlGenerator {
 
     Document generate() throws ParserConfigurationException;
 
-    String toXmlString() throws TransformerException;
+    String toXmlString() throws Exception;
 
     String toString();
 

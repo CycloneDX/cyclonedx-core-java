@@ -265,4 +265,35 @@ public class XStreamUtils
     });
     return xstream;
   }
+
+  public static XStream createXStreamWithoutDriver() {
+    final XStream xstream = new XStream() {
+      @Override
+      protected MapperWrapper wrapMapper(MapperWrapper next) {
+        return new MapperWrapper(next) {
+          @Override
+          public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+            try {
+              return definedIn != Object.class || realClass(fieldName) != null;
+            } catch(CannotResolveClassException e) {
+              return false;
+            }
+          }
+          @Override
+          public Class realClass(String elementName) {
+            try {
+              return super.realClass(elementName);
+            } catch(CannotResolveClassException e) {
+              return null;
+            }
+          }
+        };
+      }
+    };
+    XStream.setupDefaultSecurity(xstream);
+    xstream.allowTypesByWildcard(new String[] {
+        "org.cyclonedx.model.**"
+    });
+    return xstream;
+  }
 }

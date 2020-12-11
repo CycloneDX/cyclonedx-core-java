@@ -19,15 +19,11 @@
 package org.cyclonedx.generators.xml;
 
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.util.XStreamUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * BomGenerator creates a CycloneDX bill-of-material document from a set of
@@ -61,35 +57,12 @@ public class BomXmlGenerator12 extends AbstractBomXmlGenerator implements BomXml
      * @since 2.0.0
      */
     public Document generate() throws ParserConfigurationException {
-        final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
-        this.doc = docBuilder.newDocument();
-        doc.setXmlStandalone(true);
-
-        final List<Attribute> attributes = new ArrayList<>();
-        attributes.add(new Attribute("xmlns", NS_BOM_12));
-        attributes.add(new Attribute("version", String.valueOf(bom.getVersion())));
-
-        // Create root <bom> node
-        final Element bomNode = createRootElement("bom", null, attributes.toArray(new Attribute[0]));
-        if (bom.getSerialNumber() != null) {
-            bomNode.setAttribute("serialNumber", bom.getSerialNumber());
-        }
-
-        createMetadataNode(bomNode, bom.getMetadata());
-
-        final Element componentsNode = createElement(bomNode, "components");
-        createComponentsNode(componentsNode, bom.getComponents());
-        createExternalReferencesNode(bomNode, bom.getExternalReferences());
-
-        if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
-            final Element dependenciesNode = createElement(bomNode, "dependencies");
-            createDependenciesNode(dependenciesNode, bom.getDependencies());
-        }
-        processExtensions(bomNode, bom);
-        return doc;
+        return generateDocument(
+            XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStreamWithoutDriver()),
+            this.bom);
     }
 
-    public String getXML() throws Exception {
+    public String toXmlString() throws Exception {
         return toXML(this.bom);
     }
 }

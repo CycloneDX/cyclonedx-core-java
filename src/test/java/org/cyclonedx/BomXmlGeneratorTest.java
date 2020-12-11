@@ -74,7 +74,7 @@ public class BomXmlGeneratorTest {
             (BomXmlGenerator10) BomGeneratorFactory.createXml(Version.VERSION_10, createCommonBom("/bom-1.0.xml"));
 
         Assert.assertEquals(Version.VERSION_10, generator.getSchemaVersion());
-        File file = writeToFile(generator.getXML());
+        File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, Version.VERSION_10));
     }
@@ -84,7 +84,7 @@ public class BomXmlGeneratorTest {
         BomXmlGenerator11 generator =
             (BomXmlGenerator11) BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBom("/bom-1.1-dependency-graph-1.0.xml"));
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
-        File file = writeToFile(generator.getXML());
+        File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
@@ -117,7 +117,7 @@ public class BomXmlGeneratorTest {
             (BomXmlGenerator11) BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBom("/bom-1.1.xml"));
 
         Assert.assertEquals(Version.VERSION_11, generator.getSchemaVersion());
-        File file = writeToFile(generator.getXML());
+        File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, Version.VERSION_11));
     }
@@ -138,7 +138,7 @@ public class BomXmlGeneratorTest {
         BomXmlGenerator12 generator =
             (BomXmlGenerator12) BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom());
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
-        File file = writeToFile(generator.getXML());
+        File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
@@ -159,7 +159,7 @@ public class BomXmlGeneratorTest {
         BomXmlGenerator12 generator =
             (BomXmlGenerator12) BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom("/bom-1.2.xml"));
         Assert.assertEquals(Version.VERSION_12, generator.getSchemaVersion());
-        File file = writeToFile(generator.getXML());
+        File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         Assert.assertTrue(parser.isValid(file, Version.VERSION_12));
     }
