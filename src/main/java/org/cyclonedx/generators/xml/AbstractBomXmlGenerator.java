@@ -89,6 +89,10 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
             }
             bom.setXmlns(CycloneDxSchema.NS_BOM_11);
         } else if (this.getSchemaVersion().getVersion() == 1.2) {
+            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
+                depModule.setSerializers(new CollectionTypeSerializer(false));
+                mapper.registerModule(depModule);
+            }
             bom.setXmlns(CycloneDxSchema.NS_BOM_12);
         }
 
