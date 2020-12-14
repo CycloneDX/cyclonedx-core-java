@@ -29,7 +29,8 @@ import java.util.Objects;
 public class OrganizationalEntity extends ExtensibleElement {
 
     private String name;
-    private String url;
+
+    private List<String> url;
     @JSONField(name = "contact")
     private List<OrganizationalContact> contact;
 
@@ -41,11 +42,13 @@ public class OrganizationalEntity extends ExtensibleElement {
         this.name = name;
     }
 
-    public String getUrl() {
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "url")
+    public List<String> getUrls() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrls(List<String> url) {
         this.url = url;
     }
 
