@@ -42,7 +42,7 @@ public class Bom extends ExtensibleElement {
     @VersionFilter(versions = {"1.2"})
     private Metadata metadata;
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
-    private List<Component> component;
+    private List<Component> components;
     @VersionFilter(versions = {"1.1", "1.2"})
     private List<Dependency> dependencies;
     private List<ExternalReference> externalReferences;
@@ -64,18 +64,18 @@ public class Bom extends ExtensibleElement {
     @JacksonXmlElementWrapper(localName = "components")
     @JacksonXmlProperty(localName = "component")
     public List<Component> getComponents() {
-        return component;
+        return components;
     }
 
     public void setComponents(List<Component> components) {
-        this.component = components;
+        this.components = components;
     }
 
     public void addComponent(Component comp) {
-        if (component == null) {
-            component = new ArrayList<>();
+        if (components == null) {
+            components = new ArrayList<>();
         }
-        component.add(comp);
+        components.add(comp);
     }
 
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -151,7 +151,7 @@ public class Bom extends ExtensibleElement {
         Bom bom = (Bom) o;
         return version == bom.version &&
                 Objects.equals(metadata, bom.metadata) &&
-                Objects.equals(component, bom.component) &&
+                Objects.equals(components, bom.components) &&
                 Objects.equals(dependencies, bom.dependencies) &&
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
@@ -160,6 +160,6 @@ public class Bom extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, component, dependencies, externalReferences, version, serialNumber, specVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, version, serialNumber, specVersion);
     }
 }
