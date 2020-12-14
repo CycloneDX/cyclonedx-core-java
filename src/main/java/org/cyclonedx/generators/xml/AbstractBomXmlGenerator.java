@@ -28,6 +28,7 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.CollectionTypeSerializer;
+import org.cyclonedx.util.VersionAnnotationIntrospector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -88,6 +89,10 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         XmlMapper mapper = new XmlMapper();
 
         SimpleModule depModule = new SimpleModule();
+
+        mapper.setAnnotationIntrospector(
+            new VersionAnnotationIntrospector(
+                String.valueOf(this.getSchemaVersion().getVersion())));
 
         if (this.getSchemaVersion().getVersion() == 1.0) {
             bom.setXmlns(CycloneDxSchema.NS_BOM_10);
