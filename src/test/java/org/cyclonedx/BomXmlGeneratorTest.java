@@ -73,8 +73,8 @@ public class BomXmlGeneratorTest {
     public void schema10GenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_10, createCommonBom("/bom-1.0.xml"));
         Document doc = generator.generate();
+        testDocument(doc);
 
-        Assert.assertNotNull(doc);
         Assert.assertTrue(generator instanceof BomXmlGenerator10);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_10, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -86,8 +86,8 @@ public class BomXmlGeneratorTest {
     public void schema11WithDependencyGraphGenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, createCommonBom("/bom-1.1-dependency-graph-1.0.xml"));
         Document doc = generator.generate();
+        testDocument(doc);
 
-        Assert.assertNotNull(doc);
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -99,8 +99,8 @@ public class BomXmlGeneratorTest {
     public void schema11GenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, createCommonBom());
         Document doc = generator.generate();
+        testDocument(doc);
 
-        Assert.assertNotNull(doc);
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -112,8 +112,8 @@ public class BomXmlGeneratorTest {
     public void schema12GenerationTestWith11Data() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_12, createCommonBom());
         Document doc = generator.generate();
+        testDocument(doc);
 
-        Assert.assertNotNull(doc);
         Assert.assertTrue(generator instanceof BomXmlGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -125,8 +125,8 @@ public class BomXmlGeneratorTest {
     public void schema12GenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_12, createCommonBom("/bom-1.2.xml"));
         Document doc = generator.generate();
+        testDocument(doc);
 
-        Assert.assertNotNull(doc);
         Assert.assertTrue(generator instanceof BomXmlGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -158,7 +158,7 @@ public class BomXmlGeneratorTest {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, bom);
         Document doc = generator.generate();
 
-        Assert.assertNotNull(doc);
+        testDocument(doc);
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -194,8 +194,8 @@ public class BomXmlGeneratorTest {
 
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, bom);
         Document doc = generator.generate();
+        testDocument(doc);
 
-        Assert.assertNotNull(doc);
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -218,6 +218,11 @@ public class BomXmlGeneratorTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
         XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
+    }
+
+    private void testDocument(Document doc) {
+        Assert.assertNotNull(doc);
+        Assert.assertNotNull(documentToString(doc));
     }
 
     private String documentToString(Document doc) {
