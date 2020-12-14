@@ -18,15 +18,10 @@
  */
 package org.cyclonedx.parsers;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.XStreamException;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.util.XStreamUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -45,7 +40,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -68,10 +62,10 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         try {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
-            final XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
-            final Bom bom = (Bom) xstream.fromXML(file);
+            XmlMapper mapper = new XmlMapper();
+            final Bom bom = mapper.readValue(file, Bom.class);
             return bom;
-        } catch (XStreamException | XPathExpressionException | FileNotFoundException e) {
+        } catch (IOException | XPathExpressionException e) {
             throw new ParseException(e);
         }
     }
@@ -87,19 +81,9 @@ public class XmlParser extends CycloneDxSchema implements Parser {
             XmlMapper mapper = new XmlMapper();
             final Bom bom = mapper.readValue(bomBytes, Bom.class);
             return bom;
-        } catch (XStreamException | XPathExpressionException e) {
+        } catch (IOException | XPathExpressionException e) {
             throw new ParseException(e);
         }
-        catch (JsonParseException e) {
-            System.out.println(e);
-        }
-        catch (JsonMappingException e) {
-            System.out.println(e);
-        }
-        catch (IOException e) {
-            System.out.println(e);
-        }
-        return null;
     }
 
     /**
@@ -107,9 +91,10 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final InputStream inputStream) throws ParseException {
         try {
-            XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
-            return (Bom) xstream.fromXML(inputStream);
-        } catch (XStreamException e) {
+            XmlMapper mapper = new XmlMapper();
+            final Bom bom = mapper.readValue(inputStream, Bom.class);
+            return bom;
+        } catch (IOException e) {
             throw new ParseException(e);
         }
     }
@@ -119,9 +104,10 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final Reader reader) throws ParseException {
         try {
-            XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
-            return (Bom) xstream.fromXML(reader);
-        } catch (XStreamException e) {
+            XmlMapper mapper = new XmlMapper();
+            final Bom bom = mapper.readValue(reader, Bom.class);
+            return bom;
+        } catch (IOException e) {
             throw new ParseException(e);
         }
     }

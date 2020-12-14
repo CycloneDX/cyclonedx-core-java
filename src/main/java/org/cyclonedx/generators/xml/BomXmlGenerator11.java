@@ -20,12 +20,9 @@ package org.cyclonedx.generators.xml;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
-import org.cyclonedx.util.VersionAnnotationIntrospector;
-import org.cyclonedx.util.XStreamUtils;
 import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
