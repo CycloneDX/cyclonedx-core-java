@@ -60,6 +60,7 @@ public class BomXmlGeneratorTest {
     @Test
     public void schema10GenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_10, createCommonBom("/bom-1.0.xml"));
+        generator.generate();
         Assert.assertTrue(generator instanceof BomXmlGenerator10);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_10, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -70,6 +71,7 @@ public class BomXmlGeneratorTest {
     @Test
     public void schema11WithDependencyGraphGenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, createCommonBom("/bom-1.1-dependency-graph-1.0.xml"));
+        generator.generate();
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -80,6 +82,7 @@ public class BomXmlGeneratorTest {
     @Test
     public void schema11GenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, createCommonBom());
+        generator.generate();
         Assert.assertTrue(generator instanceof BomXmlGenerator11);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
@@ -90,6 +93,7 @@ public class BomXmlGeneratorTest {
     @Test
     public void schema12GenerationTestWith11Data() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_12, createCommonBom());
+        generator.generate();
         Assert.assertTrue(generator instanceof BomXmlGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
