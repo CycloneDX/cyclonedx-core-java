@@ -21,6 +21,7 @@ package org.cyclonedx.generators.xml;
 import java.io.IOException;
 
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.w3c.dom.Document;
@@ -62,7 +63,7 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
         return generateDocument(this.bom);
     }
 
-    public String toXmlString() throws Exception {
+    public String toXmlString() throws GeneratorException {
         return toXML(this.bom);
     }
 }

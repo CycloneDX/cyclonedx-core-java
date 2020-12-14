@@ -18,31 +18,23 @@
  */
 package org.cyclonedx.generators.xml;
 
-import java.io.IOException;
 import java.io.StringReader;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.CollectionTypeSerializer;
 import org.cyclonedx.util.VersionAnnotationIntrospector;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
 
 abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator {
 
@@ -85,7 +77,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         }
     }
 
-    public String toXML(final Bom bom) throws Exception {
+    public String toXML(final Bom bom) throws GeneratorException {
         XmlMapper mapper = new XmlMapper();
 
         SimpleModule depModule = new SimpleModule();
@@ -109,8 +101,11 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
             }
             bom.setXmlns(CycloneDxSchema.NS_BOM_12);
         }
-
-        return PROLOG + mapper.writeValueAsString(bom);
+        try {
+            return PROLOG + mapper.writeValueAsString(bom);
+        } catch (JsonProcessingException ex) {
+            throw new GeneratorException(ex);
+        }
     }
 
     /**

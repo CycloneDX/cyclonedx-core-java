@@ -19,6 +19,7 @@
 package org.cyclonedx.generators.xml;
 
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.exception.GeneratorException;
 import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -28,7 +29,7 @@ public interface BomXmlGenerator {
 
     Document generate() throws ParserConfigurationException;
 
-    String toXmlString() throws Exception;
+    String toXmlString() throws GeneratorException;
 
     String toString();
 
