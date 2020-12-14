@@ -19,6 +19,9 @@
 package org.cyclonedx.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -39,6 +42,7 @@ public class Hash {
         BLAKE3("BLAKE3");
 
         private String spec;
+
         Algorithm(String spec) {
             this.spec = spec;
         }
@@ -49,9 +53,11 @@ public class Hash {
     }
 
     @JSONField(name = "alg")
+    @JacksonXmlProperty(localName = "alg", isAttribute = true)
     private String algorithm;
 
     @JSONField(name = "content")
+    @JacksonXmlText
     private String value;
 
     public Hash() { }

@@ -18,12 +18,15 @@
  */
 package org.cyclonedx.generators.xml;
 
+import java.io.IOException;
+
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.util.XStreamUtils;
 import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * BomGenerator creates a CycloneDX bill-of-material document from a set of
@@ -57,9 +60,16 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
      * @since 1.1.0
      */
     public Document generate() throws ParserConfigurationException {
-        return generateDocument(
-            XStreamUtils.mapObjectModelBom1_0(XStreamUtils.createXStreamWithoutDriver()),
-            this.bom);
+        try {
+            return generateDocument(this.bom);
+        }
+        catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String toXmlString() throws Exception {

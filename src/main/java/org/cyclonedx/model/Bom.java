@@ -22,15 +22,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("unused")
-public class Bom extends ExtensibleElement {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+@SuppressWarnings("unused")
+@JacksonXmlRootElement(localName = "bom")
+@JsonInclude(Include.NON_NULL)
+@JsonPropertyOrder({"metadata", "components", "externalReferences", "dependencies"})
+public class Bom extends ExtensibleElement {
+    @JacksonXmlProperty(isAttribute = true)
+    private String xmlns;
+    @VersionFilter(versions = {"1.2"})
     private Metadata metadata;
-    private List<Component> components;
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    private List<Component> component;
+    @VersionFilter(versions = {"1.1", "1.2"})
     private List<Dependency> dependencies;
     private List<ExternalReference> externalReferences;
+    @JacksonXmlProperty(isAttribute = true)
     private int version = 1;
+    @JacksonXmlProperty(isAttribute = true)
     private String serialNumber;
+    @JsonIgnore
     private String specVersion;
 
     public Metadata getMetadata() {
@@ -41,21 +59,24 @@ public class Bom extends ExtensibleElement {
         this.metadata = metadata;
     }
 
+    @JacksonXmlElementWrapper(localName = "components")
+    @JacksonXmlProperty(localName = "component")
     public List<Component> getComponents() {
-        return components;
+        return component;
     }
 
     public void setComponents(List<Component> components) {
-        this.components = components;
+        this.component = components;
     }
 
-    public void addComponent(Component component) {
-        if (components == null) {
-            components = new ArrayList<>();
+    public void addComponent(Component comp) {
+        if (component == null) {
+            component = new ArrayList<>();
         }
-        components.add(component);
+        component.add(comp);
     }
 
+    @JacksonXmlElementWrapper(useWrapping = false)
     public List<Dependency> getDependencies() {
         return dependencies;
     }
@@ -102,6 +123,14 @@ public class Bom extends ExtensibleElement {
         this.serialNumber = serialNumber;
     }
 
+    public String getXmlns() {
+        return xmlns;
+    }
+
+    public void setXmlns(String xmlns) {
+        this.xmlns = xmlns;
+    }
+
     /**
      * Returns the CycloneDX spec version of a Bom. The spec version will
      * only be populated when paring a bom via {@link org.cyclonedx.parsers.Parser}.
@@ -119,7 +148,7 @@ public class Bom extends ExtensibleElement {
         Bom bom = (Bom) o;
         return version == bom.version &&
                 Objects.equals(metadata, bom.metadata) &&
-                Objects.equals(components, bom.components) &&
+                Objects.equals(component, bom.component) &&
                 Objects.equals(dependencies, bom.dependencies) &&
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
@@ -128,6 +157,6 @@ public class Bom extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, version, serialNumber, specVersion);
+        return Objects.hash(metadata, component, dependencies, externalReferences, version, serialNumber, specVersion);
     }
 }

@@ -144,6 +144,7 @@ public class BomXmlGeneratorTest {
         c.setName("Component-A");
         c.setType(Component.Type.LIBRARY);
         c.setVersion("1.0.0");
+
         c.addExtensibleType(new ExtensibleType("foo", "comp-bar", "my-comp-value"));
 
         License l = new License();

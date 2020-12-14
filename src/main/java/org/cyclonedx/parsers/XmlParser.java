@@ -18,6 +18,9 @@
  */
 package org.cyclonedx.parsers;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import org.cyclonedx.CycloneDxSchema;
@@ -80,12 +83,23 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         try {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
-            final XStream xstream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream());
-            final Bom bom = (Bom)xstream.fromXML(new ByteArrayInputStream(bomBytes));
+
+            XmlMapper mapper = new XmlMapper();
+            final Bom bom = mapper.readValue(bomBytes, Bom.class);
             return bom;
         } catch (XStreamException | XPathExpressionException e) {
             throw new ParseException(e);
         }
+        catch (JsonParseException e) {
+            System.out.println(e);
+        }
+        catch (JsonMappingException e) {
+            System.out.println(e);
+        }
+        catch (IOException e) {
+            System.out.println(e);
+        }
+        return null;
     }
 
     /**

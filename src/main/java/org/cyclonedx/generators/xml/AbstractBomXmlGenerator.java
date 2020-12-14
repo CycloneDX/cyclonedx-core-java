@@ -18,22 +18,30 @@
  */
 package org.cyclonedx.generators.xml;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomWriter;
-import com.thoughtworks.xstream.io.xml.QNameMap;
+import java.io.IOException;
+
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.util.XStreamUtils;
+import org.cyclonedx.util.CollectionTypeSerializer;
 import org.w3c.dom.Document;
 import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.dom.DOMResult;
 
 abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator {
 
     Document doc;
+
+    protected static String PROLOG = "<?xml version=\"1.0\"?>";
 
     /**
      * Constructs a new document builder with security features enabled.
@@ -51,46 +59,40 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         return factory.newDocumentBuilder();
     }
 
-    protected Document generateDocument(final XStream xStream, final Bom bom) throws ParserConfigurationException {
+    protected Document generateDocument(final Bom bom)
+        throws ParserConfigurationException, XMLStreamException, IOException
+    {
         final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
         this.doc = docBuilder.newDocument();
         this.doc.setXmlStandalone(true);
-        DomWriter writer = new DomWriter(this.doc);
-        xStream.marshal(bom, writer);
+        XMLOutputFactory factory = XMLOutputFactory.newInstance();
+        XMLStreamWriter sw =  factory.createXMLStreamWriter(new DOMResult(this.doc));
+
+        XmlMapper mapper = new XmlMapper();
+        ToXmlGenerator xmlGenerator = mapper.getFactory().createGenerator(sw);
+        mapper.writerFor(Bom.class).writeValue(xmlGenerator, bom);
 
         return this.doc;
     }
 
     public String toXML(final Bom bom) throws Exception {
-        XStream xStream;
+        XmlMapper mapper = new XmlMapper();
+
+        SimpleModule depModule = new SimpleModule();
+
         if (this.getSchemaVersion().getVersion() == 1.0) {
-            xStream = XStreamUtils.mapObjectModelBom1_0(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_10, null));
+            bom.setXmlns(CycloneDxSchema.NS_BOM_10);
         } else if (this.getSchemaVersion().getVersion() == 1.1) {
-
-            if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
-                QNameMap nsm = new QNameMap();
-                QName dependency =
-                    new QName("",
-                        "dependency",
-                        "dg");
-                QName dependencies = new QName(
-                    "http://cyclonedx.org/schema/ext/dependency-graph/1.0",
-                    "dependencies",
-                    "dg");
-                nsm.registerMapping(dependency, "dependency");
-                nsm.registerMapping(dependencies, "dependencies");
-                xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11, nsm));
-            } else {
-                xStream = XStreamUtils.mapObjectModelBom1_1(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_11, null));
+            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
+                depModule.setSerializers(new CollectionTypeSerializer(true));
+                mapper.registerModule(depModule);
             }
-
+            bom.setXmlns(CycloneDxSchema.NS_BOM_11);
         } else if (this.getSchemaVersion().getVersion() == 1.2) {
-            xStream = XStreamUtils.mapObjectModelBom1_2(XStreamUtils.createXStream(CycloneDxSchema.NS_BOM_12, null));
-        } else {
-            throw new Exception("Unsupported schema version");
+            bom.setXmlns(CycloneDxSchema.NS_BOM_12);
         }
 
-        return xStream.toXML(bom);
+        return PROLOG + mapper.writeValueAsString(bom);
     }
 
     /**

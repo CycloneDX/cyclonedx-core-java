@@ -20,20 +20,18 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+
 @SuppressWarnings("unused")
 public class AttachmentText {
 
-    private String contentType;
+    @JacksonXmlProperty(isAttribute = true)
     private String encoding;
+    @JacksonXmlProperty(localName = "content-type", isAttribute = true)
+    private String contentType;
+    @JacksonXmlText
     private String text;
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
 
     public String getEncoding() {
         return encoding;
@@ -41,6 +39,14 @@ public class AttachmentText {
 
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public String getText() {

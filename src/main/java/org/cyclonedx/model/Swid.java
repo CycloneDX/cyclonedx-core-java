@@ -20,13 +20,21 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 public class Swid {
 
+    @JacksonXmlProperty(isAttribute = true)
     private String tagId;
+    @JacksonXmlProperty(isAttribute = true)
     private String name;
+    @JacksonXmlProperty(isAttribute = true)
     private String version;
+    @JacksonXmlProperty(isAttribute = true)
     private int tagVersion;
+    @JacksonXmlProperty(isAttribute = true)
     private boolean patch;
+    @JacksonXmlProperty(localName = "text")
     private AttachmentText attachmentText;
 
     public String getTagId() {

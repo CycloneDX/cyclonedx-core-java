@@ -20,11 +20,21 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 @SuppressWarnings("unused")
+@JsonInclude(Include.NON_NULL)
+@JsonPropertyOrder({"id", "text", "url"})
 public class License extends ExtensibleElement {
 
+    @JacksonXmlProperty(localName = "id")
     private String id;
     private String name;
+
+    @JacksonXmlProperty(localName = "text")
     private AttachmentText attachmentText;
     private String url;
 

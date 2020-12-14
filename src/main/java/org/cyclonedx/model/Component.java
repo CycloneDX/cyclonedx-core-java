@@ -18,22 +18,40 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.github.packageurl.PackageURL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
+@JacksonXmlRootElement(localName = "component")
+@JsonInclude(Include.NON_NULL)
+@JsonPropertyOrder({"supplier", "author", "publisher", "group", "name", "version", "description", "scope", "hashes", "licenses", "copyright", "cpe", "purl", "swid", "modified", "pedigree", "externalReferences", "components"})
 public class Component extends ExtensibleElement {
 
     public enum Type {
+        @JsonProperty("application")
         APPLICATION("application"),
+        @JsonProperty("framework")
         FRAMEWORK("framework"),
+        @JsonProperty("library")
         LIBRARY("library"),
+        @JsonProperty("container")
         CONTAINER("container"),
+        @JsonProperty("operating-system")
         OPERATING_SYSTEM("operating-system"),
+        @JsonProperty("device")
         DEVICE("device"),
+        @JsonProperty("firmware")
         FIRMWARE("firmware"),
+        @JsonProperty("file")
         FILE("file");
 
         private final String name;
@@ -48,8 +66,11 @@ public class Component extends ExtensibleElement {
     }
 
     public enum Scope {
+        @JsonProperty("required")
         REQUIRED("required"),
+        @JsonProperty("optional")
         OPTIONAL("optional"),
+        @JsonProperty("excluded")
         EXCLUDED("excluded");
 
         private final String name;
@@ -63,10 +84,15 @@ public class Component extends ExtensibleElement {
         }
     }
 
+    @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     private String bomRef;
+    @JacksonXmlProperty(isAttribute = true)
     private String mimeType;
+    @VersionFilter(versions = {"1.2"})
     private OrganizationalEntity supplier;
+    @VersionFilter(versions = {"1.2"})
     private String author;
+    @VersionFilter(versions = {"1.1", "1.2"})
     private String publisher;
     private String group;
     private String name;
@@ -74,15 +100,17 @@ public class Component extends ExtensibleElement {
     private String description;
     private Scope scope;
     private List<Hash> hashes;
-    private LicenseChoice licenseChoice;
+    private LicenseChoice license;
     private String copyright;
     private String cpe;
     private String purl;
+    @VersionFilter(versions = {"1.2"})
     private Swid swid;
     private Boolean modified;
     private Pedigree pedigree;
     private List<ExternalReference> externalReferences;
     private List<Component> components;
+    @JacksonXmlProperty(isAttribute = true)
     private Type type;
 
     public String getBomRef() {
@@ -165,6 +193,8 @@ public class Component extends ExtensibleElement {
         this.scope = scope;
     }
 
+    @JacksonXmlElementWrapper(localName = "hashes")
+    @JacksonXmlProperty(localName = "hash")
     public List<Hash> getHashes() {
         return hashes;
     }
@@ -180,12 +210,13 @@ public class Component extends ExtensibleElement {
         this.hashes.add(hash);
     }
 
+    @JacksonXmlProperty(localName = "licenses")
     public LicenseChoice getLicenseChoice() {
-        return licenseChoice;
+        return license;
     }
 
     public void setLicenseChoice(LicenseChoice licenseChoice) {
-        this.licenseChoice = licenseChoice;
+        this.license = licenseChoice;
     }
 
     public String getCopyright() {
@@ -250,6 +281,8 @@ public class Component extends ExtensibleElement {
         this.pedigree = pedigree;
     }
 
+    @JacksonXmlElementWrapper(localName = "externalReferences")
+    @JacksonXmlProperty(localName = "reference")
     public List<ExternalReference> getExternalReferences() {
         return externalReferences;
     }
@@ -265,6 +298,8 @@ public class Component extends ExtensibleElement {
         this.externalReferences = externalReferences;
     }
 
+    @JacksonXmlElementWrapper(localName = "components")
+    @JacksonXmlProperty(localName = "component")
     public List<Component> getComponents() {
         return components;
     }
@@ -290,7 +325,7 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenseChoice, copyright, cpe, purl, swid, modified, components, type);
+        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright, cpe, purl, swid, modified, components, type);
     }
 
     @Override
@@ -308,7 +343,7 @@ public class Component extends ExtensibleElement {
                 Objects.equals(description, component.description) &&
                 Objects.equals(scope, component.scope) &&
                 Objects.equals(hashes, component.hashes) &&
-                Objects.equals(licenseChoice, component.licenseChoice) &&
+                Objects.equals(license, component.license) &&
                 Objects.equals(copyright, component.copyright) &&
                 Objects.equals(cpe, component.cpe) &&
                 Objects.equals(purl, component.purl) &&

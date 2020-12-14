@@ -19,6 +19,8 @@
 package org.cyclonedx.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class OrganizationalEntity extends ExtensibleElement {
     private String name;
     private String url;
     @JSONField(name = "contact")
-    private List<OrganizationalContact> contacts;
+    private List<OrganizationalContact> contact;
 
     public String getName() {
         return name;
@@ -47,19 +49,21 @@ public class OrganizationalEntity extends ExtensibleElement {
         this.url = url;
     }
 
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "contact")
     public List<OrganizationalContact> getContacts() {
-        return contacts;
+        return contact;
     }
 
     public void setContacts(List<OrganizationalContact> contacts) {
-        this.contacts = contacts;
+        this.contact = contacts;
     }
 
     public void addContact(OrganizationalContact contact) {
-        if (this.contacts == null) {
-            this.contacts = new ArrayList<>();
+        if (this.contact == null) {
+            this.contact = new ArrayList<>();
         }
-        this.contacts.add(contact);
+        this.contact.add(contact);
     }
 
     @Override
@@ -69,11 +73,11 @@ public class OrganizationalEntity extends ExtensibleElement {
         OrganizationalEntity that = (OrganizationalEntity) o;
         return Objects.equals(name, that.name) &&
                 Objects.equals(url, that.url) &&
-                Objects.equals(contacts, that.contacts);
+                Objects.equals(contact, that.contact);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, url, contacts);
+        return Objects.hash(name, url, contact);
     }
 }

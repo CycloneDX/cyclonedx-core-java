@@ -21,9 +21,13 @@ package org.cyclonedx.model;
 import java.util.Date;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.cyclonedx.util.CustomDateSerializer;
+
 @SuppressWarnings("unused")
 public class IdentifiableActionType extends ExtensibleElement {
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date timestamp;
     private String name;
     private String email;
