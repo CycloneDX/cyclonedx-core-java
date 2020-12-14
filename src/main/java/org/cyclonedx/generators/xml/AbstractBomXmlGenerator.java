@@ -19,6 +19,7 @@
 package org.cyclonedx.generators.xml;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -28,6 +29,9 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.CollectionTypeSerializer;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,7 +39,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator {
 
@@ -60,19 +66,22 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
     }
 
     protected Document generateDocument(final Bom bom)
-        throws ParserConfigurationException, XMLStreamException, IOException
+        throws ParserConfigurationException
     {
-        final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
-        this.doc = docBuilder.newDocument();
-        this.doc.setXmlStandalone(true);
-        XMLOutputFactory factory = XMLOutputFactory.newInstance();
-        XMLStreamWriter sw =  factory.createXMLStreamWriter(new DOMResult(this.doc));
+        try {
+            final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
 
-        XmlMapper mapper = new XmlMapper();
-        ToXmlGenerator xmlGenerator = mapper.getFactory().createGenerator(sw);
-        mapper.writerFor(Bom.class).writeValue(xmlGenerator, bom);
+            this.doc = docBuilder.parse(
+                new InputSource(
+                    new StringReader(
+                        toXML(bom))));
 
-        return this.doc;
+            this.doc.setXmlStandalone(true);
+
+            return this.doc;
+        } catch (Exception ex) {
+            throw new ParserConfigurationException(ex.toString());
+        }
     }
 
     public String toXML(final Bom bom) throws Exception {

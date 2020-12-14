@@ -59,16 +59,7 @@ public class BomXmlGenerator11 extends AbstractBomXmlGenerator implements BomXml
      * @since 2.0.0
      */
     public Document generate() throws ParserConfigurationException {
-        try {
-            return generateDocument(this.bom);
-        }
-        catch (XMLStreamException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return generateDocument(this.bom);
     }
 
     public String toXmlString() throws Exception {
