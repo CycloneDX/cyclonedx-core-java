@@ -23,10 +23,13 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.ExternalReferenceSerializer;
 
 @SuppressWarnings("unused")
 @JsonInclude(Include.NON_NULL)
+@JsonSerialize(using = ExternalReferenceSerializer.class)
 public class ExternalReference {
 
     public enum Type {
