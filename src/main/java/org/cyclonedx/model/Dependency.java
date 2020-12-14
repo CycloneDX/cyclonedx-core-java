@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import org.cyclonedx.converters.DependencyDeserializer;
 import java.util.ArrayList;
 import java.util.List;
