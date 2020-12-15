@@ -21,6 +21,7 @@ package org.cyclonedx.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.converters.DependencyDeserializer;
@@ -34,6 +35,7 @@ public class Dependency {
     @JacksonXmlProperty(isAttribute = true)
     private String ref;
     @JSONField(name = "dependsOn", deserializeUsing = DependencyDeserializer.class)
+    @JsonProperty("dependsOn")
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "dependency")
     private List<Dependency> dependencies;

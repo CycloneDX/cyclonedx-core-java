@@ -22,10 +22,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.github.packageurl.PackageURL;
+import org.cyclonedx.util.LicenseDeserializer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -85,6 +88,7 @@ public class Component extends ExtensibleElement {
     }
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
+    @JsonProperty("bom-ref")
     private String bomRef;
     @JacksonXmlProperty(isAttribute = true)
     private String mimeType;
@@ -211,6 +215,8 @@ public class Component extends ExtensibleElement {
     }
 
     @JacksonXmlProperty(localName = "licenses")
+    @JsonProperty("licenses")
+    @JsonDeserialize(using = LicenseDeserializer.class)
     public LicenseChoice getLicenseChoice() {
         return license;
     }

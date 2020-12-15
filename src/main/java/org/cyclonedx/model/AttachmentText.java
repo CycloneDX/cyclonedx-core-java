@@ -20,6 +20,7 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
@@ -31,6 +32,7 @@ public class AttachmentText {
     @JacksonXmlProperty(localName = "content-type", isAttribute = true)
     private String contentType;
     @JacksonXmlText
+    @JsonProperty("content")
     private String text;
 
     public String getEncoding() {

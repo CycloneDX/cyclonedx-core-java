@@ -19,11 +19,13 @@
 package org.cyclonedx.util;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.Dependency;
 
 public class DependencyDeserializer extends StdDeserializer<List<Dependency>>
@@ -42,8 +44,12 @@ public class DependencyDeserializer extends StdDeserializer<List<Dependency>>
       throws IOException
   {
     Dependency[] dependencies = parser.readValueAs(Dependency[].class);
-    if (dependencies != null && dependencies.length > 0) {
-      return dependencies[0].getDependencies();
+    if (parser instanceof FromXmlParser) {
+      if (dependencies != null && dependencies.length > 0) {
+        return dependencies[0].getDependencies();
+      }
+    } else {
+      return Arrays.asList(dependencies.clone());
     }
 
     return null;

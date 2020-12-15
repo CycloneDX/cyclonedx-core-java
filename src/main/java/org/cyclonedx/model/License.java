@@ -22,19 +22,24 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @SuppressWarnings("unused")
 @JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({"id", "text", "url"})
+@JsonRootName("license")
 public class License extends ExtensibleElement {
 
     @JacksonXmlProperty(localName = "id")
+    @JsonProperty("id")
     private String id;
     private String name;
 
     @JacksonXmlProperty(localName = "text")
+    @JsonProperty("text")
     private AttachmentText attachmentText;
     private String url;
 

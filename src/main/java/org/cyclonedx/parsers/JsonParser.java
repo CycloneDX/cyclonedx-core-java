@@ -20,6 +20,7 @@ package org.cyclonedx.parsers;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
@@ -51,7 +52,11 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     public Bom parse(final File file) throws ParseException {
         try {
             final String jsonString = IOUtils.toString(new FileInputStream(file), StandardCharsets.UTF_8);
-            return JSON.parseObject(jsonString, Bom.class, Feature.SupportNonPublicField);
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            return objectMapper.readValue(file, Bom.class);
+
+            //return JSON.parseObject(jsonString, Bom.class, Feature.SupportNonPublicField);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from File", e);
         }

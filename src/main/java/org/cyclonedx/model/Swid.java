@@ -20,6 +20,7 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class Swid {
@@ -35,6 +36,7 @@ public class Swid {
     @JacksonXmlProperty(isAttribute = true)
     private boolean patch;
     @JacksonXmlProperty(localName = "text")
+    @JsonProperty("text")
     private AttachmentText attachmentText;
 
     public String getTagId() {
