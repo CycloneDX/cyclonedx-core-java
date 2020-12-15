@@ -48,6 +48,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
   @Override
   public void serialize(
       final List<Dependency> depList, final JsonGenerator generator, final SerializerProvider provider)
+      throws IOException
   {
     final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
     final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
@@ -60,8 +61,8 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
           }
         }
       }
-      catch (XMLStreamException e) {
-        e.printStackTrace();
+      catch (XMLStreamException ex) {
+        throw new IOException(ex);
       }
     } else {
       try {
@@ -73,8 +74,8 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
           staxWriter.writeEndElement();
         }
       }
-      catch (XMLStreamException e) {
-        e.printStackTrace();
+      catch (XMLStreamException ex) {
+        throw new IOException(ex);
       }
     }
   }
