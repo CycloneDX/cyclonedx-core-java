@@ -86,7 +86,7 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
       }
     }
     catch (XMLStreamException e) {
-      e.printStackTrace();
+      throw new IOException(e);
     }
   }
 }
