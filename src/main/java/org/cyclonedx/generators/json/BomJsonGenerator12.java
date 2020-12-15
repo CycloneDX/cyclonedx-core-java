@@ -20,15 +20,10 @@ package org.cyclonedx.generators.json;
 
 import java.lang.reflect.Field;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
-import org.cyclonedx.util.CollectionTypeSerializer;
-import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.json.JSONObject;
 
 /**
@@ -48,7 +43,7 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
     public BomJsonGenerator12(final Bom bom) {
         Bom modifiedBom = null;
         try {
-            modifiedBom = injectBomFormat(bom);
+            modifiedBom = injectBomFormatAndSpecVersion(bom);
         }
         catch (GeneratorException e) {
         }
@@ -73,32 +68,37 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
      * @since 3.0.0
      */
     public JSONObject generate() {
-        ObjectMapper mapper = new ObjectMapper();
-
-        SimpleModule licenseModule = new SimpleModule();
-        SimpleModule depModule = new SimpleModule();
-
-        licenseModule.addSerializer(new LicenseChoiceSerializer());
-
-        mapper.registerModule(licenseModule);
-
         try {
-            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
-                depModule.setSerializers(new CollectionTypeSerializer(false));
-                mapper.registerModule(depModule);
-            }
-            final String json = mapper.writeValueAsString(this.bom);
-
-            doc = new JSONObject(json);
+            doc = new JSONObject(toJson(this.bom, false));
 
             return doc;
         }
-        catch (JsonProcessingException e) {
+        catch (GeneratorException e) {
             return null;
         }
     }
 
-    private Bom injectBomFormat(Bom bom) throws GeneratorException {
+    @Override
+    public String toJsonString() {
+        try {
+            return toJson(this.bom, true);
+        }
+        catch (GeneratorException e) {
+            return "";
+        }
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return toJson(this.bom, false);
+        }
+        catch (GeneratorException e) {
+            return "";
+        }
+    }
+
+    private Bom injectBomFormatAndSpecVersion(Bom bom) throws GeneratorException {
         try {
             Field field;
             field = Bom.class.getDeclaredField("bomFormat");

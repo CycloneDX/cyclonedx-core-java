@@ -18,20 +18,42 @@
  */
 package org.cyclonedx.generators.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.exception.GeneratorException;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.util.CollectionTypeSerializer;
+import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.json.JSONObject;
 
 abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
     JSONObject doc = OrderedJSONObjectFactory.create();
 
-    public String toJsonString() {
-        return doc.toString(2);
-    }
+    String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
+        ObjectMapper mapper = new ObjectMapper();
 
-    @Override
-    public String toString() {
-        return doc.toString(0);
-    }
+        SimpleModule licenseModule = new SimpleModule();
+        SimpleModule depModule = new SimpleModule();
 
+        licenseModule.addSerializer(new LicenseChoiceSerializer());
+
+        mapper.registerModule(licenseModule);
+
+        try {
+            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
+                depModule.setSerializers(new CollectionTypeSerializer(false));
+                mapper.registerModule(depModule);
+            }
+            if (prettyPrint) {
+                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bom);
+            }
+            return mapper.writeValueAsString(bom);
+        }
+        catch (JsonProcessingException e) {
+            throw new GeneratorException(e);
+        }
+    }
 }
