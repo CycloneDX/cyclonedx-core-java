@@ -18,9 +18,17 @@
  */
 package org.cyclonedx.generators.json;
 
+import java.lang.reflect.Field;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.util.CollectionTypeSerializer;
+import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.json.JSONObject;
 
 /**
@@ -38,7 +46,17 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
      * @param bom the BOM to generate
      */
     public BomJsonGenerator12(final Bom bom) {
-        this.bom = bom;
+        Bom modifiedBom = null;
+        try {
+            modifiedBom = injectBomFormat(bom);
+        }
+        catch (GeneratorException e) {
+        }
+        if (modifiedBom != null) {
+            this.bom = modifiedBom;
+        } else {
+            this.bom = bom;
+        }
     }
 
     /**
@@ -55,16 +73,44 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
      * @since 3.0.0
      */
     public JSONObject generate() {
-        doc.put("bomFormat", "CycloneDX");
-        doc.put("specVersion", Version.VERSION_12.getVersionString());
-        if (bom.getSerialNumber() != null) {
-            doc.put("serialNumber", bom.getSerialNumber());
+        ObjectMapper mapper = new ObjectMapper();
+
+        SimpleModule licenseModule = new SimpleModule();
+        SimpleModule depModule = new SimpleModule();
+
+        licenseModule.addSerializer(new LicenseChoiceSerializer());
+
+        mapper.registerModule(licenseModule);
+
+        try {
+            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
+                depModule.setSerializers(new CollectionTypeSerializer(false));
+                mapper.registerModule(depModule);
+            }
+            final String json = mapper.writeValueAsString(this.bom);
+
+            doc = new JSONObject(json);
+
+            return doc;
         }
-        doc.put("version", bom.getVersion());
-        createMetadataNode(doc, bom.getMetadata());
-        createComponentsNode(doc, bom.getComponents(), "components");
-        createExternalReferencesNode(doc, bom.getExternalReferences());
-        createDependenciesNode(doc, bom.getDependencies());
-        return doc;
+        catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    private Bom injectBomFormat(Bom bom) throws GeneratorException {
+        try {
+            Field field;
+            field = Bom.class.getDeclaredField("bomFormat");
+            field.setAccessible(true);
+            field.set(bom, "CycloneDX");
+            field = Bom.class.getDeclaredField("specVersion");
+            field.setAccessible(true);
+            field.set(bom, getSchemaVersion().getVersionString());
+            return bom;
+        }
+        catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new GeneratorException(e);
+        }
     }
 }

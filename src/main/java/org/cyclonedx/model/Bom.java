@@ -36,8 +36,7 @@ import org.cyclonedx.util.DependencyDeserializer;
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"metadata", "components", "externalReferences", "dependencies"})
-@JsonIgnoreProperties({"bomFormat"})
+@JsonPropertyOrder({"bomFormat", "specVersion", "metadata", "components", "externalReferences", "dependencies", "serialNumber", "version"})
 public class Bom extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
@@ -54,6 +53,8 @@ public class Bom extends ExtensibleElement {
     private String serialNumber;
     @JsonOnly
     private String specVersion;
+    @JsonOnly
+    private String bomFormat;
 
     public Metadata getMetadata() {
         return metadata;
@@ -144,6 +145,10 @@ public class Bom extends ExtensibleElement {
      */
     public String getSpecVersion() {
         return specVersion;
+    }
+
+    public String getBomFormat() {
+        return bomFormat;
     }
 
     @Override

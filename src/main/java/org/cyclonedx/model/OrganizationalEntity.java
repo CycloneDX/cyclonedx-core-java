@@ -57,6 +57,7 @@ public class OrganizationalEntity extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "contact")
+    @JsonProperty("contact")
     public List<OrganizationalContact> getContacts() {
         return contact;
     }

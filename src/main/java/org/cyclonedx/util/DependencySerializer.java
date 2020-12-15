@@ -49,32 +49,57 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
   public void serialize(
       final List<Dependency> depList, final JsonGenerator generator, final SerializerProvider provider)
   {
-    final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
-    final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
-    if (useNamespace) {
-      try {
-        if (depList != null && !depList.isEmpty()) {
-          staxWriter.writeStartElement(NAMESPACE_PREFIX, "dependencies", NAMESPACE_URI);
-          for (Dependency d : depList) {
-            writeDependency(d, staxWriter);
+    if (generator instanceof ToXmlGenerator) {
+      final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
+      final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
+      if (useNamespace) {
+        try {
+          if (depList != null && !depList.isEmpty()) {
+            staxWriter.writeStartElement(NAMESPACE_PREFIX, "dependencies", NAMESPACE_URI);
+            for (Dependency d : depList) {
+              writeDependency(d, staxWriter);
+            }
           }
         }
+        catch (XMLStreamException e) {
+          e.printStackTrace();
+        }
       }
-      catch (XMLStreamException e) {
-        e.printStackTrace();
+      else {
+        try {
+          if (depList != null && !depList.isEmpty()) {
+            staxWriter.writeStartElement("dependencies");
+            for (Dependency dep : depList) {
+              writeNormalDependency(dep, staxWriter);
+            }
+            staxWriter.writeEndElement();
+          }
+        }
+        catch (XMLStreamException e) {
+          e.printStackTrace();
+        }
       }
     } else {
-      try {
-        if (depList != null && !depList.isEmpty()) {
-          staxWriter.writeStartElement("dependencies");
+      if (depList != null && !depList.isEmpty()) {
+        try {
+          generator.writeStartArray();
           for (Dependency dep : depList) {
-            writeNormalDependency(dep, staxWriter);
+            generator.writeStartObject();
+            generator.writeStringField("ref", dep.getRef());
+            generator.writeArrayFieldStart("dependsOn");
+            if (dep.getDependencies() != null && !dep.getDependencies().isEmpty()) {
+              for (Dependency d : dep.getDependencies()) {
+                generator.writeString(d.getRef());
+              }
+            }
+            generator.writeEndArray();
+            generator.writeEndObject();
           }
-          staxWriter.writeEndElement();
+          generator.writeEndArray();
         }
-      }
-      catch (XMLStreamException e) {
-        e.printStackTrace();
+        catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
