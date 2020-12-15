@@ -71,11 +71,11 @@ public class Bom extends ExtensibleElement {
         this.components = components;
     }
 
-    public void addComponent(Component comp) {
+    public void addComponent(Component component) {
         if (components == null) {
             components = new ArrayList<>();
         }
-        components.add(comp);
+        components.add(component);
     }
 
     @JacksonXmlElementWrapper(useWrapping = false)
