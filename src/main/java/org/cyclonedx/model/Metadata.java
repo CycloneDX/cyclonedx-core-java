@@ -35,7 +35,7 @@ public class Metadata extends ExtensibleElement {
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date timestamp = new Date();
     private List<Tool> tools;
-    private List<AuthorContact> authors;
+    private List<OrganizationalContact> authors;
     private Component component;
     private OrganizationalEntity manufacture;
     private OrganizationalEntity supplier;
@@ -67,15 +67,15 @@ public class Metadata extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "authors")
     @JacksonXmlProperty(localName = "author")
-    public List<AuthorContact> getAuthors() {
+    public List<OrganizationalContact> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<AuthorContact> authors) {
+    public void setAuthors(List<OrganizationalContact> authors) {
         this.authors = authors;
     }
 
-    public void addAuthor(AuthorContact author) {
+    public void addAuthor(OrganizationalContact author) {
         if (this.authors == null) {
             this.authors = new ArrayList<>();
         }
