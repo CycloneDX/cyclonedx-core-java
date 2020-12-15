@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.generators.xml;
 
+import java.io.IOException;
 import java.io.StringReader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,6 +31,7 @@ import org.cyclonedx.util.CollectionTypeSerializer;
 import org.cyclonedx.util.VersionAnnotationIntrospector;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -72,7 +74,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
             this.doc.setXmlStandalone(true);
 
             return this.doc;
-        } catch (Exception ex) {
+        } catch (SAXException | ParserConfigurationException | IOException | GeneratorException ex) {
             throw new ParserConfigurationException(ex.toString());
         }
     }
