@@ -271,6 +271,9 @@ public class Component extends ExtensibleElement {
         this.swid = swid;
     }
 
+    @JsonInclude(Include.NON_NULL)
+    public Boolean getModified() { return modified; }
+
     public Boolean isModified() {
         return modified;
     }
