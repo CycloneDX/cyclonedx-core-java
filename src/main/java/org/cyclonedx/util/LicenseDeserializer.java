@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 
@@ -28,6 +29,9 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
   public LicenseChoice deserialize(
       final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException
   {
+    if (p instanceof FromXmlParser) {
+      return p.readValueAs(LicenseChoice.class);
+    }
     ArrayNode nodes = p.readValueAsTree();
 
     ObjectMapper mapper = new ObjectMapper();

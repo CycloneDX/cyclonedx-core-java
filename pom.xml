@@ -148,7 +148,7 @@
             <artifactId>packageurl-java</artifactId>
             <version>1.1.1</version>
         </dependency>
-        <!-- XML Parser -->
+        <!-- XML Parser, Generator, JSON Parser -->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
@@ -160,7 +160,7 @@
             <artifactId>xercesImpl</artifactId>
             <version>2.12.0</version>
         </dependency>
-        <!-- JSON library -->
+        <!-- JSON Generator library -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -172,12 +172,7 @@
             <artifactId>org.everit.json.schema</artifactId>
             <version>1.12.1</version>
         </dependency>
-        <!-- JSON Serialization / Deserialization -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.75</version>
-        </dependency>
+
         <!-- Unit Test -->
         <dependency>
             <groupId>junit</groupId>

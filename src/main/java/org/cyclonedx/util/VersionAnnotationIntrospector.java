@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlAnnotationIntrospector;
+import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.VersionFilter;
 
 public class VersionAnnotationIntrospector extends JacksonXmlAnnotationIntrospector
@@ -39,6 +40,9 @@ public class VersionAnnotationIntrospector extends JacksonXmlAnnotationIntrospec
       if (Arrays.stream(filter.versions()).noneMatch(v -> v.equals(version))) {
         return true;
       }
+    }
+    if (m.hasAnnotation(JsonOnly.class)) {
+      return true;
     }
     return super.hasIgnoreMarker(m);
   }

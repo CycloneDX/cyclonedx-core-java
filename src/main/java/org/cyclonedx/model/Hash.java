@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
@@ -53,12 +52,10 @@ public class Hash {
         }
     }
 
-    @JSONField(name = "alg")
     @JacksonXmlProperty(localName = "alg", isAttribute = true)
     @JsonProperty("alg")
     private String algorithm;
 
-    @JSONField(name = "content")
     @JacksonXmlText
     @JsonProperty("content")
     private String value;

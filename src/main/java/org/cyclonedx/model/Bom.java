@@ -52,7 +52,7 @@ public class Bom extends ExtensibleElement {
     private int version = 1;
     @JacksonXmlProperty(isAttribute = true)
     private String serialNumber;
-    @JsonIgnore
+    @JsonOnly
     private String specVersion;
 
     public Metadata getMetadata() {
