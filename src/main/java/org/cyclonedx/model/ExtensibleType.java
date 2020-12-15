@@ -20,8 +20,6 @@ package org.cyclonedx.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-
 public class ExtensibleType extends ExtensibleElement {
 
     private final String namespace;

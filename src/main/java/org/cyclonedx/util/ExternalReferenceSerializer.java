@@ -23,7 +23,7 @@ public class ExternalReferenceSerializer extends StdSerializer<ExternalReference
 
   @Override
   public void serialize(
-      final ExternalReference extRef, final JsonGenerator gen, final SerializerProvider provider) throws IOException
+      final ExternalReference extRef, final JsonGenerator gen, final SerializerProvider provider)
   {
     final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
     final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();

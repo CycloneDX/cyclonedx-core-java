@@ -63,8 +63,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
             XmlMapper mapper = new XmlMapper();
-            final Bom bom = mapper.readValue(file, Bom.class);
-            return bom;
+            return mapper.readValue(file, Bom.class);
         } catch (IOException | XPathExpressionException e) {
             throw new ParseException(e);
         }
@@ -79,8 +78,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
                     extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
 
             XmlMapper mapper = new XmlMapper();
-            final Bom bom = mapper.readValue(bomBytes, Bom.class);
-            return bom;
+            return mapper.readValue(bomBytes, Bom.class);
         } catch (IOException | XPathExpressionException e) {
             throw new ParseException(e);
         }
@@ -92,8 +90,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     public Bom parse(final InputStream inputStream) throws ParseException {
         try {
             XmlMapper mapper = new XmlMapper();
-            final Bom bom = mapper.readValue(inputStream, Bom.class);
-            return bom;
+            return mapper.readValue(inputStream, Bom.class);
         } catch (IOException e) {
             throw new ParseException(e);
         }
@@ -105,8 +102,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     public Bom parse(final Reader reader) throws ParseException {
         try {
             XmlMapper mapper = new XmlMapper();
-            final Bom bom = mapper.readValue(reader, Bom.class);
-            return bom;
+            return mapper.readValue(reader, Bom.class);
         } catch (IOException e) {
             throw new ParseException(e);
         }

@@ -32,7 +32,7 @@ import org.cyclonedx.model.Dependency;
 
 public class CollectionTypeSerializer extends SimpleSerializers
 {
-  private boolean useNamespace;
+  private final boolean useNamespace;
 
   public CollectionTypeSerializer(final boolean useNamespace) {
     this.useNamespace = useNamespace;

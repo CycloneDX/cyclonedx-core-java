@@ -26,7 +26,7 @@ import org.cyclonedx.model.VersionFilter;
 
 public class VersionAnnotationIntrospector extends JacksonXmlAnnotationIntrospector
 {
-  private String version;
+  private final String version;
 
   public VersionAnnotationIntrospector(final String version) {
     this.version = version;

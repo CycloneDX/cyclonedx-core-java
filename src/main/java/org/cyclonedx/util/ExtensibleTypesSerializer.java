@@ -50,7 +50,6 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
       final List<ExtensibleType> extList,
       final JsonGenerator generator,
       final SerializerProvider provider)
-      throws IOException
   {
     final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
     final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();

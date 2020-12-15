@@ -64,7 +64,7 @@ public class ExternalReference {
         @JsonProperty("other")
         OTHER("other");
 
-        private String name;
+        private final String name;
 
         public String getTypeName() {
             return this.name;

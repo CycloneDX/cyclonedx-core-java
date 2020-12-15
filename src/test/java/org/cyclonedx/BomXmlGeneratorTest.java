@@ -239,8 +239,7 @@ public class BomXmlGeneratorTest {
 
             StringWriter sw = new StringWriter();
             transformer.transform(new DOMSource(doc), new StreamResult(sw));
-            String output = sw.getBuffer().toString();
-            return output;
+            return sw.getBuffer().toString();
         } catch (TransformerException ex) {
             return null;
         }
