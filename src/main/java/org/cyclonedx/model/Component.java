@@ -36,7 +36,26 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "component")
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"supplier", "author", "publisher", "group", "name", "version", "description", "scope", "hashes", "licenses", "copyright", "cpe", "purl", "swid", "modified", "pedigree", "externalReferences", "components"})
+@JsonPropertyOrder(
+    {"supplier",
+     "author",
+     "publisher",
+     "group",
+     "name",
+     "version",
+     "description",
+     "scope",
+     "hashes",
+     "licenses",
+     "copyright",
+     "cpe",
+     "purl",
+     "swid",
+     "modified",
+     "pedigree",
+     "externalReferences",
+     "components"
+    })
 public class Component extends ExtensibleElement {
 
     public enum Type {

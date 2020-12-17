@@ -96,6 +96,19 @@ public class BomXmlGeneratorTest {
     }
 
     @Test
+    public void schema11WithVulnerabilitiesGenerationTest() throws Exception {
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, createCommonBom("/bom-1.1-vulnerability-1.0.xml"));
+        Document doc = generator.generate();
+        testDocument(doc);
+
+        Assert.assertTrue(generator instanceof BomXmlGenerator11);
+        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+    }
+
+    @Test
     public void schema11GenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_11, createCommonBom());
         Document doc = generator.generate();

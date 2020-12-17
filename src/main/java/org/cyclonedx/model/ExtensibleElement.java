@@ -19,6 +19,7 @@
 package org.cyclonedx.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,14 +27,16 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import org.cyclonedx.util.ExtensibleTypesSerializer;
+import org.cyclonedx.util.ExtensionDeserializer;
 
 @JsonInclude(Include.NON_NULL)
 public abstract class ExtensibleElement {
 
-    private Map<String, String> extensions;
+    private Map<String, Extension> extensions;
 
     private List<ExtensibleType> extensibleTypes;
 
@@ -55,12 +58,20 @@ public abstract class ExtensibleElement {
     }
 
     @JsonAnyGetter
-    public Map<String, String> getExtensions() {
+    public Map<String, Extension> getExtensions() {
         return extensions;
     }
 
-    @JsonAnySetter
-    public void setExtensions(final Map<String, String> extensions) {
+    public void setExtensions(final Map<String, Extension> extensions) {
         this.extensions = extensions;
+    }
+
+    @JsonDeserialize(contentUsing = ExtensionDeserializer.class)
+    @JsonAnySetter
+    public void add(String property, Extension value) {
+        if (this.extensions == null) {
+            this.extensions = new HashMap<>();
+        }
+        extensions.put(property, value);
     }
 }
