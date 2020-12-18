@@ -21,6 +21,10 @@ package org.cyclonedx.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.cyclonedx.util.ExtensionSerializer;
+
+@JsonSerialize(using = ExtensionSerializer.class)
 public class Extension
 {
   public enum ExtensionType {
@@ -37,8 +41,17 @@ public class Extension
     }
   }
 
+  private ExtensionType extensionType;
   private String namespaceURI;
   private String prefix;
+
+  public ExtensionType getExtensionType() {
+    return extensionType;
+  }
+
+  public void setExtensionType(final ExtensionType extensionType) {
+    this.extensionType = extensionType;
+  }
 
   public void setNamespaceURI(final String namespaceURI) {
     this.namespaceURI = namespaceURI;

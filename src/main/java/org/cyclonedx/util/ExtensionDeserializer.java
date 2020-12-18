@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
+import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.vulnerability.Rating;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0;
 import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
@@ -238,6 +239,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     ext.setExtensions(list);
     ext.setNamespaceURI("http://cyclonedx.org/schema/ext/vulnerability/1.0");
     ext.setPrefix("v");
+    ext.setExtensionType(ExtensionType.VULNERABILITIES);
 
     return ext;
   }
