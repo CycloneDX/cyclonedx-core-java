@@ -66,12 +66,12 @@ public abstract class ExtensibleElement {
         this.extensions = extensions;
     }
 
-    @JsonDeserialize(contentUsing = ExtensionDeserializer.class)
     @JsonAnySetter
-    public void add(String property, Extension value) {
+    @JsonDeserialize(contentUsing = ExtensionDeserializer.class)
+    public void add(final String key, final Extension value) {
         if (this.extensions == null) {
             this.extensions = new HashMap<>();
         }
-        extensions.put(property, value);
+        extensions.put(key, value);
     }
 }
