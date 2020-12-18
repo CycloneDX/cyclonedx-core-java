@@ -87,7 +87,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
       extList.add(vuln);
     }
     if (!extList.isEmpty()) {
-      return createAndReturnExtension(extList);
+      return createAndReturnExtension(ExtensionType.VULNERABILITIES, extList);
     }
     return null;
   }
@@ -233,13 +233,11 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     return rating;
   }
 
-  private Extension createAndReturnExtension(final List<ExtensibleType> list) {
-    Extension ext = new Extension();
+  private Extension createAndReturnExtension(final ExtensionType extType, final List<ExtensibleType> list) {
+    Extension ext = new Extension(extType, list);
 
-    ext.setExtensions(list);
     ext.setNamespaceURI("http://cyclonedx.org/schema/ext/vulnerability/1.0");
     ext.setPrefix("v");
-    ext.setExtensionType(ExtensionType.VULNERABILITIES);
 
     return ext;
   }

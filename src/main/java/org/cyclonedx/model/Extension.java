@@ -67,6 +67,7 @@ public class Extension
   }
 
   public Extension(final ExtensionType type, final List<ExtensibleType> extensions) {
+    this.extensionType = type;
     this.extensions = extensions;
   }
 
