@@ -234,12 +234,15 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   }
 
   private Extension createAndReturnExtension(final ExtensionType extType, final List<ExtensibleType> list) {
-    Extension ext = new Extension(extType, list);
+    if (extType == ExtensionType.VULNERABILITIES) {
+      Extension ext = new Extension(extType, list);
 
-    ext.setNamespaceURI("http://cyclonedx.org/schema/ext/vulnerability/1.0");
-    ext.setPrefix("v");
+      ext.setNamespaceURI("http://cyclonedx.org/schema/ext/vulnerability/1.0");
+      ext.setPrefix("v");
 
-    return ext;
+      return ext;
+    }
+    return null;
   }
 
   private Double getAsDouble(final String fieldName, final JsonNode node) {
