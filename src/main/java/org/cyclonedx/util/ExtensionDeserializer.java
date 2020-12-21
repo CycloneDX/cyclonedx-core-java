@@ -188,9 +188,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private Vulnerability1_0.Source processSource(final JsonNode source) {
     Source sauce = new Source();
-    if (source.get("name") != null) {
-      sauce.setName(source.get("name").textValue());
-    }
+    sauce.setName(getAsString("name", source));
     if (source.get("url") != null) {
       try {
         sauce.setUrl(new URL(source.get("url").textValue()));
