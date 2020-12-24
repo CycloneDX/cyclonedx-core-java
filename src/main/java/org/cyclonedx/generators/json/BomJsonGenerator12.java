@@ -47,11 +47,7 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
         }
         catch (GeneratorException e) {
         }
-        if (modifiedBom != null) {
-            this.bom = modifiedBom;
-        } else {
-            this.bom = bom;
-        }
+        this.bom = modifiedBom != null ? modifiedBom : bom;
     }
 
     /**
