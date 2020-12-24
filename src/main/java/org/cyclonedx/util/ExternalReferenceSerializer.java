@@ -65,14 +65,13 @@ public class ExternalReferenceSerializer extends StdSerializer<ExternalReference
       }
     } else {
       if (extRef.getType() != null && extRef.getUrl() != null && BomUtils.validateUrlString(extRef.getUrl())) {
-          gen.writeStartObject();
-          gen.writeStringField("type", extRef.getType().getTypeName());
-          gen.writeStringField("url", extRef.getUrl());
-          if (extRef.getComment() != null) {
-            gen.writeStringField("comment", extRef.getComment());
-          }
-          gen.writeEndObject();
+        gen.writeStartObject();
+        gen.writeStringField("type", extRef.getType().getTypeName());
+        gen.writeStringField("url", extRef.getUrl());
+        if (extRef.getComment() != null) {
+          gen.writeStringField("comment", extRef.getComment());
         }
+        gen.writeEndObject();
       }
     }
   }
