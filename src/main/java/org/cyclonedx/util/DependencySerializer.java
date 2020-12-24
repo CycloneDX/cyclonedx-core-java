@@ -87,7 +87,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
           generator.writeEndArray();
         }
         catch (IOException ex) {
-          throw new IOException(ex)
+          throw new IOException(ex);
         }
       }
     }
