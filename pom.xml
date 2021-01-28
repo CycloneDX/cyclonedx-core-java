@@ -170,7 +170,7 @@
         <dependency>
             <groupId>com.github.everit-org.json-schema</groupId>
             <artifactId>org.everit.json.schema</artifactId>
-            <version>1.12.1</version>
+            <version>1.12.2</version>
         </dependency>
         <!-- JSON Serialization / Deserialization -->
         <dependency>
