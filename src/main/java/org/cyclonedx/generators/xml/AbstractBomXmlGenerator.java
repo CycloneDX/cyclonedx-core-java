@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.CycloneDxSchema;
@@ -40,9 +41,34 @@ import javax.xml.parsers.ParserConfigurationException;
 
 abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator {
 
+    private ObjectMapper mapper;
+
     Document doc;
 
     protected static String PROLOG = "<?xml version=\"1.0\"?>";
+
+    protected void setupObjectMapper() {
+        this.mapper = new XmlMapper();
+
+        mapper.setAnnotationIntrospector(
+            new VersionAnnotationIntrospector(
+                String.valueOf(this.getSchemaVersion().getVersion())));
+
+        if (this.getSchemaVersion().getVersion() == 1.0) {
+            // NO-OP
+        } else if (this.getSchemaVersion().getVersion() == 1.1) {
+            registerDependencyModule(mapper, true);
+        } else if (this.getSchemaVersion().getVersion() == 1.2) {
+            registerDependencyModule(mapper, false);
+        }
+    }
+
+    private void registerDependencyModule(final ObjectMapper mapper, final boolean useNamespace) {
+        SimpleModule depModule = new SimpleModule();
+
+        depModule.setSerializers(new CollectionTypeSerializer(useNamespace));
+        mapper.registerModule(depModule);
+    }
 
     /**
      * Constructs a new document builder with security features enabled.
@@ -80,31 +106,8 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
     }
 
     public String toXML(final Bom bom) throws GeneratorException {
-        XmlMapper mapper = new XmlMapper();
-
-        SimpleModule depModule = new SimpleModule();
-
-        mapper.setAnnotationIntrospector(
-            new VersionAnnotationIntrospector(
-                String.valueOf(this.getSchemaVersion().getVersion())));
-
-        if (this.getSchemaVersion().getVersion() == 1.0) {
-            bom.setXmlns(CycloneDxSchema.NS_BOM_10);
-        } else if (this.getSchemaVersion().getVersion() == 1.1) {
-            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
-                depModule.setSerializers(new CollectionTypeSerializer(true));
-                mapper.registerModule(depModule);
-            }
-            bom.setXmlns(CycloneDxSchema.NS_BOM_11);
-        } else if (this.getSchemaVersion().getVersion() == 1.2) {
-            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
-                depModule.setSerializers(new CollectionTypeSerializer(false));
-                mapper.registerModule(depModule);
-            }
-            bom.setXmlns(CycloneDxSchema.NS_BOM_12);
-        }
         try {
-            return PROLOG + mapper.writeValueAsString(bom);
+            return PROLOG + this.mapper.writeValueAsString(bom);
         } catch (JsonProcessingException ex) {
             throw new GeneratorException(ex);
         }
