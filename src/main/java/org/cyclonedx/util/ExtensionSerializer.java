@@ -58,6 +58,7 @@ public class ExtensionSerializer
         }
         catch (XMLStreamException e) {
           e.printStackTrace();
+          throw new RuntimeException(e);
         }
       }
     }
