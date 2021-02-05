@@ -48,54 +48,37 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
   @Override
   public void serialize(
       final List<Dependency> depList, final JsonGenerator generator, final SerializerProvider provider)
+      throws IOException
   {
     final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
     final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
-    if (useNamespace) {
-      try {
-        if (depList != null && !depList.isEmpty()) {
+    try {
+      if (depList != null && !depList.isEmpty()) {
+        if (useNamespace) {
           staxWriter.writeStartElement(NAMESPACE_PREFIX, "dependencies", NAMESPACE_URI);
-          for (Dependency d : depList) {
-            writeDependency(d, staxWriter);
-          }
-        }
-      }
-      catch (XMLStreamException e) {
-        e.printStackTrace();
-      }
-    } else {
-      try {
-        if (depList != null && !depList.isEmpty()) {
+        } else {
           staxWriter.writeStartElement("dependencies");
-          for (Dependency dep : depList) {
-            writeNormalDependency(dep, staxWriter);
-          }
-          staxWriter.writeEndElement();
+        }
+        for (Dependency d : depList) {
+          writeDependency(d, staxWriter);
         }
       }
-      catch (XMLStreamException e) {
-        e.printStackTrace();
-      }
+    }
+    catch (XMLStreamException ex) {
+      throw new IOException(ex);
     }
   }
 
   private void writeDependency(final Dependency dependency, final XMLStreamWriter writer) throws XMLStreamException {
-    writer.writeStartElement(NAMESPACE_PREFIX, "dependency", NAMESPACE_URI);
+    if (useNamespace) {
+      writer.writeStartElement(NAMESPACE_PREFIX, "dependency", NAMESPACE_URI);
+    } else {
+      writer.writeStartElement( "dependency");
+    }
     writer.writeAttribute("ref", dependency.getRef());
     if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
       for (Dependency dep : dependency.getDependencies()) {
         writeDependency(dep, writer);
-      }
-    }
-    writer.writeEndElement();
-  }
-
-  private void writeNormalDependency(final Dependency dependency, final XMLStreamWriter writer) throws XMLStreamException {
-    writer.writeStartElement( "dependency");
-    writer.writeAttribute("ref", dependency.getRef());
-    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
-      for (Dependency dep : dependency.getDependencies()) {
-        writeNormalDependency(dep, writer);
       }
     }
     writer.writeEndElement();

@@ -18,6 +18,8 @@
  */
 package org.cyclonedx.generators.xml;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
@@ -40,6 +42,10 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
      * @param bom the BOM to generate
      */
     public BomXmlGenerator10(final Bom bom) {
+        setupObjectMapper();
+
+        bom.setXmlns(CycloneDxSchema.NS_BOM_10);
+
         this.bom = bom;
     }
 
