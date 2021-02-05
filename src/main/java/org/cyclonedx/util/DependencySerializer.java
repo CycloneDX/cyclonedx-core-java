@@ -50,46 +50,22 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
       final List<Dependency> depList, final JsonGenerator generator, final SerializerProvider provider)
       throws IOException
   {
-    if (generator instanceof ToXmlGenerator) {
-      final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
-      final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
-      try {
-        if (depList != null && !depList.isEmpty()) {
-          if (useNamespace) {
-            staxWriter.writeStartElement(NAMESPACE_PREFIX, "dependencies", NAMESPACE_URI);
-          } else {
-            staxWriter.writeStartElement("dependencies");
-          }
-          for (Dependency d : depList) {
-            writeDependency(d, staxWriter);
-          }
-        }
-      }
-      catch (XMLStreamException ex) {
-       throw new IOException(ex);
-      }
-    } else {
+    final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
+    final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
+    try {
       if (depList != null && !depList.isEmpty()) {
-        try {
-          generator.writeStartArray();
-          for (Dependency dep : depList) {
-            generator.writeStartObject();
-            generator.writeStringField("ref", dep.getRef());
-            generator.writeArrayFieldStart("dependsOn");
-            if (dep.getDependencies() != null && !dep.getDependencies().isEmpty()) {
-              for (Dependency d : dep.getDependencies()) {
-                generator.writeString(d.getRef());
-              }
-            }
-            generator.writeEndArray();
-            generator.writeEndObject();
-          }
-          generator.writeEndArray();
+        if (useNamespace) {
+          staxWriter.writeStartElement(NAMESPACE_PREFIX, "dependencies", NAMESPACE_URI);
+        } else {
+          staxWriter.writeStartElement("dependencies");
         }
-        catch (IOException ex) {
-          throw new IOException(ex);
+        for (Dependency d : depList) {
+          writeDependency(d, staxWriter);
         }
       }
+    }
+    catch (XMLStreamException ex) {
+      throw new IOException(ex);
     }
   }
 

@@ -43,14 +43,18 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class JsonParser extends CycloneDxSchema implements Parser {
 
+    private ObjectMapper mapper;
+
+    public JsonParser() {
+        this.mapper = new ObjectMapper();
+    }
+
     /**
      * {@inheritDoc}
      */
     public Bom parse(final File file) throws ParseException {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            return objectMapper.readValue(file, Bom.class);
+            return mapper.readValue(file, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from File", e);
         }
@@ -61,9 +65,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final byte[] bomBytes) throws ParseException {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            return objectMapper.readValue(bomBytes, Bom.class);
+            return mapper.readValue(bomBytes, Bom.class);
         } catch (RuntimeException | IOException e) {
             throw new ParseException("Unable to parse BOM from byte array", e);
         }
@@ -74,9 +76,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final InputStream inputStream) throws ParseException {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            return objectMapper.readValue(inputStream, Bom.class);
+            return mapper.readValue(inputStream, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from InputStream", e);
         }
@@ -87,9 +87,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final Reader reader) throws ParseException {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            return objectMapper.readValue(reader, Bom.class);
+            return mapper.readValue(reader, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from Reader", e);
         }

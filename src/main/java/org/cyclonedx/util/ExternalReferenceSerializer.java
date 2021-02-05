@@ -43,35 +43,23 @@ public class ExternalReferenceSerializer extends StdSerializer<ExternalReference
   public void serialize(
       final ExternalReference extRef, final JsonGenerator gen, final SerializerProvider provider) throws IOException
   {
-    if (gen instanceof ToXmlGenerator) {
-      final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
-      final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
-      if (extRef.getType() != null && extRef.getUrl() != null && BomUtils.validateUrlString(extRef.getUrl())) {
-        try {
-          staxWriter.writeStartElement("reference");
-          staxWriter.writeAttribute("type", extRef.getType().getTypeName());
-          staxWriter.writeStartElement("url");
-          staxWriter.writeCharacters(extRef.getUrl());
-          staxWriter.writeEndElement();
-          if (extRef.getComment() != null) {
-            staxWriter.writeStartElement("comment");
-            staxWriter.writeCharacters(extRef.getComment());
-            staxWriter.writeEndElement();
-          }
-          staxWriter.writeEndElement();
-        } catch (XMLStreamException ex) {
-          throw new IOException(ex);
-        }
-      }
-    } else {
-      if (extRef.getType() != null && extRef.getUrl() != null && BomUtils.validateUrlString(extRef.getUrl())) {
-        gen.writeStartObject();
-        gen.writeStringField("type", extRef.getType().getTypeName());
-        gen.writeStringField("url", extRef.getUrl());
+    final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
+    final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
+    if (extRef.getType() != null && extRef.getUrl() != null && BomUtils.validateUrlString(extRef.getUrl())) {
+      try {
+        staxWriter.writeStartElement("reference");
+        staxWriter.writeAttribute("type", extRef.getType().getTypeName());
+        staxWriter.writeStartElement("url");
+        staxWriter.writeCharacters(extRef.getUrl());
+        staxWriter.writeEndElement();
         if (extRef.getComment() != null) {
-          gen.writeStringField("comment", extRef.getComment());
+          staxWriter.writeStartElement("comment");
+          staxWriter.writeCharacters(extRef.getComment());
+          staxWriter.writeEndElement();
         }
-        gen.writeEndObject();
+        staxWriter.writeEndElement();
+      } catch (XMLStreamException ex) {
+        throw new IOException(ex);
       }
     }
   }
