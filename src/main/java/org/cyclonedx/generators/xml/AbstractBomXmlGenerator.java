@@ -48,7 +48,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
     protected static String PROLOG = "<?xml version=\"1.0\"?>";
 
     protected void setupObjectMapper() {
-        this.mapper = new XmlMapper();
+        mapper = new XmlMapper();
 
         mapper.setAnnotationIntrospector(
             new VersionAnnotationIntrospector(
@@ -107,7 +107,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
     public String toXML(final Bom bom) throws GeneratorException {
         try {
-            return PROLOG + this.mapper.writeValueAsString(bom);
+            return PROLOG + mapper.writeValueAsString(bom);
         } catch (JsonProcessingException ex) {
             throw new GeneratorException(ex);
         }
