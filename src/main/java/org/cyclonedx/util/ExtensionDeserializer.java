@@ -29,7 +29,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.ExtensibleType;
@@ -50,15 +49,12 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   private static final String VULNERABILITIES = "vulnerabilities";
   private static final String VULNERABILITY = "vulnerability";
 
-  private ObjectMapper objectMapper;
-
   public ExtensionDeserializer() {
     this(Extension.class);
   }
 
   public ExtensionDeserializer(final Class vc) {
     super(vc);
-    this.objectMapper = new ObjectMapper();
   }
 
   @Override

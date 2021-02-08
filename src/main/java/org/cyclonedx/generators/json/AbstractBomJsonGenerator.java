@@ -30,11 +30,15 @@ import org.json.JSONObject;
 
 abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
-    JSONObject doc = OrderedJSONObjectFactory.create();
+    private final ObjectMapper mapper;
 
-    String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
-        ObjectMapper mapper = new ObjectMapper();
+    AbstractBomJsonGenerator() {
+        this.mapper = new ObjectMapper();
 
+        setupObjectMapper(this.mapper);
+    }
+
+    private void setupObjectMapper(final ObjectMapper mapper) {
         SimpleModule licenseModule = new SimpleModule();
         SimpleModule depModule = new SimpleModule();
 
@@ -42,11 +46,14 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
         mapper.registerModule(licenseModule);
 
+        depModule.setSerializers(new CollectionTypeSerializer(false));
+        mapper.registerModule(depModule);
+    }
+
+    JSONObject doc = OrderedJSONObjectFactory.create();
+
+    String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
         try {
-            if (bom.getDependencies() != null && !bom.getDependencies().isEmpty()) {
-                depModule.setSerializers(new CollectionTypeSerializer(false));
-                mapper.registerModule(depModule);
-            }
             if (prettyPrint) {
                 return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bom);
             }
