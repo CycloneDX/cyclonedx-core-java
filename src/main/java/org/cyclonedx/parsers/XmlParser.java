@@ -56,7 +56,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class XmlParser extends CycloneDxSchema implements Parser {
 
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     public XmlParser() {
         this.mapper = new XmlMapper();

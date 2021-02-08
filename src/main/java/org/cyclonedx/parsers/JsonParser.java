@@ -43,7 +43,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class JsonParser extends CycloneDxSchema implements Parser {
 
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     public JsonParser() {
         this.mapper = new ObjectMapper();
