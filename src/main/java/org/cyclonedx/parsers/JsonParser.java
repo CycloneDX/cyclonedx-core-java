@@ -46,7 +46,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     private final ObjectMapper mapper;
 
     public JsonParser() {
-        this.mapper = new ObjectMapper();
+        mapper = new ObjectMapper();
     }
 
     /**
