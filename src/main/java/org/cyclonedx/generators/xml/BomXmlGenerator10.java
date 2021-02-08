@@ -18,14 +18,13 @@
  */
 package org.cyclonedx.generators.xml;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.w3c.dom.Document;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * BomGenerator creates a CycloneDX bill-of-material document from a set of
