@@ -45,7 +45,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
     Document doc;
 
-    protected static String PROLOG = "<?xml version=\"1.0\"?>";
+    protected static final String PROLOG = "<?xml version=\"1.0\"?>";
 
     protected void setupObjectMapper() {
         mapper = new XmlMapper();
