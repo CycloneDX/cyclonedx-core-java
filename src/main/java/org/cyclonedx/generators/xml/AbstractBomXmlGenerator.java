@@ -41,15 +41,18 @@ import javax.xml.parsers.ParserConfigurationException;
 
 abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator {
 
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
+
+    AbstractBomXmlGenerator() {
+        mapper = new XmlMapper();
+        setupObjectMapper();
+    }
 
     Document doc;
 
     protected static final String PROLOG = "<?xml version=\"1.0\"?>";
 
-    protected void setupObjectMapper() {
-        mapper = new XmlMapper();
-
+    private void setupObjectMapper() {
         mapper.setAnnotationIntrospector(
             new VersionAnnotationIntrospector(
                 String.valueOf(this.getSchemaVersion().getVersion())));

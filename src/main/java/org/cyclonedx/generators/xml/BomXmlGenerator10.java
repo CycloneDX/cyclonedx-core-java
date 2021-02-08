@@ -40,8 +40,6 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
      * @param bom the BOM to generate
      */
     public BomXmlGenerator10(final Bom bom) {
-        setupObjectMapper();
-
         bom.setXmlns(CycloneDxSchema.NS_BOM_10);
 
         this.bom = bom;
