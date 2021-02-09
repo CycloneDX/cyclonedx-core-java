@@ -72,13 +72,13 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
       if (dependencies != null && !dependencies.isEmpty()) {
         try {
           generator.writeStartArray();
-          for (Dependency dep : dependencies) {
+          for (Dependency dependency : dependencies) {
             generator.writeStartObject();
-            generator.writeStringField("ref", dep.getRef());
+            generator.writeStringField("ref", dependency.getRef());
             generator.writeArrayFieldStart("dependsOn");
-            if (dep.getDependencies() != null && !dep.getDependencies().isEmpty()) {
-              for (Dependency d : dep.getDependencies()) {
-                generator.writeString(d.getRef());
+            if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+              for (Dependency subDependency : dependency.getDependencies()) {
+                generator.writeString(subDependency.getRef());
               }
             }
             generator.writeEndArray();
@@ -101,8 +101,8 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
     }
     writer.writeAttribute("ref", dependency.getRef());
     if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
-      for (Dependency dep : dependency.getDependencies()) {
-        writeDependency(dep, writer);
+      for (Dependency subDependency : dependency.getDependencies()) {
+        writeDependency(subDependency, writer);
       }
     }
     writer.writeEndElement();
