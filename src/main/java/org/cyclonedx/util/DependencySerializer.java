@@ -47,20 +47,20 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
 
   @Override
   public void serialize(
-      final List<Dependency> depList, final JsonGenerator generator, final SerializerProvider provider)
+      final List<Dependency> dependencies, final JsonGenerator generator, final SerializerProvider provider)
       throws IOException
   {
     if (generator instanceof ToXmlGenerator) {
       final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
       final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
       try {
-        if (depList != null && !depList.isEmpty()) {
+        if (dependencies != null && !dependencies.isEmpty()) {
           if (useNamespace) {
             staxWriter.writeStartElement(NAMESPACE_PREFIX, "dependencies", NAMESPACE_URI);
           } else {
             staxWriter.writeStartElement("dependencies");
           }
-          for (Dependency d : depList) {
+          for (Dependency d : dependencies) {
             writeDependency(d, staxWriter);
           }
         }
@@ -69,10 +69,10 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
        throw new IOException(ex);
       }
     } else {
-      if (depList != null && !depList.isEmpty()) {
+      if (dependencies != null && !dependencies.isEmpty()) {
         try {
           generator.writeStartArray();
-          for (Dependency dep : depList) {
+          for (Dependency dep : dependencies) {
             generator.writeStartObject();
             generator.writeStringField("ref", dep.getRef());
             generator.writeArrayFieldStart("dependsOn");
