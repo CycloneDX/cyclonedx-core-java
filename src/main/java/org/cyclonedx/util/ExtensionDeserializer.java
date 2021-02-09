@@ -70,20 +70,20 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   }
 
   private Extension processVulnerabilities(final JsonParser parser) throws IOException {
-    TreeNode on =  parser.readValueAsTree();
-    JsonNode vn = (JsonNode) on.get(VULNERABILITY);
-    List<ExtensibleType> extList = new ArrayList<>();
-    if (vn.isArray() && !vn.isEmpty()) {
-      for (JsonNode jn : vn) {
-        Vulnerability10 vuln = processVulnerability(jn);
-        extList.add(vuln);
+    TreeNode treeNode =  parser.readValueAsTree();
+    JsonNode vulnerabilityNode = (JsonNode) treeNode.get(VULNERABILITY);
+    List<ExtensibleType> extensibleTypes = new ArrayList<>();
+    if (vulnerabilityNode.isArray() && !vulnerabilityNode.isEmpty()) {
+      for (JsonNode jn : vulnerabilityNode) {
+        Vulnerability10 vulnerability = processVulnerability(jn);
+        extensibleTypes.add(vulnerability);
       }
     } else {
-      Vulnerability10 vuln = processVulnerability(vn);
-      extList.add(vuln);
+      Vulnerability10 vuln = processVulnerability(vulnerabilityNode);
+      extensibleTypes.add(vuln);
     }
-    if (!extList.isEmpty()) {
-      return createAndReturnExtension(ExtensionType.VULNERABILITIES, extList);
+    if (!extensibleTypes.isEmpty()) {
+      return createAndReturnExtension(ExtensionType.VULNERABILITIES, extensibleTypes);
     }
     return null;
   }
