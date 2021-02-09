@@ -27,6 +27,14 @@ import org.cyclonedx.util.ExtensionSerializer;
 @JsonSerialize(using = ExtensionSerializer.class)
 public class Extension
 {
+  public Extension() {
+  }
+
+  public Extension(final ExtensionType type, final List<ExtensibleType> extensions) {
+    this.extensionType = type;
+    this.extensions = extensions;
+  }
+
   public enum ExtensionType {
     VULNERABILITIES("vulnerabilities");
 
@@ -62,14 +70,6 @@ public class Extension
   }
 
   private List<ExtensibleType> extensions;
-
-  public Extension() {
-  }
-
-  public Extension(final ExtensionType type, final List<ExtensibleType> extensions) {
-    this.extensionType = type;
-    this.extensions = extensions;
-  }
 
   public List<ExtensibleType> getExtensions() {
     return extensions;
