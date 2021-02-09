@@ -35,14 +35,14 @@ import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.vulnerability.Rating;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Cwe;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Score;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.ScoreSource;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Severity;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Source;
+import org.cyclonedx.model.vulnerability.Vulnerability10;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Advisory;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Cwe;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Recommendation;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Score;
+import org.cyclonedx.model.vulnerability.Vulnerability10.ScoreSource;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Severity;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Source;
 
 public class ExtensionDeserializer extends StdDeserializer<Extension>
 {
@@ -75,11 +75,11 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     List<ExtensibleType> extList = new ArrayList<>();
     if (vn.isArray() && !vn.isEmpty()) {
       for (JsonNode jn : vn) {
-        Vulnerability1_0 vuln = processVulnerability(jn);
+        Vulnerability10 vuln = processVulnerability(jn);
         extList.add(vuln);
       }
     } else {
-      Vulnerability1_0 vuln = processVulnerability(vn);
+      Vulnerability10 vuln = processVulnerability(vn);
       extList.add(vuln);
     }
     if (!extList.isEmpty()) {
@@ -88,8 +88,8 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     return null;
   }
 
-  private Vulnerability1_0 processVulnerability(final JsonNode vulnJson) {
-    Vulnerability1_0 vuln = new Vulnerability1_0();
+  private Vulnerability10 processVulnerability(final JsonNode vulnJson) {
+    Vulnerability10 vuln = new Vulnerability10();
     for (Iterator<String> it = vulnJson.fieldNames(); it.hasNext(); ) {
       String field = it.next();
       switch (field) {
@@ -182,7 +182,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     return c;
   }
 
-  private Vulnerability1_0.Source processSource(final JsonNode source) {
+  private Vulnerability10.Source processSource(final JsonNode source) {
     Source sauce = new Source();
     sauce.setName(getAsString("name", source));
     if (source.get("url") != null) {

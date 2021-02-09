@@ -31,10 +31,10 @@ import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.Extension.ExtensionType;
 import org.cyclonedx.model.vulnerability.Rating;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Advisory;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Cwe;
-import org.cyclonedx.model.vulnerability.Vulnerability1_0.Recommendation;
+import org.cyclonedx.model.vulnerability.Vulnerability10;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Advisory;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Cwe;
+import org.cyclonedx.model.vulnerability.Vulnerability10.Recommendation;
 
 public class ExtensionSerializer
     extends StdSerializer<Extension>
@@ -73,7 +73,7 @@ public class ExtensionSerializer
         "vulnerabilities",
         vulns.getNamespaceURI());
     for (ExtensibleType ext : vulns.getExtensions()) {
-      final Vulnerability1_0 vuln = (Vulnerability1_0) ext;
+      final Vulnerability10 vuln = (Vulnerability10) ext;
       staxWriter.writeStartElement(vulns.getPrefix(), "vulnerability", vulns.getNamespaceURI());
       staxWriter.writeAttribute("ref", vuln.getRef());
       generateTextNode(staxWriter, "id", vuln.getId(), vulns.getNamespaceURI(), vulns.getPrefix());
