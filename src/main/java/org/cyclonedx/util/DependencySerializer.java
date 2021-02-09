@@ -60,8 +60,8 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
           } else {
             staxWriter.writeStartElement("dependencies");
           }
-          for (Dependency d : dependencies) {
-            writeDependency(d, staxWriter);
+          for (Dependency dependency : dependencies) {
+            writeDependency(dependency, staxWriter);
           }
         }
       }
