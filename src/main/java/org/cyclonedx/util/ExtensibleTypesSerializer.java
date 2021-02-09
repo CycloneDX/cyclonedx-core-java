@@ -64,10 +64,9 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
 
             if (xmlNS != null) {
               staxWriter.writeStartElement(ext.getNamespace(), ext.getName(), xmlNS.getValue());
-              if (ext.getAttributes() != null && !ext.getAttributes().isEmpty()) {
-                for (Attribute attr : ext.getAttributes()) {
-                  staxWriter.writeAttribute(attr.getKey(), attr.getValue());
-                }
+
+              for (Attribute attr : ext.getAttributes()) {
+                staxWriter.writeAttribute(attr.getKey(), attr.getValue());
               }
             }
           } else {
