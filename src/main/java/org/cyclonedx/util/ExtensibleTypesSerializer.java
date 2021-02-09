@@ -47,15 +47,15 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
 
   @Override
   public void serialize(
-      final List<ExtensibleType> extList,
+      final List<ExtensibleType> extensibleTypes,
       final JsonGenerator generator,
       final SerializerProvider provider) throws IOException
   {
     final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
     final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
     try {
-      if (extList != null && !extList.isEmpty()) {
-        for (ExtensibleType ext : extList) {
+      if (extensibleTypes != null && !extensibleTypes.isEmpty()) {
+        for (ExtensibleType ext : extensibleTypes) {
           if (ext.getAttributes() != null && !ext.getAttributes().isEmpty()) {
             Attribute xmlNS = ext.getAttributes().stream()
                 .filter(a -> a.getKey().contains(XMLNS))
