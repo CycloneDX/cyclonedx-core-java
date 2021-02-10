@@ -118,7 +118,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
           vuln.setAdvisories(processAdvisories(vulnJson.get(field)));
           break;
         default:
-          // Can't do anything so don't do anything
+          // Unsupported field, skipped and not deserialized
           break;
       }
     }
