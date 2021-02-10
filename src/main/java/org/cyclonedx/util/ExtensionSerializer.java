@@ -57,7 +57,6 @@ public class ExtensionSerializer
           serializeVulnerabilities((ToXmlGenerator) gen, value);
         }
         catch (XMLStreamException e) {
-          e.printStackTrace();
           throw new IOException(e);
         }
       }
