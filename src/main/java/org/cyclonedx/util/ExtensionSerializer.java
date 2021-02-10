@@ -67,10 +67,7 @@ public class ExtensionSerializer
       throws XMLStreamException
   {
     final XMLStreamWriter staxWriter = gen.getStaxWriter();
-    staxWriter.writeStartElement(
-        vulns.getPrefix(),
-        "vulnerabilities",
-        vulns.getNamespaceURI());
+    staxWriter.writeStartElement(vulns.getPrefix(), "vulnerabilities", vulns.getNamespaceURI());
     for (ExtensibleType ext : vulns.getExtensions()) {
       final Vulnerability10 vuln = (Vulnerability10) ext;
       staxWriter.writeStartElement(vulns.getPrefix(), "vulnerability", vulns.getNamespaceURI());
