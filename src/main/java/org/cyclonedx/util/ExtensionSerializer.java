@@ -67,19 +67,19 @@ public class ExtensionSerializer
       throws XMLStreamException
   {
     final XMLStreamWriter staxWriter = gen.getStaxWriter();
-    staxWriter.writeStartElement(Vulnerability10.PREFIX, "vulnerabilities", Vulnerability10.NAMESPACE_URI);
+    staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.VULNERABILITIES, Vulnerability10.NAMESPACE_URI);
 
     for (ExtensibleType ext : vulns.getExtensions()) {
       final Vulnerability10 vuln = (Vulnerability10) ext;
       staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.NAME, Vulnerability10.NAMESPACE_URI);
-      staxWriter.writeAttribute("ref", vuln.getRef());
+      staxWriter.writeAttribute(Vulnerability10.REF, vuln.getRef());
 
-      generateTextNode(staxWriter, "id", vuln.getId(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
-      processRatings(vulns, staxWriter, vuln);
-      processCwes(vulns, staxWriter, vuln);
-      generateTextNode(staxWriter, "description", vuln.getDescription(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
-      processRecommendations(vulns, staxWriter, vuln);
-      processAdvisories(vulns, staxWriter, vuln);
+      generateTextNode(staxWriter, Vulnerability10.ID, vuln.getId(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+      processRatings(staxWriter, vuln);
+      processCwes(staxWriter, vuln);
+      generateTextNode(staxWriter, Vulnerability10.DESCRIPTION, vuln.getDescription(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+      processRecommendations(staxWriter, vuln);
+      processAdvisories(staxWriter, vuln);
 
       staxWriter.writeEndElement();
     }
@@ -87,60 +87,59 @@ public class ExtensionSerializer
     staxWriter.writeEndElement();
   }
 
-  private void processAdvisories(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+  private void processAdvisories(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
     if (vuln.getAdvisories() != null && !vuln.getAdvisories().isEmpty()) {
-      staxWriter.writeStartElement(Vulnerability10.PREFIX, "advisories", Vulnerability10.NAMESPACE_URI);
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.ADVISORIES, Vulnerability10.NAMESPACE_URI);
       for (Advisory a : vuln.getAdvisories()) {
-        generateTextNode(staxWriter, "advisory", a.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, Vulnerability10.ADVISORY, a.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
     }
   }
 
-  private void processRecommendations(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+  private void processRecommendations(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
     if (vuln.getRecommendations() != null && !vuln.getRecommendations().isEmpty()) {
-      staxWriter.writeStartElement(Vulnerability10.PREFIX, "recommendations", Vulnerability10.NAMESPACE_URI);
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.RECOMMENDATIONS, Vulnerability10.NAMESPACE_URI);
       for (Recommendation r : vuln.getRecommendations()) {
-        generateTextNode(staxWriter, "recommendation", r.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, Vulnerability10.RECOMMENDATION, r.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
     }
   }
 
-  private void processCwes(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+  private void processCwes(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
     if (vuln.getCwes() != null && !vuln.getCwes().isEmpty()) {
-      staxWriter.writeStartElement(Vulnerability10.PREFIX, "cwes", Vulnerability10.NAMESPACE_URI);
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.CWES, Vulnerability10.NAMESPACE_URI);
       for (Cwe c : vuln.getCwes()) {
-        generateTextNode(staxWriter, "cwe", c.getText().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, Vulnerability10.CWE, c.getText().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
     }
   }
 
-  private void processRatings(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+  private void processRatings(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
     if (vuln.getRatings() != null && !vuln.getRatings().isEmpty()) {
-      staxWriter.writeStartElement(Vulnerability10.PREFIX, "ratings", Vulnerability10.NAMESPACE_URI);
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.RATINGS, Vulnerability10.NAMESPACE_URI);
       for (Rating r : vuln.getRatings()) {
-        staxWriter.writeStartElement(Vulnerability10.PREFIX, "rating", Vulnerability10.NAMESPACE_URI);
+        staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.RATING, Vulnerability10.NAMESPACE_URI);
         if (r.getScore() != null) {
-          staxWriter.writeStartElement(Vulnerability10.PREFIX, "score", Vulnerability10.NAMESPACE_URI);
-          generateTextNode(staxWriter, "base", r.getScore().getBase().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
-          generateTextNode(staxWriter, "impact", r.getScore().getImpact().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
-          generateTextNode(staxWriter, "exploitability", r.getScore().getExploitability().toString(), Vulnerability10.NAMESPACE_URI, vulns
-              .getPrefix());
+          staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.SCORE, Vulnerability10.NAMESPACE_URI);
+          generateTextNode(staxWriter, Vulnerability10.BASE, r.getScore().getBase().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+          generateTextNode(staxWriter, Vulnerability10.IMPACT, r.getScore().getImpact().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+          generateTextNode(staxWriter, Vulnerability10.EXPLOITABILITY, r.getScore().getExploitability().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
           staxWriter.writeEndElement();
         }
-        generateTextNode(staxWriter, "severity", r.getSeverity().getSeverityName(), Vulnerability10.NAMESPACE_URI,Vulnerability10.PREFIX);
-        generateTextNode(staxWriter, "method", r.getMethod().getScoreSourceName(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
-        generateTextNode(staxWriter, "vector", r.getVector(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, Vulnerability10.SEVERITY, r.getSeverity().getSeverityName(), Vulnerability10.NAMESPACE_URI,Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, Vulnerability10.METHOD, r.getMethod().getScoreSourceName(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, Vulnerability10.VECTOR, r.getVector(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
         staxWriter.writeEndElement();
       }
       staxWriter.writeEndElement();

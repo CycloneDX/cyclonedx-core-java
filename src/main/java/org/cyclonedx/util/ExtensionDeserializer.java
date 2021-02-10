@@ -46,9 +46,6 @@ import org.cyclonedx.model.vulnerability.Vulnerability10.Source;
 
 public class ExtensionDeserializer extends StdDeserializer<Extension>
 {
-  private static final String VULNERABILITIES = "vulnerabilities";
-  private static final String VULNERABILITY = "vulnerability";
-
   public ExtensionDeserializer() {
     this(Extension.class);
   }
@@ -61,7 +58,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   public Extension deserialize(
       final JsonParser p, final DeserializationContext ctxt) throws IOException
   {
-    if (p.currentName().equals(VULNERABILITIES)) {
+    if (p.currentName().equals(Vulnerability10.VULNERABILITIES)) {
       if (p instanceof FromXmlParser) {
         return processVulnerabilities(p);
       }
@@ -71,7 +68,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private Extension processVulnerabilities(final JsonParser parser) throws IOException {
     TreeNode treeNode =  parser.readValueAsTree();
-    JsonNode vulnerabilityNode = (JsonNode) treeNode.get(VULNERABILITY);
+    JsonNode vulnerabilityNode = (JsonNode) treeNode.get(Vulnerability10.NAME);
     List<ExtensibleType> extensibleTypes = new ArrayList<>();
     if (vulnerabilityNode.isArray() && !vulnerabilityNode.isEmpty()) {
       for (JsonNode jn : vulnerabilityNode) {
@@ -93,28 +90,28 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     for (Iterator<String> it = vulnJson.fieldNames(); it.hasNext(); ) {
       String field = it.next();
       switch (field) {
-        case "ref":
+        case Vulnerability10.REF:
           vuln.setRef(vulnJson.get(field).textValue());
           break;
-        case "id":
+        case Vulnerability10.ID:
           vuln.setId(vulnJson.get(field).textValue());
           break;
-        case "source":
+        case Vulnerability10.SOURCE:
           vuln.setSource(processSource(vulnJson.get(field)));
           break;
-        case "ratings":
+        case Vulnerability10.RATINGS:
           vuln.setRatings(processRatings(vulnJson.get(field)));
           break;
-        case "cwes":
+        case Vulnerability10.CWES:
           vuln.setCwes(processCwes(vulnJson.get(field)));
           break;
-        case "description":
+        case Vulnerability10.DESCRIPTION:
           vuln.setDescription(vulnJson.get(field).textValue());
           break;
-        case "recommendations":
+        case Vulnerability10.RECOMMENDATIONS:
           vuln.setRecommendations(processRecommendations(vulnJson.get(field)));
           break;
-        case "advisories":
+        case Vulnerability10.ADVISORIES:
           vuln.setAdvisories(processAdvisories(vulnJson.get(field)));
           break;
         default:
@@ -127,7 +124,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private List<Advisory> processAdvisories(final JsonNode advisories) {
     List<Advisory> advisoryList = new ArrayList<>();
-    JsonNode adv = advisories.get("advisory");
+    JsonNode adv = advisories.get(Vulnerability10.ADVISORY);
     if (adv.isArray() && !adv.isEmpty()) {
       for (JsonNode a : adv) {
         advisoryList.add(processAdvisory(a));
@@ -146,7 +143,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private List<Recommendation> processRecommendations(final JsonNode recommendations) {
     List<Recommendation> recommendationsList = new ArrayList<>();
-    JsonNode rec = recommendations.get("recommendation");
+    JsonNode rec = recommendations.get(Vulnerability10.RECOMMENDATION);
     if (rec.isArray() && !rec.isEmpty()) {
       for (JsonNode r : rec) {
         recommendationsList.add(processRecommendation(r));
@@ -165,7 +162,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private List<Cwe> processCwes(final JsonNode cwes) {
     List<Cwe> cweList = new ArrayList<>();
-    JsonNode cwe = cwes.get("cwe");
+    JsonNode cwe = cwes.get(Vulnerability10.CWE);
     if (cwe.isArray() && !cwe.isEmpty()) {
       for (JsonNode c : cwe) {
         cweList.add(processCwe(c));
@@ -185,9 +182,9 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   private Vulnerability10.Source processSource(final JsonNode sourceNode) {
     Source source = new Source();
     source.setName(getAsString("name", sourceNode));
-    if (sourceNode.get("url") != null) {
+    if (sourceNode.get(Vulnerability10.URL) != null) {
       try {
-        source.setUrl(new URL(sourceNode.get("url").textValue()));
+        source.setUrl(new URL(sourceNode.get(Vulnerability10.URL).textValue()));
       }
       catch (MalformedURLException e) {
         // Should we throw an exception? Is this worth stopping things over?
@@ -211,18 +208,18 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private Rating processRating(final JsonNode ratingNode) {
     Rating rating = new Rating();
-    JsonNode r = ratingNode.get("rating");
-    if (r.get("score") != null) {
+    JsonNode r = ratingNode.get(Vulnerability10.RATING);
+    if (r.get(Vulnerability10.SCORE) != null) {
       Score score = new Score();
-      JsonNode s = r.get("score");
-      score.setBase(getAsDouble("base", s));
-      score.setImpact(getAsDouble("impact", s));
-      score.setExploitability(getAsDouble("exploitability", s));
+      JsonNode s = r.get(Vulnerability10.SCORE);
+      score.setBase(getAsDouble(Vulnerability10.BASE, s));
+      score.setImpact(getAsDouble(Vulnerability10.IMPACT, s));
+      score.setExploitability(getAsDouble(Vulnerability10.EXPLOITABILITY, s));
       rating.setScore(score);
     }
-    rating.setSeverity(Severity.fromString(getAsString("severity", r)));
-    rating.setMethod(ScoreSource.fromString(getAsString("method", r)));
-    rating.setVector(getAsString("vector", r));
+    rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, r)));
+    rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, r)));
+    rating.setVector(getAsString(Vulnerability10.VECTOR, r));
 
     return rating;
   }
@@ -231,8 +228,8 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     if (extType == ExtensionType.VULNERABILITIES) {
       Extension ext = new Extension(extType, list);
 
-      ext.setNamespaceURI("http://cyclonedx.org/schema/ext/vulnerability/1.0");
-      ext.setPrefix("v");
+      ext.setNamespaceURI(Vulnerability10.NAMESPACE_URI);
+      ext.setPrefix(Vulnerability10.PREFIX);
 
       return ext;
     }
