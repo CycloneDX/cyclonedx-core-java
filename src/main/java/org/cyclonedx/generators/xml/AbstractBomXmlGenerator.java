@@ -95,10 +95,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         try {
             final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
 
-            this.doc = docBuilder.parse(
-                new InputSource(
-                    new StringReader(
-                        toXML(bom))));
+            this.doc = docBuilder.parse(new InputSource(new StringReader(toXML(bom))));
 
             this.doc.setXmlStandalone(true);
 
