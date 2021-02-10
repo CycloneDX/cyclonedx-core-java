@@ -67,17 +67,17 @@ public class ExtensionSerializer
       throws XMLStreamException
   {
     final XMLStreamWriter staxWriter = gen.getStaxWriter();
-    staxWriter.writeStartElement(vulns.getPrefix(), "vulnerabilities", vulns.getNamespaceURI());
+    staxWriter.writeStartElement(Vulnerability10.PREFIX, "vulnerabilities", Vulnerability10.NAMESPACE_URI);
 
     for (ExtensibleType ext : vulns.getExtensions()) {
       final Vulnerability10 vuln = (Vulnerability10) ext;
-      staxWriter.writeStartElement(vulns.getPrefix(), "vulnerability", vulns.getNamespaceURI());
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.NAME, Vulnerability10.NAMESPACE_URI);
       staxWriter.writeAttribute("ref", vuln.getRef());
 
-      generateTextNode(staxWriter, "id", vuln.getId(), vulns.getNamespaceURI(), vulns.getPrefix());
+      generateTextNode(staxWriter, "id", vuln.getId(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       processRatings(vulns, staxWriter, vuln);
       processCwes(vulns, staxWriter, vuln);
-      generateTextNode(staxWriter, "description", vuln.getDescription(), vulns.getNamespaceURI(), vulns.getPrefix());
+      generateTextNode(staxWriter, "description", vuln.getDescription(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       processRecommendations(vulns, staxWriter, vuln);
       processAdvisories(vulns, staxWriter, vuln);
 
@@ -91,9 +91,9 @@ public class ExtensionSerializer
       throws XMLStreamException
   {
     if (vuln.getAdvisories() != null && !vuln.getAdvisories().isEmpty()) {
-      staxWriter.writeStartElement(vulns.getPrefix(), "advisories", vulns.getNamespaceURI());
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, "advisories", Vulnerability10.NAMESPACE_URI);
       for (Advisory a : vuln.getAdvisories()) {
-        generateTextNode(staxWriter, "advisory", a.getText(), vulns.getNamespaceURI(), vulns.getPrefix());
+        generateTextNode(staxWriter, "advisory", a.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
     }
@@ -103,9 +103,9 @@ public class ExtensionSerializer
       throws XMLStreamException
   {
     if (vuln.getRecommendations() != null && !vuln.getRecommendations().isEmpty()) {
-      staxWriter.writeStartElement(vulns.getPrefix(), "recommendations", vulns.getNamespaceURI());
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, "recommendations", Vulnerability10.NAMESPACE_URI);
       for (Recommendation r : vuln.getRecommendations()) {
-        generateTextNode(staxWriter, "recommendation", r.getText(), vulns.getNamespaceURI(), vulns.getPrefix());
+        generateTextNode(staxWriter, "recommendation", r.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
     }
@@ -115,9 +115,9 @@ public class ExtensionSerializer
       throws XMLStreamException
   {
     if (vuln.getCwes() != null && !vuln.getCwes().isEmpty()) {
-      staxWriter.writeStartElement(vulns.getPrefix(), "cwes", vulns.getNamespaceURI());
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, "cwes", Vulnerability10.NAMESPACE_URI);
       for (Cwe c : vuln.getCwes()) {
-        generateTextNode(staxWriter, "cwe", c.getText().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
+        generateTextNode(staxWriter, "cwe", c.getText().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
     }
@@ -127,20 +127,20 @@ public class ExtensionSerializer
       throws XMLStreamException
   {
     if (vuln.getRatings() != null && !vuln.getRatings().isEmpty()) {
-      staxWriter.writeStartElement(vulns.getPrefix(), "ratings", vulns.getNamespaceURI());
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, "ratings", Vulnerability10.NAMESPACE_URI);
       for (Rating r : vuln.getRatings()) {
-        staxWriter.writeStartElement(vulns.getPrefix(), "rating", vulns.getNamespaceURI());
+        staxWriter.writeStartElement(Vulnerability10.PREFIX, "rating", Vulnerability10.NAMESPACE_URI);
         if (r.getScore() != null) {
-          staxWriter.writeStartElement(vulns.getPrefix(), "score", vulns.getNamespaceURI());
-          generateTextNode(staxWriter, "base", r.getScore().getBase().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
-          generateTextNode(staxWriter, "impact", r.getScore().getImpact().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
-          generateTextNode(staxWriter, "exploitability", r.getScore().getExploitability().toString(), vulns.getNamespaceURI(), vulns
+          staxWriter.writeStartElement(Vulnerability10.PREFIX, "score", Vulnerability10.NAMESPACE_URI);
+          generateTextNode(staxWriter, "base", r.getScore().getBase().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+          generateTextNode(staxWriter, "impact", r.getScore().getImpact().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+          generateTextNode(staxWriter, "exploitability", r.getScore().getExploitability().toString(), Vulnerability10.NAMESPACE_URI, vulns
               .getPrefix());
           staxWriter.writeEndElement();
         }
-        generateTextNode(staxWriter, "severity", r.getSeverity().getSeverityName(), vulns.getNamespaceURI(), vulns.getPrefix());
-        generateTextNode(staxWriter, "method", r.getMethod().getScoreSourceName(), vulns.getNamespaceURI(), vulns.getPrefix());
-        generateTextNode(staxWriter, "vector", r.getVector(), vulns.getNamespaceURI(), vulns.getPrefix());
+        generateTextNode(staxWriter, "severity", r.getSeverity().getSeverityName(), Vulnerability10.NAMESPACE_URI,Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, "method", r.getMethod().getScoreSourceName(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        generateTextNode(staxWriter, "vector", r.getVector(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
         staxWriter.writeEndElement();
       }
       staxWriter.writeEndElement();
