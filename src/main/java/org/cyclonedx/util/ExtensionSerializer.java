@@ -68,56 +68,84 @@ public class ExtensionSerializer
   {
     final XMLStreamWriter staxWriter = gen.getStaxWriter();
     staxWriter.writeStartElement(vulns.getPrefix(), "vulnerabilities", vulns.getNamespaceURI());
+
     for (ExtensibleType ext : vulns.getExtensions()) {
       final Vulnerability10 vuln = (Vulnerability10) ext;
       staxWriter.writeStartElement(vulns.getPrefix(), "vulnerability", vulns.getNamespaceURI());
       staxWriter.writeAttribute("ref", vuln.getRef());
+
       generateTextNode(staxWriter, "id", vuln.getId(), vulns.getNamespaceURI(), vulns.getPrefix());
-      if (vuln.getRatings() != null && !vuln.getRatings().isEmpty()) {
-        staxWriter.writeStartElement(vulns.getPrefix(), "ratings", vulns.getNamespaceURI());
-        for (Rating r : vuln.getRatings()) {
-          staxWriter.writeStartElement(vulns.getPrefix(), "rating", vulns.getNamespaceURI());
-          if (r.getScore() != null) {
-            staxWriter.writeStartElement(vulns.getPrefix(), "score", vulns.getNamespaceURI());
-            generateTextNode(staxWriter, "base", r.getScore().getBase().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
-            generateTextNode(staxWriter, "impact", r.getScore().getImpact().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
-            generateTextNode(staxWriter, "exploitability", r.getScore().getExploitability().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
-            staxWriter.writeEndElement();
-          }
-          generateTextNode(staxWriter, "severity", r.getSeverity().getSeverityName(), vulns.getNamespaceURI(), vulns.getPrefix());
-          generateTextNode(staxWriter, "method", r.getMethod().getScoreSourceName(), vulns.getNamespaceURI(), vulns.getPrefix());
-          generateTextNode(staxWriter, "vector", r.getVector(), vulns.getNamespaceURI(), vulns.getPrefix());
+      processRatings(vulns, staxWriter, vuln);
+      processCwes(vulns, staxWriter, vuln);
+      generateTextNode(staxWriter, "description", vuln.getDescription(), vulns.getNamespaceURI(), vulns.getPrefix());
+      processRecommendations(vulns, staxWriter, vuln);
+      processAdvisories(vulns, staxWriter, vuln);
+
+      staxWriter.writeEndElement();
+    }
+
+    staxWriter.writeEndElement();
+  }
+
+  private void processAdvisories(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+      throws XMLStreamException
+  {
+    if (vuln.getAdvisories() != null && !vuln.getAdvisories().isEmpty()) {
+      staxWriter.writeStartElement(vulns.getPrefix(), "advisories", vulns.getNamespaceURI());
+      for (Advisory a : vuln.getAdvisories()) {
+        generateTextNode(staxWriter, "advisory", a.getText(), vulns.getNamespaceURI(), vulns.getPrefix());
+      }
+      staxWriter.writeEndElement();
+    }
+  }
+
+  private void processRecommendations(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+      throws XMLStreamException
+  {
+    if (vuln.getRecommendations() != null && !vuln.getRecommendations().isEmpty()) {
+      staxWriter.writeStartElement(vulns.getPrefix(), "recommendations", vulns.getNamespaceURI());
+      for (Recommendation r : vuln.getRecommendations()) {
+        generateTextNode(staxWriter, "recommendation", r.getText(), vulns.getNamespaceURI(), vulns.getPrefix());
+      }
+      staxWriter.writeEndElement();
+    }
+  }
+
+  private void processCwes(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+      throws XMLStreamException
+  {
+    if (vuln.getCwes() != null && !vuln.getCwes().isEmpty()) {
+      staxWriter.writeStartElement(vulns.getPrefix(), "cwes", vulns.getNamespaceURI());
+      for (Cwe c : vuln.getCwes()) {
+        generateTextNode(staxWriter, "cwe", c.getText().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
+      }
+      staxWriter.writeEndElement();
+    }
+  }
+
+  private void processRatings(final Extension vulns, final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
+      throws XMLStreamException
+  {
+    if (vuln.getRatings() != null && !vuln.getRatings().isEmpty()) {
+      staxWriter.writeStartElement(vulns.getPrefix(), "ratings", vulns.getNamespaceURI());
+      for (Rating r : vuln.getRatings()) {
+        staxWriter.writeStartElement(vulns.getPrefix(), "rating", vulns.getNamespaceURI());
+        if (r.getScore() != null) {
+          staxWriter.writeStartElement(vulns.getPrefix(), "score", vulns.getNamespaceURI());
+          generateTextNode(staxWriter, "base", r.getScore().getBase().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
+          generateTextNode(staxWriter, "impact", r.getScore().getImpact().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
+          generateTextNode(staxWriter, "exploitability", r.getScore().getExploitability().toString(), vulns.getNamespaceURI(), vulns
+              .getPrefix());
           staxWriter.writeEndElement();
         }
-        staxWriter.writeEndElement();
-      }
-      if (vuln.getCwes() != null && !vuln.getCwes().isEmpty()) {
-        staxWriter.writeStartElement(vulns.getPrefix(), "cwes", vulns.getNamespaceURI());
-        for (Cwe c : vuln.getCwes()) {
-          generateTextNode(staxWriter, "cwe", c.getText().toString(), vulns.getNamespaceURI(), vulns.getPrefix());
-        }
-        staxWriter.writeEndElement();
-      }
-      generateTextNode(staxWriter, "description", vuln.getDescription(), vulns.getNamespaceURI(), vulns.getPrefix());
-      if (vuln.getRecommendations() != null && !vuln.getRecommendations().isEmpty()) {
-        staxWriter.writeStartElement(vulns.getPrefix(), "recommendations", vulns.getNamespaceURI());
-        for (Recommendation r : vuln.getRecommendations()) {
-          generateTextNode(staxWriter, "recommendation", r.getText(), vulns.getNamespaceURI(), vulns.getPrefix());
-        }
-        staxWriter.writeEndElement();
-      }
-      if (vuln.getAdvisories() != null && !vuln.getAdvisories().isEmpty()) {
-        staxWriter.writeStartElement(vulns.getPrefix(), "advisories", vulns.getNamespaceURI());
-        for (Advisory a : vuln.getAdvisories()) {
-          generateTextNode(staxWriter, "advisory", a.getText(), vulns.getNamespaceURI(), vulns.getPrefix());
-        }
+        generateTextNode(staxWriter, "severity", r.getSeverity().getSeverityName(), vulns.getNamespaceURI(), vulns.getPrefix());
+        generateTextNode(staxWriter, "method", r.getMethod().getScoreSourceName(), vulns.getNamespaceURI(), vulns.getPrefix());
+        generateTextNode(staxWriter, "vector", r.getVector(), vulns.getNamespaceURI(), vulns.getPrefix());
         staxWriter.writeEndElement();
       }
       staxWriter.writeEndElement();
     }
-    staxWriter.writeEndElement();
   }
-
 
   private void generateTextNode(final XMLStreamWriter writer,
                                 final String fieldName,
