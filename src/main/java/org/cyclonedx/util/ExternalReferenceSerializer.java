@@ -19,6 +19,7 @@
 package org.cyclonedx.util;
 
 import java.io.IOException;
+import java.util.function.BiPredicate;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.ExternalReference.Type;
 
 public class ExternalReferenceSerializer extends StdSerializer<ExternalReference>
 {
@@ -43,10 +45,12 @@ public class ExternalReferenceSerializer extends StdSerializer<ExternalReference
   public void serialize(
       final ExternalReference extRef, final JsonGenerator gen, final SerializerProvider provider) throws IOException
   {
+    final BiPredicate<Type, String> validateExternalReference = (type, url) -> (type != null && url != null && BomUtils.validateUrlString(url));
     if (gen instanceof ToXmlGenerator) {
       final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
       final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
-      if (extRef.getType() != null && extRef.getUrl() != null && BomUtils.validateUrlString(extRef.getUrl())) {
+
+      if (validateExternalReference.test(extRef.getType(), extRef.getUrl())) {
         try {
           staxWriter.writeStartElement("reference");
           staxWriter.writeAttribute("type", extRef.getType().getTypeName());
@@ -64,16 +68,14 @@ public class ExternalReferenceSerializer extends StdSerializer<ExternalReference
           throw new IOException(ex);
         }
       }
-    } else {
-      if (extRef.getType() != null && extRef.getUrl() != null && BomUtils.validateUrlString(extRef.getUrl())) {
-        gen.writeStartObject();
-        gen.writeStringField("type", extRef.getType().getTypeName());
-        gen.writeStringField("url", extRef.getUrl());
-        if (extRef.getComment() != null) {
-          gen.writeStringField("comment", extRef.getComment());
-        }
-        gen.writeEndObject();
+    } else if (validateExternalReference.test(extRef.getType(), extRef.getUrl())) {
+      gen.writeStartObject();
+      gen.writeStringField("type", extRef.getType().getTypeName());
+      gen.writeStringField("url", extRef.getUrl());
+      if (extRef.getComment() != null) {
+        gen.writeStringField("comment", extRef.getComment());
       }
+      gen.writeEndObject();
     }
   }
 }
