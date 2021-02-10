@@ -182,19 +182,19 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     return c;
   }
 
-  private Vulnerability10.Source processSource(final JsonNode source) {
-    Source sauce = new Source();
-    sauce.setName(getAsString("name", source));
-    if (source.get("url") != null) {
+  private Vulnerability10.Source processSource(final JsonNode sourceNode) {
+    Source source = new Source();
+    source.setName(getAsString("name", sourceNode));
+    if (sourceNode.get("url") != null) {
       try {
-        sauce.setUrl(new URL(source.get("url").textValue()));
+        source.setUrl(new URL(sourceNode.get("url").textValue()));
       }
       catch (MalformedURLException e) {
         // Should we throw an exception? Is this worth stopping things over?
         e.printStackTrace();
       }
     }
-    return sauce;
+    return source;
   }
 
   private List<Rating> processRatings(final JsonNode ratings) {
