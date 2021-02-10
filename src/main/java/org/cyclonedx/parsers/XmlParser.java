@@ -70,7 +70,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
 
-            return mapper.readValue(file, Bom.class);
+            return injectSchemaVersion(mapper.readValue(file, Bom.class), schemaVersion);
         } catch (IOException | XPathExpressionException e) {
             throw new ParseException(e);
         }
@@ -84,7 +84,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
             final String schemaVersion = identifySchemaVersion(
                     extractAllNamespaceDeclarations(new InputSource(new ByteArrayInputStream(bomBytes))));
 
-            return mapper.readValue(bomBytes, Bom.class);
+            return injectSchemaVersion(mapper.readValue(bomBytes, Bom.class), schemaVersion);
         } catch (IOException | XPathExpressionException e) {
             throw new ParseException(e);
         }

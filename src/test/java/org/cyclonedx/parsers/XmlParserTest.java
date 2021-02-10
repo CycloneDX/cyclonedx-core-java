@@ -77,6 +77,7 @@ public class XmlParserTest {
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals(1, bom.getComponents().size());
+        Assert.assertEquals("1.0", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
         Assert.assertEquals(1, components.size());
