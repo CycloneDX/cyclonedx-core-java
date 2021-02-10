@@ -103,6 +103,7 @@ public class XmlParserTest {
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals(3, bom.getComponents().size());
+        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
         Assert.assertEquals(3, components.size());
@@ -148,6 +149,7 @@ public class XmlParserTest {
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals(3, bom.getComponents().size());
+        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
         Assert.assertEquals(3, components.size());
@@ -178,6 +180,7 @@ public class XmlParserTest {
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals(3, bom.getComponents().size());
+        Assert.assertEquals("1.2", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         Assert.assertNotNull(bom.getMetadata());
         Assert.assertNotNull(bom.getMetadata().getTimestamp());
