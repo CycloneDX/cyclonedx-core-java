@@ -70,12 +70,12 @@ public class JsonParserTest {
         Assert.assertEquals(0, bom.getMetadata().getComponent().getSwid().getTagVersion());
         Assert.assertEquals(false, bom.getMetadata().getComponent().getSwid().isPatch());
         Assert.assertEquals("Acme, Inc.", bom.getMetadata().getManufacture().getName());
-        Assert.assertEquals("https://example.com", bom.getMetadata().getManufacture().getUrls().get(0)); // TODO: fix this
+        Assert.assertEquals("https://example.com", bom.getMetadata().getManufacture().getUrls().get(0));
         Assert.assertEquals(1, bom.getMetadata().getManufacture().getContacts().size());
         Assert.assertEquals("Acme Professional Services", bom.getMetadata().getManufacture().getContacts().get(0).getName());
         Assert.assertEquals("professional.services@example.com", bom.getMetadata().getManufacture().getContacts().get(0).getEmail());
         Assert.assertEquals("Acme, Inc.", bom.getMetadata().getSupplier().getName());
-        Assert.assertEquals("https://example.com", bom.getMetadata().getSupplier().getUrls().get(0)); // TODO: fix this
+        Assert.assertEquals("https://example.com", bom.getMetadata().getSupplier().getUrls().get(0));
         Assert.assertEquals(1, bom.getMetadata().getSupplier().getContacts().size());
         Assert.assertEquals("Acme Distribution", bom.getMetadata().getSupplier().getContacts().get(0).getName());
         Assert.assertEquals("distribution@example.com", bom.getMetadata().getSupplier().getContacts().get(0).getEmail());
