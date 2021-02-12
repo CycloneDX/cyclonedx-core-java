@@ -117,7 +117,7 @@ public class ExtensionSerializer
     if (vuln.getCwes() != null && !vuln.getCwes().isEmpty()) {
       staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.CWES, Vulnerability10.NAMESPACE_URI);
       for (Cwe c : vuln.getCwes()) {
-        generateTextNode(staxWriter, Vulnerability10.CWE, c.getText().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        generateTextNodeFromNumber(staxWriter, Vulnerability10.CWE, c.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
     }
@@ -132,17 +132,34 @@ public class ExtensionSerializer
         staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.RATING, Vulnerability10.NAMESPACE_URI);
         if (r.getScore() != null) {
           staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.SCORE, Vulnerability10.NAMESPACE_URI);
-          generateTextNode(staxWriter, Vulnerability10.BASE, r.getScore().getBase().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
-          generateTextNode(staxWriter, Vulnerability10.IMPACT, r.getScore().getImpact().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
-          generateTextNode(staxWriter, Vulnerability10.EXPLOITABILITY, r.getScore().getExploitability().toString(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+          generateTextNodeFromNumber(staxWriter, Vulnerability10.BASE, r.getScore().getBase(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+          generateTextNodeFromNumber(staxWriter, Vulnerability10.IMPACT, r.getScore().getImpact(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+          generateTextNodeFromNumber(staxWriter, Vulnerability10.EXPLOITABILITY, r.getScore().getExploitability(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
           staxWriter.writeEndElement();
         }
-        generateTextNode(staxWriter, Vulnerability10.SEVERITY, r.getSeverity().getSeverityName(), Vulnerability10.NAMESPACE_URI,Vulnerability10.PREFIX);
-        generateTextNode(staxWriter, Vulnerability10.METHOD, r.getMethod().getScoreSourceName(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        if (r.getSeverity() != null) {
+          generateTextNode(staxWriter, Vulnerability10.SEVERITY, r.getSeverity().getSeverityName(),
+              Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        }
+        if (r.getMethod() != null) {
+          generateTextNode(staxWriter, Vulnerability10.METHOD, r.getMethod().getScoreSourceName(),
+              Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+        }
         generateTextNode(staxWriter, Vulnerability10.VECTOR, r.getVector(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
         staxWriter.writeEndElement();
       }
       staxWriter.writeEndElement();
+    }
+  }
+
+  private void generateTextNodeFromNumber(final XMLStreamWriter writer,
+                                          final String fieldName,
+                                          final Number value,
+                                          final String namespaceUri,
+                                          final String prefix) throws XMLStreamException
+  {
+    if ( value != null) {
+      generateTextNode(writer, fieldName, value.toString(), namespaceUri, prefix);
     }
   }
 
@@ -152,8 +169,10 @@ public class ExtensionSerializer
                                 final String namespaceUri,
                                 final String prefix) throws XMLStreamException
   {
-    writer.writeStartElement(prefix, fieldName, namespaceUri);
-    writer.writeCharacters(value);
-    writer.writeEndElement();
+    if ( value != null) {
+      writer.writeStartElement(prefix, fieldName, namespaceUri);
+      writer.writeCharacters(value);
+      writer.writeEndElement();
+    }
   }
 }
