@@ -23,6 +23,7 @@ import java.io.StringReader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.CycloneDxSchema;
@@ -64,6 +65,8 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         } else if (this.getSchemaVersion().getVersion() == 1.2) {
             registerDependencyModule(mapper, false);
         }
+
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     private void registerDependencyModule(final ObjectMapper mapper, final boolean useNamespace) {
