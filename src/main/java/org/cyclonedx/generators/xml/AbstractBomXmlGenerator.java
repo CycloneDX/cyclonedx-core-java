@@ -23,7 +23,6 @@ import java.io.StringReader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.CycloneDxSchema;
@@ -65,8 +64,6 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         } else if (this.getSchemaVersion().getVersion() == 1.2) {
             registerDependencyModule(mapper, false);
         }
-
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     private void registerDependencyModule(final ObjectMapper mapper, final boolean useNamespace) {
@@ -98,7 +95,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         try {
             final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
 
-            this.doc = docBuilder.parse(new InputSource(new StringReader(toXML(bom))));
+            this.doc = docBuilder.parse(new InputSource(new StringReader(toXML(bom, false))));
 
             this.doc.setXmlStandalone(true);
 
@@ -108,8 +105,11 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         }
     }
 
-    public String toXML(final Bom bom) throws GeneratorException {
+    protected String toXML(final Bom bom, final boolean prettyPrint) throws GeneratorException {
         try {
+            if (prettyPrint) {
+                return PROLOG + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bom);
+            }
             return PROLOG + mapper.writeValueAsString(bom);
         } catch (JsonProcessingException ex) {
             throw new GeneratorException(ex);

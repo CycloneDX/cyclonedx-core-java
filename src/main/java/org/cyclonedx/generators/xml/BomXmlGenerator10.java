@@ -63,6 +63,6 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
     }
 
     public String toXmlString() throws GeneratorException {
-        return toXML(this.bom);
+        return toXML(this.bom, true);
     }
 }
