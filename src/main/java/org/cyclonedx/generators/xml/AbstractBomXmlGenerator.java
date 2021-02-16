@@ -105,7 +105,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         }
     }
 
-    protected String toXML(final Bom bom, final boolean prettyPrint) throws GeneratorException {
+    String toXML(final Bom bom, final boolean prettyPrint) throws GeneratorException {
         try {
             if (prettyPrint) {
                 return PROLOG + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bom);
