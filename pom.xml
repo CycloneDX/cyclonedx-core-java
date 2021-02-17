@@ -101,10 +101,6 @@
             <id>maven-central</id>
             <url>https://repo1.maven.org/maven2</url>
         </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
         <!-- Resolve snapshot releases -->
         <repository>
             <id>ossrh-snapshot</id>
@@ -169,8 +165,8 @@
         </dependency>
         <!-- JSON Schema library -->
         <dependency>
-            <groupId>com.github.everit-org.json-schema</groupId>
-            <artifactId>org.everit.json.schema</artifactId>
+            <groupId>com.github.erosb</groupId>
+            <artifactId>everit-json-schema</artifactId>
             <version>1.12.2</version>
         </dependency>
 
