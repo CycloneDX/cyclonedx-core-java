@@ -20,7 +20,6 @@ package org.cyclonedx.model;
 
 import java.util.Date;
 import java.util.Objects;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.cyclonedx.util.CustomDateSerializer;
 

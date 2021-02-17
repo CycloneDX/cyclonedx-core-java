@@ -21,7 +21,6 @@ package org.cyclonedx.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
-
 import java.util.Objects;
 
 @SuppressWarnings("unused")

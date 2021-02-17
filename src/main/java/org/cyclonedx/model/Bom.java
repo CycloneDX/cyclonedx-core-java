@@ -21,9 +21,6 @@ package org.cyclonedx.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -36,23 +33,33 @@ import org.cyclonedx.util.DependencyDeserializer;
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomFormat", "specVersion", "metadata", "components", "externalReferences", "dependencies", "serialNumber", "version"})
+@JsonPropertyOrder({"bomFormat", "specVersion", "serialNumber", "version", "metadata", "components", "externalReferences", "dependencies"})
 public class Bom extends ExtensibleElement {
+
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
+
     @VersionFilter(versions = {"1.2"})
     private Metadata metadata;
+
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Component> components;
+
     @VersionFilter(versions = {"1.1", "1.2"})
     private List<Dependency> dependencies;
+
+    @VersionFilter(versions = {"1.1", "1.2"})
     private List<ExternalReference> externalReferences;
+
     @JacksonXmlProperty(isAttribute = true)
     private int version = 1;
+
     @JacksonXmlProperty(isAttribute = true)
     private String serialNumber;
+
     @JsonOnly
     private String specVersion;
+
     @JsonOnly
     private String bomFormat;
 

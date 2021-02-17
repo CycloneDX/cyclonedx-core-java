@@ -32,6 +32,7 @@ public class Dependency {
 
     @JacksonXmlProperty(isAttribute = true)
     private String ref;
+
     @JsonProperty("dependsOn")
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "dependency")
