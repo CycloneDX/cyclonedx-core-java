@@ -20,10 +20,12 @@ package org.cyclonedx.model;
 
 import java.util.Date;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.cyclonedx.util.CustomDateSerializer;
 
 @SuppressWarnings("unused")
+@JsonPropertyOrder({"timestamp", "name", "email"})
 public class IdentifiableActionType extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)

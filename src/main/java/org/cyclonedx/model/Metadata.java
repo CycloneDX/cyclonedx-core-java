@@ -28,7 +28,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.CustomDateSerializer;
 
-@JsonPropertyOrder({"timestamp", "tools", "authors"})
+@JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier"})
 public class Metadata extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)

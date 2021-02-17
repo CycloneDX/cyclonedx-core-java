@@ -18,8 +18,10 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
+@JsonPropertyOrder({"name", "email", "phone"})
 public class OrganizationalContact extends ExtensibleElement {
 
     private String name;

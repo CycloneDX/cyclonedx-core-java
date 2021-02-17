@@ -18,9 +18,11 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
+@JsonPropertyOrder({"uid", "url", "author", "committer", "message"})
 public class Commit extends ExtensibleElement {
 
     private String uid;
