@@ -147,13 +147,13 @@
         <dependency>
             <groupId>com.github.package-url</groupId>
             <artifactId>packageurl-java</artifactId>
-            <version>1.1.1</version>
+            <version>1.2.0</version>
         </dependency>
         <!-- XML Parser, Generator, JSON Parser -->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.12.0</version>
+            <version>2.12.1</version>
         </dependency>
 
         <dependency>
@@ -171,7 +171,7 @@
         <dependency>
             <groupId>com.github.everit-org.json-schema</groupId>
             <artifactId>org.everit.json.schema</artifactId>
-            <version>1.12.1</version>
+            <version>1.12.2</version>
         </dependency>
 
         <!-- Unit Test -->
