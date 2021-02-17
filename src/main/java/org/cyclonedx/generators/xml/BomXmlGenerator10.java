@@ -19,12 +19,10 @@
 package org.cyclonedx.generators.xml;
 
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.model.Attribute;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
@@ -42,6 +40,8 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
      * @param bom the BOM to generate
      */
     public BomXmlGenerator10(final Bom bom) {
+        bom.setXmlns(CycloneDxSchema.NS_BOM_10);
+
         this.bom = bom;
     }
 
@@ -59,17 +59,10 @@ public class BomXmlGenerator10 extends AbstractBomXmlGenerator implements BomXml
      * @since 1.1.0
      */
     public Document generate() throws ParserConfigurationException {
-        final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
-        this.doc = docBuilder.newDocument();
-        doc.setXmlStandalone(true);
+        return generateDocument(this.bom);
+    }
 
-        // Create root <bom> node
-        final Element bomNode = createRootElement("bom", null,
-                new Attribute("xmlns", NS_BOM_10),
-                new Attribute("version", String.valueOf(bom.getVersion())));
-
-        final Element componentsNode = createElement(bomNode, "components");
-        createComponentsNode(componentsNode, bom.getComponents());
-        return doc;
+    public String toXmlString() throws GeneratorException {
+        return toXML(this.bom, true);
     }
 }

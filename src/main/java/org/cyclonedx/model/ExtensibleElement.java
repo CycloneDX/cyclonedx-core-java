@@ -19,12 +19,29 @@
 package org.cyclonedx.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import org.cyclonedx.util.ExtensibleTypesSerializer;
+import org.cyclonedx.util.ExtensionDeserializer;
+
+@JsonInclude(Include.NON_NULL)
 public abstract class ExtensibleElement {
+
+    private Map<String, Extension> extensions;
 
     private List<ExtensibleType> extensibleTypes;
 
+    @JsonSerialize(using = ExtensibleTypesSerializer.class)
+    @JacksonXmlElementWrapper(useWrapping = false)
     public List<ExtensibleType> getExtensibleTypes() {
         return extensibleTypes;
     }
@@ -38,5 +55,23 @@ public abstract class ExtensibleElement {
             this.extensibleTypes = new ArrayList<>();
         }
         this.extensibleTypes.add(extensibleType);
+    }
+
+    @JsonAnyGetter
+    public Map<String, Extension> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(final Map<String, Extension> extensions) {
+        this.extensions = extensions;
+    }
+
+    @JsonAnySetter
+    @JsonDeserialize(contentUsing = ExtensionDeserializer.class)
+    public void add(final String key, final Extension value) {
+        if (this.extensions == null) {
+            this.extensions = new HashMap<>();
+        }
+        extensions.put(key, value);
     }
 }

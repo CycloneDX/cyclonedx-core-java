@@ -19,15 +19,11 @@
 package org.cyclonedx.generators.xml;
 
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.model.Attribute;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * BomGenerator creates a CycloneDX bill-of-material document from a set of
@@ -44,6 +40,8 @@ public class BomXmlGenerator11 extends AbstractBomXmlGenerator implements BomXml
      * @param bom the BOM to generate
      */
     public BomXmlGenerator11(final Bom bom) {
+        bom.setXmlns(CycloneDxSchema.NS_BOM_11);
+
         this.bom = bom;
     }
 
@@ -61,32 +59,10 @@ public class BomXmlGenerator11 extends AbstractBomXmlGenerator implements BomXml
      * @since 2.0.0
      */
     public Document generate() throws ParserConfigurationException {
-        final DocumentBuilder docBuilder = buildSecureDocumentBuilder();
-        this.doc = docBuilder.newDocument();
-        doc.setXmlStandalone(true);
+        return generateDocument(this.bom);
+    }
 
-        final List<Attribute> attributes = new ArrayList<>();
-        attributes.add(new Attribute("xmlns", NS_BOM_11));
-        attributes.add(new Attribute("version", String.valueOf(bom.getVersion())));
-        if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
-            attributes.add(new Attribute("xmlns:dg", NS_DEPENDENCY_GRAPH_10));
-        }
-
-        // Create root <bom> node
-        final Element bomNode = createRootElement("bom", null, attributes.toArray(new Attribute[0]));
-        if (bom.getSerialNumber() != null) {
-            bomNode.setAttribute("serialNumber", bom.getSerialNumber());
-        }
-
-        final Element componentsNode = createElement(bomNode, "components");
-        createComponentsNode(componentsNode, bom.getComponents());
-        createExternalReferencesNode(bomNode, bom.getExternalReferences());
-
-        if (bom.getDependencies() != null && bom.getDependencies().size() > 0) {
-            final Element dependenciesNode = createElement(bomNode, "dg:dependencies");
-            createDependenciesNode(dependenciesNode, bom.getDependencies());
-        }
-        processExtensions(bomNode, bom);
-        return doc;
+    public String toXmlString() throws GeneratorException {
+        return toXML(this.bom, true);
     }
 }

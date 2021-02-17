@@ -23,8 +23,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.CustomDateSerializer;
+
+@JsonPropertyOrder({"timestamp", "tools", "authors"})
 public class Metadata extends ExtensibleElement {
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date timestamp = new Date();
     private List<Tool> tools;
     private List<OrganizationalContact> authors;
@@ -40,6 +48,8 @@ public class Metadata extends ExtensibleElement {
         this.timestamp = timestamp;
     }
 
+    @JacksonXmlElementWrapper(localName = "tools")
+    @JacksonXmlProperty(localName = "tool")
     public List<Tool> getTools() {
         return tools;
     }
@@ -55,6 +65,8 @@ public class Metadata extends ExtensibleElement {
         this.tools.add(tool);
     }
 
+    @JacksonXmlElementWrapper(localName = "authors")
+    @JacksonXmlProperty(localName = "author")
     public List<OrganizationalContact> getAuthors() {
         return authors;
     }

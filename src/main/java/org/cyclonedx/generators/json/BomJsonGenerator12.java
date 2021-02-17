@@ -18,7 +18,10 @@
  */
 package org.cyclonedx.generators.json;
 
+import java.lang.reflect.Field;
+
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.json.JSONObject;
@@ -38,7 +41,13 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
      * @param bom the BOM to generate
      */
     public BomJsonGenerator12(final Bom bom) {
-        this.bom = bom;
+        Bom modifiedBom = null;
+        try {
+            modifiedBom = injectBomFormatAndSpecVersion(bom);
+        }
+        catch (GeneratorException e) {
+        }
+        this.bom = modifiedBom != null ? modifiedBom : bom;
     }
 
     /**
@@ -55,16 +64,49 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
      * @since 3.0.0
      */
     public JSONObject generate() {
-        doc.put("bomFormat", "CycloneDX");
-        doc.put("specVersion", Version.VERSION_12.getVersionString());
-        if (bom.getSerialNumber() != null) {
-            doc.put("serialNumber", bom.getSerialNumber());
+        try {
+            doc = new JSONObject(toJson(this.bom, false));
+
+            return doc;
         }
-        doc.put("version", bom.getVersion());
-        createMetadataNode(doc, bom.getMetadata());
-        createComponentsNode(doc, bom.getComponents(), "components");
-        createExternalReferencesNode(doc, bom.getExternalReferences());
-        createDependenciesNode(doc, bom.getDependencies());
-        return doc;
+        catch (GeneratorException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String toJsonString() {
+        try {
+            return toJson(this.bom, true);
+        }
+        catch (GeneratorException e) {
+            return "";
+        }
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return toJson(this.bom, false);
+        }
+        catch (GeneratorException e) {
+            return "";
+        }
+    }
+
+    private Bom injectBomFormatAndSpecVersion(Bom bom) throws GeneratorException {
+        try {
+            Field field;
+            field = Bom.class.getDeclaredField("bomFormat");
+            field.setAccessible(true);
+            field.set(bom, "CycloneDX");
+            field = Bom.class.getDeclaredField("specVersion");
+            field.setAccessible(true);
+            field.set(bom, getSchemaVersion().getVersionString());
+            return bom;
+        }
+        catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new GeneratorException(e);
+        }
     }
 }

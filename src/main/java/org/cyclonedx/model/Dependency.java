@@ -18,16 +18,23 @@
  */
 package org.cyclonedx.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import org.cyclonedx.converters.DependencyDeserializer;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@JsonInclude(Include.NON_NULL)
 public class Dependency {
 
+    @JacksonXmlProperty(isAttribute = true)
     private String ref;
-    @JSONField(name = "dependsOn", deserializeUsing = DependencyDeserializer.class)
+    @JsonProperty("dependsOn")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "dependency")
     private List<Dependency> dependencies;
 
     public Dependency(final String ref) {

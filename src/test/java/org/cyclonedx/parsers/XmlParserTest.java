@@ -76,8 +76,8 @@ public class XmlParserTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.0.xml"));
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
-        Assert.assertEquals("1.0", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getComponents().size());
+        Assert.assertEquals("1.0", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
         Assert.assertEquals(1, components.size());
@@ -102,8 +102,8 @@ public class XmlParserTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.1.xml"));
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
-        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(3, bom.getComponents().size());
+        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
         Assert.assertEquals(3, components.size());
@@ -148,8 +148,8 @@ public class XmlParserTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.1-dependency-graph-1.0.xml"));
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
-        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(3, bom.getComponents().size());
+        Assert.assertEquals("1.1", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         final List<Component> components = bom.getComponents();
         Assert.assertEquals(3, components.size());
@@ -179,8 +179,8 @@ public class XmlParserTest {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.2.xml"));
         final XmlParser parser = new XmlParser();
         final Bom bom = parser.parse(bomBytes);
-        Assert.assertEquals("1.2", bom.getSpecVersion());
         Assert.assertEquals(3, bom.getComponents().size());
+        Assert.assertEquals("1.2", bom.getSpecVersion());
         Assert.assertEquals(1, bom.getVersion());
         Assert.assertNotNull(bom.getMetadata());
         Assert.assertNotNull(bom.getMetadata().getTimestamp());
@@ -205,12 +205,12 @@ public class XmlParserTest {
         Assert.assertEquals(0, bom.getMetadata().getComponent().getSwid().getTagVersion());
         Assert.assertEquals(false, bom.getMetadata().getComponent().getSwid().isPatch());
         Assert.assertEquals("Acme, Inc.", bom.getMetadata().getManufacture().getName());
-        Assert.assertEquals("https://example.com", bom.getMetadata().getManufacture().getUrl());
+        Assert.assertEquals("https://example.com", bom.getMetadata().getManufacture().getUrls().get(0));
         Assert.assertEquals(1, bom.getMetadata().getManufacture().getContacts().size());
         Assert.assertEquals("Acme Professional Services", bom.getMetadata().getManufacture().getContacts().get(0).getName());
         Assert.assertEquals("professional.services@example.com", bom.getMetadata().getManufacture().getContacts().get(0).getEmail());
         Assert.assertEquals("Acme, Inc.", bom.getMetadata().getSupplier().getName());
-        Assert.assertEquals("https://example.com", bom.getMetadata().getSupplier().getUrl());
+        Assert.assertEquals("https://example.com", bom.getMetadata().getSupplier().getUrls().get(0));
         Assert.assertEquals(1, bom.getMetadata().getSupplier().getContacts().size());
         Assert.assertEquals("Acme Distribution", bom.getMetadata().getSupplier().getContacts().get(0).getName());
         Assert.assertEquals("distribution@example.com", bom.getMetadata().getSupplier().getContacts().get(0).getEmail());

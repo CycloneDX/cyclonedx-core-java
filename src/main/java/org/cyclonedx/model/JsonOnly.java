@@ -16,21 +16,14 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-package org.cyclonedx.generators.xml;
+package org.cyclonedx.model;
 
-import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.exception.GeneratorException;
-import org.w3c.dom.Document;
-import javax.xml.parsers.ParserConfigurationException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface BomXmlGenerator {
-
-    CycloneDxSchema.Version getSchemaVersion();
-
-    Document generate() throws ParserConfigurationException;
-
-    String toXmlString() throws GeneratorException;
-
-    String toString();
-
-}
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface JsonOnly
+{}

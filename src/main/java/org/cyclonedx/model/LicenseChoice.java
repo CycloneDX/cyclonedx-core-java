@@ -22,25 +22,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.LicenseDeserializer;
+
+@JsonInclude(Include.NON_NULL)
 public class LicenseChoice {
 
-    private List<License> licenses;
+    private List<License> license;
     private String expression;
 
+    @JacksonXmlProperty(localName = "license")
+    @JacksonXmlElementWrapper(useWrapping = false)
     public List<License> getLicenses() {
-        return licenses;
+        return license;
     }
 
     public void setLicenses(List<License> licenses) {
-        this.licenses = licenses;
+        this.license = licenses;
         this.expression = null;
     }
 
     public void addLicense(License license) {
-        if (this.licenses == null) {
-            this.licenses = new ArrayList<>();
+        if (this.license == null) {
+            this.license = new ArrayList<>();
         }
-        this.licenses.add(license);
+        this.license.add(license);
         this.expression = null;
     }
 
@@ -50,7 +62,7 @@ public class LicenseChoice {
 
     public void setExpression(String expression) {
         this.expression = expression;
-        this.licenses = null;
+        this.license = null;
     }
 
     @Override
@@ -58,12 +70,12 @@ public class LicenseChoice {
         if (this == o) return true;
         if (!(o instanceof LicenseChoice)) return false;
         LicenseChoice that = (LicenseChoice) o;
-        return Objects.equals(licenses, that.licenses) &&
+        return Objects.equals(license, that.license) &&
                 Objects.equals(expression, that.expression);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(licenses, expression);
+        return Objects.hash(license, expression);
     }
 }

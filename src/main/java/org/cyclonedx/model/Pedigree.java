@@ -21,7 +21,12 @@ package org.cyclonedx.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 @SuppressWarnings("unused")
+@JsonPropertyOrder({"ancestors", "commits", "notes"})
 public class Pedigree extends ExtensibleElement {
 
     private List<Component> ancestors;
@@ -30,6 +35,8 @@ public class Pedigree extends ExtensibleElement {
     private List<Commit> commits;
     private String notes;
 
+    @JacksonXmlElementWrapper(localName = "ancestors")
+    @JacksonXmlProperty(localName = "component")
     public List<Component> getAncestors() {
         return ancestors;
     }
@@ -54,6 +61,8 @@ public class Pedigree extends ExtensibleElement {
         this.variants = variants;
     }
 
+    @JacksonXmlElementWrapper(localName = "commits")
+    @JacksonXmlProperty(localName = "commit")
     public List<Commit> getCommits() {
         return commits;
     }

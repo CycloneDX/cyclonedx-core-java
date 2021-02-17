@@ -18,8 +18,7 @@
  */
 package org.cyclonedx.parsers;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
@@ -28,7 +27,6 @@ import org.cyclonedx.model.Bom;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONObject;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -45,13 +43,18 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class JsonParser extends CycloneDxSchema implements Parser {
 
+    private final ObjectMapper mapper;
+
+    public JsonParser() {
+        mapper = new ObjectMapper();
+    }
+
     /**
      * {@inheritDoc}
      */
     public Bom parse(final File file) throws ParseException {
         try {
-            final String jsonString = IOUtils.toString(new FileInputStream(file), StandardCharsets.UTF_8);
-            return JSON.parseObject(jsonString, Bom.class, Feature.SupportNonPublicField);
+            return mapper.readValue(file, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from File", e);
         }
@@ -62,8 +65,8 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final byte[] bomBytes) throws ParseException {
         try {
-            return JSON.parseObject(bomBytes, Bom.class, Feature.SupportNonPublicField);
-        } catch (RuntimeException e) {
+            return mapper.readValue(bomBytes, Bom.class);
+        } catch (RuntimeException | IOException e) {
             throw new ParseException("Unable to parse BOM from byte array", e);
         }
     }
@@ -73,7 +76,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final InputStream inputStream) throws ParseException {
         try {
-            return JSON.parseObject(inputStream, Bom.class, Feature.SupportNonPublicField);
+            return mapper.readValue(inputStream, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from InputStream", e);
         }
@@ -84,8 +87,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final Reader reader) throws ParseException {
         try {
-            InputStream in = IOUtils.toInputStream(IOUtils.toString(reader), StandardCharsets.UTF_8);
-            return JSON.parseObject(in, Bom.class, Feature.SupportNonPublicField);
+            return mapper.readValue(reader, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from Reader", e);
         }

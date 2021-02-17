@@ -20,27 +20,51 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.ExternalReferenceSerializer;
+
 @SuppressWarnings("unused")
+@JsonInclude(Include.NON_NULL)
+@JsonSerialize(using = ExternalReferenceSerializer.class)
 public class ExternalReference {
 
     public enum Type {
+        @JsonProperty("vcs")
         VCS("vcs"),
+        @JsonProperty("issue-tracker")
         ISSUE_TRACKER("issue-tracker"),
+        @JsonProperty("website")
         WEBSITE("website"),
+        @JsonProperty("advisories")
         ADVISORIES("advisories"),
+        @JsonProperty("bom")
         BOM("bom"),
+        @JsonProperty("mailing-list")
         MAILING_LIST("mailing-list"),
+        @JsonProperty("social")
         SOCIAL("social"),
+        @JsonProperty("chat")
         CHAT("chat"),
+        @JsonProperty("documentation")
         DOCUMENTATION("documentation"),
+        @JsonProperty("support")
         SUPPORT("support"),
+        @JsonProperty("distribution")
         DISTRIBUTION("distribution"),
+        @JsonProperty("license")
         LICENSE("license"),
+        @JsonProperty("build-meta")
         BUILD_META("build-meta"),
+        @JsonProperty("build-system")
         BUILD_SYSTEM("build-system"),
+        @JsonProperty("other")
         OTHER("other");
 
-        private String name;
+        private final String name;
 
         public String getTypeName() {
             return this.name;
@@ -52,6 +76,7 @@ public class ExternalReference {
     }
 
     private String url;
+    @JacksonXmlProperty(localName = "type", isAttribute = true)
     private Type type;
     private String comment;
 

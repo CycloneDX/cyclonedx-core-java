@@ -21,6 +21,11 @@ package org.cyclonedx.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
+@JsonPropertyOrder({"vendor", "name", "version", "hashes"})
 public class Tool extends ExtensibleElement {
 
     private String vendor;
@@ -52,6 +57,8 @@ public class Tool extends ExtensibleElement {
         this.version = version;
     }
 
+    @JacksonXmlElementWrapper(localName = "hashes")
+    @JacksonXmlProperty(localName = "hash")
     public List<Hash> getHashes() {
         return hashes;
     }
