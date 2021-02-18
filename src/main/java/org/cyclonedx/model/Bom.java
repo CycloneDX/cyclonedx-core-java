@@ -33,7 +33,17 @@ import org.cyclonedx.util.DependencyDeserializer;
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomFormat", "specVersion", "serialNumber", "version", "metadata", "components", "externalReferences", "dependencies"})
+@JsonPropertyOrder({
+        "bomFormat",
+        "specVersion",
+        "serialNumber",
+        "version",
+        "metadata",
+        "components",
+        "externalReferences",
+        "services",
+        "dependencies"
+})
 public class Bom extends ExtensibleElement {
 
     @JacksonXmlProperty(isAttribute = true)
@@ -44,6 +54,9 @@ public class Bom extends ExtensibleElement {
 
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Component> components;
+
+    @VersionFilter(versions = {"1.2"})
+    private List<Service> services;
 
     @VersionFilter(versions = {"1.1", "1.2"})
     private List<Dependency> dependencies;
@@ -86,6 +99,23 @@ public class Bom extends ExtensibleElement {
             components = new ArrayList<>();
         }
         components.add(component);
+    }
+
+    @JacksonXmlElementWrapper(localName = "services")
+    @JacksonXmlProperty(localName = "service")
+    public List<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
+
+    public void addService(Service service) {
+        if (services == null) {
+            services = new ArrayList<>();
+        }
+        services.add(service);
     }
 
     @JacksonXmlElementWrapper(useWrapping = false)
