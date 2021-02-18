@@ -25,40 +25,17 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @SuppressWarnings("unused")
-@JsonPropertyOrder({"ancestors", "commits", "notes"})
+@JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "notes"})
 public class Pedigree extends ExtensibleElement {
 
-    private List<Component> ancestors;
-    private List<Component> descendants;
-    private List<Component> variants;
+    @JacksonXmlProperty(localName = "ancestors")
+    private Ancestors ancestors;
+    @JacksonXmlProperty(localName = "descendants")
+    private Descendants descendants;
+    @JacksonXmlProperty(localName = "variants")
+    private Variants variants;
     private List<Commit> commits;
     private String notes;
-
-    @JacksonXmlElementWrapper(localName = "ancestors")
-    @JacksonXmlProperty(localName = "component")
-    public List<Component> getAncestors() {
-        return ancestors;
-    }
-
-    public void setAncestors(List<Component> ancestors) {
-        this.ancestors = ancestors;
-    }
-
-    public List<Component> getDescendants() {
-        return descendants;
-    }
-
-    public void setDescendants(List<Component> descendants) {
-        this.descendants = descendants;
-    }
-
-    public List<Component> getVariants() {
-        return variants;
-    }
-
-    public void setVariants(List<Component> variants) {
-        this.variants = variants;
-    }
 
     @JacksonXmlElementWrapper(localName = "commits")
     @JacksonXmlProperty(localName = "commit")
@@ -76,22 +53,5 @@ public class Pedigree extends ExtensibleElement {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Pedigree)) return false;
-        Pedigree pedigree = (Pedigree) o;
-        return Objects.equals(ancestors, pedigree.ancestors) &&
-                Objects.equals(descendants, pedigree.descendants) &&
-                Objects.equals(variants, pedigree.variants) &&
-                Objects.equals(commits, pedigree.commits) &&
-                Objects.equals(notes, pedigree.notes);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(ancestors, descendants, variants, commits, notes);
     }
 }
