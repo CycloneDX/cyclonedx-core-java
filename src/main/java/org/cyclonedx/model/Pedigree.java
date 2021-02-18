@@ -20,6 +20,8 @@ package org.cyclonedx.model;
 
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -37,6 +39,30 @@ public class Pedigree extends ExtensibleElement {
     private List<Commit> commits;
     private String notes;
 
+    @JsonIgnore
+    public List<Component> getAncestors() {
+        if (null != ancestors) {
+            return ancestors.getComponents();
+        }
+        return null;
+    }
+
+    @JsonIgnore
+    public List<Component> getDescendants() {
+        if (null != descendants) {
+            return descendants.getComponents();
+        }
+        return null;
+    }
+
+    @JsonIgnore
+    public List<Component> getVariants() {
+        if (null != variants) {
+            return variants.getComponents();
+        }
+        return null;
+    }
+
     @JacksonXmlElementWrapper(localName = "commits")
     @JacksonXmlProperty(localName = "commit")
     public List<Commit> getCommits() {
@@ -53,5 +79,22 @@ public class Pedigree extends ExtensibleElement {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pedigree)) return false;
+        Pedigree pedigree = (Pedigree) o;
+        return Objects.equals(ancestors, pedigree.ancestors) &&
+            Objects.equals(descendants, pedigree.descendants) &&
+            Objects.equals(variants, pedigree.variants) &&
+            Objects.equals(commits, pedigree.commits) &&
+            Objects.equals(notes, pedigree.notes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ancestors, descendants, variants, commits, notes);
     }
 }
