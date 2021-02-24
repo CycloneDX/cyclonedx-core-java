@@ -34,6 +34,10 @@ import org.cyclonedx.model.Variants;
 
 public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrapper>
 {
+  private static final String ANCESTORS = "ancestors";
+  private static final String DESCENDANTS = "descendants";
+  private static final String VARIANTS = "variants";
+
   @Override
   public ComponentWrapper deserialize(
       final JsonParser parser, final DeserializationContext context)
@@ -42,27 +46,27 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
     final String location = parser.getCurrentName();
     if (parser instanceof FromXmlParser) {
       switch (location) {
-        case "ancestors":
+        case ANCESTORS:
           return parser.readValueAs(Ancestors.class);
-        case "descendants":
+        case DESCENDANTS:
           return parser.readValueAs(Descendants.class);
-        case "variants":
+        case VARIANTS:
           return parser.readValueAs(Variants.class);
         default:
           return null;
       }
     }
 
-    ComponentWrapper wrapper = null;
+    ComponentWrapper wrapper;
 
     switch (location) {
-      case "ancestors":
+      case ANCESTORS:
         wrapper = new Ancestors();
         break;
-      case "descendants":
+      case DESCENDANTS:
         wrapper = new Descendants();
         break;
-      case "variants":
+      case VARIANTS:
         wrapper = new Variants();
         break;
       default:
@@ -70,10 +74,9 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
     }
 
     Component[] components = parser.readValueAs(Component[].class);
-    if (null != wrapper) {
-      wrapper.setComponents(Arrays.asList(components));
-    }
-    
+
+    wrapper.setComponents(Arrays.asList(components));
+
     return wrapper;
   }
 }
