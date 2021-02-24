@@ -74,7 +74,6 @@ public class XmlParserTest {
         final File file = new File(this.getClass().getResource("/bom-1.2-pedigree.xml").getFile());
         final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
-        final Bom bom = parser.parse(file);
         Assert.assertTrue(valid);
     }
 
