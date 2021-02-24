@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -31,11 +32,22 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  */
 public abstract class ComponentWrapper
 {
-  private List<Component> components;
+  protected List<Component> components;
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "component")
   public List<Component> getComponents() {
     return components;
+  }
+
+  public void setComponents(final List<Component> components) {
+    this.components = components;
+  }
+
+  public void addComponent(final Component component) {
+    if (this.components == null) {
+      this.components = new ArrayList<>();
+    }
+    this.components.add(component);
   }
 }

@@ -18,4 +18,5 @@
  */
 package org.cyclonedx.model;
 
-public class Variants extends ComponentWrapper {}
+public class Variants extends ComponentWrapper {
+}

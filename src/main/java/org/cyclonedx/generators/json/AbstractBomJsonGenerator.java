@@ -25,6 +25,7 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.CollectionTypeSerializer;
+import org.cyclonedx.util.ComponentWrapperSerializer;
 import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.json.JSONObject;
 
@@ -41,6 +42,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     private void setupObjectMapper(final ObjectMapper mapper) {
         SimpleModule licenseModule = new SimpleModule();
         SimpleModule depModule = new SimpleModule();
+        SimpleModule componentWrapperModule = new SimpleModule();
 
         licenseModule.addSerializer(new LicenseChoiceSerializer());
 
@@ -48,6 +50,10 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
         depModule.setSerializers(new CollectionTypeSerializer(false));
         mapper.registerModule(depModule);
+
+        componentWrapperModule.addSerializer(new ComponentWrapperSerializer(mapper));
+
+        mapper.registerModule(componentWrapperModule);
     }
 
     JSONObject doc = OrderedJSONObjectFactory.create();

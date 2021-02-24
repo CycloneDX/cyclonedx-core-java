@@ -18,4 +18,5 @@
  */
 package org.cyclonedx.model;
 
-public class Descendants extends ComponentWrapper {}
+public class Descendants extends ComponentWrapper {
+}

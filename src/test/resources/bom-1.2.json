@@ -127,6 +127,38 @@
             "version": "9.0.14"
           }
         ],
+        "descendants": [
+          {
+            "type": "library",
+            "publisher": "Acme Inc",
+            "group": "com.acme",
+            "name": "tomcat-catalina",
+            "version": "9.0.14"
+          },
+          {
+            "type": "library",
+            "publisher": "Acme Inc",
+            "group": "com.acme",
+            "name": "tomcat-catalina",
+            "version": "9.0.14"
+          }
+        ],
+        "variants": [
+          {
+            "type": "library",
+            "publisher": "Acme Inc",
+            "group": "com.acme",
+            "name": "tomcat-catalina",
+            "version": "9.0.14"
+          },
+          {
+            "type": "library",
+            "publisher": "Acme Inc",
+            "group": "com.acme",
+            "name": "tomcat-catalina",
+            "version": "9.0.14"
+          }
+        ],
         "commits": [
           {
             "uid": "123",

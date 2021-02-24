@@ -85,6 +85,9 @@ public class JsonParserTest {
         Assert.assertEquals("9.0.14", c1.getVersion());
         Assert.assertEquals(Component.Type.LIBRARY, c1.getType());
         Assert.assertEquals("pkg:npm/acme/component@1.0.0", c1.getPurl());
+
+        testPedigree(c1);
+
         // Begin Services
         List<Service> services = bom.getServices();
         Assert.assertEquals(1, services.size());
@@ -130,6 +133,7 @@ public class JsonParserTest {
         Assert.assertEquals(ExternalReference.Type.DOCUMENTATION, s.getExternalReferences().get(1).getType());
         Assert.assertEquals("http://api.partner.org/swagger", s.getExternalReferences().get(1).getUrl());
         // End Services
+
         // Begin Dependencies
         Assert.assertEquals(1, bom.getDependencies().size());
         Dependency d1 = bom.getDependencies().get(0);
@@ -139,5 +143,15 @@ public class JsonParserTest {
         Dependency d11 = d1.getDependencies().get(0);
         Assert.assertEquals("pkg:npm/acme/common@1.0.0", d11.getRef());
         Assert.assertNull(d11.getDependencies());
+    }
+
+    private void testPedigree(final Component component) {
+        Assert.assertNotNull(component.getPedigree());
+        Assert.assertNotNull(component.getPedigree().getAncestors());
+        Assert.assertEquals(2, component.getPedigree().getAncestors().getComponents().size());
+        //Assert.assertNotNull(component.getPedigree().getDescendants());
+        //Assert.assertEquals(2, component.getPedigree().getDescendants().size());
+        //Assert.assertNotNull(component.getPedigree().getVariants());
+        //Assert.assertEquals(2, component.getPedigree().getVariants().size());
     }
 }

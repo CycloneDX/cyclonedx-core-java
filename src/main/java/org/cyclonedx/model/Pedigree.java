@@ -21,46 +21,39 @@ package org.cyclonedx.model;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.ComponentWrapperDeserializer;
 
 @SuppressWarnings("unused")
 @JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "notes"})
 public class Pedigree extends ExtensibleElement {
 
     @JacksonXmlProperty(localName = "ancestors")
+    @JsonProperty(value = "ancestors")
+    @JsonDeserialize(using = ComponentWrapperDeserializer.class)
     private Ancestors ancestors;
+
     @JacksonXmlProperty(localName = "descendants")
+    @JsonProperty(value = "descendants")
+    @JsonDeserialize(using = ComponentWrapperDeserializer.class)
     private Descendants descendants;
+
     @JacksonXmlProperty(localName = "variants")
+    @JsonProperty(value = "variants")
+    @JsonDeserialize(using = ComponentWrapperDeserializer.class)
     private Variants variants;
     private List<Commit> commits;
     private String notes;
 
-    @JsonIgnore
-    public List<Component> getAncestors() {
-        if (null != ancestors) {
-            return ancestors.getComponents();
-        }
-        return null;
+    public Ancestors getAncestors() {
+        return ancestors;
     }
-
-    @JsonIgnore
-    public List<Component> getDescendants() {
-        if (null != descendants) {
-            return descendants.getComponents();
-        }
-        return null;
-    }
-
-    @JsonIgnore
-    public List<Component> getVariants() {
-        if (null != variants) {
-            return variants.getComponents();
-        }
-        return null;
+    public void setAncestors(final Ancestors ancestors) {
+        this.ancestors = ancestors;
     }
 
     @JacksonXmlElementWrapper(localName = "commits")
