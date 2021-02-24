@@ -134,6 +134,7 @@ public class ExtensionSerializer
         generateTextNode(staxWriter, Vulnerability10.URL, vulnerability.getSource().getUrl().toString(),
             Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
+      staxWriter.writeEndElement();
     }
   }
 
