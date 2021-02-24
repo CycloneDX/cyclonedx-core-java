@@ -11,22 +11,22 @@
         <ancestors>
           <component type="library">
             <group>org.example</group>
-            <name>sample-library</name>
+            <name>sample-library-ancestor</name>
             <version>1.0.0</version>
           </component>
         </ancestors>
         <descendants>
           <component type="library">
             <group>org.example</group>
-            <name>sample-library</name>
-            <version>1.0.0</version>
+            <name>sample-library-descendant</name>
+            <version>1.0.1</version>
           </component>
         </descendants>
         <variants>
           <component type="library">
             <group>org.example</group>
-            <name>sample-library</name>
-            <version>1.0.0</version>
+            <name>sample-library-variant</name>
+            <version>1.0.2</version>
           </component>
         </variants>
       </pedigree>

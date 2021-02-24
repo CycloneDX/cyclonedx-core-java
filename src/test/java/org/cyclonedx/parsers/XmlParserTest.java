@@ -20,7 +20,15 @@ package org.cyclonedx.parsers;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.model.*;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.OrganizationalContact;
+import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.Service;
+import org.cyclonedx.model.ServiceData;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.File;
@@ -75,6 +83,15 @@ public class XmlParserTest {
         final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
         Assert.assertTrue(valid);
+
+        final Bom bom = parser.parse(file);
+        testPedigree(bom.getComponents().get(0).getPedigree());
+    }
+
+    private void testPedigree(final Pedigree pedigree) {
+        Assert.assertEquals("sample-library-ancestor", pedigree.getAncestors().getComponents().get(0).getName());
+        Assert.assertEquals("sample-library-descendant", pedigree.getDescendants().getComponents().get(0).getName());
+        Assert.assertEquals("sample-library-variant", pedigree.getVariants().getComponents().get(0).getName());
     }
 
     @Test
