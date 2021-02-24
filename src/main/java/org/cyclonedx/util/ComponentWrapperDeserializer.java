@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
@@ -41,7 +40,7 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
   @Override
   public ComponentWrapper deserialize(
       final JsonParser parser, final DeserializationContext context)
-      throws IOException, JsonProcessingException
+      throws IOException
   {
     final String location = parser.getCurrentName();
     if (parser instanceof FromXmlParser) {
