@@ -149,9 +149,9 @@ public class JsonParserTest {
         Assert.assertNotNull(component.getPedigree());
         Assert.assertNotNull(component.getPedigree().getAncestors());
         Assert.assertEquals(2, component.getPedigree().getAncestors().getComponents().size());
-        //Assert.assertNotNull(component.getPedigree().getDescendants());
-        //Assert.assertEquals(2, component.getPedigree().getDescendants().size());
-        //Assert.assertNotNull(component.getPedigree().getVariants());
-        //Assert.assertEquals(2, component.getPedigree().getVariants().size());
+        Assert.assertNotNull(component.getPedigree().getDescendants());
+        Assert.assertEquals(2, component.getPedigree().getDescendants().getComponents().size());
+        Assert.assertNotNull(component.getPedigree().getVariants());
+        Assert.assertEquals(2, component.getPedigree().getVariants().getComponents().size());
     }
 }

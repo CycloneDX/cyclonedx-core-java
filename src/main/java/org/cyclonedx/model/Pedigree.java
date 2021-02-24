@@ -56,6 +56,20 @@ public class Pedigree extends ExtensibleElement {
         this.ancestors = ancestors;
     }
 
+    public Descendants getDescendants() {
+        return descendants;
+    }
+    public void setDescendants(final Descendants descendants) {
+        this.descendants = descendants;
+    }
+
+    public Variants getVariants() {
+        return variants;
+    }
+    public void setVariants(final Variants variants) {
+        this.variants = variants;
+    }
+
     @JacksonXmlElementWrapper(localName = "commits")
     @JacksonXmlProperty(localName = "commit")
     public List<Commit> getCommits() {
