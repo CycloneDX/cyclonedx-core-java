@@ -80,6 +80,7 @@ public class ExtensionSerializer
       generateTextNode(staxWriter, Vulnerability10.DESCRIPTION, vuln.getDescription(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       processRecommendations(staxWriter, vuln);
       processAdvisories(staxWriter, vuln);
+      processSource(staxWriter, vuln);
 
       staxWriter.writeEndElement();
     }
@@ -120,6 +121,19 @@ public class ExtensionSerializer
         generateTextNodeFromNumber(staxWriter, Vulnerability10.CWE, c.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
       }
       staxWriter.writeEndElement();
+    }
+  }
+
+  private void processSource(final XMLStreamWriter staxWriter, final Vulnerability10 vulnerability)
+      throws XMLStreamException
+  {
+    if (vulnerability.getSource() != null && vulnerability.getSource().getName() != null) {
+      staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.SOURCE, Vulnerability10.NAMESPACE_URI);
+      staxWriter.writeAttribute(Vulnerability10.SOURCE_NAME, vulnerability.getSource().getName());
+      if (vulnerability.getSource().getUrl() != null) {
+        generateTextNode(staxWriter, Vulnerability10.URL, vulnerability.getSource().getUrl().toString(),
+            Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
+      }
     }
   }
 
