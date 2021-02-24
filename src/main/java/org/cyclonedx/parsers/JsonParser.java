@@ -19,14 +19,11 @@
 package org.cyclonedx.parsers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.ComponentWrapper;
-import org.cyclonedx.util.ComponentWrapperDeserializer;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONObject;
 import java.io.File;
