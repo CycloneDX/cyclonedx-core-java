@@ -43,7 +43,7 @@ public class ExtensionSerializer
     this(null);
   }
 
-  public ExtensionSerializer(final Class t) {
+  public ExtensionSerializer(final Class<Extension> t) {
     super(t);
   }
 

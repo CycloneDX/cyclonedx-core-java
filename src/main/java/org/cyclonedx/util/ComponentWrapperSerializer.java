@@ -36,7 +36,7 @@ public class ComponentWrapperSerializer extends StdSerializer<ComponentWrapper>
     this.mapper = mapper;
   }
 
-  public ComponentWrapperSerializer(final Class t) {
+  public ComponentWrapperSerializer(final Class<ComponentWrapper> t) {
     super(t);
 
     mapper = new ObjectMapper();
