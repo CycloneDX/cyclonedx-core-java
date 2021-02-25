@@ -46,7 +46,7 @@ public class BomGeneratorFactory {
         }
     }
 
-    public static BomJsonGenerator createJson(CycloneDxSchema.Version version, Bom bom) {
+    public static BomJsonGenerator createJson(Bom bom) {
         return new BomJsonGenerator12(bom);
     }
 }
