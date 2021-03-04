@@ -50,7 +50,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
     Document doc;
 
-    protected static final String PROLOG = "<?xml version=\"1.0\"?>";
+    protected static final String PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
     private void setupObjectMapper(final ObjectMapper mapper) {
         mapper.setAnnotationIntrospector(
