@@ -168,7 +168,7 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
         cweList.add(processCwe(c));
       }
     } else {
-      processCwe(cwe);
+      cweList.add(processCwe(cwe));
     }
     return cweList.isEmpty() ? null : cweList;
   }

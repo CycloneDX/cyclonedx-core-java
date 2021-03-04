@@ -1,6 +1,7 @@
 package org.cyclonedx;
 
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.json.BomJsonGenerator12;
 import org.cyclonedx.model.Bom;
@@ -35,7 +36,7 @@ public class BomJsonGeneratorTest {
     @Test
     public void schema12GenerationTest() throws Exception {
         Bom bom =  createCommonBom("/bom-1.2.xml");
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(CycloneDxSchema.Version.VERSION_12, bom);
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_12, bom);
         generator.generate();
         Assert.assertTrue(generator instanceof BomJsonGenerator12);
         Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());

@@ -37,16 +37,20 @@ public class BomGeneratorFactory {
     }
 
     public static BomXmlGenerator createXml(CycloneDxSchema.Version version, Bom bom) {
-        if (CycloneDxSchema.Version.VERSION_10 == version) {
-            return new BomXmlGenerator10(bom);
-        } else if (CycloneDxSchema.Version.VERSION_11 == version) {
-            return new BomXmlGenerator11(bom);
-        } else {
-            return new BomXmlGenerator12(bom);
+        switch (version) {
+            case VERSION_10:
+                return new BomXmlGenerator10(bom);
+            case VERSION_11:
+                return new BomXmlGenerator11(bom);
+            default:
+                return new BomXmlGenerator12(bom);
         }
     }
 
-    public static BomJsonGenerator createJson(CycloneDxSchema.Version version, Bom bom) {
-        return new BomJsonGenerator12(bom);
+    public static BomJsonGenerator createJson(final CycloneDxSchema.Version version,  Bom bom) {
+        switch (version) {
+            default:
+                return new BomJsonGenerator12(bom);
+        }
     }
 }

@@ -148,6 +148,19 @@ public class BomXmlGeneratorTest {
     }
 
     @Test
+    public void schema12GenerationWithPedigreeDataTest() throws Exception {
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_12, createCommonBom("/bom-1.2-pedigree.xml"));
+        Document doc = generator.generate();
+        testDocument(doc);
+
+        Assert.assertTrue(generator instanceof BomXmlGenerator12);
+        Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+    }
+
+    @Test
     public void invalidUrlTest() throws Exception {
         Component c = new Component();
         c.setName("Component-A");

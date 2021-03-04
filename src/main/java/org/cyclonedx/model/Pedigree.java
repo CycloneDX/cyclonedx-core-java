@@ -20,43 +20,46 @@ package org.cyclonedx.model;
 
 import java.util.List;
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.ComponentWrapperDeserializer;
 
 @SuppressWarnings("unused")
-@JsonPropertyOrder({"ancestors", "commits", "notes"})
+@JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "notes"})
 public class Pedigree extends ExtensibleElement {
 
-    private List<Component> ancestors;
-    private List<Component> descendants;
-    private List<Component> variants;
+    @JsonDeserialize(using = ComponentWrapperDeserializer.class)
+    private Ancestors ancestors;
+
+    @JsonDeserialize(using = ComponentWrapperDeserializer.class)
+    private Descendants descendants;
+
+    @JsonDeserialize(using = ComponentWrapperDeserializer.class)
+    private Variants variants;
     private List<Commit> commits;
     private String notes;
 
-    @JacksonXmlElementWrapper(localName = "ancestors")
-    @JacksonXmlProperty(localName = "component")
-    public List<Component> getAncestors() {
+    public Ancestors getAncestors() {
         return ancestors;
     }
-
-    public void setAncestors(List<Component> ancestors) {
+    public void setAncestors(final Ancestors ancestors) {
         this.ancestors = ancestors;
     }
 
-    public List<Component> getDescendants() {
+    public Descendants getDescendants() {
         return descendants;
     }
-
-    public void setDescendants(List<Component> descendants) {
+    public void setDescendants(final Descendants descendants) {
         this.descendants = descendants;
     }
 
-    public List<Component> getVariants() {
+    public Variants getVariants() {
         return variants;
     }
-
-    public void setVariants(List<Component> variants) {
+    public void setVariants(final Variants variants) {
         this.variants = variants;
     }
 
@@ -84,10 +87,10 @@ public class Pedigree extends ExtensibleElement {
         if (!(o instanceof Pedigree)) return false;
         Pedigree pedigree = (Pedigree) o;
         return Objects.equals(ancestors, pedigree.ancestors) &&
-                Objects.equals(descendants, pedigree.descendants) &&
-                Objects.equals(variants, pedigree.variants) &&
-                Objects.equals(commits, pedigree.commits) &&
-                Objects.equals(notes, pedigree.notes);
+            Objects.equals(descendants, pedigree.descendants) &&
+            Objects.equals(variants, pedigree.variants) &&
+            Objects.equals(commits, pedigree.commits) &&
+            Objects.equals(notes, pedigree.notes);
     }
 
     @Override

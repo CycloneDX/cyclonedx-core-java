@@ -20,7 +20,15 @@ package org.cyclonedx.parsers;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.model.*;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.OrganizationalContact;
+import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.Service;
+import org.cyclonedx.model.ServiceData;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.File;
@@ -67,6 +75,23 @@ public class XmlParserTest {
         final XmlParser parser = new XmlParser();
         final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
         Assert.assertTrue(valid);
+    }
+
+    @Test
+    public void testValid12BomWithPedigree() throws Exception {
+        final File file = new File(this.getClass().getResource("/bom-1.2-pedigree.xml").getFile());
+        final XmlParser parser = new XmlParser();
+        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        Assert.assertTrue(valid);
+
+        final Bom bom = parser.parse(file);
+        testPedigree(bom.getComponents().get(0).getPedigree());
+    }
+
+    private void testPedigree(final Pedigree pedigree) {
+        Assert.assertEquals("sample-library-ancestor", pedigree.getAncestors().getComponents().get(0).getName());
+        Assert.assertEquals("sample-library-descendant", pedigree.getDescendants().getComponents().get(0).getName());
+        Assert.assertEquals("sample-library-variant", pedigree.getVariants().getComponents().get(0).getName());
     }
 
     @Test
@@ -124,7 +149,8 @@ public class XmlParserTest {
         Assert.assertEquals("text/plain", c1.getLicenseChoice().getLicenses().get(0).getAttachmentText().getContentType());
         Assert.assertEquals("base64", c1.getLicenseChoice().getLicenses().get(0).getAttachmentText().getEncoding());
         Assert.assertNotNull(c1.getPedigree());
-        Assert.assertEquals(1, c1.getPedigree().getAncestors().size());
+
+        Assert.assertEquals(1, c1.getPedigree().getAncestors().getComponents().size());
         Assert.assertNull(c1.getPedigree().getDescendants());
         Assert.assertNull(c1.getPedigree().getVariants());
         Assert.assertEquals(1, c1.getPedigree().getCommits().size());
