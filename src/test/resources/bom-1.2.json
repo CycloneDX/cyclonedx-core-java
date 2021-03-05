@@ -196,6 +196,15 @@
       "group": "org.example",
       "name": "mylibrary",
       "version": "1.0.0"
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:maven/org.glassfish.hk2/osgi-resource-locator@1.0.1?type=jar",
+      "publisher": "GlassFish Community",
+      "group": "org.glassfish.hk2",
+      "name": "osgi-resource-locator",
+      "version": "1.0.1",
+      "licenses": [{"expression": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)"}]
     }
   ],
   "services": [

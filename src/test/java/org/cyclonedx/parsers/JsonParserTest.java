@@ -43,7 +43,7 @@ public class JsonParserTest {
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
         Assert.assertEquals("1.2", bom.getSpecVersion());
-        Assert.assertEquals(2, bom.getComponents().size());
+        Assert.assertEquals(3, bom.getComponents().size());
         Assert.assertEquals(1, bom.getVersion());
         Assert.assertNotNull(bom.getMetadata());
         Assert.assertNotNull(bom.getMetadata().getTimestamp());
@@ -77,14 +77,24 @@ public class JsonParserTest {
         Assert.assertEquals(1, bom.getMetadata().getSupplier().getContacts().size());
         Assert.assertEquals("Acme Distribution", bom.getMetadata().getSupplier().getContacts().get(0).getName());
         Assert.assertEquals("distribution@example.com", bom.getMetadata().getSupplier().getContacts().get(0).getEmail());
+
         final List<Component> components = bom.getComponents();
-        Assert.assertEquals(2, components.size());
+        Assert.assertEquals(3, components.size());
         Component c1 = components.get(0);
         Assert.assertEquals("com.acme", c1.getGroup());
         Assert.assertEquals("tomcat-catalina", c1.getName());
         Assert.assertEquals("9.0.14", c1.getVersion());
         Assert.assertEquals(Component.Type.LIBRARY, c1.getType());
         Assert.assertEquals("pkg:npm/acme/component@1.0.0", c1.getPurl());
+
+        Component c3 = components.get(2);
+        Assert.assertEquals(Component.Type.LIBRARY, c3.getType());
+        Assert.assertEquals("pkg:maven/org.glassfish.hk2/osgi-resource-locator@1.0.1?type=jar", c3.getBomRef());
+        Assert.assertEquals("GlassFish Community", c3.getPublisher());
+        Assert.assertEquals("org.glassfish.hk2", c3.getGroup());
+        Assert.assertEquals("osgi-resource-locator", c3.getName());
+        Assert.assertEquals("1.0.1", c3.getVersion());
+        Assert.assertEquals( "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)", c3.getLicenseChoice().getExpression());
 
         testPedigree(c1);
 
