@@ -18,11 +18,13 @@
  */
 package org.cyclonedx;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersionDetector;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
-import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -31,8 +33,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * CycloneDxSchema is a base class that provides schema information to
@@ -73,16 +73,30 @@ public abstract class CycloneDxSchema {
     }
 
     /**
-     * Returns the CycloneDX JSON Schema for the specified schema version.
+     * Returns the CycloneDX JsonSchema for the specified schema version.
      * @param schemaVersion The version to return the schema for
      * @param strict if true, the strict schema will be used which prohibits non-defined properties from being present in the BOM
      * @return a Schema
      * @throws IOException when errors are encountered
-     * @throws URISyntaxException when errors are encountered
-     * @since 3.0.0
+     * @since 5.0.0
      */
-    public org.everit.json.schema.Schema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException, URISyntaxException {
-        return getJsonSchema12(strict);
+    public JsonSchema getJsonSchema(CycloneDxSchema.Version schemaVersion, boolean strict, final ObjectMapper mapper)
+        throws IOException
+    {
+        final InputStream spdxInstream = getJsonSchemaAsStream(schemaVersion, strict);
+
+        JsonNode schemaNode = mapper.readTree(spdxInstream);
+
+        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersionDetector.detect(schemaNode));
+
+        return factory.getSchema(schemaNode);
+    }
+
+    private InputStream getJsonSchemaAsStream(final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+        if (strict) {
+            return this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json");
+        }
+        return this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json");
     }
 
     /**
@@ -151,24 +165,5 @@ public abstract class CycloneDxSchema {
             schemaFiles[i] = new StreamSource(inputStreams[i]);
         }
         return schemaFactory.newSchema(schemaFiles);
-    }
-
-    private org.everit.json.schema.Schema getJsonSchema12(boolean strict) throws IOException, URISyntaxException {
-        if (strict) {
-            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json"));
-        } else {
-            return getJsonSchema(this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json"));
-        }
-    }
-
-    private org.everit.json.schema.Schema getJsonSchema(InputStream inputStream) throws IOException, URISyntaxException {
-        final JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
-        final InputStream spdxInstream = this.getClass().getClassLoader().getResourceAsStream("spdx.schema.json");
-        final JSONObject spdxSchema = new JSONObject(new JSONTokener(spdxInstream));
-        final SchemaLoader schemaLoader = SchemaLoader.builder()
-                .registerSchemaByURI(new URI("http://cyclonedx.org/schema/spdx.schema.json"), spdxSchema)
-                .schemaJson(rawSchema)
-                .build();
-        return schemaLoader.load().build();
     }
 }

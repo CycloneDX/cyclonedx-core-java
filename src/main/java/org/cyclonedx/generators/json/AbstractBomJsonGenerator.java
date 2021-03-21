@@ -28,7 +28,6 @@ import org.cyclonedx.util.CollectionTypeSerializer;
 import org.cyclonedx.util.ComponentWrapperSerializer;
 import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.cyclonedx.util.TrimStringSerializer;
-import org.json.JSONObject;
 
 abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
@@ -60,8 +59,6 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
         mapper.registerModule(componentWrapperModule);
     }
-
-    JSONObject doc = OrderedJSONObjectFactory.create();
 
     String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
         try {

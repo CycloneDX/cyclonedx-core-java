@@ -18,14 +18,15 @@
  */
 package org.cyclonedx.generators.json;
 
+import javax.json.JsonObject;
+
 import org.cyclonedx.CycloneDxSchema;
-import org.json.JSONObject;
 
 public interface BomJsonGenerator {
 
     CycloneDxSchema.Version getSchemaVersion();
 
-    JSONObject generate();
+    JsonObject toJsonObject();
 
     String toJsonString();
 

@@ -19,21 +19,25 @@
 package org.cyclonedx.parsers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.ValidationMessage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
-import org.everit.json.schema.ValidationException;
-import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.net.URISyntaxException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 /**
  * JsonParser is responsible for validating and parsing CycloneDX bill-of-material
@@ -210,8 +214,9 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    public List<ParseException> validate (final String bomString, final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
-        return validate(new JSONObject(bomString), schemaVersion, strict);
+    public List<ParseException> validate(final String bomString, final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+        JsonReader reader = Json.createReader(new StringReader(bomString));
+        return validate(reader.readObject(), schemaVersion, strict);
     }
 
     /**
@@ -223,13 +228,15 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    public List<ParseException> validate (final JSONObject bomJson, final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+    public List<ParseException> validate(final JsonObject bomJson, final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
         final List<ParseException> exceptions = new ArrayList<>();
-        try {
-            getJsonSchema(schemaVersion, strict).validate(bomJson);
-        } catch (ValidationException | URISyntaxException e) {
-            exceptions.add(new ParseException(e.getMessage(), e));
+
+        Set<ValidationMessage> errors = getJsonSchema(schemaVersion, strict, mapper).validate(mapper.readTree(bomJson.toString()));
+
+        for (ValidationMessage message: errors) {
+            exceptions.add(new ParseException(message.getMessage()));
         }
+
         return exceptions;
     }
 
