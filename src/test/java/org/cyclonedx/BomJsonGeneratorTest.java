@@ -52,6 +52,12 @@ public class BomJsonGeneratorTest {
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_12, bom);
         JsonObject obj = generator.toJsonObject();
         Assert.assertNotNull(obj);
+        Assert.assertEquals("CycloneDX", obj.getString("bomFormat"));
+        Assert.assertEquals("1.2", obj.getString("specVersion"));
+        Assert.assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79", obj.getString("serialNumber"));
+        Assert.assertEquals(1, obj.getInt("version"));
+        Assert.assertEquals(6, obj.getJsonObject("metadata").size());
+        Assert.assertEquals(3, obj.getJsonArray("components").size());
     }
 
     private File writeToFile(String jsonString) throws Exception {
