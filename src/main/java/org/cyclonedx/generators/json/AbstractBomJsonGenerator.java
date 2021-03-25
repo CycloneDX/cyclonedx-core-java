@@ -19,6 +19,9 @@
 package org.cyclonedx.generators.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
@@ -34,10 +37,19 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
     private final ObjectMapper mapper;
 
+    private final DefaultPrettyPrinter prettyPrinter;
+
     AbstractBomJsonGenerator() {
         this.mapper = new ObjectMapper();
+        this.prettyPrinter = new DefaultPrettyPrinter();
 
         setupObjectMapper(this.mapper);
+        setupPrettyPrinter(this.prettyPrinter);
+
+    }
+
+    private void setupPrettyPrinter(final DefaultPrettyPrinter prettyPrinter) {
+        prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
     }
 
     private void setupObjectMapper(final ObjectMapper mapper) {
@@ -66,7 +78,7 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
         try {
             if (prettyPrint) {
-                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bom);
+                return mapper.writer(prettyPrinter).writeValueAsString(bom);
             }
             return mapper.writeValueAsString(bom);
         }
