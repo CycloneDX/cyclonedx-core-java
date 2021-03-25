@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -43,9 +45,17 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
     private final ObjectMapper mapper;
 
+    private final DefaultPrettyPrinter prettyPrinter;
+
     AbstractBomXmlGenerator() {
         mapper = new XmlMapper();
+        prettyPrinter = new DefaultPrettyPrinter();
         setupObjectMapper(mapper);
+        setupPrettyPrinter(prettyPrinter);
+    }
+
+    private void setupPrettyPrinter(final DefaultPrettyPrinter prettyPrinter) {
+        prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
     }
 
     Document doc;
@@ -108,7 +118,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
     String toXML(final Bom bom, final boolean prettyPrint) throws GeneratorException {
         try {
             if (prettyPrint) {
-                return PROLOG + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bom);
+                return PROLOG + mapper.writer(prettyPrinter).writeValueAsString(bom);
             }
             return PROLOG + mapper.writeValueAsString(bom);
         } catch (JsonProcessingException ex) {
