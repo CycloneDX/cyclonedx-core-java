@@ -45,7 +45,6 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
 
         setupObjectMapper(this.mapper);
         setupPrettyPrinter(this.prettyPrinter);
-
     }
 
     private void setupPrettyPrinter(final DefaultPrettyPrinter prettyPrinter) {
