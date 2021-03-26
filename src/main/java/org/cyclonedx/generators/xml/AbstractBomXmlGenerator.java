@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.util.DefaultXmlPrettyPrinter;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
@@ -45,17 +46,12 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
     private final ObjectMapper mapper;
 
-    private final DefaultPrettyPrinter prettyPrinter;
+    private final DefaultXmlPrettyPrinter prettyPrinter;
 
     AbstractBomXmlGenerator() {
         mapper = new XmlMapper();
-        prettyPrinter = new DefaultPrettyPrinter();
+        prettyPrinter = new DefaultXmlPrettyPrinter();
         setupObjectMapper(mapper);
-        setupPrettyPrinter(prettyPrinter);
-    }
-
-    private void setupPrettyPrinter(final DefaultPrettyPrinter prettyPrinter) {
-        prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
     }
 
     Document doc;

@@ -63,6 +63,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
           for (Dependency dependency : dependencies) {
             writeDependency(dependency, staxWriter);
           }
+          staxWriter.writeEndElement();
         }
       }
       catch (XMLStreamException ex) {
