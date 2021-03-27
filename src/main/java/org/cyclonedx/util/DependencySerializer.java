@@ -35,6 +35,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
   private final String NAMESPACE_PREFIX = "dg";
   private final String DEPENDENCY = "dependency";
   private final String DEPENDENCIES = "dependencies";
+  private final String REF = "ref";
   private final String NAMESPACE_URI = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
   private boolean useNamespace = false;
 
@@ -52,42 +53,36 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
       final List<Dependency> dependencies, final JsonGenerator generator, final SerializerProvider provider)
       throws IOException
   {
-    if (generator instanceof ToXmlGenerator) {
-      try {
-        writeXMLDependencies((ToXmlGenerator) generator, dependencies);
+    try {
+      if ((generator instanceof ToXmlGenerator)) {
+        writeXMLDependenciesWithGenerator((ToXmlGenerator) generator,
+            dependencies);
       }
-      catch (XMLStreamException e) {
-        e.printStackTrace();
+      else {
+        writeJSONDependenciesWithGenerator(generator, dependencies);
       }
-    } else {
-      if (dependencies != null && !dependencies.isEmpty()) {
-        try {
-          generator.writeStartArray();
-          for (Dependency dependency : dependencies) {
-            generator.writeStartObject();
-            generator.writeStringField("ref", dependency.getRef());
-            generator.writeArrayFieldStart("dependsOn");
-            if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
-              for (Dependency subDependency : dependency.getDependencies()) {
-                generator.writeString(subDependency.getRef());
-              }
-            }
-            generator.writeEndArray();
-            generator.writeEndObject();
-          }
-          generator.writeEndArray();
-        }
-        catch (IOException ex) {
-          throw new IOException(ex);
-        }
-      }
+    } catch (XMLStreamException | IOException ex) {
+      throw new IOException(ex);
     }
   }
 
-  private void writeXMLDependencies(final ToXmlGenerator toXmlGenerator, final List<Dependency> dependencies)
-      throws IOException, XMLStreamException
-  {
-    writeXMLDependenciesWithGenerator(toXmlGenerator, dependencies);
+  private void writeJSONDependenciesWithGenerator(final JsonGenerator generator, final List<Dependency> dependencies) throws IOException {
+    if (dependencies != null && !dependencies.isEmpty()) {
+      generator.writeStartArray();
+      for (Dependency dependency : dependencies) {
+        generator.writeStartObject();
+        generator.writeStringField(REF, dependency.getRef());
+        generator.writeArrayFieldStart("dependsOn");
+        if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+          for (Dependency subDependency : dependency.getDependencies()) {
+            generator.writeString(subDependency.getRef());
+          }
+        }
+        generator.writeEndArray();
+        generator.writeEndObject();
+      }
+      generator.writeEndArray();
+    }
   }
 
   private void writeXMLDependenciesWithGenerator(final ToXmlGenerator toXmlGenerator, final List<Dependency> dependencies)
@@ -138,7 +133,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
     }
 
     generator.setNextIsAttribute(true);
-    generator.setNextName(new QName("ref"));
+    generator.setNextName(new QName(REF));
     generator.writeString(dependency.getRef());
     generator.setNextIsAttribute(false);
 
