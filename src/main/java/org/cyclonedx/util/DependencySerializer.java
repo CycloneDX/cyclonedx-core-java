@@ -21,8 +21,8 @@ package org.cyclonedx.util;
 import java.io.IOException;
 import java.util.List;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -33,6 +33,9 @@ import org.cyclonedx.model.Dependency;
 public class DependencySerializer extends StdSerializer<List<Dependency>>
 {
   private final String NAMESPACE_PREFIX = "dg";
+  private final String DEPENDENCY = "dependency";
+  private final String DEPENDENCIES = "dependencies";
+  private final String REF = "ref";
   private final String NAMESPACE_URI = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
   private boolean useNamespace = false;
 
@@ -50,61 +53,101 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
       final List<Dependency> dependencies, final JsonGenerator generator, final SerializerProvider provider)
       throws IOException
   {
-    if (generator instanceof ToXmlGenerator) {
-      final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
-      final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
-      try {
-        if (dependencies != null && !dependencies.isEmpty()) {
-          if (useNamespace) {
-            staxWriter.writeStartElement(NAMESPACE_PREFIX, "dependencies", NAMESPACE_URI);
-          } else {
-            staxWriter.writeStartElement("dependencies");
-          }
-          for (Dependency dependency : dependencies) {
-            writeDependency(dependency, staxWriter);
-          }
-        }
+    try {
+      if ((generator instanceof ToXmlGenerator)) {
+        writeXMLDependenciesWithGenerator((ToXmlGenerator) generator,
+            dependencies);
       }
-      catch (XMLStreamException ex) {
-       throw new IOException(ex);
+      else {
+        writeJSONDependenciesWithGenerator(generator, dependencies);
       }
-    } else {
-      if (dependencies != null && !dependencies.isEmpty()) {
-        try {
-          generator.writeStartArray();
-          for (Dependency dependency : dependencies) {
-            generator.writeStartObject();
-            generator.writeStringField("ref", dependency.getRef());
-            generator.writeArrayFieldStart("dependsOn");
-            if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
-              for (Dependency subDependency : dependency.getDependencies()) {
-                generator.writeString(subDependency.getRef());
-              }
-            }
-            generator.writeEndArray();
-            generator.writeEndObject();
-          }
-          generator.writeEndArray();
-        }
-        catch (IOException ex) {
-          throw new IOException(ex);
-        }
-      }
+    } catch (XMLStreamException | IOException ex) {
+      throw new IOException(ex);
     }
   }
 
-  private void writeDependency(final Dependency dependency, final XMLStreamWriter writer) throws XMLStreamException {
-    if (useNamespace) {
-      writer.writeStartElement(NAMESPACE_PREFIX, "dependency", NAMESPACE_URI);
-    } else {
-      writer.writeStartElement( "dependency");
+  private void writeJSONDependenciesWithGenerator(final JsonGenerator generator, final List<Dependency> dependencies) throws IOException {
+    if (dependencies != null && !dependencies.isEmpty()) {
+      generator.writeStartArray();
+      for (Dependency dependency : dependencies) {
+        generator.writeStartObject();
+        generator.writeStringField(REF, dependency.getRef());
+        generator.writeArrayFieldStart("dependsOn");
+        if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+          for (Dependency subDependency : dependency.getDependencies()) {
+            generator.writeString(subDependency.getRef());
+          }
+        }
+        generator.writeEndArray();
+        generator.writeEndObject();
+      }
+      generator.writeEndArray();
     }
-    writer.writeAttribute("ref", dependency.getRef());
+  }
+
+  private void writeXMLDependenciesWithGenerator(final ToXmlGenerator toXmlGenerator, final List<Dependency> dependencies)
+      throws IOException, XMLStreamException
+  {
+    if (dependencies != null && !dependencies.isEmpty()) {
+      QName qName;
+
+      if (useNamespace) {
+        qName = new QName(NAMESPACE_URI, DEPENDENCIES, NAMESPACE_PREFIX);
+        toXmlGenerator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
+      } else {
+        qName = new QName(DEPENDENCIES);
+      }
+
+      toXmlGenerator.setNextName(qName);
+      toXmlGenerator.writeStartObject();
+      toXmlGenerator.writeFieldName(qName.getLocalPart());
+      toXmlGenerator.writeStartArray();
+
+      for (Dependency dependency : dependencies) {
+        writeXMLDependency(dependency, toXmlGenerator);
+      }
+
+      toXmlGenerator.writeEndArray();
+      toXmlGenerator.writeEndObject();
+    }
+  }
+
+  private void writeXMLDependency(final Dependency dependency, final ToXmlGenerator generator)
+      throws IOException, XMLStreamException
+  {
+    QName qName;
+    if (useNamespace) {
+      qName = new QName(NAMESPACE_URI, DEPENDENCY, NAMESPACE_PREFIX);
+      generator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
+    } else {
+      qName = new QName(DEPENDENCY);
+    }
+
+    generator.setNextName(qName);
+
+    generator.writeStartObject();
+    generator.writeFieldName(qName.getLocalPart());
+
+    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+      generator.writeStartArray();
+    }
+
+    generator.setNextIsAttribute(true);
+    generator.setNextName(new QName(REF));
+    generator.writeString(dependency.getRef());
+    generator.setNextIsAttribute(false);
+
     if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
       for (Dependency subDependency : dependency.getDependencies()) {
-        writeDependency(subDependency, writer);
+        // You got Shay'd
+        writeXMLDependency(subDependency, generator);
       }
     }
-    writer.writeEndElement();
+
+    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+      generator.writeEndArray();
+    }
+
+    generator.writeEndObject();
   }
 }
