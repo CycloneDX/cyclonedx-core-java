@@ -140,12 +140,15 @@
             <version>2.8.0</version>
         </dependency>
         <!-- Package URL -->
+
         <dependency>
             <groupId>com.github.package-url</groupId>
             <artifactId>packageurl-java</artifactId>
             <version>1.2.0</version>
         </dependency>
+
         <!-- XML Parser, Generator, JSON Parser -->
+
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
@@ -157,26 +160,38 @@
             <artifactId>xercesImpl</artifactId>
             <version>2.12.1</version>
         </dependency>
-        <!-- JSON Generator library -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20210307</version>
-        </dependency>
+
         <!-- JSON Schema library -->
+
         <dependency>
-            <groupId>com.github.erosb</groupId>
-            <artifactId>everit-json-schema</artifactId>
-            <version>1.12.2</version>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>1.0.50</version>
+        </dependency>
+
+        <!-- JsonObject supporting libraries -->
+
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+            <version>1.1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1.4</version>
         </dependency>
 
         <!-- Unit Test -->
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>

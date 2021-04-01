@@ -18,43 +18,17 @@
  */
 package org.cyclonedx.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.AttachmentText;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public final class LicenseResolver {
-
-    private static Map<String, List<String>> mappings = new HashMap<>();
-    static {
-        final InputStream is = LicenseResolver.class.getResourceAsStream("/license-mapping.json");
-        try {
-            final String jsonTxt = IOUtils.toString(is, "UTF-8");
-            final JSONArray json = new JSONArray(jsonTxt);
-            for (int i = 0; i < json.length(); i++) {
-                final JSONObject mapping = json.getJSONObject(i);
-                if (!mappings.containsKey(mapping.getString("exp"))) {
-                    mappings.put(mapping.getString("exp"), new ArrayList<>());
-                }
-                final List<String> names = mappings.get(mapping.getString("exp"));
-                for (int n = 0; n < mapping.getJSONArray("names").length(); n++) {
-                    names.add(mapping.getJSONArray("names").getString(n));
-                }
-                mappings.replace(mapping.getString("exp"), names);
-            }
-        } catch (IOException e) {
-            // This should be logged
-        }
-    }
 
     /**
      * Private constructor.
@@ -66,29 +40,36 @@ public final class LicenseResolver {
      * Attempts to resolve the specified license string via SPDX license identifier and expression
      * parsing first. If SPDX resolution is not successful, the method will attempt fuzzy matching.
      * @param licenseString the license string to resolve
-     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a LicenseChoice object if resolution was successful, or null if unresolved
      */
-    public static LicenseChoice resolve(String licenseString, boolean includeLicenseText) {
-        try {
-            LicenseChoice licenseChoice = resolveSpdxLicenseString(licenseString, includeLicenseText);
-            if (licenseChoice == null) {
-                licenseChoice = resolveViaAlternativeMapping(licenseString, includeLicenseText);
-            }
-            return licenseChoice;
-        } catch (IOException e) {
-            return null;
-        }
+    public static LicenseChoice resolve(final String licenseString) {
+        return resolve(licenseString, true);
     }
 
     /**
      * Attempts to resolve the specified license string via SPDX license identifier and expression
      * parsing first. If SPDX resolution is not successful, the method will attempt fuzzy matching.
      * @param licenseString the license string to resolve
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
      * @return a LicenseChoice object if resolution was successful, or null if unresolved
      */
-    public static LicenseChoice resolve(String licenseString) {
-        return resolve(licenseString, true);
+    public static LicenseChoice resolve(final String licenseString, final boolean includeLicenseText) {
+        final ObjectMapper mapper = new ObjectMapper();
+
+        return resolve(licenseString, includeLicenseText, mapper);
+    }
+
+    static LicenseChoice resolve(final String licenseString, final boolean includeLicenseText, final ObjectMapper mapper) {
+        try {
+            LicenseChoice licenseChoice = resolveLicenseString(licenseString, includeLicenseText, mapper);
+
+            if (licenseChoice == null) {
+                licenseChoice = resolveFuzzyMatching(licenseString, includeLicenseText, mapper);
+            }
+            return licenseChoice;
+        } catch (IOException ex) {
+            return null;
+        }
     }
 
     /**
@@ -96,40 +77,84 @@ public final class LicenseResolver {
      * return a LicenseChoice object.
      * @param licenseString the license string to resolve
      * @param includeLicenseText specifies is the resolved license will include the entire text of the license
+     * @param mapper is to provide a Jackson ObjectMapper
      * @return a LicenseChoice object if resolved, or null
      * @throws IOException an exception while parsing the license string
      */
-    private static LicenseChoice resolveSpdxLicenseString(String licenseString, boolean includeLicenseText) throws IOException {
+    private static LicenseChoice resolveLicenseString(String licenseString, boolean includeLicenseText, final ObjectMapper mapper)
+        throws IOException
+    {
         final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/licenses.json");
-        final String licenseStringModified = urlNormalize(licenseString);
-        final String jsonTxt = IOUtils.toString(is, "UTF-8");
-        final JSONObject json = new JSONObject(jsonTxt);
-        final JSONArray licenses = json.getJSONArray("licenses");
-        for (int i = 0; i < licenses.length(); i++) {
-            final JSONObject license = licenses.getJSONObject(i);
-            final boolean isDeprecatedLicenseId = license.getBoolean("isDeprecatedLicenseId");
-            final String licenseId = license.getString("licenseId");
-            final String name = license.getString("name");
-            final JSONArray seeAlso = license.optJSONArray("seeAlso");
-            final String primaryLicenseUrl = (seeAlso != null && seeAlso.length() > 0) ? seeAlso.getString(0) : null;
-            if (licenseString.trim().equalsIgnoreCase(licenseId)) {
-                return createLicenseChoice(licenseId, primaryLicenseUrl, isDeprecatedLicenseId, includeLicenseText);
-            } else if (licenseString.trim().equalsIgnoreCase(name)) {
-                return createLicenseChoice(licenseId, primaryLicenseUrl, isDeprecatedLicenseId, includeLicenseText);
-            } else {
-                if (isDeprecatedLicenseId) {
-                    continue;
-                }
-                for (int s = 0; s < seeAlso.length(); s++) {
-                    final String url = seeAlso.getString(s);
-                    if (url != null) {
-                        if (licenseStringModified.equalsIgnoreCase(urlNormalize(url))) {
-                            return createLicenseChoice(licenseId, url, isDeprecatedLicenseId, includeLicenseText);
+
+        final LicenseList licenses = mapper.readValue(is, LicenseList.class);
+
+        if (licenses != null && licenses.licenses != null && !licenses.licenses.isEmpty()) {
+            for (LicenseDetail licenseDetail : licenses.licenses) {
+
+                final String primaryLicenseUrl = (licenseDetail.seeAlso != null && !licenseDetail.seeAlso.isEmpty()) ? licenseDetail.seeAlso.get(0) : null;
+
+                if (licenseString.trim().equalsIgnoreCase(licenseDetail.licenseId)) {
+                    return createLicenseChoice(licenseDetail.licenseId, primaryLicenseUrl, licenseDetail.isDeprecatedLicenseId, includeLicenseText);
+                } else if (licenseString.trim().equalsIgnoreCase(licenseDetail.name)) {
+                    return createLicenseChoice(licenseDetail.licenseId, primaryLicenseUrl, licenseDetail.isDeprecatedLicenseId, includeLicenseText);
+                } else {
+
+                    if (licenseDetail.isDeprecatedLicenseId) {
+                        continue;
+                    }
+
+                    if (licenseDetail.seeAlso != null) {
+                        for (String url : licenseDetail.seeAlso) {
+                            if (url != null) {
+                                final String licenseStringModified = urlNormalize(licenseString);
+
+                                if (licenseStringModified.equalsIgnoreCase(urlNormalize(url))) {
+                                    return createLicenseChoice(licenseDetail.licenseId, url, licenseDetail.isDeprecatedLicenseId, includeLicenseText);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
+        return null;
+    }
+
+    /**
+     * Attempts to perform high-confidence license resolution with unstructured text as input.
+     * @param licenseString the license string (not the actual license text)
+     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
+     * @param mapper is to provide a Jackson ObjectMapper
+     * @return a LicenseChoice object if resolved, otherwise null
+     */
+    private static LicenseChoice resolveFuzzyMatching(final String licenseString, final boolean includeLicenseText, final ObjectMapper mapper) throws IOException {
+        if (licenseString == null) {
+            return null;
+        }
+
+        final InputStream is = LicenseResolver.class.getResourceAsStream("/license-mapping.json");
+
+        final SpdxLicenseMapping[] mappings = mapper.readValue(is, SpdxLicenseMapping[].class);
+
+        if (mappings != null) {
+            for(final SpdxLicenseMapping licenseMapping : mappings) {
+                if (licenseMapping.names != null && !licenseMapping.names.isEmpty()) {
+                    for (final String name : licenseMapping.names) {
+                        if (licenseString.equalsIgnoreCase(name)) {
+                            if (licenseMapping.exp.startsWith("(") && licenseMapping.exp.endsWith(")")) {
+                                final LicenseChoice lc = new LicenseChoice();
+                                lc.setExpression(licenseMapping.exp);
+                                return lc;
+                            } else {
+                                return createLicenseChoice(licenseMapping.exp, null, false, includeLicenseText);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return null;
     }
 
@@ -161,32 +186,26 @@ public final class LicenseResolver {
         return choice;
     }
 
-    /**
-     * Attempts to perform high-confidence license resolution with unstructured text as input.
-     * @param licenseString the license string (not the actual license text)
-     * @param includeLicenseText specifies is the resolved license will include the entire text of the license
-     * @return a LicenseChoice object if resolved, otherwise null
-     */
-    private static LicenseChoice resolveViaAlternativeMapping(String licenseString, boolean includeLicenseText) throws IOException {
-        if (licenseString == null) {
-            return null;
-        }
-        for (final Map.Entry<String, List<String>> mapping : mappings.entrySet()) {
-            final List<String> names = mapping.getValue();
-            if (names != null) {
-                for (final String name: names) {
-                    if (licenseString.equalsIgnoreCase(name)) {
-                        if (mapping.getKey().startsWith("(") && mapping.getKey().endsWith(")")) {
-                            final LicenseChoice lc = new LicenseChoice();
-                            lc.setExpression(mapping.getKey());
-                            return lc;
-                        } else {
-                            return createLicenseChoice(mapping.getKey(), null, false, includeLicenseText);
-                        }
-                    }
-                }
-            }
-        }
-        return null;
+    private static class LicenseDetail {
+        public String reference;
+        public boolean isDeprecatedLicenseId;
+        public String detailsUrl;
+        public String referenceNumber;
+        public String name;
+        public String licenseId;
+        public List<String> seeAlso;
+        public boolean isOsiApproved;
+        public boolean isFsfLibre;
+    }
+
+    private static class LicenseList {
+        public String licenseListVersion;
+        public List<LicenseDetail> licenses;
+        public String releaseDate;
+    }
+
+    private static class SpdxLicenseMapping{
+        public String exp;
+        public List<String> names;
     }
 }

@@ -18,18 +18,21 @@
  */
 package org.cyclonedx.generators.json;
 
+import java.io.StringReader;
 import java.lang.reflect.Field;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
-import org.json.JSONObject;
 
 /**
  * BomGenerator creates a CycloneDX bill-of-material document from a set of
- * {@link Component}s. Proper usage assumes {@link #generate()} is called after
- * construction and optionally followed by {@link #toJsonString()}.
+ * {@link Component}s.
  * @since 3.0.0
  */
 public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJsonGenerator {
@@ -61,15 +64,14 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
     /**
      * Creates a CycloneDX BOM from a set of Components.
      * @return an XML Document representing a CycloneDX BoM
-     * @since 3.0.0
+     * @since 5.0.0
      */
-    public JSONObject generate() {
+    public JsonObject toJsonObject() {
         try {
-            doc = new JSONObject(toJson(this.bom, false));
+            JsonReader reader = Json.createReader(new StringReader(toJson(this.bom, false)));
 
-            return doc;
-        }
-        catch (GeneratorException e) {
+            return reader.readObject();
+        } catch (GeneratorException e) {
             return null;
         }
     }
