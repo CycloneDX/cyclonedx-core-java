@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SchemaValidatorsConfig;
 import com.networknt.schema.SpecVersionDetector;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
@@ -33,6 +34,10 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * CycloneDxSchema is a base class that provides schema information to
@@ -85,11 +90,19 @@ public abstract class CycloneDxSchema {
     {
         final InputStream spdxInstream = getJsonSchemaAsStream(schemaVersion, strict);
 
+        final SchemaValidatorsConfig config = new SchemaValidatorsConfig();
+
+        final Map<String, String> offlineMappings = new HashMap<>();
+
+        offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", getClass().getClassLoader().getResource("spdx.schema.json").toExternalForm());
+
+        config.setUriMappings(offlineMappings);
+
         JsonNode schemaNode = mapper.readTree(spdxInstream);
 
         JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersionDetector.detect(schemaNode));
 
-        return factory.getSchema(schemaNode);
+        return factory.getSchema(schemaNode, config);
     }
 
     private InputStream getJsonSchemaAsStream(final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
