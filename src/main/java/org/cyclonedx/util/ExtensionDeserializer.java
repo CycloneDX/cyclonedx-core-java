@@ -70,14 +70,16 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     TreeNode treeNode =  parser.readValueAsTree();
     JsonNode vulnerabilityNode = (JsonNode) treeNode.get(Vulnerability10.NAME);
     List<ExtensibleType> extensibleTypes = new ArrayList<>();
-    if (vulnerabilityNode.isArray() && !vulnerabilityNode.isEmpty()) {
-      for (JsonNode jn : vulnerabilityNode) {
-        Vulnerability10 vulnerability = processVulnerability(jn);
-        extensibleTypes.add(vulnerability);
+    if (vulnerabilityNode != null) {
+      if (vulnerabilityNode.isArray() && !vulnerabilityNode.isEmpty()) {
+        for (JsonNode jn : vulnerabilityNode) {
+          Vulnerability10 vulnerability = processVulnerability(jn);
+          extensibleTypes.add(vulnerability);
+        }
+      } else {
+        Vulnerability10 vuln = processVulnerability(vulnerabilityNode);
+        extensibleTypes.add(vuln);
       }
-    } else {
-      Vulnerability10 vuln = processVulnerability(vulnerabilityNode);
-      extensibleTypes.add(vuln);
     }
     if (!extensibleTypes.isEmpty()) {
       return createAndReturnExtension(ExtensionType.VULNERABILITIES, extensibleTypes);
@@ -125,12 +127,14 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   private List<Advisory> processAdvisories(final JsonNode advisories) {
     List<Advisory> advisoryList = new ArrayList<>();
     JsonNode adv = advisories.get(Vulnerability10.ADVISORY);
-    if (adv.isArray() && !adv.isEmpty()) {
-      for (JsonNode a : adv) {
-        advisoryList.add(processAdvisory(a));
+    if (adv != null) {
+      if (adv.isArray() && !adv.isEmpty()) {
+        for (JsonNode a : adv) {
+          advisoryList.add(processAdvisory(a));
+        }
+      } else {
+        advisoryList.add(processAdvisory(adv));
       }
-    } else {
-      advisoryList.add(processAdvisory(adv));
     }
     return advisoryList.isEmpty() ? null : advisoryList;
   }
@@ -144,12 +148,14 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   private List<Recommendation> processRecommendations(final JsonNode recommendations) {
     List<Recommendation> recommendationsList = new ArrayList<>();
     JsonNode rec = recommendations.get(Vulnerability10.RECOMMENDATION);
-    if (rec.isArray() && !rec.isEmpty()) {
-      for (JsonNode r : rec) {
-        recommendationsList.add(processRecommendation(r));
+    if (rec != null) {
+      if (rec.isArray() && !rec.isEmpty()) {
+        for (JsonNode r : rec) {
+          recommendationsList.add(processRecommendation(r));
+        }
+      } else {
+        recommendationsList.add(processRecommendation(rec));
       }
-    } else {
-      recommendationsList.add(processRecommendation(rec));
     }
     return recommendationsList.isEmpty() ? null : recommendationsList;
   }
@@ -163,12 +169,14 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   private List<Cwe> processCwes(final JsonNode cwes) {
     List<Cwe> cweList = new ArrayList<>();
     JsonNode cwe = cwes.get(Vulnerability10.CWE);
-    if (cwe.isArray() && !cwe.isEmpty()) {
-      for (JsonNode c : cwe) {
-        cweList.add(processCwe(c));
+    if (cwe != null) {
+      if (cwe.isArray() && !cwe.isEmpty()) {
+        for (JsonNode c : cwe) {
+          cweList.add(processCwe(c));
+        }
+      } else {
+        cweList.add(processCwe(cwe));
       }
-    } else {
-      cweList.add(processCwe(cwe));
     }
     return cweList.isEmpty() ? null : cweList;
   }
@@ -191,17 +199,20 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
         e.printStackTrace();
       }
     }
+
     return source;
   }
 
   private List<Rating> processRatings(final JsonNode ratings) {
     List<Rating> ratingsList = new ArrayList<>();
-    if (ratings.isArray() && !ratings.isEmpty()) {
-      for (JsonNode rating : ratings) {
-        ratingsList.add(processRating(rating));
+    if (ratings != null) {
+      if (ratings.isArray() && !ratings.isEmpty()) {
+        for (JsonNode rating : ratings) {
+          ratingsList.add(processRating(rating));
+        }
+      } else {
+        ratingsList.add(processRating(ratings));
       }
-    } else {
-      ratingsList.add(processRating(ratings));
     }
     return ratingsList.isEmpty() ? null : ratingsList;
   }
@@ -209,17 +220,19 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   private Rating processRating(final JsonNode ratingNode) {
     Rating rating = new Rating();
     JsonNode r = ratingNode.get(Vulnerability10.RATING);
-    if (r.get(Vulnerability10.SCORE) != null) {
-      Score score = new Score();
-      JsonNode s = r.get(Vulnerability10.SCORE);
-      score.setBase(getAsDouble(Vulnerability10.BASE, s));
-      score.setImpact(getAsDouble(Vulnerability10.IMPACT, s));
-      score.setExploitability(getAsDouble(Vulnerability10.EXPLOITABILITY, s));
-      rating.setScore(score);
+    if (r != null) {
+      if (r.get(Vulnerability10.SCORE) != null) {
+        Score score = new Score();
+        JsonNode s = r.get(Vulnerability10.SCORE);
+        score.setBase(getAsDouble(Vulnerability10.BASE, s));
+        score.setImpact(getAsDouble(Vulnerability10.IMPACT, s));
+        score.setExploitability(getAsDouble(Vulnerability10.EXPLOITABILITY, s));
+        rating.setScore(score);
+      }
+      rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, r)));
+      rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, r)));
+      rating.setVector(getAsString(Vulnerability10.VECTOR, r));
     }
-    rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, r)));
-    rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, r)));
-    rating.setVector(getAsString(Vulnerability10.VECTOR, r));
 
     return rating;
   }
