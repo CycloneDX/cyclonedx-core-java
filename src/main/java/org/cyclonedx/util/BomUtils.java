@@ -45,7 +45,7 @@ public final class BomUtils {
      * @since 1.0.0
      */
     public static List<Hash> calculateHashes(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
-        if (file == null || !file.exists() || !file.canRead()) {
+        if (file == null || !file.exists() || !file.canRead() || !file.isFile()) {
             return null;
         }
         final List<Hash> hashes = new ArrayList<>();
