@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.Extension.ExtensionType;
@@ -183,7 +184,9 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private Cwe processCwe(final JsonNode cwe) {
     Cwe c = new Cwe();
-    c.setText(Integer.valueOf(cwe.textValue()));
+    if (NumberUtils.isParsable(cwe.textValue())) {
+      c.setText(Integer.valueOf(cwe.textValue()));
+    }
     return c;
   }
 
