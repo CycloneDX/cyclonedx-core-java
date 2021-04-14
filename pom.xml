@@ -155,12 +155,6 @@
             <version>2.12.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.12.1</version>
-        </dependency>
-
         <!-- JSON Schema library -->
 
         <dependency>
