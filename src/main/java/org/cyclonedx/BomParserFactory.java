@@ -26,6 +26,7 @@ import org.cyclonedx.parsers.XmlParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class BomParserFactory {
@@ -33,8 +34,8 @@ public class BomParserFactory {
     private BomParserFactory() {}
 
     public static Parser createParser(final File file) throws ParseException {
-        try {
-            final byte[] bytes = IOUtils.toByteArray(new FileInputStream(file), 1);
+        try (final InputStream fis = new FileInputStream(file)) {
+            final byte[] bytes = IOUtils.toByteArray(fis, 1);
             return createParser(bytes);
         } catch (IOException e) {
             throw new ParseException("An error occurred creating parser from file", e);
