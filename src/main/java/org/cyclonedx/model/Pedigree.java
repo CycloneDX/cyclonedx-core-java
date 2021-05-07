@@ -28,7 +28,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.ComponentWrapperDeserializer;
 
 @SuppressWarnings("unused")
-@JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "notes"})
+@JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "patches", "notes"})
 public class Pedigree extends ExtensibleElement {
 
     @JsonDeserialize(using = ComponentWrapperDeserializer.class)
@@ -40,6 +40,7 @@ public class Pedigree extends ExtensibleElement {
     @JsonDeserialize(using = ComponentWrapperDeserializer.class)
     private Variants variants;
     private List<Commit> commits;
+    private List<Patch> patches;
     private String notes;
 
     public Ancestors getAncestors() {
@@ -71,6 +72,16 @@ public class Pedigree extends ExtensibleElement {
 
     public void setCommits(List<Commit> commits) {
         this.commits = commits;
+    }
+
+    @JacksonXmlElementWrapper(localName = "patches")
+    @JacksonXmlProperty(localName = "patch")
+    public List<Patch> getPatches() {
+        return patches;
+    }
+
+    public void setPatches(List<Patch> patches) {
+        this.patches = patches;
     }
 
     public String getNotes() {
