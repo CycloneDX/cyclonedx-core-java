@@ -95,6 +95,22 @@ public class XmlParserTest {
     }
 
     @Test
+    public void testValid12BomWithPedigreeWithPatches() throws Exception {
+        final File file = new File(this.getClass().getResource("/bom-1.2-pedigree-example.xml").getFile());
+        final XmlParser parser = new XmlParser();
+        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        Assert.assertTrue(valid);
+
+        final Bom bom = parser.parse(file);
+        testPedigreeFromExample(bom.getComponents().get(0).getPedigree());
+    }
+
+    private void testPedigreeFromExample(final Pedigree pedigree) {
+        Assert.assertEquals(2, pedigree.getPatches().size());
+        Assert.assertEquals(2, pedigree.getPatches().get(1).getResolves().size());
+    }
+
+    @Test
     public void testParsedObjects10Bom() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.0.xml"));
         final XmlParser parser = new XmlParser();
