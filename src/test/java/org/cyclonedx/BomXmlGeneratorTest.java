@@ -31,12 +31,10 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.parsers.XmlParser;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,7 +42,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -53,17 +50,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class BomXmlGeneratorTest {
 
     private File tempFile;
 
-    @Before
+    @BeforeEach
     public void before() throws IOException {
         Path path = Files.createTempDirectory("cyclonedx-core-java");
         this.tempFile = new File(path.toFile(), "bom.xml");
     }
 
-    @After
+    @AfterEach
     public void after() {
         tempFile.delete();
         tempFile.getParentFile().delete();
@@ -75,11 +74,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator10);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_10, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator10);
+        assertEquals(CycloneDxSchema.Version.VERSION_10, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, Version.VERSION_10));
+        assertTrue(parser.isValid(file, Version.VERSION_10));
     }
 
     @Test
@@ -88,11 +87,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator11);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator11);
+        assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
     @Test
@@ -101,11 +100,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator11);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator11);
+        assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
     @Test
@@ -114,11 +113,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator11);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator11);
+        assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
     @Test
@@ -127,11 +126,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator12);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator12);
+        assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
 
     @Test
@@ -140,11 +139,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator12);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator12);
+        assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
 
     @Test
@@ -153,11 +152,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator12);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator12);
+        assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
 
     @Test
@@ -185,11 +184,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
 
         testDocument(doc);
-        Assert.assertTrue(generator instanceof BomXmlGenerator11);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator11);
+        assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
     @Test
@@ -222,11 +221,11 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        Assert.assertTrue(generator instanceof BomXmlGenerator11);
-        Assert.assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
+        assertTrue(generator instanceof BomXmlGenerator11);
+        assertEquals(CycloneDxSchema.Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
-        Assert.assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
     }
 
     private File writeToFile(String xmlString) throws Exception {
@@ -247,8 +246,8 @@ public class BomXmlGeneratorTest {
     }
 
     private void testDocument(Document doc) {
-        Assert.assertNotNull(doc);
-        Assert.assertNotNull(documentToString(doc));
+        assertNotNull(doc);
+        assertNotNull(documentToString(doc));
     }
 
     private String documentToString(Document doc) {

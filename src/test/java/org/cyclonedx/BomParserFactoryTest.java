@@ -21,21 +21,22 @@ package org.cyclonedx;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.Parser;
 import org.cyclonedx.parsers.XmlParser;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BomParserFactoryTest {
 
     @Test
     public void testXMLFactory() throws Exception {
         Parser parser = BomParserFactory.createParser(new File(BomParserFactory.class.getResource("/bom-1.2.xml").getFile()));
-        Assert.assertTrue(parser instanceof XmlParser);
+        assertTrue(parser instanceof XmlParser);
     }
 
     @Test
     public void testJSONFactory() throws Exception {
         Parser parser = BomParserFactory.createParser(new File(BomParserFactory.class.getResource("/bom-1.2.json").getFile()));
-        Assert.assertTrue(parser instanceof JsonParser);
+        assertTrue(parser instanceof JsonParser);
     }
 }
