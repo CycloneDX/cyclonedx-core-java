@@ -20,8 +20,8 @@ package org.cyclonedx.model;
 
 public class Attribute {
 
-    private String key;
-    private String value;
+    private final String key;
+    private final String value;
 
     public Attribute(String key, String value) {
         this.key = key;

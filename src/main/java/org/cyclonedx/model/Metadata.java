@@ -18,26 +18,44 @@
  */
 package org.cyclonedx.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.CustomDateSerializer;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
-@JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier"})
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier", "properties"})
 public class Metadata extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)
+    @VersionFilter(versions = {"1.2", "1.3"})
     private Date timestamp = new Date();
+
+    @VersionFilter(versions = {"1.2", "1.3"})
     private List<Tool> tools;
+
+    @VersionFilter(versions = {"1.2", "1.3"})
     private List<OrganizationalContact> authors;
+
+    @VersionFilter(versions = {"1.2", "1.3"})
     private Component component;
+
+    @VersionFilter(versions = {"1.2", "1.3"})
     private OrganizationalEntity manufacture;
+
+    @VersionFilter(versions = {"1.2", "1.3"})
     private OrganizationalEntity supplier;
+
+    @VersionFilter(versions = {"1.3"})
+    private List<Property> properties;
 
     public Date getTimestamp() {
         return timestamp;
@@ -105,6 +123,16 @@ public class Metadata extends ExtensibleElement {
         this.supplier = supplier;
     }
 
+    @JacksonXmlElementWrapper(localName = "properties")
+    @JacksonXmlProperty(localName = "property")
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,11 +143,12 @@ public class Metadata extends ExtensibleElement {
                 Objects.equals(authors, metadata.authors) &&
                 Objects.equals(component, metadata.component) &&
                 Objects.equals(manufacture, metadata.manufacture) &&
-                Objects.equals(supplier, metadata.supplier);
+                Objects.equals(supplier, metadata.supplier) &&
+                Objects.equals(properties, metadata.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, tools, authors, component, manufacture, supplier);
+        return Objects.hash(timestamp, tools, authors, component, manufacture, supplier, properties);
     }
 }

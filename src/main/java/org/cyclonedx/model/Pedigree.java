@@ -20,7 +20,8 @@ package org.cyclonedx.model;
 
 import java.util.List;
 import java.util.Objects;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -28,6 +29,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.ComponentWrapperDeserializer;
 
 @SuppressWarnings("unused")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "patches", "notes"})
 public class Pedigree extends ExtensibleElement {
 
@@ -39,8 +42,12 @@ public class Pedigree extends ExtensibleElement {
 
     @JsonDeserialize(using = ComponentWrapperDeserializer.class)
     private Variants variants;
+
     private List<Commit> commits;
+
+    @VersionFilter(versions = {"1.2", "1.3"})
     private List<Patch> patches;
+
     private String notes;
 
     public Ancestors getAncestors() {

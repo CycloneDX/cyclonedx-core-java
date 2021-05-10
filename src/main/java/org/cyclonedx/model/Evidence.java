@@ -18,69 +18,48 @@
  */
 package org.cyclonedx.model;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.LicenseDeserializer;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"diff", "resolves"})
-public class Patch {
+@JsonPropertyOrder({"licenses", "copyright"})
+public class Evidence extends ExtensibleElement {
 
-  public enum Type {
-    @JsonProperty("backport")
-    BACKPORT("backport"),
-    @JsonProperty("unofficial")
-    UNOFFICIAL("unofficial"),
-    @JsonProperty("monkey")
-    MONKEY("monkey"),
-    @JsonProperty("cherry-pick")
-    CHERRY_PICK("cherry-pick");
+    private LicenseChoice license;
+    private List<Copyright> copyright;
 
-    private final String name;
-
-    public String getTypeName() {
-      return this.name;
+    @JacksonXmlProperty(localName = "licenses")
+    @JsonProperty("licenses")
+    @JsonDeserialize(using = LicenseDeserializer.class)
+    public LicenseChoice getLicenseChoice() {
+        return license;
     }
 
-    Type(final String name) {
-      this.name = name;
+    public void setLicenseChoice(LicenseChoice licenseChoice) {
+        this.license = licenseChoice;
     }
-  }
 
-  @JacksonXmlProperty(isAttribute = true)
-  private Type type;
-  private Diff diff;
-  private List<Issue> resolves;
+    public List<Copyright> getCopyright() {
+        return copyright;
+    }
 
-  public Diff getDiff() {
-    return diff;
-  }
+    public void setCopyright(List<Copyright> copyright) {
+        this.copyright = copyright;
+    }
 
-  public void setDiff(final Diff diff) {
-    this.diff = diff;
-  }
-
-  @JacksonXmlElementWrapper(localName = "resolves")
-  @JacksonXmlProperty(localName = "issue")
-  public List<Issue> getResolves() {
-    return resolves;
-  }
-
-  public void setResolves(final List<Issue> resolves) {
-    this.resolves = resolves;
-  }
-
-  public Type getType() {
-    return type;
-  }
-
-  public void setType(Type type) {
-    this.type = type;
-  }
+    public void addCopyright(Copyright copyright) {
+        if (this.copyright == null) {
+            this.copyright = new ArrayList<>();
+        }
+        this.copyright.add(copyright);
+    }
 }

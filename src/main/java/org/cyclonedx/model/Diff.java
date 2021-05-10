@@ -18,8 +18,8 @@
  */
 package org.cyclonedx.model;
 
-public class Diff
-{
+public class Diff {
+
   private AttachmentText text;
   private String url;
 

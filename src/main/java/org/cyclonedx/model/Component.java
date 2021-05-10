@@ -18,8 +18,8 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -34,7 +34,8 @@ import java.util.Objects;
 
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "component")
-@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder(
     {"supplier",
      "author",
@@ -53,7 +54,8 @@ import java.util.Objects;
      "modified",
      "pedigree",
      "externalReferences",
-     "components"
+     "components",
+     "evidence"
     })
 public class Component extends ExtensibleElement {
 
@@ -110,11 +112,11 @@ public class Component extends ExtensibleElement {
     private String bomRef;
     @JacksonXmlProperty(isAttribute = true)
     private String mimeType;
-    @VersionFilter(versions = {"1.2"})
+    @VersionFilter(versions = {"1.2", "1.3"})
     private OrganizationalEntity supplier;
-    @VersionFilter(versions = {"1.2"})
+    @VersionFilter(versions = {"1.2", "1.3"})
     private String author;
-    @VersionFilter(versions = {"1.1", "1.2"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
     private String publisher;
     private String group;
     private String name;
@@ -126,12 +128,16 @@ public class Component extends ExtensibleElement {
     private String copyright;
     private String cpe;
     private String purl;
-    @VersionFilter(versions = {"1.2"})
+    @VersionFilter(versions = {"1.2", "1.3"})
     private Swid swid;
     private Boolean modified;
+    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
     private Pedigree pedigree;
+    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
     private List<ExternalReference> externalReferences;
     private List<Component> components;
+    @VersionFilter(versions = {"1.3"})
+    private Evidence evidence;
     @JacksonXmlProperty(isAttribute = true)
     private Type type;
 
@@ -289,7 +295,7 @@ public class Component extends ExtensibleElement {
         this.swid = swid;
     }
 
-    @JsonInclude(Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Boolean getModified() { return modified; }
 
     public Boolean isModified() {
@@ -342,6 +348,14 @@ public class Component extends ExtensibleElement {
         this.components.add(component);
     }
 
+    public Evidence getEvidence() {
+        return evidence;
+    }
+
+    public void setEvidence(Evidence evidence) {
+        this.evidence = evidence;
+    }
+
     public Type getType() {
         return type;
     }
@@ -352,7 +366,7 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright, cpe, purl, swid, modified, components, type);
+        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright, cpe, purl, swid, modified, components, evidence, type);
     }
 
     @Override
@@ -376,6 +390,7 @@ public class Component extends ExtensibleElement {
                 Objects.equals(purl, component.purl) &&
                 Objects.equals(swid, component.swid) &&
                 Objects.equals(components, component.components) &&
+                Objects.equals(evidence, component.evidence) &&
                 Objects.equals(mimeType, component.mimeType) &&
                 Objects.equals(type, component.type);
     }

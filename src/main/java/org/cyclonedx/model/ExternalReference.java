@@ -18,19 +18,23 @@
  */
 package org.cyclonedx.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.ExternalReferenceSerializer;
 
 @SuppressWarnings("unused")
-@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize(using = ExternalReferenceSerializer.class)
-@JsonPropertyOrder({"url", "comment"})
+@JsonPropertyOrder({"url", "comment", "hashes"})
 public class ExternalReference {
 
     public enum Type {
@@ -81,6 +85,9 @@ public class ExternalReference {
     private Type type;
     private String comment;
 
+    @VersionFilter(versions = {"1.3"})
+    private List<Hash> hashes;
+
     public String getUrl() {
         return url;
     }
@@ -105,6 +112,23 @@ public class ExternalReference {
         this.comment = comment;
     }
 
+    @JacksonXmlElementWrapper(localName = "hashes")
+    @JacksonXmlProperty(localName = "hash")
+    public List<Hash> getHashes() {
+        return hashes;
+    }
+
+    public void setHashes(List<Hash> hashes) {
+        this.hashes = hashes;
+    }
+
+    public void addHash(Hash hash) {
+        if (this.hashes == null) {
+            this.hashes = new ArrayList<>();
+        }
+        this.hashes.add(hash);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,11 +136,12 @@ public class ExternalReference {
         ExternalReference reference = (ExternalReference) o;
         return Objects.equals(url, reference.url) &&
                 type == reference.type &&
-                Objects.equals(comment, reference.comment);
+                Objects.equals(comment, reference.comment) &&
+                Objects.equals(hashes, reference.hashes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, type, comment);
+        return Objects.hash(url, type, comment, hashes);
     }
 }

@@ -20,7 +20,6 @@ package org.cyclonedx.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
@@ -30,8 +29,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  * Workaround for: https://github.com/FasterXML/jackson-dataformat-xml/issues/192
  * @since 4.0.0
  */
-public abstract class ComponentWrapper
-{
+public abstract class ComponentWrapper {
   protected List<Component> components;
 
   @JacksonXmlElementWrapper(useWrapping = false)

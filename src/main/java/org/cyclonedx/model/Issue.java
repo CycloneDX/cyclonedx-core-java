@@ -18,14 +18,20 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.model.Source;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "description", "source", "reference"})
-public class Issue
-{
+public class Issue {
 
   public enum Type {
     @JsonProperty("enhancement")
@@ -47,15 +53,10 @@ public class Issue
   }
 
   private String id;
-
   private String name;
-
   private String description;
-
   private Source source;
-
-  private ExternalReference references;
-
+  private List<String> references;
   @JacksonXmlProperty(isAttribute = true)
   private Type type;
 
@@ -91,11 +92,35 @@ public class Issue
     this.source = source;
   }
 
-  public ExternalReference getReferences() {
+  @JacksonXmlElementWrapper(localName = "references")
+  @JacksonXmlProperty(localName = "url")
+  public List<String> getReferences() {
     return references;
   }
 
-  public void setReferences(final ExternalReference references) {
+  public void addReference(String reference) {
+    if (references == null) {
+      references = new ArrayList<>();
+    }
+    references.add(reference);
+  }
+
+  public void addReference(URI reference) {
+    if (references == null) {
+      references = new ArrayList<>();
+    }
+    references.add(reference.toString());
+  }
+
+  public void setReferences(List<String> references) {
     this.references = references;
+  }
+
+  public Type getType() {
+    return type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
   }
 }

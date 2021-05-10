@@ -18,32 +18,23 @@
  */
 package org.cyclonedx.model;
 
-import java.util.Date;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.cyclonedx.util.CustomDateSerializer;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import java.util.Objects;
 
-@SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"timestamp", "name", "email"})
-public class IdentifiableActionType extends ExtensibleElement {
+@JsonPropertyOrder({"name", "value"})
+public class Property extends ExtensibleElement {
 
-    @JsonSerialize(using = CustomDateSerializer.class)
-    private Date timestamp;
+    @JacksonXmlProperty(isAttribute = true)
     private String name;
-    private String email;
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
+    @JacksonXmlText
+    private String value;
 
     public String getName() {
         return name;
@@ -53,26 +44,25 @@ public class IdentifiableActionType extends ExtensibleElement {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getValue() {
+        return value;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof IdentifiableActionType)) return false;
-        IdentifiableActionType that = (IdentifiableActionType) o;
-        return Objects.equals(timestamp, that.timestamp) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(email, that.email);
+        if (!(o instanceof Property)) return false;
+        Property property = (Property) o;
+        return Objects.equals(name, property.name) &&
+                Objects.equals(value, property.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, name, email);
+        return Objects.hash(name, value);
     }
 }

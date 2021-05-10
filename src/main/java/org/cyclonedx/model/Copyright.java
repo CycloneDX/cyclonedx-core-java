@@ -18,31 +18,21 @@
  */
 package org.cyclonedx.model;
 
-import java.net.URL;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+public class Copyright {
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Source {
-  @JacksonXmlProperty(localName = "name", isAttribute = true)
-  private String name;
-  private URL url;
+    private String text;
 
-  public URL getUrl() {
-    return url;
-  }
+    public Copyright() {}
 
-  public void setUrl(final URL url) {
-    this.url = url;
-  }
+    public Copyright(String text) {
+        this.text = text;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getText() {
+        return text;
+    }
 
-  public void setName(final String name) {
-    this.name = name;
-  }
+    public void setText(String text) {
+        this.text = text;
+    }
 }
