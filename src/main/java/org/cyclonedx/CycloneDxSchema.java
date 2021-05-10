@@ -48,14 +48,16 @@ public abstract class CycloneDxSchema {
     public static final String NS_BOM_10 = "http://cyclonedx.org/schema/bom/1.0";
     public static final String NS_BOM_11 = "http://cyclonedx.org/schema/bom/1.1";
     public static final String NS_BOM_12 = "http://cyclonedx.org/schema/bom/1.2";
+    public static final String NS_BOM_13 = "http://cyclonedx.org/schema/bom/1.3";
     public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
-    public static final String NS_BOM_LATEST = NS_BOM_12;
-    public static final Version VERSION_LATEST = Version.VERSION_12;
+    public static final String NS_BOM_LATEST = NS_BOM_13;
+    public static final Version VERSION_LATEST = Version.VERSION_13;
 
     public enum Version {
         VERSION_10(CycloneDxSchema.NS_BOM_10, "1.0", 1.0),
         VERSION_11(CycloneDxSchema.NS_BOM_11, "1.1", 1.1),
-        VERSION_12(CycloneDxSchema.NS_BOM_12, "1.2", 1.2);
+        VERSION_12(CycloneDxSchema.NS_BOM_12, "1.2", 1.2),
+        VERSION_13(CycloneDxSchema.NS_BOM_13, "1.3", 1.3);
         private String namespace;
         private String versionString;
         private double version;
@@ -95,6 +97,8 @@ public abstract class CycloneDxSchema {
         offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", getClass().getClassLoader().getResource("spdx.schema.json").toExternalForm());
         offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json", getClass().getClassLoader().getResource("bom-1.2.schema.json").toExternalForm());
         offlineMappings.put("http://cyclonedx.org/schema/bom-1.2-strict.schema.json", getClass().getClassLoader().getResource("bom-1.2-strict.schema.json").toExternalForm());
+        offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json", getClass().getClassLoader().getResource("bom-1.3.schema.json").toExternalForm());
+        offlineMappings.put("http://cyclonedx.org/schema/bom-1.3-strict.schema.json", getClass().getClassLoader().getResource("bom-1.3-strict.schema.json").toExternalForm());
 
         config.setUriMappings(offlineMappings);
 
@@ -106,10 +110,17 @@ public abstract class CycloneDxSchema {
     }
 
     private InputStream getJsonSchemaAsStream(final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
-        if (strict) {
-            return this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json");
+        if (CycloneDxSchema.Version.VERSION_12 == schemaVersion) {
+            if (strict) {
+                return this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json");
+            }
+            return this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json");
+        } else {
+            if (strict) {
+                return this.getClass().getClassLoader().getResourceAsStream("bom-1.3-strict.schema.json");
+            }
+            return this.getClass().getClassLoader().getResourceAsStream("bom-1.3.schema.json");
         }
-        return this.getClass().getClassLoader().getResourceAsStream("bom-1.2.schema.json");
     }
 
     /**
@@ -124,8 +135,10 @@ public abstract class CycloneDxSchema {
             return getXmlSchema10();
         } else if (CycloneDxSchema.Version.VERSION_11 == schemaVersion) {
             return getXmlSchema11();
-        } else {
+        } else if (CycloneDxSchema.Version.VERSION_12 == schemaVersion) {
             return getXmlSchema12();
+        } else {
+            return getXmlSchema13();
         }
     }
 
@@ -168,6 +181,20 @@ public abstract class CycloneDxSchema {
         return getXmlSchema(
                 this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
                 this.getClass().getClassLoader().getResourceAsStream("bom-1.2.xsd")
+        );
+    }
+
+    /**
+     * Returns the CycloneDX XML Schema from the specifications XSD.
+     * @return a Schema
+     * @throws SAXException a SAXException
+     * @since 5.0.0
+     */
+    private Schema getXmlSchema13() throws SAXException {
+        // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
+        return getXmlSchema(
+                this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.3.xsd")
         );
     }
 
