@@ -13,6 +13,7 @@
  */
 package org.cyclonedx.parse;
 
+import org.cyclonedx.model.Bom;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import java.io.File;
@@ -31,7 +32,13 @@ public class XmlParseTest extends BaseParseTest {
         for (final File file: files) {
             if (file.getName().endsWith(".xml")) {
                 if (file.getName().startsWith("valid")) {
-                    dynamicTests.add(DynamicTest.dynamicTest(file.getName(), () -> assertNotNull(parseBom(file))));
+                    //dynamicTests.add(DynamicTest.dynamicTest(file.getName(), () -> assertNotNull(parseBom(file))));
+                    dynamicTests.add(DynamicTest.dynamicTest(file.getName(), () -> {
+                        final Bom bom = parseBom(file);
+                        assertNotNull(bom);
+                        super.generateBomXml(file.getName(), bom);
+
+                    }));
                 } else if (file.getName().startsWith("invalid")) {
 
                 }

@@ -13,24 +13,42 @@
  */
 package org.cyclonedx.parse;
 
+import org.cyclonedx.BomGeneratorFactory;
 import org.cyclonedx.BomParserFactory;
+import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.exception.ParseException;
+import org.cyclonedx.generators.json.BomJsonGenerator;
+import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.parsers.Parser;
+import org.junit.jupiter.api.Assertions;
+import org.w3c.dom.Document;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseParseTest {
 
+    static List<CycloneDxSchema.Version> VERSIONS = new ArrayList<>();
+    static {
+        VERSIONS.add(CycloneDxSchema.Version.VERSION_10);
+        VERSIONS.add(CycloneDxSchema.Version.VERSION_11);
+        VERSIONS.add(CycloneDxSchema.Version.VERSION_12);
+        VERSIONS.add(CycloneDxSchema.Version.VERSION_13);
+    }
+
     List<File> getAllResources() throws Exception {
         final List<File> files = new ArrayList<>();
-        files.addAll(getResources("1.0/"));
-        files.addAll(getResources("1.1/"));
-        files.addAll(getResources("1.2/"));
-        files.addAll(getResources("1.3/"));
+        for (CycloneDxSchema.Version version: VERSIONS) {
+            files.addAll(getResources(version.getVersionString() + "/"));
+        }
         return files;
     }
 
@@ -45,4 +63,22 @@ public abstract class BaseParseTest {
         final Parser parser = BomParserFactory.createParser(file);
         return parser.parse(file);
     }
+
+    void generateBomXml(final String testName, final Bom bom) throws ParserConfigurationException, ParseException, GeneratorException, IOException {
+        for (CycloneDxSchema.Version version : VERSIONS) {
+            System.out.println("Generating CycloneDX " + version.getVersionString() + " XML for " + testName);
+            BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+            Document doc = generator.generate();
+            Assertions.assertNotNull(doc);
+        }
+    }
+
+    void generateBomJson(final String testName, final Bom bom) {
+        for (CycloneDxSchema.Version version : VERSIONS) {
+            System.out.println("Generating CycloneDX " + version.getVersionString() + " JSON for " + testName);
+            BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+            Assertions.assertNotNull(generator.toJsonString());
+        }
+    }
+
 }
