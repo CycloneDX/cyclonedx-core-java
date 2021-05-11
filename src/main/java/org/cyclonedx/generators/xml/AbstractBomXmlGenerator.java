@@ -20,7 +20,6 @@ package org.cyclonedx.generators.xml;
 
 import java.io.IOException;
 import java.io.StringReader;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -34,7 +33,6 @@ import org.cyclonedx.util.VersionAnnotationIntrospector;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -66,6 +64,8 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
         } else if (this.getSchemaVersion().getVersion() == 1.1) {
             registerDependencyModule(mapper, true);
         } else if (this.getSchemaVersion().getVersion() == 1.2) {
+            registerDependencyModule(mapper, false);
+        } else if (this.getSchemaVersion().getVersion() == 1.3) {
             registerDependencyModule(mapper, false);
         }
     }

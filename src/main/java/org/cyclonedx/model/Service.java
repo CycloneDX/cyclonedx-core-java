@@ -44,6 +44,7 @@ import java.util.List;
         "data",
         "licenses",
         "externalReferences",
+        "properties",
         "services"
 })
 public class Service extends ExtensibleElement {
@@ -64,6 +65,8 @@ public class Service extends ExtensibleElement {
     private List<ServiceData> data;
     private LicenseChoice license;
     private List<ExternalReference> externalReferences;
+    @VersionFilter(versions = {"1.3"})
+    private List<Property> properties;
     private List<Service> services;
 
     public String getBomRef() {
@@ -190,6 +193,16 @@ public class Service extends ExtensibleElement {
 
     public void setExternalReferences(List<ExternalReference> externalReferences) {
         this.externalReferences = externalReferences;
+    }
+
+    @JacksonXmlElementWrapper(localName = "properties")
+    @JacksonXmlProperty(localName = "property")
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
     }
 
     @JacksonXmlElementWrapper(localName = "services")

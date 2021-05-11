@@ -54,6 +54,7 @@ import java.util.Objects;
      "modified",
      "pedigree",
      "externalReferences",
+     "properties",
      "components",
      "evidence"
     })
@@ -135,6 +136,8 @@ public class Component extends ExtensibleElement {
     private Pedigree pedigree;
     @VersionFilter(versions = {"1.1", "1.2", "1.3"})
     private List<ExternalReference> externalReferences;
+    @VersionFilter(versions = {"1.3"})
+    private List<Property> properties;
     private List<Component> components;
     @VersionFilter(versions = {"1.3"})
     private Evidence evidence;
@@ -329,6 +332,16 @@ public class Component extends ExtensibleElement {
 
     public void setExternalReferences(List<ExternalReference> externalReferences) {
         this.externalReferences = externalReferences;
+    }
+
+    @JacksonXmlElementWrapper(localName = "properties")
+    @JacksonXmlProperty(localName = "property")
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
     }
 
     @JacksonXmlElementWrapper(localName = "components")

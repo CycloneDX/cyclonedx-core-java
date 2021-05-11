@@ -20,11 +20,14 @@ package org.cyclonedx.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.CustomDateSerializer;
+import org.cyclonedx.util.LicenseDeserializer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +35,7 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier", "properties"})
+@JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier", "licenses", "properties"})
 public class Metadata extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)
@@ -53,6 +56,9 @@ public class Metadata extends ExtensibleElement {
 
     @VersionFilter(versions = {"1.2", "1.3"})
     private OrganizationalEntity supplier;
+
+    @VersionFilter(versions = {"1.3"})
+    private LicenseChoice license;
 
     @VersionFilter(versions = {"1.3"})
     private List<Property> properties;
@@ -123,6 +129,17 @@ public class Metadata extends ExtensibleElement {
         this.supplier = supplier;
     }
 
+    @JacksonXmlProperty(localName = "licenses")
+    @JsonProperty("licenses")
+    @JsonDeserialize(using = LicenseDeserializer.class)
+    public LicenseChoice getLicenseChoice() {
+        return license;
+    }
+
+    public void setLicenseChoice(LicenseChoice licenseChoice) {
+        this.license = licenseChoice;
+    }
+
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
     public List<Property> getProperties() {
@@ -144,11 +161,12 @@ public class Metadata extends ExtensibleElement {
                 Objects.equals(component, metadata.component) &&
                 Objects.equals(manufacture, metadata.manufacture) &&
                 Objects.equals(supplier, metadata.supplier) &&
+                Objects.equals(license, metadata.license) &&
                 Objects.equals(properties, metadata.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, tools, authors, component, manufacture, supplier, properties);
+        return Objects.hash(timestamp, tools, authors, component, manufacture, supplier, license, properties);
     }
 }

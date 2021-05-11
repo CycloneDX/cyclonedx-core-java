@@ -41,9 +41,11 @@ import org.cyclonedx.util.DependencyDeserializer;
         "version",
         "metadata",
         "components",
-        "externalReferences",
         "services",
-        "dependencies"
+        "externalReferences",
+        "dependencies",
+        "compositions",
+        "properties"
 })
 public class Bom extends ExtensibleElement {
 
@@ -64,6 +66,12 @@ public class Bom extends ExtensibleElement {
 
     @VersionFilter(versions = {"1.1", "1.2", "1.3"})
     private List<ExternalReference> externalReferences;
+
+    @VersionFilter(versions = {"1.3"})
+    private List<Composition> compositions;
+
+    @VersionFilter(versions = {"1.3"})
+    private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)
     private int version = 1;
@@ -151,6 +159,26 @@ public class Bom extends ExtensibleElement {
         this.externalReferences = externalReferences;
     }
 
+    @JacksonXmlElementWrapper(localName = "compositions")
+    @JacksonXmlProperty(localName = "composition")
+    public List<Composition> getCompositions() {
+        return compositions;
+    }
+
+    public void setCompositions(List<Composition> compositions) {
+        this.compositions = compositions;
+    }
+
+    @JacksonXmlElementWrapper(localName = "properties")
+    @JacksonXmlProperty(localName = "property")
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
     public int getVersion() {
         return version;
     }
@@ -199,12 +227,14 @@ public class Bom extends ExtensibleElement {
                 Objects.equals(components, bom.components) &&
                 Objects.equals(dependencies, bom.dependencies) &&
                 Objects.equals(externalReferences, bom.externalReferences) &&
+                Objects.equals(compositions, bom.compositions) &&
+                Objects.equals(properties, bom.properties) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
                 Objects.equals(specVersion, bom.specVersion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, version, serialNumber, specVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, properties, version, serialNumber, specVersion);
     }
 }
