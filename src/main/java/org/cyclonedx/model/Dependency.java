@@ -29,10 +29,7 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Dependency {
-
-    @JacksonXmlProperty(isAttribute = true)
-    private String ref;
+public class Dependency extends BomReference {
 
     @JsonProperty("dependsOn")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -40,14 +37,10 @@ public class Dependency {
     private List<Dependency> dependencies;
 
     public Dependency(final String ref) {
-        this.ref = ref;
+        super(ref);
     }
 
     public Dependency() { }
-
-    public String getRef() {
-        return ref;
-    }
 
     public List<Dependency> getDependencies() {
         return dependencies;
@@ -72,11 +65,11 @@ public class Dependency {
         if (this == o) return true;
         if (!(o instanceof Dependency)) return false;
         Dependency that = (Dependency) o;
-        return Objects.equals(ref, that.ref);
+        return Objects.equals(getRef(), that.getRef());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ref);
+        return Objects.hash(getRef());
     }
 }
