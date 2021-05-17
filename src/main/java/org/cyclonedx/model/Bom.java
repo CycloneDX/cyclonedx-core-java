@@ -49,6 +49,7 @@ import org.cyclonedx.util.DependencyDeserializer;
 })
 public class Bom extends ExtensibleElement {
 
+    @XmlOnly
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
 

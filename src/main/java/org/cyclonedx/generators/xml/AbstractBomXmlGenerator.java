@@ -29,7 +29,7 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.CollectionTypeSerializer;
-import org.cyclonedx.util.VersionAnnotationIntrospector;
+import org.cyclonedx.util.VersionXmlAnnotationIntrospector;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -56,7 +56,7 @@ abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXml
 
     private void setupObjectMapper(final ObjectMapper mapper) {
         mapper.setAnnotationIntrospector(
-            new VersionAnnotationIntrospector(
+            new VersionXmlAnnotationIntrospector(
                 String.valueOf(this.getSchemaVersion().getVersion())));
 
         if (this.getSchemaVersion().getVersion() == 1.0) {

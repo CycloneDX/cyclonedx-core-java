@@ -30,6 +30,8 @@ import org.cyclonedx.util.CollectionTypeSerializer;
 import org.cyclonedx.util.ComponentWrapperSerializer;
 import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.cyclonedx.util.TrimStringSerializer;
+import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
+import java.lang.reflect.Field;
 
 abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
@@ -50,6 +52,10 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
     }
 
     private void setupObjectMapper(final ObjectMapper mapper) {
+        mapper.setAnnotationIntrospector(
+                new VersionJsonAnnotationIntrospector(
+                        String.valueOf(this.getSchemaVersion().getVersion())));
+
         SimpleModule licenseModule = new SimpleModule();
         SimpleModule depModule = new SimpleModule();
         SimpleModule componentWrapperModule = new SimpleModule();
@@ -78,6 +84,21 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
             return mapper.writeValueAsString(bom);
         }
         catch (JsonProcessingException e) {
+            throw new GeneratorException(e);
+        }
+    }
+
+    Bom injectBomFormatAndSpecVersion(Bom bom) throws GeneratorException {
+        try {
+            Field field;
+            field = Bom.class.getDeclaredField("bomFormat");
+            field.setAccessible(true);
+            field.set(bom, "CycloneDX");
+            field = Bom.class.getDeclaredField("specVersion");
+            field.setAccessible(true);
+            field.set(bom, getSchemaVersion().getVersionString());
+            return bom;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new GeneratorException(e);
         }
     }

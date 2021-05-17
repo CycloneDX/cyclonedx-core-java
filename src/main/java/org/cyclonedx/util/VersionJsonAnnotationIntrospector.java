@@ -19,31 +19,30 @@
 package org.cyclonedx.util;
 
 import java.util.Arrays;
-
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
-import com.fasterxml.jackson.dataformat.xml.JacksonXmlAnnotationIntrospector;
-import org.cyclonedx.model.JsonOnly;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import org.cyclonedx.model.VersionFilter;
+import org.cyclonedx.model.XmlOnly;
 
-public class VersionAnnotationIntrospector extends JacksonXmlAnnotationIntrospector
+public class VersionJsonAnnotationIntrospector extends JacksonAnnotationIntrospector
 {
-  private final String version;
+    private final String version;
 
-  public VersionAnnotationIntrospector(final String version) {
-    this.version = version;
-  }
+    public VersionJsonAnnotationIntrospector(final String version) {
+        this.version = version;
+    }
 
-  @Override
-  public boolean hasIgnoreMarker(final AnnotatedMember m) {
-    if (m.hasAnnotation(VersionFilter.class)) {
-      VersionFilter filter = m.getAnnotation(VersionFilter.class);
-      if (Arrays.stream(filter.versions()).noneMatch(v -> v.equals(version))) {
-        return true;
-      }
+    @Override
+    public boolean hasIgnoreMarker(final AnnotatedMember m) {
+        if (m.hasAnnotation(VersionFilter.class)) {
+            VersionFilter filter = m.getAnnotation(VersionFilter.class);
+            if (Arrays.stream(filter.versions()).noneMatch(v -> v.equals(version))) {
+                return true;
+            }
+        }
+        if (m.hasAnnotation(XmlOnly.class)) {
+            return true;
+        }
+        return super.hasIgnoreMarker(m);
     }
-    if (m.hasAnnotation(JsonOnly.class)) {
-      return true;
-    }
-    return super.hasIgnoreMarker(m);
-  }
 }
