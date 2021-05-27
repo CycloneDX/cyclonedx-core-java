@@ -44,7 +44,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
     this.useNamespace = useNamespace;
   }
 
-  public DependencySerializer(final Class t) {
+  public DependencySerializer(final Class<List<Dependency>> t) {
     super(t);
   }
 

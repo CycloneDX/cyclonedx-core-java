@@ -58,9 +58,9 @@ public abstract class CycloneDxSchema {
         VERSION_11(CycloneDxSchema.NS_BOM_11, "1.1", 1.1),
         VERSION_12(CycloneDxSchema.NS_BOM_12, "1.2", 1.2),
         VERSION_13(CycloneDxSchema.NS_BOM_13, "1.3", 1.3);
-        private String namespace;
-        private String versionString;
-        private double version;
+        private final String namespace;
+        private final String versionString;
+        private final double version;
         public String getNamespace() {
             return this.namespace;
         }
@@ -109,7 +109,7 @@ public abstract class CycloneDxSchema {
         return factory.getSchema(schemaNode, config);
     }
 
-    private InputStream getJsonSchemaAsStream(final CycloneDxSchema.Version schemaVersion, boolean strict) throws IOException {
+    private InputStream getJsonSchemaAsStream(final CycloneDxSchema.Version schemaVersion, boolean strict) {
         if (CycloneDxSchema.Version.VERSION_12 == schemaVersion) {
             if (strict) {
                 return this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json");

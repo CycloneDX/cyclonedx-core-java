@@ -37,7 +37,7 @@ public class ExternalReferenceSerializer extends StdSerializer<ExternalReference
     this(null);
   }
 
-  public ExternalReferenceSerializer(final Class t) {
+  public ExternalReferenceSerializer(final Class<ExternalReference> t) {
     super(t);
   }
 

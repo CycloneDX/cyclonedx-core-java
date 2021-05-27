@@ -27,16 +27,14 @@ import org.w3c.dom.Document;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseParseTest {
 
-    static List<CycloneDxSchema.Version> VERSIONS = new ArrayList<>();
+    static final List<CycloneDxSchema.Version> VERSIONS = new ArrayList<>();
     static {
         VERSIONS.add(CycloneDxSchema.Version.VERSION_10);
         VERSIONS.add(CycloneDxSchema.Version.VERSION_11);
@@ -52,7 +50,7 @@ public abstract class BaseParseTest {
         return files;
     }
 
-    List<File> getResources(final String resourceDirectory) throws Exception {
+    List<File> getResources(final String resourceDirectory) {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
         final URL url = loader.getResource(resourceDirectory);
         final String path = url.getPath();
@@ -64,7 +62,7 @@ public abstract class BaseParseTest {
         return parser.parse(file);
     }
 
-    void generateBomXml(final String testName, final Bom bom) throws ParserConfigurationException, ParseException, GeneratorException, IOException {
+    void generateBomXml(final String testName, final Bom bom) throws ParserConfigurationException {
         for (CycloneDxSchema.Version version : VERSIONS) {
             System.out.println("Generating CycloneDX " + version.getVersionString() + " XML for " + testName);
             BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);

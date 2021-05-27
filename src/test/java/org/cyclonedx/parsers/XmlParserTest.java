@@ -34,6 +34,7 @@ import java.io.File;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -247,7 +248,7 @@ public class XmlParserTest {
         assertEquals("Acme Application", bom.getMetadata().getComponent().getSwid().getName());
         assertEquals("9.1.1", bom.getMetadata().getComponent().getSwid().getVersion());
         assertEquals(0, bom.getMetadata().getComponent().getSwid().getTagVersion());
-        assertEquals(false, bom.getMetadata().getComponent().getSwid().isPatch());
+        assertFalse(bom.getMetadata().getComponent().getSwid().isPatch());
         assertEquals("Acme, Inc.", bom.getMetadata().getManufacture().getName());
         assertEquals("https://example.com", bom.getMetadata().getManufacture().getUrls().get(0));
         assertEquals(1, bom.getMetadata().getManufacture().getContacts().size());
@@ -351,7 +352,7 @@ public class XmlParserTest {
         assertEquals("Acme Application", bom.getMetadata().getComponent().getSwid().getName());
         assertEquals("9.1.1", bom.getMetadata().getComponent().getSwid().getVersion());
         assertEquals(0, bom.getMetadata().getComponent().getSwid().getTagVersion());
-        assertEquals(false, bom.getMetadata().getComponent().getSwid().isPatch());
+        assertFalse(bom.getMetadata().getComponent().getSwid().isPatch());
         assertEquals("Acme, Inc.", bom.getMetadata().getManufacture().getName());
         assertEquals("https://example.com", bom.getMetadata().getManufacture().getUrls().get(0));
         assertEquals(1, bom.getMetadata().getManufacture().getContacts().size());
