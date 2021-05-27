@@ -25,6 +25,7 @@ import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.AttachmentText;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
@@ -174,7 +175,7 @@ public final class LicenseResolver {
         if (!isDeprecatedLicenseId && includeLicenseText) {
             final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/" + licenseId + ".txt");
             if (is != null) {
-                final String text = IOUtils.toString(is, "UTF-8");
+                final String text = IOUtils.toString(is, StandardCharsets.UTF_8);
                 final AttachmentText attachment = new AttachmentText();
                 attachment.setContentType("plain/text");
                 attachment.setEncoding("base64");

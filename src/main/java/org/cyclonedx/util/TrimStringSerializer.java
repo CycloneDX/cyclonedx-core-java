@@ -30,8 +30,7 @@ public class TrimStringSerializer extends StdScalarSerializer<Object> {
         super(String.class, false);
     }
 
-    public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException,
-            JsonProcessingException {
+    public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         if (value != null) {
             gen.writeString(value.trim().replace("\r\n", " ").replace("\n", " ").replace("\t", " ").replace("\r", " ").replaceAll(" +", " "));
         }

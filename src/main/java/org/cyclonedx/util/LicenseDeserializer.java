@@ -44,7 +44,7 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
 
   @Override
   public LicenseChoice deserialize(
-    final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException
+    final JsonParser p, final DeserializationContext ctxt) throws IOException
   {
     if (p instanceof FromXmlParser) {
       return p.readValueAs(LicenseChoice.class);
@@ -55,7 +55,7 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
     MapType type = factory.constructMapType(HashMap.class, String.class, License.class);
     LicenseChoice licenseChoice = new LicenseChoice();
     for (JsonNode node : nodes) {
-      HashMap<String, License> map = null;
+      HashMap<String, License> map;
       try
       {
         map = this.mapper.readValue(node.toString(), type);

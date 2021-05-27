@@ -41,7 +41,7 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
     this(null);
   }
 
-  public ExtensibleTypesSerializer(final Class t) {
+  public ExtensibleTypesSerializer(final Class<List<ExtensibleType>> t) {
     super(t);
   }
 
