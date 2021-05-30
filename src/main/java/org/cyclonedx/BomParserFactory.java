@@ -54,11 +54,12 @@ public class BomParserFactory {
 
     public static boolean looksLikeCycloneDX(final byte[] bytes) {
         final String bomString = new String(bytes, StandardCharsets.UTF_8);
-        if (bomString.startsWith("<?xml") && bomString.contains("<bom") && bomString.contains("http://cyclonedx.org/schema/bom")) {
-            return true;
-        } else if (bomString.startsWith("{") && bomString.contains("bomFormat") && bomString.contains("CycloneDX")) {
+        if (bomString.startsWith("<?xml") && bomString.contains("<bom") &&
+            bomString.contains("http://cyclonedx.org/schema/bom")) {
             return true;
         }
-        return false;
+        else {
+            return bomString.startsWith("{") && bomString.contains("bomFormat") && bomString.contains("CycloneDX");
+        }
     }
 }

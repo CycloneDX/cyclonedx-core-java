@@ -44,7 +44,7 @@ public class Hash {
         BLAKE2b_512("BLAKE2b-512"),
         BLAKE3("BLAKE3");
 
-        private String spec;
+        private final String spec;
 
         Algorithm(String spec) {
             this.spec = spec;
