@@ -21,7 +21,7 @@ Maven Usage
 <dependency>
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
-    <version>5.0.1-LM</version>
+    <version>5.0.1</version>
 </dependency>
 ```
 
