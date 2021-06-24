@@ -18,11 +18,8 @@
  */
 package org.cyclonedx.generators.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import java.lang.reflect.Field;
+
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
@@ -31,15 +28,22 @@ import org.cyclonedx.util.ComponentWrapperSerializer;
 import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.cyclonedx.util.TrimStringSerializer;
 import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
-import java.lang.reflect.Field;
 
-abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator
+{
 
     private final ObjectMapper mapper;
 
     private final DefaultPrettyPrinter prettyPrinter;
 
-    AbstractBomJsonGenerator() {
+	public AbstractBomJsonGenerator()
+	{
         this.mapper = new ObjectMapper();
         this.prettyPrinter = new DefaultPrettyPrinter();
 
@@ -47,10 +51,15 @@ abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJs
         setupPrettyPrinter(this.prettyPrinter);
     }
 
+	public ObjectMapper getMapper()
+	{
+		return mapper;
+	}
+	
     private void setupPrettyPrinter(final DefaultPrettyPrinter prettyPrinter) {
         prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
     }
-
+	
     private void setupObjectMapper(final ObjectMapper mapper) {
         mapper.setAnnotationIntrospector(
                 new VersionJsonAnnotationIntrospector(
