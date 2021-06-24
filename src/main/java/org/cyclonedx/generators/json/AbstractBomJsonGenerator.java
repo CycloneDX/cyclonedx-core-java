@@ -19,7 +19,6 @@
 package org.cyclonedx.generators.json;
 
 import java.lang.reflect.Field;
-
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
@@ -28,22 +27,19 @@ import org.cyclonedx.util.ComponentWrapperSerializer;
 import org.cyclonedx.util.LicenseChoiceSerializer;
 import org.cyclonedx.util.TrimStringSerializer;
 import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator
-{
+public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
     private final ObjectMapper mapper;
 
     private final DefaultPrettyPrinter prettyPrinter;
 
-	public AbstractBomJsonGenerator()
-	{
+	public AbstractBomJsonGenerator() {
         this.mapper = new ObjectMapper();
         this.prettyPrinter = new DefaultPrettyPrinter();
 
@@ -51,8 +47,7 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         setupPrettyPrinter(this.prettyPrinter);
     }
 
-	public ObjectMapper getMapper()
-	{
+	public ObjectMapper getMapper() {
 		return mapper;
 	}
 	

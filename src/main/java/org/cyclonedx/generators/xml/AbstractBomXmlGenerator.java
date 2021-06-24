@@ -20,12 +20,10 @@ package org.cyclonedx.generators.xml;
 
 import java.io.IOException;
 import java.io.StringReader;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
@@ -34,29 +32,25 @@ import org.cyclonedx.util.VersionXmlAnnotationIntrospector;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.util.DefaultXmlPrettyPrinter;
 
-public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator
-{
+public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements BomXmlGenerator {
 
     private final ObjectMapper mapper;
 
     private final DefaultXmlPrettyPrinter prettyPrinter;
 
-	public AbstractBomXmlGenerator()
-	{
+	public AbstractBomXmlGenerator() {
         mapper = new XmlMapper();
         prettyPrinter = new DefaultXmlPrettyPrinter();
         setupObjectMapper(mapper);
     }
 
-	public ObjectMapper getMapper()
-	{
+	public ObjectMapper getMapper() {
 		return mapper;
 	}
 	
