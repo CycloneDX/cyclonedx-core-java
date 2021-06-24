@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.cyclonedx.model.Property;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,15 +27,13 @@ import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
  * @author wrgoff
  * @since 28 May 2021
  */
-public class PropertyDeserializer extends StdDeserializer<List<Property>>
-{
+public class PropertyDeserializer extends StdDeserializer<List<Property>> {
 	private static final long serialVersionUID = 3080840606644733407L;
 	
 	/**
 	 * Default Constructor.
 	 */
-	public PropertyDeserializer()
-	{
+	public PropertyDeserializer() {
 		this(null);
 	}
 	
@@ -46,8 +42,7 @@ public class PropertyDeserializer extends StdDeserializer<List<Property>>
 	 * 
 	 * @param vc Class for which the deserializer is for.
 	 */
-	public PropertyDeserializer(final Class<?> vc)
-	{
+	public PropertyDeserializer(final Class<?> vc) {
 		super(vc);
 	}
 	
@@ -60,34 +55,26 @@ public class PropertyDeserializer extends StdDeserializer<List<Property>>
 	 */
 	@Override
 	public List<Property> deserialize(final JsonParser parser,
-			final DeserializationContext context) throws IOException
-	{
+			final DeserializationContext context) throws IOException {
 		List<Property> properties = new ArrayList<>();
 		
-		if (parser instanceof FromXmlParser)
-		{
+		if (parser instanceof FromXmlParser) {
 			JsonNode node = parser.getCodec().readTree(parser);
-			if (node.has("properties"))
-			{
+			if (node.has("properties")) {
 				JsonNode propertiesNode = node.get("properties");
-				if(propertiesNode.isArray())
-				{
+				if(propertiesNode.isArray()) {
 					ArrayNode arrayNode = (ArrayNode) node;
-					for (int i = 0; i < arrayNode.size(); i++)
-					{
+					for (int i = 0; i < arrayNode.size(); i++) {
 						node = node.get("property");
 						properties.addAll(parsePropertyNode(node, new ArrayList<Property>()));
 					}
 				}
 			}
-			else if (node.has("property"))
-			{
+			else if (node.has("property")) {
 				node = node.get("property");
 				properties.addAll(parsePropertyNode(node, new ArrayList<Property>()));
 			}
-		}
-		else
-		{
+		} else {
 			Property[] props = parser.readValueAs(Property[].class);
 			properties = Arrays.asList(props.clone());
 		}
@@ -100,29 +87,26 @@ public class PropertyDeserializer extends StdDeserializer<List<Property>>
 	 * @param node JsonNode to process the property form.
 	 * @return Property processed from the JsonNode passed in.
 	 */
-	private Property parseProperty(JsonNode node)
-	{
-		String name = "";
-		String value = "";
+	private Property parseProperty(JsonNode node) {
+		String name = null;
+		String value = null;
 		
 		JsonNode nameNode = node.get("name");
-		if (nameNode != null)
+		if (nameNode != null) {
 			name = nameNode.asText();
-		
-		JsonNode valueNode = node.get("");
-		if (valueNode != null)
-			value = valueNode.asText();
-		else
-		{
-			valueNode = node.get("value");
-			if (valueNode != null)
-				value = valueNode.asText();
 		}
-		
+		JsonNode valueNode = node.get("");
+		if (valueNode != null) {
+			value = valueNode.asText();
+		} else if (isPreleaseDeserializationEnabled()) {
+			valueNode = node.get("value");
+			if (valueNode != null) {
+				value = valueNode.asText();
+			}
+		}
 		Property prop = new Property();
 		prop.setName(name);
 		prop.setValue(value);
-		
 		return prop;
 	}
 	
@@ -133,18 +117,15 @@ public class PropertyDeserializer extends StdDeserializer<List<Property>>
 	 * @param props     List of properties to append to.
 	 * @return List of properties processed.
 	 */
-	private List<Property> parseArrayNode(ArrayNode arrayNode, List<Property> props)
-	{
+	private List<Property> parseArrayNode(ArrayNode arrayNode, List<Property> props) {
 		JsonNode node;
-		for (int i = 0; i < arrayNode.size(); i++)
-		{
+		for (int i = 0; i < arrayNode.size(); i++) {
 			node = arrayNode.get(i);
-			if (node instanceof ArrayNode)
-			{
+			if (node instanceof ArrayNode) {
 				parseArrayNode(((ArrayNode) node), props);
-			}
-			else
+			} else {
 				props.add(parseProperty(node));
+			}
 		}
 		return props;
 	}
@@ -156,16 +137,18 @@ public class PropertyDeserializer extends StdDeserializer<List<Property>>
 	 * @param properties List of properties to append to.
 	 * @return List of properties.
 	 */
-	private List<Property> parsePropertyNode(JsonNode node, List<Property> properties)
-	{
-		if (node.isArray())
-		{
+	private List<Property> parsePropertyNode(JsonNode node, List<Property> properties) {
+		if (node.isArray()) {
 			ArrayNode arrayNode = (ArrayNode) node;
 			properties.addAll(parseArrayNode(arrayNode, new ArrayList<Property>()));
-		}
-		else
+		} else {
 			properties.add(parseProperty(node));
-		
+		}
 		return properties;
+	}
+
+	private boolean isPreleaseDeserializationEnabled() {
+		final String s = System.getProperty("cyclonedx.prerelease.13.properties");
+		return Boolean.parseBoolean(s);
 	}
 }

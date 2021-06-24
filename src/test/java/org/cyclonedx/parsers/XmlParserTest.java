@@ -426,4 +426,24 @@ public class XmlParserTest {
         assertEquals("pkg:maven/org.acme/web-framework@1.0.0", d11.getRef());
         assertNull(d11.getDependencies());
     }
+
+    @Test
+    public void test13PrereleasePropertyBom() throws Exception {
+        final File file = new File(this.getClass().getResource("/1.3/valid-properties-1.3-prerelease.xml").getFile());
+        final XmlParser parser = new XmlParser();
+        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        assertFalse(valid);
+        final Bom bom1 = parser.parse(file);
+        Component c1 = bom1.getComponents().get(0);
+        assertEquals(2, c1.getProperties().size());
+        assertEquals("Foo", c1.getProperties().get(0).getName());
+        assertNull(c1.getProperties().get(0).getValue());
+
+        System.setProperty("cyclonedx.prerelease.13.properties", "true");
+        final Bom bom2 = parser.parse(file);
+        Component c2 = bom2.getComponents().get(0);
+        assertEquals(2, c2.getProperties().size());
+        assertEquals("Foo", c2.getProperties().get(0).getName());
+        assertEquals("Bar", c2.getProperties().get(0).getValue());
+    }
 }
