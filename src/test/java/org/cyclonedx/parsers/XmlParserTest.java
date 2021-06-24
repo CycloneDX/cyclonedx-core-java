@@ -431,7 +431,7 @@ public class XmlParserTest {
     public void test13PrereleasePropertyBom() throws Exception {
         final File file = new File(this.getClass().getResource("/1.3/valid-properties-1.3-prerelease.xml").getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_13);
         assertFalse(valid);
         final Bom bom1 = parser.parse(file);
         Component c1 = bom1.getComponents().get(0);
