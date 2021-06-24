@@ -48,7 +48,9 @@
     "exp": "CDDL-1.0",
     "names": [
       "CDDL 1.0",
-      "CDDL License"
+      "CDDL License",
+      "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+      "Common Development and Distribution License (CDDL) v1.0"
     ]
   },
   {
@@ -61,7 +63,9 @@
   {
     "exp": "CDDL-1.1",
     "names": [
-      "CDDL 1.1"
+      "CDDL 1.1",
+      "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1",
+      "Common Development and Distribution License (CDDL) v1.1"
     ]
   },
   {
