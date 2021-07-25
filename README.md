@@ -42,7 +42,7 @@ the CycloneDX version supported by the target system.
 Copyright & License
 -------------------
 
-CycloneDX Core (Java) is Copyright (c) Steve Springett. All Rights Reserved.
+CycloneDX Core (Java) is Copyright (c) OWASP Foundation. All Rights Reserved.
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [License] file for the full license.
 
