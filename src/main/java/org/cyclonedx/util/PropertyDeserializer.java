@@ -148,7 +148,7 @@ public class PropertyDeserializer extends StdDeserializer<List<Property>> {
 	}
 
 	private boolean isPreleaseDeserializationEnabled() {
-		final String s = System.getProperty("cyclonedx.prerelease.13.properties");
+		final String s = System.getProperty("cyclonedx.prerelease.14.properties");
 		return Boolean.parseBoolean(s);
 	}
 }
