@@ -439,7 +439,7 @@ public class XmlParserTest {
         assertEquals("Foo", c1.getProperties().get(0).getName());
         assertNull(c1.getProperties().get(0).getValue());
 
-        System.setProperty("cyclonedx.prerelease.13.properties", "true");
+        System.setProperty("cyclonedx.prerelease.14.properties", "true");
         final Bom bom2 = parser.parse(file);
         Component c2 = bom2.getComponents().get(0);
         assertEquals(2, c2.getProperties().size());
