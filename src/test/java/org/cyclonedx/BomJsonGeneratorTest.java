@@ -22,6 +22,7 @@ import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.json.BomJsonGenerator12;
+import org.cyclonedx.generators.json.BomJsonGenerator13;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
@@ -33,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import javax.json.JsonObject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,6 +80,19 @@ public class BomJsonGeneratorTest {
         assertEquals(1, obj.getInt("version"));
         assertEquals(6, obj.getJsonObject("metadata").size());
         assertEquals(3, obj.getJsonArray("components").size());
+    }
+
+    @Test
+    public void schema13EmptyComponentsJsonTest() throws Exception {
+        final Bom bom =  new Bom();
+        bom.setComponents(new ArrayList<>());
+        bom.setDependencies(new ArrayList<>());
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
+        assertTrue(generator instanceof BomJsonGenerator13);
+        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        File file = writeToFile(generator.toJsonString());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13, true));
     }
 
     private File writeToFile(String jsonString) throws Exception {

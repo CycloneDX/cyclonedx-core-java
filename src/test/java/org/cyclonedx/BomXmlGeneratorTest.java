@@ -20,10 +20,7 @@ package org.cyclonedx;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema.Version;
-import org.cyclonedx.generators.xml.BomXmlGenerator;
-import org.cyclonedx.generators.xml.BomXmlGenerator10;
-import org.cyclonedx.generators.xml.BomXmlGenerator11;
-import org.cyclonedx.generators.xml.BomXmlGenerator12;
+import org.cyclonedx.generators.xml.*;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExtensibleType;
@@ -42,6 +39,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -226,6 +224,19 @@ public class BomXmlGeneratorTest {
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_11));
+    }
+
+    @Test
+    public void schema13EmptyComponentsXmlTest() throws Exception {
+        final Bom bom =  new Bom();
+        bom.setComponents(new ArrayList<>());
+        bom.setDependencies(new ArrayList<>());
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_13, bom);
+        assertTrue(generator instanceof BomXmlGenerator13);
+        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
     }
 
     private File writeToFile(String xmlString) throws Exception {

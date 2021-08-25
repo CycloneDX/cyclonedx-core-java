@@ -67,19 +67,21 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
   }
 
   private void writeJSONDependenciesWithGenerator(final JsonGenerator generator, final List<Dependency> dependencies) throws IOException {
-    if (dependencies != null && !dependencies.isEmpty()) {
+    if (dependencies != null) {
       generator.writeStartArray();
-      for (Dependency dependency : dependencies) {
-        generator.writeStartObject();
-        generator.writeStringField(REF, dependency.getRef());
-        generator.writeArrayFieldStart("dependsOn");
-        if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
-          for (Dependency subDependency : dependency.getDependencies()) {
-            generator.writeString(subDependency.getRef());
+      if (! dependencies.isEmpty()) {
+        for (Dependency dependency : dependencies) {
+          generator.writeStartObject();
+          generator.writeStringField(REF, dependency.getRef());
+          generator.writeArrayFieldStart("dependsOn");
+          if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+            for (Dependency subDependency : dependency.getDependencies()) {
+              generator.writeString(subDependency.getRef());
+            }
           }
+          generator.writeEndArray();
+          generator.writeEndObject();
         }
-        generator.writeEndArray();
-        generator.writeEndObject();
       }
       generator.writeEndArray();
     }
