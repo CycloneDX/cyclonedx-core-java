@@ -39,6 +39,10 @@ the CycloneDX version supported by the target system.
 | 2.x | CycloneDX v1.1 | XML |
 | 1.x | CycloneDX v1.0 | XML |
 
+## Library API Documentation
+
+The library API documentation can be viewed online at [https://cyclonedx.github.io/cyclonedx-core-java](https://cyclonedx.github.io/cyclonedx-core-java).
+
 Copyright & License
 -------------------
 
