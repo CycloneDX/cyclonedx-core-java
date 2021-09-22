@@ -41,7 +41,7 @@ the CycloneDX version supported by the target system.
 
 ## Library API Documentation
 
-The library API documentation can be viewed online at [https://cyclonedx.github.io/cyclonedx-core-java](https://cyclonedx.github.io/cyclonedx-core-java).
+The library API documentation can be viewed online at [https://cyclonedx.github.io/cyclonedx-core-java/](https://cyclonedx.github.io/cyclonedx-core-java/).
 
 Copyright & License
 -------------------
