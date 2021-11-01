@@ -294,4 +294,13 @@ public class JsonParserTest {
         assertEquals("pkg:npm/acme/common@1.0.0", d11.getRef());
         assertNull(d11.getDependencies());
     }
+
+    @Test
+    public void testParsedObjects14Bom() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.4.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        assertNotNull(bom);
+    }
 }
