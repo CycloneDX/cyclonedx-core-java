@@ -45,7 +45,7 @@ public class JsonParserTest {
         final File file = new File(this.getClass().getResource("/bom-1.2.json").getFile());
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
         System.out.println(bom.getSerialNumber());
     }
 

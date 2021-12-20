@@ -65,7 +65,7 @@ public class BomJsonGeneratorTest {
         assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12, true));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class BomJsonGeneratorTest {
         assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13, true));
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
     }
 
     private File writeToFile(String jsonString) throws Exception {
