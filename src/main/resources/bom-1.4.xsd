@@ -28,18 +28,25 @@ limitations under the License.
 
     <xs:annotation>
         <xs:documentation>
-            <name>CycloneDX Software Bill-of-Material Specification</name>
+            <name>CycloneDX Software Bill of Materials Standard</name>
             <url>https://cyclonedx.org/</url>
             <license uri="http://www.apache.org/licenses/LICENSE-2.0"
                      version="2.0">Apache License, Version 2.0</license>
         </xs:documentation>
     </xs:annotation>
 
+    <xs:simpleType name="refType">
+        <xs:annotation>
+            <xs:documentation>Identifier-DataType for interlinked elements.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string" />
+    </xs:simpleType>
+
     <xs:complexType name="metadata">
         <xs:sequence minOccurs="0" maxOccurs="1">
             <xs:element name="timestamp" type="xs:dateTime" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation>The date and time (timestamp) when the document was created.</xs:documentation>
+                    <xs:documentation>The date and time (timestamp) when the BOM was created.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="tools" minOccurs="0" maxOccurs="1">
@@ -84,7 +91,10 @@ limitations under the License.
                 <xs:annotation>
                     <xs:documentation>Provides the ability to document properties in a key/value store.
                         This provides flexibility to include data not officially supported in the standard
-                        without having to use additional namespaces or create extensions.</xs:documentation>
+                        without having to use additional namespaces or create extensions. Property names
+                        of interest to the general public are encouraged to be registered in the
+                        CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                        Formal registration is OPTIONAL.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
@@ -281,8 +291,8 @@ limitations under the License.
             </xs:element>
             <xs:element name="scope" type="bom:scope" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation>Specifies the scope of the component. If scope is not specified, 'runtime'
-                        scope should be assumed by the consumer of the BOM</xs:documentation>
+                    <xs:documentation>Specifies the scope of the component. If scope is not specified, 'required'
+                        scope SHOULD be assumed by the consumer of the BOM.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="hashes" minOccurs="0" maxOccurs="1">
@@ -295,21 +305,21 @@ limitations under the License.
             <xs:element name="licenses" type="bom:licenseChoiceType" minOccurs="0" maxOccurs="1"/>
             <xs:element name="copyright" type="xs:normalizedString" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation>An optional copyright notice informing users of the underlying claims to
+                    <xs:documentation>A copyright notice informing users of the underlying claims to
                         copyright ownership in a published work.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="cpe" type="bom:cpe" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        Specifies a well-formed CPE name. See https://nvd.nist.gov/products/cpe
+                        Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. See https://nvd.nist.gov/products/cpe
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="purl" type="xs:anyURI" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        Specifies the package-url (PURL). The purl, if specified, must be valid and conform
+                        Specifies the package-url (purl). The purl, if specified, MUST be valid and conform
                         to the specification defined at: https://github.com/package-url/purl-spec
                     </xs:documentation>
                 </xs:annotation>
@@ -326,7 +336,7 @@ limitations under the License.
                     <xs:documentation>
                         DEPRECATED - DO NOT USE. This will be removed in a future version. Use the pedigree
                         element instead to supply information on exactly how the component was modified.
-                        A boolean value indicating is the component has been modified from the original.
+                        A boolean value indicating if the component has been modified from the original.
                         A value of true indicates the component is a derivative of the original.
                         A value of false indicates the component has not been modified from the original.
                     </xs:documentation>
@@ -350,15 +360,18 @@ limitations under the License.
                 <xs:annotation>
                     <xs:documentation>Provides the ability to document properties in a key/value store.
                         This provides flexibility to include data not officially supported in the standard
-                        without having to use additional namespaces or create extensions.</xs:documentation>
+                        without having to use additional namespaces or create extensions. Property names
+                        of interest to the general public are encouraged to be registered in the
+                        CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                        Formal registration is OPTIONAL.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="components" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        Specifies optional sub-components. This is not a dependency tree. It provides a way
-                        to specify a hierarchical representation of component assemblies, similar to
-                        system -> subsystem -> parts assembly in physical supply chains.
+                        A list of software and hardware components included in the parent component. This is not a
+                        dependency tree. It provides a way to specify a hierarchical representation of component
+                        assemblies, similar to system -> subsystem -> parts assembly in physical supply chains.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -403,13 +416,13 @@ limitations under the License.
         <xs:attribute name="mime-type" type="bom:mimeType">
             <xs:annotation>
                 <xs:documentation>
-                    The optional mime-type of the component. When used on file components, the mime-type
+                    The OPTIONAL mime-type of the component. When used on file components, the mime-type
                     can provide additional context about the kind of file being represented such as an image,
                     font, or executable. Some library or framework components may also have an associated mime-type.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="bom-ref" type="xs:string">
+        <xs:attribute name="bom-ref" type="bom:refType">
             <xs:annotation>
                 <xs:documentation>
                     An optional identifier which can be used to reference the component elsewhere in the BOM.
@@ -562,7 +575,7 @@ limitations under the License.
             <xs:enumeration value="device">
                 <xs:annotation>
                     <xs:documentation>A hardware device such as a processor, or chip-set. A hardware device
-                        containing firmware should include a component for the physical hardware itself, and another
+                        containing firmware SHOULD include a component for the physical hardware itself, and another
                         component of type 'firmware' or 'operating-system' (whichever is relevant), describing
                         information about the software running on the device.</xs:documentation>
                 </xs:annotation>
@@ -1008,6 +1021,11 @@ limitations under the License.
     </xs:complexType>
 
     <xs:complexType name="issueType">
+        <xs:annotation>
+            <xs:documentation>
+                An individual issue that has been resolved.
+            </xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="id" type="xs:normalizedString" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
@@ -1170,7 +1188,7 @@ limitations under the License.
         <xs:sequence minOccurs="0" maxOccurs="unbounded">
             <xs:element name="dependency" type="bom:dependencyType"/>
         </xs:sequence>
-        <xs:attribute name="ref" type="xs:string" use="required">
+        <xs:attribute name="ref" type="bom:refType" use="required">
             <xs:annotation>
                 <xs:documentation>References a component or service by the its bom-ref attribute</xs:documentation>
             </xs:annotation>
@@ -1291,15 +1309,17 @@ limitations under the License.
                 <xs:annotation>
                     <xs:documentation>Provides the ability to document properties in a key/value store.
                         This provides flexibility to include data not officially supported in the standard
-                        without having to use additional namespaces or create extensions.</xs:documentation>
+                        without having to use additional namespaces or create extensions. Property names
+                        of interest to the general public are encouraged to be registered in the
+                        CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                        Formal registration is OPTIONAL.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="services" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        Specifies optional sub-service. This is not a dependency tree. It provides a way
-                        to specify a hierarchical representation of service assemblies, similar to
-                        system -> subsystem -> parts assembly in physical supply chains.
+                        A list of services included or deployed behind the parent service. This is not a dependency
+                        tree. It provides a way to specify a hierarchical representation of service assemblies.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -1328,7 +1348,7 @@ limitations under the License.
                 </xs:annotation>
             </xs:any>
         </xs:sequence>
-        <xs:attribute name="bom-ref" type="xs:string">
+        <xs:attribute name="bom-ref" type="bom:refType">
             <xs:annotation>
                 <xs:documentation>
                     An optional identifier which can be used to reference the service elsewhere in the BOM.
@@ -1639,10 +1659,12 @@ limitations under the License.
             </xs:element>
             <xs:element name="properties" type="bom:propertiesType" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation>Provides the ability to document properties in a name-value store.
+                    <xs:documentation>Provides the ability to document properties in a key/value store.
                         This provides flexibility to include data not officially supported in the standard
-                        without having to use additional namespaces or create extensions. Unlike key-value
-                        stores, properties support duplicate names, each potentially having different values.</xs:documentation>
+                        without having to use additional namespaces or create extensions. Property names
+                        of interest to the general public are encouraged to be registered in the
+                        CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                        Formal registration is OPTIONAL.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
@@ -1662,7 +1684,7 @@ limitations under the License.
     </xs:complexType>
 
     <xs:complexType name="bomReferenceType">
-        <xs:attribute name="ref" type="xs:string" use="required">
+        <xs:attribute name="ref" type="bom:refType" use="required">
             <xs:annotation>
                 <xs:documentation>References a component or service by the its bom-ref attribute</xs:documentation>
             </xs:annotation>
@@ -1993,7 +2015,7 @@ limitations under the License.
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="bom-ref" type="xs:string">
+        <xs:attribute name="bom-ref" type="bom:refType">
             <xs:annotation>
                 <xs:documentation>
                     An optional identifier which can be used to reference the vulnerability elsewhere in the BOM.
@@ -2308,12 +2330,12 @@ limitations under the License.
                 </xs:element>
                 <xs:element name="components" type="bom:componentsType" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
-                        <xs:documentation>Provides the ability to document a list of components.</xs:documentation>
+                        <xs:documentation>A list of software and hardware components.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="services" type="bom:servicesType" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
-                        <xs:documentation>Provides the ability to document a list of external services.</xs:documentation>
+                        <xs:documentation>A list of services. This may include microservices, function-as-a-service, and other types of network or intra-process services.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="externalReferences" type="bom:externalReferences" minOccurs="0" maxOccurs="1">
@@ -2334,10 +2356,12 @@ limitations under the License.
                 </xs:element>
                 <xs:element name="properties" type="bom:propertiesType" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
-                        <xs:documentation>Provides the ability to document properties in a name-value store.
+                        <xs:documentation>Provides the ability to document properties in a key/value store.
                             This provides flexibility to include data not officially supported in the standard
-                            without having to use additional namespaces or create extensions. Unlike key-value
-                            stores, properties support duplicate names, each potentially having different values.</xs:documentation>
+                            without having to use additional namespaces or create extensions. Property names
+                            of interest to the general public are encouraged to be registered in the
+                            CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                            Formal registration is OPTIONAL.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="vulnerabilities" type="bom:vulnerabilitiesType" minOccurs="0" maxOccurs="1">
@@ -2355,19 +2379,17 @@ limitations under the License.
             </xs:sequence>
             <xs:attribute name="version" type="xs:integer" default="1">
                 <xs:annotation>
-                    <xs:documentation>The version allows component publishers/authors to make changes to existing
-                        BOMs to update various aspects of the document such as description or licenses. When a system
-                        is presented with multiple BOMs for the same component, the system should use the most recent
-                        version of the BOM. The default version is '1' and should be incremented for each version of the
-                        BOM that is published. Each version of a component should have a unique BOM and if no changes are
-                        made to the BOMs, then each BOM will have a version of '1'.</xs:documentation>
+                    <xs:documentation>Whenever an existing BOM is modified, either manually or through automated
+                        processes, the version of the BOM SHOULD be incremented by 1. When a system is presented with
+                        multiple BOMs with identical serial numbers, the system SHOULD use the most recent version of the BOM.
+                        The default version is '1'.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="serialNumber" type="bom:urnUuid">
                 <xs:annotation>
-                    <xs:documentation>Every BOM generated should have a unique serial number, even if the contents
-                        of the BOM being generated have not changed over time. The process or tool responsible for
-                        creating the BOM should create random UUID's for every BOM generated.</xs:documentation>
+                    <xs:documentation>Every BOM generated SHOULD have a unique serial number, even if the contents of
+                        the BOM have not changed over time. If specified, the serial number MUST conform to RFC-4122.
+                        Use of serial numbers are RECOMMENDED.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:anyAttribute namespace="##any" processContents="lax">

@@ -95,7 +95,7 @@ public abstract class CycloneDxSchema {
         offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", getClass().getClassLoader().getResource("spdx.schema.json").toExternalForm());
         offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json", getClass().getClassLoader().getResource("bom-1.2-strict.schema.json").toExternalForm());
         offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json", getClass().getClassLoader().getResource("bom-1.3-strict.schema.json").toExternalForm());
-        offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", getClass().getClassLoader().getResource("bom-1.4-SNAPSHOT.schema.json").toExternalForm());
+        offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", getClass().getClassLoader().getResource("bom-1.4.schema.json").toExternalForm());
         config.setUriMappings(offlineMappings);
         JsonNode schemaNode = mapper.readTree(spdxInstream);
         JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersionDetector.detect(schemaNode));
@@ -108,7 +108,7 @@ public abstract class CycloneDxSchema {
         } else if (CycloneDxSchema.Version.VERSION_13 == schemaVersion) {
             return this.getClass().getClassLoader().getResourceAsStream("bom-1.3-strict.schema.json");
         } else {
-            return this.getClass().getClassLoader().getResourceAsStream("bom-1.4-SNAPSHOT.schema.json");
+            return this.getClass().getClassLoader().getResourceAsStream("bom-1.4.schema.json");
         }
     }
 
@@ -199,7 +199,7 @@ public abstract class CycloneDxSchema {
         // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
         return getXmlSchema(
                 this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
-                this.getClass().getClassLoader().getResourceAsStream("bom-1.4-SNAPSHOT.xsd")
+                this.getClass().getClassLoader().getResourceAsStream("bom-1.4.xsd")
         );
     }
 
