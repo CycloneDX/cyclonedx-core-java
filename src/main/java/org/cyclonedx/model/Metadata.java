@@ -150,6 +150,13 @@ public class Metadata extends ExtensibleElement {
         this.properties = properties;
     }
 
+    public void addProperty(Property property) {
+        if (this.properties == null) {
+            this.properties = new ArrayList<>();
+        }
+        this.properties.add(property);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
