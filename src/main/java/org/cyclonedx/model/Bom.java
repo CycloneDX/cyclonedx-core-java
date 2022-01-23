@@ -180,6 +180,13 @@ public class Bom extends ExtensibleElement {
         this.properties = properties;
     }
 
+    public void addProperty(Property property) {
+        if (this.properties == null) {
+            this.properties = new ArrayList<>();
+        }
+        this.properties.add(property);
+    }
+
     public int getVersion() {
         return version;
     }

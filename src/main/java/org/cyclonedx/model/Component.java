@@ -348,6 +348,13 @@ public class Component extends ExtensibleElement {
         this.properties = properties;
     }
 
+    public void addProperty(Property property) {
+        if (this.properties == null) {
+            this.properties = new ArrayList<>();
+        }
+        this.properties.add(property);
+    }
+
     @JacksonXmlElementWrapper(localName = "components")
     @JacksonXmlProperty(localName = "component")
     public List<Component> getComponents() {

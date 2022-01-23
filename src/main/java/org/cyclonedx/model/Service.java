@@ -205,6 +205,13 @@ public class Service extends ExtensibleElement {
         this.properties = properties;
     }
 
+    public void addProperty(Property property) {
+        if (this.properties == null) {
+            this.properties = new ArrayList<>();
+        }
+        this.properties.add(property);
+    }
+
     @JacksonXmlElementWrapper(localName = "services")
     @JacksonXmlProperty(localName = "service")
     public List<Service> getServices() {
