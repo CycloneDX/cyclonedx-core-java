@@ -66,6 +66,8 @@ public class ExternalReference {
         BUILD_META("build-meta"),
         @JsonProperty("build-system")
         BUILD_SYSTEM("build-system"),
+        @JsonProperty("release_notes")
+        RELEASE_NOTES("release_notes"),
         @JsonProperty("other")
         OTHER("other");
 
@@ -85,7 +87,7 @@ public class ExternalReference {
     private Type type;
     private String comment;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Hash> hashes;
 
     public String getUrl() {

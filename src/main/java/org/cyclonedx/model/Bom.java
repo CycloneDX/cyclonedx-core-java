@@ -55,28 +55,28 @@ public class Bom extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Metadata metadata;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
     private List<Component> components;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<Service> services;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<Dependency> dependencies;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<ExternalReference> externalReferences;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Composition> compositions;
 
     @VersionFilter(versions = {"1.4"})
     private List<Vulnerability> vulnerabilities;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -247,6 +247,7 @@ public class Bom extends ExtensibleElement {
                 Objects.equals(dependencies, bom.dependencies) &&
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(compositions, bom.compositions) &&
+                Objects.equals(vulnerabilities, bom.vulnerabilities) &&
                 Objects.equals(properties, bom.properties) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
                 Objects.equals(specVersion, bom.specVersion);
@@ -254,6 +255,6 @@ public class Bom extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, properties, version, serialNumber, specVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities, properties, version, serialNumber, specVersion);
     }
 }
