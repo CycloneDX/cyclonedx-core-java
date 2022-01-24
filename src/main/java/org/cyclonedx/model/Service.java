@@ -230,7 +230,7 @@ public class Service extends ExtensibleElement {
 
     public ReleaseNotes getReleaseNotes() { return releaseNotes; }
 
-    public void setReleaseNotes() { this.releaseNotes = releaseNotes; }
+    public void setReleaseNotes(ReleaseNotes releaseNotes) { this.releaseNotes = releaseNotes; }
 
     public Signature getSignature() { return signature; }
 
