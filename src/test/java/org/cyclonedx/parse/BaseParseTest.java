@@ -21,6 +21,7 @@ package org.cyclonedx.parse;
 import org.cyclonedx.BomGeneratorFactory;
 import org.cyclonedx.BomParserFactory;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.json.BomJsonGenerator;
@@ -45,6 +46,7 @@ public abstract class BaseParseTest {
         VERSIONS.add(CycloneDxSchema.Version.VERSION_11);
         VERSIONS.add(CycloneDxSchema.Version.VERSION_12);
         VERSIONS.add(CycloneDxSchema.Version.VERSION_13);
+        VERSIONS.add(CycloneDxSchema.Version.VERSION_14);
     }
 
     List<File> getAllResources() throws Exception {

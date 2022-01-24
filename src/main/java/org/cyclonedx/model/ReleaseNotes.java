@@ -23,7 +23,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -47,6 +49,7 @@ public class ReleaseNotes
 {
   public ReleaseNotes() {}
 
+  @JacksonXmlProperty(isAttribute = true)
   private String type;
   private String title;
   private String featuredImage;
@@ -140,9 +143,13 @@ public class ReleaseNotes
   }
 
   public static class Resolves {
+
     public enum Type {
+      @JsonProperty("defect")
       DEFECT("defect"),
+      @JsonProperty("enhancement")
       ENHANCEMENT("enhancement"),
+      @JsonProperty("security")
       SECURITY("security");
 
       private final String name;
@@ -166,11 +173,21 @@ public class ReleaseNotes
       }
     }
 
+    private Type type;
+
     private String id;
     private String name;
     private String description;
     private Source source;
     private List<String> references;
+
+    public Type getType() {
+      return type;
+    }
+
+    public void setType(final Type type) {
+      this.type = type;
+    }
 
     public String getId() {
       return id;
