@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.util.DependencyDeserializer;
 
 @SuppressWarnings("unused")
@@ -45,6 +46,7 @@ import org.cyclonedx.util.DependencyDeserializer;
         "externalReferences",
         "dependencies",
         "compositions",
+        "vulnerabilities",
         "properties"
 })
 public class Bom extends ExtensibleElement {
@@ -70,6 +72,9 @@ public class Bom extends ExtensibleElement {
 
     @VersionFilter(versions = {"1.3"})
     private List<Composition> compositions;
+
+    @VersionFilter(versions = {"1.4"})
+    private List<Vulnerability> vulnerabilities;
 
     @VersionFilter(versions = {"1.3"})
     private List<Property> properties;
@@ -169,6 +174,12 @@ public class Bom extends ExtensibleElement {
     public void setCompositions(List<Composition> compositions) {
         this.compositions = compositions;
     }
+
+    @JacksonXmlElementWrapper(localName = "vulnerabilities")
+    @JacksonXmlProperty(localName = "vulnerability")
+    public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
+
+    public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
 
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
