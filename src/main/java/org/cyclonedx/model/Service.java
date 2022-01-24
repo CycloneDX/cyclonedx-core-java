@@ -46,6 +46,7 @@ import java.util.List;
         "externalReferences",
         "properties",
         "services",
+        "releaseNotes",
         "signature"
 })
 public class Service extends ExtensibleElement {
@@ -69,6 +70,7 @@ public class Service extends ExtensibleElement {
     @VersionFilter(versions = {"1.3"})
     private List<Property> properties;
     private List<Service> services;
+    private ReleaseNotes releaseNotes;
     @JsonOnly
     @VersionFilter(versions = {"1.4"})
     private Signature signature;
@@ -225,6 +227,10 @@ public class Service extends ExtensibleElement {
     public void setServices(List<Service> services) {
         this.services = services;
     }
+
+    public ReleaseNotes getReleaseNotes() { return releaseNotes; }
+
+    public void setReleaseNotes() { this.releaseNotes = releaseNotes; }
 
     public Signature getSignature() { return signature; }
 
