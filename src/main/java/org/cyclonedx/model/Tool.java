@@ -28,13 +28,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"vendor", "name", "version", "hashes"})
+@JsonPropertyOrder({"vendor", "name", "version", "hashes", "externalReferences"})
 public class Tool extends ExtensibleElement {
 
     private String vendor;
     private String name;
     private String version;
     private List<Hash> hashes;
+    private List<ExternalReference> externalReferences;
 
     public String getVendor() {
         return vendor;
@@ -70,6 +71,16 @@ public class Tool extends ExtensibleElement {
         this.hashes = hashes;
     }
 
+    @JacksonXmlElementWrapper(localName = "externalReferences")
+    @JacksonXmlProperty(localName = "reference")
+    public List<ExternalReference> getExternalReferences() {
+        return externalReferences;
+    }
+
+    public void setExternalReferences(final List<ExternalReference> externalReferences) {
+        this.externalReferences = externalReferences;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,11 +89,12 @@ public class Tool extends ExtensibleElement {
         return Objects.equals(vendor, tool.vendor) &&
                 Objects.equals(name, tool.name) &&
                 Objects.equals(version, tool.version) &&
-                Objects.equals(hashes, tool.hashes);
+                Objects.equals(hashes, tool.hashes) &&
+                Objects.equals(externalReferences, tool.externalReferences);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(vendor, name, version, hashes);
+        return Objects.hash(vendor, name, version, hashes, externalReferences);
     }
 }
