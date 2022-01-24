@@ -47,7 +47,8 @@ import org.cyclonedx.util.DependencyDeserializer;
         "dependencies",
         "compositions",
         "vulnerabilities",
-        "properties"
+        "properties",
+        "signature"
 })
 public class Bom extends ExtensibleElement {
 
@@ -90,6 +91,10 @@ public class Bom extends ExtensibleElement {
 
     @JsonOnly
     private String bomFormat;
+
+    @JsonOnly
+    @VersionFilter(versions = {"1.4"})
+    private Signature signature;
 
     public Metadata getMetadata() {
         return metadata;
@@ -235,6 +240,10 @@ public class Bom extends ExtensibleElement {
     public String getBomFormat() {
         return bomFormat;
     }
+
+    public Signature getSignature() { return signature; }
+
+    public void setSignature(Signature signature) { this.signature = signature; }
 
     @Override
     public boolean equals(Object o) {

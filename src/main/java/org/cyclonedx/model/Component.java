@@ -150,6 +150,9 @@ public class Component extends ExtensibleElement {
     private Type type;
     @VersionFilter(versions = {"1.4"})
     private ReleaseNotes releaseNotes;
+    @JsonOnly
+    @VersionFilter(versions = {"1.4"})
+    private Signature signature;
 
     public String getBomRef() {
         return bomRef;
@@ -395,6 +398,10 @@ public class Component extends ExtensibleElement {
     public ReleaseNotes getReleaseNotes() { return releaseNotes; }
 
     public void setReleaseNotes(ReleaseNotes releaseNotes) { this.releaseNotes = releaseNotes; }
+
+    public Signature getSignature() { return signature; }
+
+    public void setSignature(Signature signature) { this.signature = signature; }
 
     @Override
     public int hashCode() {
