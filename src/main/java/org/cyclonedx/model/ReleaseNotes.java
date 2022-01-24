@@ -39,6 +39,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
     "aliases",
     "tags",
     "resolves",
+    "notes",
     "properties"
 })
 /*
@@ -59,7 +60,7 @@ public class ReleaseNotes
   private List<String> aliases;
   private List<String> tags;
   private List<Resolves> resolves;
-
+  private List<Notes> notes;
   private List<Property> properties;
 
   public String getType() {
@@ -126,20 +127,28 @@ public class ReleaseNotes
     this.tags = tags;
   }
 
-  public List<Property> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(final List<Property> properties) {
-    this.properties = properties;
-  }
-
   public List<Resolves> getResolves() {
     return resolves;
   }
 
   public void setResolves(final List<Resolves> resolves) {
     this.resolves = resolves;
+  }
+
+  public List<Notes> getNotes() {
+    return notes;
+  }
+
+  public void setNotes(final List<Notes> notes) {
+    this.notes = notes;
+  }
+
+  public List<Property> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(final List<Property> properties) {
+    this.properties = properties;
   }
 
   public static class Resolves {
@@ -227,6 +236,27 @@ public class ReleaseNotes
 
     public void setReferences(final List<String> references) {
       this.references = references;
+    }
+  }
+
+  public static class Notes {
+    private String locale;
+    private AttachmentText text;
+
+    public String getLocale() {
+      return locale;
+    }
+
+    public void setLocale(final String locale) {
+      this.locale = locale;
+    }
+
+    public AttachmentText getText() {
+      return text;
+    }
+
+    public void setText(final AttachmentText text) {
+      this.text = text;
     }
   }
 }
