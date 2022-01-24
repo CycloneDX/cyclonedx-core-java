@@ -57,7 +57,7 @@ public class BomXmlGenerator14 extends AbstractBomXmlGenerator implements BomXml
     /**
      * Creates a CycloneDX BoM from a set of Components.
      * @return an XML Document representing a CycloneDX BoM
-     * @since 5.0.0
+     * @since 6.0.0
      */
     public Document generate() throws ParserConfigurationException {
         return generateDocument(this.bom);

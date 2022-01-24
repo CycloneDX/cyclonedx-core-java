@@ -71,6 +71,8 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
             registerDependencyModule(mapper, false);
         } else if (this.getSchemaVersion().getVersion() == 1.3) {
             registerDependencyModule(mapper, false);
+        } else if (this.getSchemaVersion().getVersion() == 1.4) {
+            registerDependencyModule(mapper, false);
         }
     }
 

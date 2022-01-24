@@ -60,7 +60,7 @@ public class BomJsonGenerator14 extends AbstractBomJsonGenerator implements BomJ
     /**
      * Creates a CycloneDX BOM from a set of Components.
      * @return an JSON Document representing a CycloneDX BoM
-     * @since 5.0.0
+     * @since 6.0.0
      */
     public JsonObject toJsonObject() {
         try {
