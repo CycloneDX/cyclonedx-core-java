@@ -27,6 +27,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+/**
+ * @since 6.0.0
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -42,10 +45,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
     "notes",
     "properties"
 })
-/*
- * @since 1.4
- * @version 1.0
- */
 public class ReleaseNotes
 {
   public ReleaseNotes() {}

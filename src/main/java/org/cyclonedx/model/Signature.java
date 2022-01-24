@@ -25,9 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/*
- * @since 1.4
- * @version 1.0
+/**
+ * @since 6.0.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
