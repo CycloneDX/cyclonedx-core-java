@@ -221,6 +221,8 @@ public class Signature
     private Crv crv;
     private String x;
     private String y;
+    private String e;
+    private String n;
 
     public Kty getKty() {
       return kty;
@@ -252,6 +254,22 @@ public class Signature
 
     public void setY(final String y) {
       this.y = y;
+    }
+
+    public String getE() {
+      return e;
+    }
+
+    public void setE(final String e) {
+      this.e = e;
+    }
+
+    public String getN() {
+      return n;
+    }
+
+    public void setN(final String n) {
+      this.n = n;
     }
   }
 }
