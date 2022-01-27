@@ -259,7 +259,6 @@
                 <state>not_affected</state>
                 <justification>code_not_reachable</justification>
                 <responses>
-                    <response>will_not_fix</response>
                     <response>update</response>
                 </responses>
                 <detail>An optional explanation of why the application is not affected by the vulnerable component.</detail>
@@ -273,11 +272,7 @@
                             <status>affected</status>
                         </version>
                         <version>
-                            <range>vers:semver/2.7.0|&lt;2.8.11.1</range>
-                            <status>affected</status>
-                        </version>
-                        <version>
-                            <range>vers:semver/2.9.0|&lt;2.9.5</range>
+                            <version>2.9.9</version>
                             <status>affected</status>
                         </version>
                     </versions>

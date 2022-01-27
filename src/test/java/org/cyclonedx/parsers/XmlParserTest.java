@@ -34,9 +34,11 @@ import org.cyclonedx.model.ReleaseNotes.Resolves;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.ServiceData;
 import org.cyclonedx.model.vulnerability.Vulnerability;
-import org.cyclonedx.model.vulnerability.Vulnerability.Rating;
+import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.Justification;
+import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.State;
 import org.cyclonedx.model.vulnerability.Vulnerability.Rating.Method;
 import org.cyclonedx.model.vulnerability.Vulnerability.Rating.Severity;
+import org.cyclonedx.model.vulnerability.Vulnerability.Version.Status;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.List;
@@ -456,8 +458,7 @@ public class XmlParserTest {
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
     }
 
-    private void assertVulnerabilities (final Bom bom) {
-
+    private void assertVulnerabilities(final Bom bom) {
         final List<Vulnerability> vulnerabilities = bom.getVulnerabilities();
         assertEquals(1, vulnerabilities.size());
         Vulnerability vuln = vulnerabilities.get(0);
@@ -480,7 +481,8 @@ public class XmlParserTest {
         assertEquals(1, vuln.getReferences().size());
         assertEquals("CVE-2018-7489", vuln.getReferences().get(0).getId());
         assertEquals("NVD", vuln.getReferences().get(0).getSource().getName());
-        assertEquals("https://nvd.nist.gov/vuln/detail/CVE-2019-9997", vuln.getReferences().get(0).getSource().getUrl());
+        assertEquals("https://nvd.nist.gov/vuln/detail/CVE-2019-9997",
+            vuln.getReferences().get(0).getSource().getUrl());
 
         //Ratings
         assertEquals(1, vuln.getRatings().size());
@@ -492,7 +494,8 @@ public class XmlParserTest {
         assertEquals(Severity.CRITICAL, vuln.getRatings().get(0).getSeverity());
         assertEquals(Method.CVSSV3, vuln.getRatings().get(0).getMethod());
         assertEquals("AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", vuln.getRatings().get(0).getVector());
-        assertEquals("An optional reason for rating the vulnerability as it was", vuln.getRatings().get(0).getJustification());
+        assertEquals("An optional reason for rating the vulnerability as it was",
+            vuln.getRatings().get(0).getJustification());
 
         //Advisories
         assertEquals(1, vuln.getAdvisories().size());
@@ -505,10 +508,34 @@ public class XmlParserTest {
         assertEquals(1, vuln.getCredits().getOrganizations().size());
 
         assertEquals("Jane Doe", vuln.getCredits().getIndividuals().get(0).getName());
-        //assertEquals("jane.doe@example.com", vuln.getCredits().getIndividuals().get(0).getExtensions().get("email"));
+        assertEquals("jane.doe@example.com", vuln.getCredits().getIndividuals().get(0).getEmail());
 
         assertEquals("Acme, Inc.", vuln.getCredits().getOrganizations().get(0).getName());
-        // assertEquals("https://example.com", vuln.getCredits().getOrganizations().get(0).getExtensions().get("url"));
+        assertEquals("https://example.com", vuln.getCredits().getOrganizations().get(0).getUrls().get(0));
+
+        //Tools
+        assertEquals(1, vuln.getTools().size());
+        assertEquals("Sonatype CLI", vuln.getTools().get(0).getName());
+        assertEquals("Sonatype", vuln.getTools().get(0).getVendor());
+        assertEquals("1.131", vuln.getTools().get(0).getVersion());
+        assertEquals(1, vuln.getTools().get(0).getHashes().size());
+
+        //Analysis
+        assertEquals(State.NOT_AFFECTED, vuln.getAnalysis().getState());
+        assertEquals(Justification.CODE_NOT_REACHABLE, vuln.getAnalysis().getJustification());
+        assertEquals("An optional explanation of why the application is not affected by the vulnerable component.",
+            vuln.getAnalysis().getDetail());
+        assertEquals("update", vuln.getAnalysis().getResponses().get(0).getResponseName());
+
+        //Affects
+        assertEquals(1, vuln.getAffects().size());
+        assertEquals("pkg:maven/com.acme/jackson-databind@2.9.9", vuln.getAffects().get(0).getRef());
+
+        assertEquals("vers:semver/<2.6.7.5", vuln.getAffects().get(0).getVersions().get(0).getRange());
+        assertEquals(Status.AFFECTED, vuln.getAffects().get(0).getVersions().get(0).getStatus());
+
+        assertEquals("2.9.9", vuln.getAffects().get(0).getVersions().get(1).getVersion());
+        assertEquals(Status.AFFECTED, vuln.getAffects().get(0).getVersions().get(1).getStatus());
     }
 
     private void assertServices(final Bom bom) {
@@ -522,6 +549,7 @@ public class XmlParserTest {
         List<String> urls = provider.getUrls();
         assertEquals(1, urls.size());
         assertEquals("https://partner.org", urls.get(0));
+
         List<OrganizationalContact> contacts = provider.getContacts();
         assertEquals(1, contacts.size());
         OrganizationalContact contact = contacts.get(0);
@@ -532,6 +560,7 @@ public class XmlParserTest {
         assertEquals("Stock ticker service", s.getName());
         assertEquals("2020-Q2", s.getVersion());
         assertEquals("Provides real-time stock information", s.getDescription());
+
         List<String> endpoints = s.getEndpoints();
         assertEquals(2, endpoints.size());
         assertEquals("https://partner.org/api/v1/lookup", endpoints.get(0));
@@ -540,6 +569,7 @@ public class XmlParserTest {
         assertNotNull(s.getxTrustBoundary());
         assertTrue(s.getAuthenticated());
         assertTrue(s.getxTrustBoundary());
+
         List<ServiceData> data = s.getData();
         assertEquals(4, data.size());
         assertEquals("inbound", data.get(0).getFlow().getFlowName());
@@ -558,7 +588,7 @@ public class XmlParserTest {
         assertEquals("http://api.partner.org/swagger", s.getExternalReferences().get(1).getUrl());
     }
 
-    private void assertComponent(final Bom bom){
+    private void assertComponent(final Bom bom) {
         final List<Component> components = bom.getComponents();
         assertEquals(1, components.size());
         Component component = components.get(0);
@@ -577,10 +607,11 @@ public class XmlParserTest {
 
         //Evidence
         assertNotNull(component.getEvidence());
-        assertEquals("Copyright 2012 Google Inc. All Rights Reserved.",  component.getEvidence().getCopyright().get(0).getText());
-        assertEquals("Apache-2.0",  component.getEvidence().getLicenseChoice().getLicenses().get(0).getId());
-        assertEquals("http://www.apache.org/licenses/LICENSE-2.0",  component.getEvidence().getLicenseChoice().getLicenses().get(0).getUrl());
-
+        assertEquals("Copyright 2012 Google Inc. All Rights Reserved.",
+            component.getEvidence().getCopyright().get(0).getText());
+        assertEquals("Apache-2.0", component.getEvidence().getLicenseChoice().getLicenses().get(0).getId());
+        assertEquals("http://www.apache.org/licenses/LICENSE-2.0",
+            component.getEvidence().getLicenseChoice().getLicenses().get(0).getUrl());
     }
 
     private void assertMetadata(final Metadata metadata) {
