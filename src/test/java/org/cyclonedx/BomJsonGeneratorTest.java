@@ -95,6 +95,35 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
     }
 
+    @Test
+    public void schema13JsonObjectGenerationTest() throws Exception {
+        Bom bom = createCommonBom("/bom-1.3.xml");
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
+        JsonObject obj = generator.toJsonObject();
+        assertNotNull(obj);
+        assertEquals("CycloneDX", obj.getString("bomFormat"));
+        assertEquals("1.3", obj.getString("specVersion"));
+        assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79", obj.getString("serialNumber"));
+        assertEquals(1, obj.getInt("version"));
+        assertEquals(7, obj.getJsonObject("metadata").size());
+        assertEquals(3, obj.getJsonArray("components").size());
+    }
+
+    @Test
+    public void schema14JsonObjectGenerationTest() throws Exception {
+        Bom bom = createCommonBom("/bom-1.4.xml");
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_14, bom);
+        JsonObject obj = generator.toJsonObject();
+        assertNotNull(obj);
+        assertEquals("CycloneDX", obj.getString("bomFormat"));
+        assertEquals("1.4", obj.getString("specVersion"));
+        assertEquals("urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79", obj.getString("serialNumber"));
+        assertEquals(1, obj.getInt("version"));
+        assertEquals(4, obj.getJsonObject("metadata").size());
+        assertEquals(1, obj.getJsonArray("components").size());
+        assertEquals(1, obj.getJsonArray("vulnerabilities").size());
+    }
+
     private File writeToFile(String jsonString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
             writer.write(jsonString);

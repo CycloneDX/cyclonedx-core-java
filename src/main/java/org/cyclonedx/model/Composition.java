@@ -60,8 +60,6 @@ public class Composition {
     }
 
     private Aggregate aggregate;
-    @JacksonXmlElementWrapper(localName = "assemblies")
-    @JacksonXmlProperty(localName = "assembly")
     private List<BomReference> assemblies;
     private List<BomReference> dependencies;
 
@@ -73,6 +71,8 @@ public class Composition {
         this.aggregate = aggregate;
     }
 
+    @JacksonXmlElementWrapper(localName = "assemblies")
+    @JacksonXmlProperty(localName = "assembly")
     public List<BomReference> getAssemblies() {
         return assemblies;
     }
@@ -88,6 +88,8 @@ public class Composition {
         assemblies.add(assembly);
     }
 
+    @JacksonXmlElementWrapper(localName = "dependencies")
+    @JacksonXmlProperty(localName = "dependency")
     public List<BomReference> getDependencies() {
         return dependencies;
     }

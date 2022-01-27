@@ -21,12 +21,16 @@ package org.cyclonedx.model;
 import java.net.URL;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "name",
+    "url"})
 public class Source {
-  @JacksonXmlProperty(localName = "name", isAttribute = true)
+  @JacksonXmlProperty(localName = "name")
   private String name;
   private URL url;
 

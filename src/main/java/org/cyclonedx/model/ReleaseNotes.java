@@ -25,8 +25,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.CustomDateSerializer;
 
 /**
  * @since 6.0.0
@@ -55,18 +57,12 @@ public class ReleaseNotes
   private String featuredImage;
   private String socialImage;
   private String description;
+  @JsonSerialize(using = CustomDateSerializer.class)
+  @VersionFilter(versions = {"1.4"})
   private Date timestamp;
-  @JacksonXmlElementWrapper(localName = "aliases")
-  @JacksonXmlProperty(localName = "alias")
   private List<String> aliases;
-  @JacksonXmlElementWrapper(localName = "tags")
-  @JacksonXmlProperty(localName = "tag")
   private List<String> tags;
-  @JacksonXmlElementWrapper(localName = "resolves")
-  @JacksonXmlProperty(localName = "issue")
   private List<Resolves> resolves;
-  @JacksonXmlElementWrapper(localName = "notes")
-  @JacksonXmlProperty(localName = "note")
   private List<Notes> notes;
   private List<Property> properties;
 
@@ -118,6 +114,8 @@ public class ReleaseNotes
     this.timestamp = timestamp;
   }
 
+  @JacksonXmlElementWrapper(localName = "aliases")
+  @JacksonXmlProperty(localName = "alias")
   public List<String> getAliases() {
     return aliases;
   }
@@ -126,6 +124,8 @@ public class ReleaseNotes
     this.aliases = aliases;
   }
 
+  @JacksonXmlElementWrapper(localName = "tags")
+  @JacksonXmlProperty(localName = "tag")
   public List<String> getTags() {
     return tags;
   }
@@ -134,6 +134,8 @@ public class ReleaseNotes
     this.tags = tags;
   }
 
+  @JacksonXmlElementWrapper(localName = "resolves")
+  @JacksonXmlProperty(localName = "issue")
   public List<Resolves> getResolves() {
     return resolves;
   }
@@ -142,6 +144,8 @@ public class ReleaseNotes
     this.resolves = resolves;
   }
 
+  @JacksonXmlElementWrapper(localName = "notes")
+  @JacksonXmlProperty(localName = "note")
   public List<Notes> getNotes() {
     return notes;
   }

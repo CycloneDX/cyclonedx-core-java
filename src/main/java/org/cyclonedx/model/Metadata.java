@@ -39,7 +39,7 @@ import java.util.Objects;
 public class Metadata extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Date timestamp = new Date();
 
     @VersionFilter(versions = {"1.2", "1.3"})

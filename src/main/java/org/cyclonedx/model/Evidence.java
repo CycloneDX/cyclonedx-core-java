@@ -36,7 +36,6 @@ import java.util.List;
 public class Evidence extends ExtensibleElement {
 
     private LicenseChoice license;
-    @JacksonXmlElementWrapper(localName = "copyright")
     private List<Copyright> copyright;
 
     @JacksonXmlProperty(localName = "licenses")
@@ -50,6 +49,7 @@ public class Evidence extends ExtensibleElement {
         this.license = licenseChoice;
     }
 
+    @JacksonXmlElementWrapper(useWrapping = false)
     public List<Copyright> getCopyright() {
         return copyright;
     }
