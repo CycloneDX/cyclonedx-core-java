@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<bom serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79" version="1" xmlns="http://cyclonedx.org/schema/bom/1.4">
+    <metadata>
+        <timestamp>2020-04-07T07:01:00Z</timestamp>
+        <tools>
+            <tool>
+                <vendor>Awesome Vendor</vendor>
+                <name>Awesome Tool</name>
+                <version>9.1.2</version>
+                <hashes>
+                    <hash alg="SHA-1">25ed8e31b995bb927966616df2a42b979a2717f0</hash>
+                </hashes>
+            </tool>
+        </tools>
+        <authors>
+            <author>
+                <name>Samantha Wright</name>
+                <email>samantha.wright@example.com</email>
+                <phone>800-555-1212</phone>
+            </author>
+        </authors>
+        <component type="application">
+            <author>Acme Super Heros</author>
+            <name>Acme Application</name>
+            <version>9.1.1</version>
+            <swid tagId="swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1" name="Acme Application" version="9.1.1">
+                <text content-type="text/xml" encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiID8+CjxTb2Z0d2FyZUlkZW50aXR5IHhtbDpsYW5nPSJFTiIgbmFtZT0iQWNtZSBBcHBsaWNhdGlvbiIgdmVyc2lvbj0iOS4xLjEiIAogdmVyc2lvblNjaGVtZT0ibXVsdGlwYXJ0bnVtZXJpYyIgCiB0YWdJZD0ic3dpZGdlbi1iNTk1MWFjOS00MmMwLWYzODItM2YxZS1iYzdhMmE0NDk3Y2JfOS4xLjEiIAogeG1sbnM9Imh0dHA6Ly9zdGFuZGFyZHMuaXNvLm9yZy9pc28vMTk3NzAvLTIvMjAxNS9zY2hlbWEueHNkIj4gCiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiAKIHhzaTpzY2hlbWFMb2NhdGlvbj0iaHR0cDovL3N0YW5kYXJkcy5pc28ub3JnL2lzby8xOTc3MC8tMi8yMDE1LWN1cnJlbnQvc2NoZW1hLnhzZCBzY2hlbWEueHNkIiA+CiAgPE1ldGEgZ2VuZXJhdG9yPSJTV0lEIFRhZyBPbmxpbmUgR2VuZXJhdG9yIHYwLjEiIC8+IAogIDxFbnRpdHkgbmFtZT0iQWNtZSwgSW5jLiIgcmVnaWQ9ImV4YW1wbGUuY29tIiByb2xlPSJ0YWdDcmVhdG9yIiAvPiAKPC9Tb2Z0d2FyZUlkZW50aXR5Pg==</text>
+            </swid>
+            <releaseNotes>
+                <type>major</type>
+                <title>My new release</title>
+                <featuredImage>https://example.com/featured_image.png</featuredImage>
+                <socialImage>https://example.com/social_image.png</socialImage>
+                <description>The main description of your release</description>
+                <timestamp>2021-09-17T00:51:18+00:00</timestamp>
+                <aliases>
+                    <alias>Project Orion</alias>
+                </aliases>
+                <tags>
+                    <tag>CMS</tag>
+                </tags>
+                <resolves>
+                    <issue type="security">
+                        <id>CVE-2019-9997</id>
+                        <name>CVE-2019-9997</name>
+                        <description>A security issue was fixed that did something bad</description>
+                        <source>
+                            <name>NVD</name>
+                            <url>https://nvd.nist.gov/vuln/detail/CVE-2019-9997</url>
+                        </source>
+                        <references>
+                            <url>http://some/other/site-1</url>
+                        </references>
+                    </issue>
+                </resolves>
+                <notes>
+                    <note>
+                        <locale>en-US</locale>
+                        <text content-type="text/html" encoding="base64">PGgxPk15IG5ldyByZWxlYXNlPGgxPgo8cD5SZWxlYXNlIG5vdGVzIGhlcmU8L3A+</text>
+                    </note>
+                </notes>
+            </releaseNotes>
+        </component>
+        <manufacture>
+            <name>Acme, Inc.</name>
+            <url>https://example.com</url>
+            <contact>
+                <name>Acme Professional Services</name>
+                <email>professional.services@example.com</email>
+            </contact>
+        </manufacture>
+        <supplier>
+            <name>Acme, Inc.</name>
+            <url>https://example.com</url>
+            <contact>
+                <name>Acme Distribution</name>
+                <email>distribution@example.com</email>
+            </contact>
+        </supplier>
+    </metadata>
+    <components>
+        <component type="library" bom-ref="pkg:maven/com.acme/jackson-databind@2.9.4">
+            <group>com.acme</group>
+            <name>jackson-databind</name>
+            <version>2.9.4</version>
+            <hashes>
+                <hash alg="MD5">641b6e166f8b33c5e959e2adcc18b1c7</hash>
+                <hash alg="SHA-1">9188560f22e0b73070d2efce670c74af2bdf30af</hash>
+                <hash alg="SHA-256">d88bc4e70bfb34d18b5542136639acbb26a8ae2429aa1e47489332fb389cc964</hash>
+                <hash alg="SHA-384">d4835048a0f57c74b8fb617d5366ab81376fc92bebe9a93bf24ba7f9da6c9aeeb6179f5d1361f6533211b15f3224cbad</hash>
+                <hash alg="SHA-512">74a51ff45e4c11df9ba1f0094282c80489649cb157a75fa337992d2d4592a5a1b8cb4525de8db0ae25233553924d76c36e093ea7fa9df4e5b8b07fd2e074efd6</hash>
+                <hash alg="SHA3-256">7478c7cf41c883a04ee89f1813f687886d53fa86f791fff90690c6221e3853aa</hash>
+                <hash alg="SHA3-384">a1eea7229716487ad2ebe96b2f997a8408f32f14047994fbcc99b49012cf86c96dbd518e5d57a61b0e57dd37dd0b48f5</hash>
+                <hash alg="SHA3-512">7d584825bc1767dfabe7e82b45ccb7a1119b145fa17e76b885e71429c706cef0a3171bc6575b968eec5da56a7966c02fec5402fcee55097ac01d40c550de9d20</hash>
+                <hash alg="BLAKE2b-256">d8779633380c050bccf4e733b763ab2abd8ad2db60b517d47fd29bbf76433237</hash>
+                <hash alg="BLAKE2b-384">e728ba56c2da995a559a178116c594e8bee4894a79ceb4399d8f479e5563cb1942b85936f646d14170717c576b14db7a</hash>
+                <hash alg="BLAKE2b-512">f8ce8d612a6c85c96cf7cebc230f6ddef26e6cedcfbc4a41c766033cc08c6ba097d1470948226807fb2d88d2a2b6fc0ff5e5440e93a603086fdd568bafcd1a9d</hash>
+                <hash alg="BLAKE3">26cdc7fb3fd65fc3b621a4ef70bc7d2489d5c19e70c76cf7ec20e538df0047cf</hash>
+            </hashes>
+            <licenses>
+                <expression>EPL-2.0 OR GPL-2.0-with-classpath-exception</expression>
+            </licenses>
+            <copyright>Copyright Example Inc. All rights reserved.</copyright>
+            <cpe>cpe:/a:example:myapplication:1.0.0</cpe>
+            <purl>pkg:maven/com.acme/jackson-databind@2.9.4</purl>
+            <swid tagId="swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1" name="Acme Application" version="9.1.1" />
+            <modified>false</modified>
+            <externalReferences>
+                <reference type="documentation">
+                    <url>http://example.org/docs</url>
+                    <comment>All component versions are documented here</comment>
+                </reference>
+            </externalReferences>
+            <evidence>
+                <licenses>
+                    <license>
+                        <id>Apache-2.0</id>
+                        <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                    </license>
+                </licenses>
+                <copyright>
+                    <text><![CDATA[Copyright 2012 Google Inc. All Rights Reserved.]]></text>
+                </copyright>
+            </evidence>
+        </component>
+    </components>
+    <services>
+        <service bom-ref="b2a46a4b-8367-4bae-9820-95557cfe03a8">
+            <provider>
+                <name>Partner Org</name>
+                <url>https://partner.org</url>
+                <contact>
+                    <name>Support</name>
+                    <email>support@partner</email>
+                    <phone>800-555-1212</phone>
+                </contact>
+            </provider>
+            <group>org.partner</group>
+            <name>Stock ticker service</name>
+            <version>2020-Q2</version>
+            <description>Provides real-time stock information</description>
+            <endpoints>
+                <endpoint>https://partner.org/api/v1/lookup</endpoint>
+                <endpoint>https://partner.org/api/v1/stock</endpoint>
+            </endpoints>
+            <authenticated>true</authenticated>
+            <x-trust-boundary>true</x-trust-boundary>
+            <data>
+                <classification flow="inbound">PII</classification>
+                <classification flow="outbound">PIFI</classification>
+                <classification flow="bi-directional">pubic</classification>
+                <classification flow="unknown">partner-data</classification>
+            </data>
+            <licenses>
+                <license>
+                    <name>Partner license</name>
+                </license>
+            </licenses>
+            <externalReferences>
+                <reference type="website">
+                    <url>http://partner.org</url>
+                </reference>
+                <reference type="documentation">
+                    <url>http://api.partner.org/swagger</url>
+                </reference>
+            </externalReferences>
+        </service>
+    </services>
+    <dependencies>
+        <dependency ref="pkg:maven/com.acme/jackson-databind@2.9.4"/>
+    </dependencies>
+    <compositions>
+        <composition>
+            <aggregate>complete</aggregate>
+            <assemblies>
+                <assembly ref="pkg:maven/partner/shaded-library@1.0"/>
+            </assemblies>
+            <dependencies>
+                <dependency ref="acme-application-1.0"/>
+            </dependencies>
+        </composition>
+        <composition>
+            <aggregate>unknown</aggregate>
+            <assemblies>
+                <assembly ref="pkg:maven/acme/library@3.0"/>
+            </assemblies>
+        </composition>
+    </compositions>
+    <vulnerabilities>
+        <vulnerability bom-ref="6eee14da-8f42-4cc4-bb65-203235f02415">
+            <id>SONATYPE-2021123</id>
+            <source>
+                <name>Sonatype</name>
+                <url>https://www.vuln.com</url>
+            </source>
+            <references>
+                <reference>
+                    <id>CVE-2018-7489</id>
+                    <source>
+                        <name>NVD</name>
+                        <url>https://nvd.nist.gov/vuln/detail/CVE-2019-9997</url>
+                    </source>
+                </reference>
+            </references>
+            <ratings>
+                <rating>
+                    <source>
+                        <name>NVD</name>
+                        <url>https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H&amp;version=3.0</url>
+                    </source>
+                    <score>9.8</score>
+                    <severity>critical</severity>
+                    <method>CVSSv3</method>
+                    <vector>AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</vector>
+                    <justification>An optional reason for rating the vulnerability as it was</justification>
+                </rating>
+            </ratings>
+            <cwes>
+                <cwe>184</cwe>
+            </cwes>
+            <description>Description</description>
+            <detail>Detail</detail>
+            <recommendation>Upgrade</recommendation>
+            <advisories>
+                <advisory>
+                    <title>GitHub Commit</title>
+                    <url>https://github.com/FasterXML/jackson-databind/commit/6799f8f10cc78e9af6d443ed6982d00a13f2e7d2</url>
+                </advisory>
+            </advisories>
+            <created>2021-01-01T00:00:00.000Z</created>
+            <published>2021-01-01T00:00:00.000Z</published>
+            <updated>2021-01-01T00:00:00.000Z</updated>
+            <credits>
+                <organizations>
+                    <organization>
+                        <name>Acme, Inc.</name>
+                        <url>https://example.com</url>
+                    </organization>
+                </organizations>
+                <individuals>
+                    <individual>
+                        <name>Jane Doe</name>
+                        <email>jane.doe@example.com</email>
+                    </individual>
+                </individuals>
+            </credits>
+            <tools>
+                <tool>
+                    <vendor>Sonatype</vendor>
+                    <name>Sonatype CLI</name>
+                    <version>1.131</version>
+                    <hashes>
+                        <hash alg="SHA-256">2eaf8c62831a1658c95d41fdc683cd177c147733c64a93e59cb2362829e45b7d</hash>
+                    </hashes>
+                </tool>
+            </tools>
+            <analysis>
+                <state>not_affected</state>
+                <justification>code_not_reachable</justification>
+                <responses>
+                    <response>will_not_fix</response>
+                    <response>update</response>
+                </responses>
+                <detail>An optional explanation of why the application is not affected by the vulnerable component.</detail>
+            </analysis>
+            <affects>
+                <target>
+                    <ref>pkg:maven/com.acme/jackson-databind@2.9.9</ref>
+                    <versions>
+                        <version>
+                            <range>vers:semver/&lt;2.6.7.5</range>
+                            <status>affected</status>
+                        </version>
+                        <version>
+                            <range>vers:semver/2.7.0|&lt;2.8.11.1</range>
+                            <status>affected</status>
+                        </version>
+                        <version>
+                            <range>vers:semver/2.9.0|&lt;2.9.5</range>
+                            <status>affected</status>
+                        </version>
+                    </versions>
+                </target>
+            </affects>
+        </vulnerability>
+    </vulnerabilities>
+</bom>
