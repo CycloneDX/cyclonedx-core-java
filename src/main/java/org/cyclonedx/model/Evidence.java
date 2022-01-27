@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.LicenseDeserializer;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import java.util.List;
 public class Evidence extends ExtensibleElement {
 
     private LicenseChoice license;
+    @JacksonXmlElementWrapper(localName = "copyright")
     private List<Copyright> copyright;
 
     @JacksonXmlProperty(localName = "licenses")

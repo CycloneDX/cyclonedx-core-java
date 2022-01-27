@@ -22,6 +22,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +60,8 @@ public class Composition {
     }
 
     private Aggregate aggregate;
+    @JacksonXmlElementWrapper(localName = "assemblies")
+    @JacksonXmlProperty(localName = "assembly")
     private List<BomReference> assemblies;
     private List<BomReference> dependencies;
 

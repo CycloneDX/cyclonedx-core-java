@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
@@ -49,16 +50,23 @@ public class ReleaseNotes
 {
   public ReleaseNotes() {}
 
-  @JacksonXmlProperty(isAttribute = true)
   private String type;
   private String title;
   private String featuredImage;
   private String socialImage;
   private String description;
   private Date timestamp;
+  @JacksonXmlElementWrapper(localName = "aliases")
+  @JacksonXmlProperty(localName = "alias")
   private List<String> aliases;
+  @JacksonXmlElementWrapper(localName = "tags")
+  @JacksonXmlProperty(localName = "tag")
   private List<String> tags;
+  @JacksonXmlElementWrapper(localName = "resolves")
+  @JacksonXmlProperty(localName = "issue")
   private List<Resolves> resolves;
+  @JacksonXmlElementWrapper(localName = "notes")
+  @JacksonXmlProperty(localName = "note")
   private List<Notes> notes;
   private List<Property> properties;
 
@@ -181,12 +189,15 @@ public class ReleaseNotes
       }
     }
 
+    @JacksonXmlProperty(isAttribute = true)
     private Type type;
 
     private String id;
     private String name;
     private String description;
     private Source source;
+    @JacksonXmlElementWrapper(localName = "references")
+    @JacksonXmlProperty(localName = "url")
     private List<String> references;
 
     public Type getType() {

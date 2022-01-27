@@ -48,13 +48,13 @@ public class Metadata extends ExtensibleElement {
     @VersionFilter(versions = {"1.2", "1.3"})
     private List<OrganizationalContact> authors;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Component component;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private OrganizationalEntity manufacture;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private OrganizationalEntity supplier;
 
     @VersionFilter(versions = {"1.3"})
