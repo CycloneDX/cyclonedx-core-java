@@ -35,6 +35,7 @@ import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.cyclonedx.util.mixin.MixInBomReference;
 
 public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
@@ -81,19 +82,6 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         componentWrapperModule.addSerializer(new ComponentWrapperSerializer(mapper));
 
         mapper.registerModule(componentWrapperModule);
-    }
-
-    public class MixInBomReference {
-        @JsonValue
-        private String ref;
-
-        public String getRef() {
-            return ref;
-        }
-
-        public void setRef(final String ref) {
-            this.ref = ref;
-        }
     }
 
     String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
