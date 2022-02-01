@@ -42,10 +42,10 @@ public class Metadata extends ExtensibleElement {
     @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Date timestamp = new Date();
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<Tool> tools;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<OrganizationalContact> authors;
 
     @VersionFilter(versions = {"1.2", "1.3", "1.4"})
@@ -57,10 +57,10 @@ public class Metadata extends ExtensibleElement {
     @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private OrganizationalEntity supplier;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private LicenseChoice license;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Property> properties;
 
     public Date getTimestamp() {

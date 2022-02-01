@@ -19,9 +19,12 @@
 package org.cyclonedx.generators.json;
 
 import java.lang.reflect.Field;
+
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.BomReference;
 import org.cyclonedx.util.CollectionTypeSerializer;
 import org.cyclonedx.util.ComponentWrapperSerializer;
 import org.cyclonedx.util.LicenseChoiceSerializer;
@@ -80,8 +83,22 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         mapper.registerModule(componentWrapperModule);
     }
 
+    public class MixInBomReference {
+        @JsonValue
+        private String ref;
+
+        public String getRef() {
+            return ref;
+        }
+
+        public void setRef(final String ref) {
+            this.ref = ref;
+        }
+    }
+
     String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
         try {
+            mapper.addMixIn(BomReference.class, MixInBomReference.class);
             if (prettyPrint) {
                 return mapper.writer(prettyPrinter).writeValueAsString(bom);
             }
