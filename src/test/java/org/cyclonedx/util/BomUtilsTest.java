@@ -64,7 +64,7 @@ public class BomUtilsTest {
     public void calculateHashesForBigFileTest() throws Exception {
         final File file = generateBigFileWithReproductiveContent();
 
-        final List<Hash> hashes = BomUtils.calculateHashesORIG(file, CycloneDxSchema.Version.VERSION_12);
+        final List<Hash> hashes = BomUtils.calculateHashes(file, CycloneDxSchema.Version.VERSION_12);
 
         assertThatHashIsComputed(hashes, MD5, "10be767d4f5874017ca03f3a9fe6627b");
         assertThatHashIsComputed(hashes, SHA1, "ae3c58e2a2d5e897b141c6552232976b99d91c9b");

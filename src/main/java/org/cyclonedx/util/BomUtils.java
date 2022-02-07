@@ -87,41 +87,6 @@ public final class BomUtils {
         return hashes;
     }
 
-    public static List<Hash> calculateHashesORIG(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
-        if (file == null || !file.exists() || !file.canRead() || !file.isFile()) {
-            return null;
-        }
-        final List<Hash> hashes = new ArrayList<>();
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.MD5, DigestUtils.md5Hex(fis)));
-        }
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.SHA1, DigestUtils.sha1Hex(fis)));
-        }
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.SHA_256, DigestUtils.sha256Hex(fis)));
-        }
-        if (schemaVersion.getVersion() >= 1.2) {
-            try (InputStream fis = Files.newInputStream(file.toPath())) {
-                hashes.add(new Hash(Hash.Algorithm.SHA_384, DigestUtils.sha384Hex(fis)));
-            }
-        }
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.SHA_512, DigestUtils.sha512Hex(fis)));
-        }
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.SHA3_256, DigestUtils.sha3_256Hex(fis)));
-        } catch (Exception | NoSuchMethodError e) { /* Not available in Java 8 and only available in later versions of DigestUtils */ }
-        if (schemaVersion.getVersion() >= 1.2) {
-            try (InputStream fis = Files.newInputStream(file.toPath())) {
-                hashes.add(new Hash(Hash.Algorithm.SHA3_384, DigestUtils.sha3_384Hex(fis)));
-            } catch (Exception | NoSuchMethodError e) { /* Not available in Java 8 and only available in later versions of DigestUtils */ }
-        }
-        try (InputStream fis = Files.newInputStream(file.toPath())) {
-            hashes.add(new Hash(Hash.Algorithm.SHA3_512, DigestUtils.sha3_512Hex(fis)));
-        } catch (Exception | NoSuchMethodError e) { /* Not available in Java 8 and only available in later versions of DigestUtils */ }
-        return hashes;
-    }
     private static Hash.Algorithm toAlgorithm(MessageDigest digest) {
         for (Hash.Algorithm value : Hash.Algorithm.values()) {
             if (value.getSpec().equals(digest.getAlgorithm())) {
