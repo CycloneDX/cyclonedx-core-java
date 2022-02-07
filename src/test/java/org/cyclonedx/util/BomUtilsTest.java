@@ -31,11 +31,17 @@ import java.util.List;
 
 import static org.apache.commons.io.FileUtils.ONE_KB;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.cyclonedx.model.Hash.Algorithm.*;
 import static org.cyclonedx.model.Hash.Algorithm.MD5;
 import static org.cyclonedx.model.Hash.Algorithm.SHA1;
+import static org.cyclonedx.model.Hash.Algorithm.SHA3_256;
+import static org.cyclonedx.model.Hash.Algorithm.SHA3_384;
+import static org.cyclonedx.model.Hash.Algorithm.SHA3_512;
+import static org.cyclonedx.model.Hash.Algorithm.SHA_256;
+import static org.cyclonedx.model.Hash.Algorithm.SHA_384;
+import static org.cyclonedx.model.Hash.Algorithm.SHA_512;
 
 public class BomUtilsTest {
+
     @Test
     public void calculateHashesTest() throws Exception {
         final File file = new File(this.getClass().getResource("/hashtest.txt").toURI());
@@ -58,7 +64,7 @@ public class BomUtilsTest {
     public void calculateHashesForBigFileTest() throws Exception {
         final File file = generateBigFileWithReproductiveContent();
 
-        final List<Hash> hashes = BomUtils.calculateHashes(file, CycloneDxSchema.Version.VERSION_12);
+        final List<Hash> hashes = BomUtils.calculateHashesORIG(file, CycloneDxSchema.Version.VERSION_12);
 
         assertThatHashIsComputed(hashes, MD5, "10be767d4f5874017ca03f3a9fe6627b");
         assertThatHashIsComputed(hashes, SHA1, "ae3c58e2a2d5e897b141c6552232976b99d91c9b");
