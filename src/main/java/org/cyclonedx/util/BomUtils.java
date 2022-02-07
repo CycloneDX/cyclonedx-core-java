@@ -57,7 +57,7 @@ public final class BomUtils {
             return null;
         }
         long start = System.currentTimeMillis();
-        final List<Hash> hashes = new ArrayList<>();
+        final List<Hash> hashes = new LinkedList<>();
         final List<MessageDigest> digests = new LinkedList<>(Arrays.asList(DigestUtils.getMd5Digest()
                 , DigestUtils.getSha1Digest()
                 , DigestUtils.getSha256Digest()  , DigestUtils.getSha512Digest()));
