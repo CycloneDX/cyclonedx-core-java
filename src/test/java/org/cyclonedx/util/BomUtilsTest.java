@@ -18,40 +18,56 @@
  */
 package org.cyclonedx.util;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Hash;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.cyclonedx.model.Hash.Algorithm.*;
+import static org.cyclonedx.model.Hash.Algorithm.MD5;
+import static org.cyclonedx.model.Hash.Algorithm.SHA1;
 
 public class BomUtilsTest {
-
     @Test
     public void calculateHashesTest() throws Exception {
-        File file = new File(this.getClass().getResource("/hashtest.txt").toURI());
-        List<Hash> hashes = BomUtils.calculateHashes(file, CycloneDxSchema.Version.VERSION_12);
-        assertTrue(hashes.size() > 0);
-        for (Hash hash: hashes) {
-            if (hash.getAlgorithm().equals(Hash.Algorithm.MD5.getSpec())) {
-                assertEquals("5dd39cab1c53c2c77cd352983f9641e1", hash.getValue());
-            } else if (hash.getAlgorithm().equals(Hash.Algorithm.SHA1.getSpec())) {
-                assertEquals("b56df8ed5365fca1419818aa384ba3b5e7756047", hash.getValue());
-            } else if (hash.getAlgorithm().equals(Hash.Algorithm.SHA_256.getSpec())) {
-                assertEquals("c87e2ca771bab6024c269b933389d2a92d4941c848c52f155b9b84e1f109fe35", hash.getValue());
-            } else if (hash.getAlgorithm().equals(Hash.Algorithm.SHA_384.getSpec())) {
-                assertEquals("1600a408df6f0775d5d3d2f13d8355a7a668ffc1be13810041e883f510b05dba0662a55c0b6b9a49c51293fa892d00d7", hash.getValue());
-            } else if (hash.getAlgorithm().equals(Hash.Algorithm.SHA_512.getSpec())) {
-                assertEquals("3de78a913cb8896f8f08ce3374b726b49ed00cc569621c5161c31eb80fca4d2f5e4443d42676dfc79743f345de7f0b95dbb2c97b2bc1a438a5a49c5f1b5298ac", hash.getValue());
-            } else if (hash.getAlgorithm().equals(Hash.Algorithm.SHA3_256.getSpec())) {
-                assertEquals("d79acc39c4f826d0a0abb614866b0347ab7a782473f666fa49582cec7acb57c6", hash.getValue());
-            } else if (hash.getAlgorithm().equals(Hash.Algorithm.SHA3_384.getSpec())) {
-                assertEquals("c557b693f910c4cab2ca5ba55083bbe08a1362038c8217179955af7686ae79f3547e383d0d63cca5e85240aed7fe8c0b", hash.getValue());
-            } else if (hash.getAlgorithm().equals(Hash.Algorithm.SHA3_512.getSpec())) {
-                assertEquals("6a2825f3e8889f60ba965894a15d09b7f3958e0bd896ad293d3a04cda2cfa1aa9764567da61a62b4af55191d1108d9ca8b9e926411c9adc2d7b0f35f6fb11633", hash.getValue());
+        final File file = new File(this.getClass().getResource("/hashtest.txt").toURI());
+
+        final List<Hash> hashes = BomUtils.calculateHashes(file, CycloneDxSchema.Version.VERSION_12);
+
+        assertThatHashIsComputed(hashes, MD5, "5dd39cab1c53c2c77cd352983f9641e1");
+        assertThatHashIsComputed(hashes, SHA1, "b56df8ed5365fca1419818aa384ba3b5e7756047");
+        assertThatHashIsComputed(hashes, SHA_256, "c87e2ca771bab6024c269b933389d2a92d4941c848c52f155b9b84e1f109fe35");
+        assertThatHashIsComputed(hashes, SHA_384, "1600a408df6f0775d5d3d2f13d8355a7a668ffc1be13810041e883f510b05dba0662a55c0b6b9a49c51293fa892d00d7");
+        assertThatHashIsComputed(hashes, SHA_512, "3de78a913cb8896f8f08ce3374b726b49ed00cc569621c5161c31eb80fca4d2f5e4443d42676dfc79743f345de7f0b95dbb2c97b2bc1a438a5a49c5f1b5298ac");
+        if (areSha3AlgorithmsAvailable()) {
+            assertThatHashIsComputed(hashes, SHA3_256, "d79acc39c4f826d0a0abb614866b0347ab7a782473f666fa49582cec7acb57c6");
+            assertThatHashIsComputed(hashes, SHA3_384, "c557b693f910c4cab2ca5ba55083bbe08a1362038c8217179955af7686ae79f3547e383d0d63cca5e85240aed7fe8c0b");
+            assertThatHashIsComputed(hashes, SHA3_512, "6a2825f3e8889f60ba965894a15d09b7f3958e0bd896ad293d3a04cda2cfa1aa9764567da61a62b4af55191d1108d9ca8b9e926411c9adc2d7b0f35f6fb11633");
+        }
+    }
+
+    private void assertThatHashIsComputed(final List<Hash> hashes, final Hash.Algorithm algorithm, final String expectedHashValue) {
+        assertThat(hashes)
+                .as("Invalid hash for "+algorithm.getSpec()+" algorithm.")
+                .filteredOn(hash-> algorithm.getSpec().equals(hash.getAlgorithm()))
+                .singleElement()
+                .extracting(Hash::getValue)
+                .isEqualTo(expectedHashValue);
+    }
+
+    static boolean areSha3AlgorithmsAvailable() {
+        try {
+            DigestUtils.getSha3_256Digest().update(new byte []{1});
+            return true;
+        } catch (IllegalArgumentException e) {
+            if (e.getCause() instanceof NoSuchAlgorithmException) {
+                return false;
             }
+            throw e;
         }
     }
 
