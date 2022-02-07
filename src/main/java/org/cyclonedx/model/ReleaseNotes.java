@@ -34,7 +34,7 @@ import org.cyclonedx.util.CustomDateSerializer;
  * @since 6.0.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "type",
     "title",

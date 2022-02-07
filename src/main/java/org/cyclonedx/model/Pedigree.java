@@ -30,7 +30,7 @@ import org.cyclonedx.util.ComponentWrapperDeserializer;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "patches", "notes"})
 public class Pedigree extends ExtensibleElement {
 

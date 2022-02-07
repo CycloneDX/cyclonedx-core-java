@@ -38,7 +38,7 @@ import com.github.packageurl.PackageURL;
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "component")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
     {"supplier",
      "author",
