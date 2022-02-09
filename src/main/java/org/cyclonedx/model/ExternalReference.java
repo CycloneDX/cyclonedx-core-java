@@ -66,8 +66,8 @@ public class ExternalReference {
         BUILD_META("build-meta"),
         @JsonProperty("build-system")
         BUILD_SYSTEM("build-system"),
-        @JsonProperty("release_notes")
-        RELEASE_NOTES("release_notes"),
+        @JsonProperty("release-notes")
+        RELEASE_NOTES("release-notes"),
         @JsonProperty("other")
         OTHER("other");
 

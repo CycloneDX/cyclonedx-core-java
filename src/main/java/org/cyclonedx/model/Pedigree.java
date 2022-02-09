@@ -45,7 +45,7 @@ public class Pedigree extends ExtensibleElement {
 
     private List<Commit> commits;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<Patch> patches;
 
     private String notes;

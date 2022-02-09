@@ -67,7 +67,7 @@ public class Service extends ExtensibleElement {
     private List<ServiceData> data;
     private LicenseChoice license;
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Property> properties;
     private List<Service> services;
     private ReleaseNotes releaseNotes;
