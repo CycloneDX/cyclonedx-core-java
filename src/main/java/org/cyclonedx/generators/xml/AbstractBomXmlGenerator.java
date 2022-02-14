@@ -50,9 +50,9 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
         setupObjectMapper(mapper);
     }
 
-	public ObjectMapper getMapper() {
-		return mapper;
-	}
+    public ObjectMapper getMapper() {
+        return mapper;
+    }
 	
     Document doc;
 
