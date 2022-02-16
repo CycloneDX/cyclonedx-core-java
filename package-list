@@ -6,3 +6,4 @@ org.cyclonedx.model
 org.cyclonedx.model.vulnerability
 org.cyclonedx.parsers
 org.cyclonedx.util
+org.cyclonedx.util.mixin
