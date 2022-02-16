@@ -28,12 +28,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.util.DependencyDeserializer;
+import org.cyclonedx.util.VulnerabilityDeserializer;
 
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
         "bomFormat",
         "specVersion",
@@ -45,7 +47,9 @@ import org.cyclonedx.util.DependencyDeserializer;
         "externalReferences",
         "dependencies",
         "compositions",
-        "properties"
+        "vulnerabilities",
+        "properties",
+        "signature"
 })
 public class Bom extends ExtensibleElement {
 
@@ -53,25 +57,29 @@ public class Bom extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Metadata metadata;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
     private List<Component> components;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<Service> services;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<Dependency> dependencies;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<ExternalReference> externalReferences;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Composition> compositions;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.4"})
+    @JsonDeserialize(using = VulnerabilityDeserializer.class)
+    private List<Vulnerability> vulnerabilities;
+
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -85,6 +93,10 @@ public class Bom extends ExtensibleElement {
 
     @JsonOnly
     private String bomFormat;
+
+    @JsonOnly
+    @VersionFilter(versions = {"1.4"})
+    private Signature signature;
 
     public Metadata getMetadata() {
         return metadata;
@@ -170,6 +182,12 @@ public class Bom extends ExtensibleElement {
         this.compositions = compositions;
     }
 
+    @JacksonXmlElementWrapper(localName = "vulnerabilities")
+    @JacksonXmlProperty(localName = "vulnerability")
+    public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
+
+    public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
+
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
     public List<Property> getProperties() {
@@ -225,6 +243,10 @@ public class Bom extends ExtensibleElement {
         return bomFormat;
     }
 
+    public Signature getSignature() { return signature; }
+
+    public void setSignature(Signature signature) { this.signature = signature; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -236,6 +258,7 @@ public class Bom extends ExtensibleElement {
                 Objects.equals(dependencies, bom.dependencies) &&
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(compositions, bom.compositions) &&
+                Objects.equals(vulnerabilities, bom.vulnerabilities) &&
                 Objects.equals(properties, bom.properties) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
                 Objects.equals(specVersion, bom.specVersion);
@@ -243,6 +266,6 @@ public class Bom extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, properties, version, serialNumber, specVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities, properties, version, serialNumber, specVersion);
     }
 }

@@ -31,7 +31,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
         "provider",
         "group",
@@ -45,7 +45,9 @@ import java.util.List;
         "licenses",
         "externalReferences",
         "properties",
-        "services"
+        "services",
+        "releaseNotes",
+        "signature"
 })
 public class Service extends ExtensibleElement {
 
@@ -65,9 +67,13 @@ public class Service extends ExtensibleElement {
     private List<ServiceData> data;
     private LicenseChoice license;
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Property> properties;
     private List<Service> services;
+    private ReleaseNotes releaseNotes;
+    @JsonOnly
+    @VersionFilter(versions = {"1.4"})
+    private Signature signature;
 
     public String getBomRef() {
         return bomRef;
@@ -221,4 +227,12 @@ public class Service extends ExtensibleElement {
     public void setServices(List<Service> services) {
         this.services = services;
     }
+
+    public ReleaseNotes getReleaseNotes() { return releaseNotes; }
+
+    public void setReleaseNotes(ReleaseNotes releaseNotes) { this.releaseNotes = releaseNotes; }
+
+    public Signature getSignature() { return signature; }
+
+    public void setSignature(Signature signature) { this.signature = signature; }
 }

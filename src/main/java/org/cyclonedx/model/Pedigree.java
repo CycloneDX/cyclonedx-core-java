@@ -30,7 +30,7 @@ import org.cyclonedx.util.ComponentWrapperDeserializer;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"ancestors", "descendants", "variants", "commits", "patches", "notes"})
 public class Pedigree extends ExtensibleElement {
 
@@ -45,7 +45,7 @@ public class Pedigree extends ExtensibleElement {
 
     private List<Commit> commits;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<Patch> patches;
 
     private String notes;
