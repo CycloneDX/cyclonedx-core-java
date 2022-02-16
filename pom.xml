@@ -41,6 +41,36 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Steve Springett</name>
+            <organization>OWASP</organization>
+            <organizationUrl>https://www.owasp.org/</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Jeffry Hesse</name>
+            <organization>OWASP</organization>
+            <organizationUrl>https://www.owasp.org/</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Alex Alzate</name>
+            <organization>Sonatype</organization>
+            <organizationUrl>https://www.sonatype.org/</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
