@@ -116,7 +116,7 @@ public class Component extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
     private String bomRef;
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty(isAttribute = true, localName = "mime-type")
     private String mimeType;
     @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private OrganizationalEntity supplier;
