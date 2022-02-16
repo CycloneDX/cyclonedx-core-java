@@ -52,7 +52,7 @@
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.4.0</maven.github.release.plugin.version>
-        <project.build.outputTimestamp>2021-08-25T05:02:26Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2022-01-23T20:52:08Z</project.build.outputTimestamp>
     </properties>
 
     <scm>
