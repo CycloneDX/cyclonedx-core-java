@@ -190,8 +190,8 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     return c;
   }
 
-  private Source processSource(final JsonNode sourceNode) {
-    Source source = new Source();
+  private Vulnerability10.Source processSource(final JsonNode sourceNode) {
+    Vulnerability10.Source source = new Vulnerability10.Source();
     source.setName(getAsString("name", sourceNode));
     if (sourceNode.get(Vulnerability10.URL) != null) {
       try {
