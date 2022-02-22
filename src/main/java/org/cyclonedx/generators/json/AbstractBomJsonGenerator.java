@@ -20,7 +20,6 @@ package org.cyclonedx.generators.json;
 
 import java.lang.reflect.Field;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
@@ -39,7 +38,7 @@ import org.cyclonedx.util.mixin.MixInBomReference;
 
 public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implements BomJsonGenerator {
 
-    private final ObjectMapper mapper;
+    protected final ObjectMapper mapper;
 
     private final DefaultPrettyPrinter prettyPrinter;
 

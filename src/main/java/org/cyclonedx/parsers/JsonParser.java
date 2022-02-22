@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.parsers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.ValidationMessage;
 import org.apache.commons.io.FileUtils;
@@ -29,15 +30,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 
 /**
  * JsonParser is responsible for validating and parsing CycloneDX bill-of-material
@@ -162,8 +158,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @since 3.0.0
      */
     public List<ParseException> validate(final String bomString, final CycloneDxSchema.Version schemaVersion) throws IOException {
-        JsonReader reader = Json.createReader(new StringReader(bomString));
-        return validate(reader.readObject(), schemaVersion);
+        return validate(mapper.readTree(bomString), schemaVersion);
     }
 
     /**
@@ -174,7 +169,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    public List<ParseException> validate(final JsonObject bomJson, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final JsonNode bomJson, final CycloneDxSchema.Version schemaVersion) throws IOException {
         final List<ParseException> exceptions = new ArrayList<>();
         Set<ValidationMessage> errors = getJsonSchema(schemaVersion, mapper).validate(mapper.readTree(bomJson.toString()));
         for (ValidationMessage message: errors) {
@@ -238,5 +233,4 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     public boolean isValid(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion) throws IOException {
         return validate(inputStream, schemaVersion).isEmpty();
     }
-
 }
