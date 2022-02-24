@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.cyclonedx.util.LicenseDeserializer;
-import org.cyclonedx.util.PropertyDeserializer;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -346,7 +344,6 @@ public class Component extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
-	@JsonDeserialize(using = PropertyDeserializer.class)
     public List<Property> getProperties() {
         return properties;
     }
