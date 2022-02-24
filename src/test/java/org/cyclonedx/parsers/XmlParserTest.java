@@ -18,6 +18,15 @@
  */
 package org.cyclonedx.parsers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Bom;
@@ -40,14 +49,6 @@ import org.cyclonedx.model.vulnerability.Vulnerability.Rating.Method;
 import org.cyclonedx.model.vulnerability.Vulnerability.Rating.Severity;
 import org.cyclonedx.model.vulnerability.Vulnerability.Version.Status;
 import org.junit.jupiter.api.Test;
-import java.io.File;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("deprecation")
 public class XmlParserTest {
@@ -711,7 +712,7 @@ public class XmlParserTest {
         assertEquals("Foo", c1.getProperties().get(0).getName());
         assertNull(c1.getProperties().get(0).getValue());
 
-        System.setProperty("cyclonedx.prerelease.13.properties", "true");
+		System.setProperty("cyclonedx.prerelease.14.properties", "true");
         final Bom bom2 = parser.parse(file);
         Component c2 = bom2.getComponents().get(0);
         assertEquals(2, c2.getProperties().size());

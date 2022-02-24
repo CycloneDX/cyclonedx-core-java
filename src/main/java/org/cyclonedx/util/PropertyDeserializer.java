@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.cyclonedx.model.Property;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -148,7 +150,7 @@ public class PropertyDeserializer extends StdDeserializer<List<Property>> {
 	}
 
 	private boolean isPreleaseDeserializationEnabled() {
-		final String s = System.getProperty("cyclonedx.prerelease.13.properties");
+		final String s = System.getProperty("cyclonedx.prerelease.14.properties");
 		return Boolean.parseBoolean(s);
 	}
 }
