@@ -23,5 +23,5 @@ This was done because those dependencies are GPLv2 with Classpath Exception, and
   
 ## [6.0.0] - 2022-02-16
 ### Added
-- Support for CycloneDX 1.4 Schema in XML and JSON.
+- Support for CycloneDX 1.4 Schema in XML, JSON and protobuf (schema only for protobuf).
 - Notable support of `vulnerabilities` object, previously an extension. Limited support for the extension left in place.
