@@ -21,6 +21,7 @@ package org.cyclonedx.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Collections;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -67,7 +68,7 @@ public class Bom extends ExtensibleElement {
     private List<Service> services;
 
     @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
-    private List<Dependency> dependencies;
+    private DependencyList dependencies;
 
     @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<ExternalReference> externalReferences;
@@ -147,12 +148,12 @@ public class Bom extends ExtensibleElement {
     }
 
     public void setDependencies(List<Dependency> dependencies) {
-        this.dependencies = dependencies;
+        this.dependencies = new DependencyList(dependencies);
     }
 
     public void addDependency(Dependency dependency) {
         if (dependencies == null) {
-            dependencies = new ArrayList<>();
+            dependencies = new DependencyList(Collections.singletonList(dependency));
         }
         dependencies.add(dependency);
     }
