@@ -27,6 +27,7 @@ import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -145,6 +146,20 @@ public class BomXmlGeneratorTest {
     }
 
     @Test
+    public void schema12MultipleDependenciesXmlTest() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.2.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, bom);
+        assertTrue(generator instanceof BomXmlGenerator12);
+        assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser xmlParser = new XmlParser();
+        assertTrue(xmlParser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+    }
+
+    @Test
     public void schema12GenerationWithPedigreeDataTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_12, createCommonBom("/bom-1.2-pedigree.xml"));
         Document doc = generator.generate();
@@ -171,6 +186,20 @@ public class BomXmlGeneratorTest {
     }
 
     @Test
+    public void schema13MultipleDependenciesXmlTest() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.3.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_13, bom);
+        assertTrue(generator instanceof BomXmlGenerator13);
+        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser xmlParser = new XmlParser();
+        assertTrue(xmlParser.isValid(file, CycloneDxSchema.Version.VERSION_13));
+    }
+
+    @Test
     public void schema14GenerationTest() throws Exception {
         BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_14, createCommonBom("/bom-1.4.xml"));
         Document doc = generator.generate();
@@ -181,6 +210,20 @@ public class BomXmlGeneratorTest {
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+    }
+
+    @Test
+    public void schema14MultipleDependenciesXmlTest() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.4.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_14, bom);
+        assertTrue(generator instanceof BomXmlGenerator14);
+        assertEquals(CycloneDxSchema.Version.VERSION_14, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser xmlParser = new XmlParser();
+        assertTrue(xmlParser.isValid(file, CycloneDxSchema.Version.VERSION_14));
     }
 
     @Test
