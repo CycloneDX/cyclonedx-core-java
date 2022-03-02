@@ -153,7 +153,7 @@ public class Bom extends ExtensibleElement {
 
     public void addDependency(Dependency dependency) {
         if (dependencies == null) {
-            dependencies = new DependencyList(Collections.singletonList(dependency));
+            dependencies = new DependencyList(Collections.emptyList());
         }
         dependencies.add(dependency);
     }
