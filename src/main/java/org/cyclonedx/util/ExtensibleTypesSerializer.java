@@ -35,8 +35,6 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
 {
   private final String XMLNS = "xmlns";
 
-  private final String DEFAULT_VALID_NAMESPACE = "http://www.w3.org/1999/xhtml";
-
   public ExtensibleTypesSerializer() {
     this(null);
   }
@@ -70,7 +68,7 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
               }
             }
           } else {
-            staxWriter.writeStartElement(ext.getNamespace(), ext.getName(), DEFAULT_VALID_NAMESPACE);
+            staxWriter.writeStartElement(ext.getNamespace(), ext.getName(), "http://www.w3.org/1999/xhtml");
           }
 
           if (ext.getExtensibleTypes() != null && !ext.getExtensibleTypes().isEmpty()) {
