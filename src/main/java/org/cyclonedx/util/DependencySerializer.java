@@ -91,18 +91,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
       throws IOException, XMLStreamException
   {
     if (dependencies != null && !dependencies.isEmpty()) {
-      QName qName;
-
-      if (useNamespace) {
-        qName = new QName(NAMESPACE_URI, DEPENDENCIES, NAMESPACE_PREFIX);
-        toXmlGenerator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
-      } else {
-        qName = new QName(DEPENDENCIES);
-      }
-
-      toXmlGenerator.setNextName(qName);
-      toXmlGenerator.writeStartObject();
-      toXmlGenerator.writeFieldName(qName.getLocalPart());
+      processNamespace(toXmlGenerator, DEPENDENCIES);
       toXmlGenerator.writeStartArray();
 
       for (Dependency dependency : dependencies) {
@@ -117,18 +106,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
   private void writeXMLDependency(final Dependency dependency, final ToXmlGenerator generator)
       throws IOException, XMLStreamException
   {
-    QName qName;
-    if (useNamespace) {
-      qName = new QName(NAMESPACE_URI, DEPENDENCY, NAMESPACE_PREFIX);
-      generator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
-    } else {
-      qName = new QName(DEPENDENCY);
-    }
-
-    generator.setNextName(qName);
-
-    generator.writeStartObject();
-    generator.writeFieldName(qName.getLocalPart());
+    processNamespace(generator, DEPENDENCY);
 
     if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
       generator.writeStartArray();
@@ -151,5 +129,22 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
     }
 
     generator.writeEndObject();
+  }
+
+  private void processNamespace(final ToXmlGenerator toXmlGenerator, final String dependencies2)
+      throws XMLStreamException, IOException
+  {
+    QName qName;
+
+    if (useNamespace) {
+      qName = new QName(NAMESPACE_URI, dependencies2, NAMESPACE_PREFIX);
+      toXmlGenerator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
+    } else {
+      qName = new QName(dependencies2);
+    }
+
+    toXmlGenerator.setNextName(qName);
+    toXmlGenerator.writeStartObject();
+    toXmlGenerator.writeFieldName(qName.getLocalPart());
   }
 }
