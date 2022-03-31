@@ -43,7 +43,6 @@ import org.cyclonedx.model.vulnerability.Vulnerability10.Recommendation;
 import org.cyclonedx.model.vulnerability.Vulnerability10.Score;
 import org.cyclonedx.model.vulnerability.Vulnerability10.ScoreSource;
 import org.cyclonedx.model.vulnerability.Vulnerability10.Severity;
-import org.cyclonedx.model.Source;
 
 public class ExtensionDeserializer extends StdDeserializer<Extension>
 {
