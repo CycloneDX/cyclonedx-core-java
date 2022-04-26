@@ -1,5 +1,12 @@
 [
   {
+    "exp": "Apache-1.0",
+    "names": [
+      "Apache License",
+      "Apache Software Licenses"
+    ]
+  },
+  {
     "exp": "Apache-2.0",
     "names": [
       "Apache 2",
@@ -15,7 +22,8 @@
       "Apache Software License - Version 2.0",
       "The Apache License, Version 2.0",
       "Apache-2.0 License",
-      "Apache License version 2.0"
+      "Apache License version 2.0",
+      "Apache 2 Style License"
     ]
   },
   {
@@ -50,6 +58,14 @@
       "Eclipse Distribution License - v 1.0",
       "Eclipse Distribution License v. 1.0",
       "Eclipse Distribution License v1.0"
+    ]
+  },
+  {
+    "exp": "BSD-4-Clause",
+    "names": [
+      "BSD License",
+      "The BSD License",
+      "BSD"
     ]
   },
   {
