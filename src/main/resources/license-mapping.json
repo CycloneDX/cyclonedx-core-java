@@ -234,6 +234,11 @@
     ]
   },
   {
+    "exp": "MPL-1.0",
+    "names": [
+      "Mozilla Public License"
+    ]
+  },  {
     "exp": "MPL-1.1",
     "names": [
       "MPL 1.1"
