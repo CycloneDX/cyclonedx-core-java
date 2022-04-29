@@ -32,11 +32,8 @@ import org.cyclonedx.model.Dependency;
 
 public class DependencySerializer extends StdSerializer<List<Dependency>>
 {
-  private final String NAMESPACE_PREFIX = "dg";
-  private final String DEPENDENCY = "dependency";
-  private final String DEPENDENCIES = "dependencies";
   private final String REF = "ref";
-  private final String NAMESPACE_URI = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
+
   private boolean useNamespace = false;
 
   public DependencySerializer(final boolean useNamespace) {
@@ -91,18 +88,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
       throws IOException, XMLStreamException
   {
     if (dependencies != null && !dependencies.isEmpty()) {
-      QName qName;
-
-      if (useNamespace) {
-        qName = new QName(NAMESPACE_URI, DEPENDENCIES, NAMESPACE_PREFIX);
-        toXmlGenerator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
-      } else {
-        qName = new QName(DEPENDENCIES);
-      }
-
-      toXmlGenerator.setNextName(qName);
-      toXmlGenerator.writeStartObject();
-      toXmlGenerator.writeFieldName(qName.getLocalPart());
+      processNamespace(toXmlGenerator, "dependencies");
       toXmlGenerator.writeStartArray();
 
       for (Dependency dependency : dependencies) {
@@ -117,18 +103,7 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
   private void writeXMLDependency(final Dependency dependency, final ToXmlGenerator generator)
       throws IOException, XMLStreamException
   {
-    QName qName;
-    if (useNamespace) {
-      qName = new QName(NAMESPACE_URI, DEPENDENCY, NAMESPACE_PREFIX);
-      generator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
-    } else {
-      qName = new QName(DEPENDENCY);
-    }
-
-    generator.setNextName(qName);
-
-    generator.writeStartObject();
-    generator.writeFieldName(qName.getLocalPart());
+    processNamespace(generator, "dependency");
 
     if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
       generator.writeStartArray();
@@ -151,5 +126,22 @@ public class DependencySerializer extends StdSerializer<List<Dependency>>
     }
 
     generator.writeEndObject();
+  }
+
+  private void processNamespace(final ToXmlGenerator toXmlGenerator, final String dependencies)
+      throws XMLStreamException, IOException
+  {
+    QName qName;
+
+    if (useNamespace) {
+      qName = new QName("http://cyclonedx.org/schema/ext/dependency-graph/1.0", dependencies, "dg");
+      toXmlGenerator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
+    } else {
+      qName = new QName(dependencies);
+    }
+
+    toXmlGenerator.setNextName(qName);
+    toXmlGenerator.writeStartObject();
+    toXmlGenerator.writeFieldName(qName.getLocalPart());
   }
 }
