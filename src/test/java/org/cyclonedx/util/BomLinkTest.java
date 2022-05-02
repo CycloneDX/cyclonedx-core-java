@@ -42,6 +42,7 @@ public class BomLinkTest {
         assertFalse(BomLink.isBomLink("urn:cdx:dbd9e325-a02e-4bd1-9a21-5123edd1b27c"));
         assertFalse(BomLink.isBomLink("urn:cdx:foo/1"));
         assertFalse(BomLink.isBomLink("urn:foo:dbd9e325-a02e-4bd1-9a21-5123edd1b27/1"));
+        assertFalse(BomLink.isBomLink("foo:cdx:dbd9e325-a02e-4bd1-9a21-5123edd1b27/1"));
     }
 
     @Test
