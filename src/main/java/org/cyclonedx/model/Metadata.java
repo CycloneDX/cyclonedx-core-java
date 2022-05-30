@@ -34,33 +34,33 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier", "licenses", "properties"})
 public class Metadata extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Date timestamp = new Date();
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<Tool> tools;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private List<OrganizationalContact> authors;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Component component;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private OrganizationalEntity manufacture;
 
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private OrganizationalEntity supplier;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private LicenseChoice license;
 
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Property> properties;
 
     public Date getTimestamp() {

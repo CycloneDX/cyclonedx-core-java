@@ -23,15 +23,15 @@
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
     <packaging>jar</packaging>
-    <version>5.0.6-SNAPSHOT</version>
+    <version>7.1.5-SNAPSHOT</version>
 
     <name>CycloneDX Core (Java)</name>
     <description>The CycloneDX core module provides a model representation of the BOM along with utilities to assist in creating, parsing, and validating BOMs.</description>
     <url>https://github.com/CycloneDX/cyclonedx-core-java</url>
     <inceptionYear>2017</inceptionYear>
     <organization>
-        <name>CycloneDX</name>
-        <url>https://cyclonedx.org</url>
+        <name>OWASP Foundation</name>
+        <url>https://owasp.org/</url>
     </organization>
 
     <licenses>
@@ -44,9 +44,26 @@
     <developers>
         <developer>
             <name>Steve Springett</name>
-            <email>Steve.Springett@owasp.org</email>
             <organization>OWASP</organization>
             <organizationUrl>https://www.owasp.org/</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Jeffry Hesse</name>
+            <organization>OWASP</organization>
+            <organizationUrl>https://www.owasp.org/</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Alex Alzate</name>
+            <organization>Sonatype</organization>
+            <organizationUrl>https://www.sonatype.org/</organizationUrl>
             <roles>
                 <role>Architect</role>
                 <role>Developer</role>
@@ -60,12 +77,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Maven Plugin Versions -->
-        <maven.cyclonedx.plugin.version>2.5.3</maven.cyclonedx.plugin.version>
-        <maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
+        <maven.cyclonedx.plugin.version>2.6.2</maven.cyclonedx.plugin.version>
+        <maven.javadoc.plugin.version>3.4.0</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.4.0</maven.github.release.plugin.version>
-        <project.build.outputTimestamp>2022-01-23T20:52:08Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2022-05-12T03:23:02Z</project.build.outputTimestamp>
     </properties>
 
     <scm>
@@ -152,7 +169,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.13.1</version>
+            <version>2.13.2</version>
         </dependency>
 
         <!-- JSON Schema library -->
@@ -160,21 +177,7 @@
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>json-schema-validator</artifactId>
-            <version>1.0.64</version>
-        </dependency>
-
-        <!-- JsonObject supporting libraries -->
-
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1.4</version>
+            <version>1.0.69</version>
         </dependency>
 
         <!-- Unit Test -->
@@ -270,7 +273,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M6</version>
                 </plugin>
             </plugins>
         </pluginManagement>

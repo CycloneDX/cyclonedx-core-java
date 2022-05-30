@@ -1,5 +1,12 @@
 [
   {
+    "exp": "Apache-1.0",
+    "names": [
+      "Apache License",
+      "Apache Software Licenses"
+    ]
+  },
+  {
     "exp": "Apache-2.0",
     "names": [
       "Apache 2",
@@ -13,7 +20,10 @@
       "Apache License, Version 2.0",
       "Apache Public License 2.0",
       "Apache Software License - Version 2.0",
-      "The Apache License, Version 2.0"
+      "The Apache License, Version 2.0",
+      "Apache-2.0 License",
+      "Apache License version 2.0",
+      "Apache 2 Style License"
     ]
   },
   {
@@ -41,7 +51,27 @@
       "Modified BSD License",
       "Revised BSD",
       "Revised BSD License",
-      "The New BSD License"
+      "The New BSD License",
+      "3-Clause BSD License",
+      "BSD 3-clause New License",
+      "BSD License",
+      "Eclipse Distribution License - v 1.0",
+      "Eclipse Distribution License v. 1.0",
+      "Eclipse Distribution License v1.0"
+    ]
+  },
+  {
+    "exp": "BSD-4-Clause",
+    "names": [
+      "BSD License",
+      "The BSD License",
+      "BSD"
+    ]
+  },
+  {
+    "exp": "CC0-1.0",
+    "names": [
+      "CC0 1.0 Universal"
     ]
   },
   {
@@ -82,14 +112,20 @@
       "Eclipse Public License v1.0",
       "Eclipse Public License, Version 1.0",
       "Eclipse Public License - v 1.0",
-      "Eclipse Public License - v1.0"
+      "Eclipse Public License - v1.0",
+      "Eclipse Public License (EPL), Version 1.0"
     ]
   },
   {
     "exp": "EPL-2.0",
     "names": [
       "Eclipse Public License - Version 2.0",
-      "EPL 2.0"
+      "EPL 2.0",
+      "Eclipse Public License - v 2.0",
+      "Eclipse Public License v2.0",
+      "Eclipse Public License, Version 2.0",
+      "The Eclipse Public License Version 2.0",
+      "Eclipse Public License v. 2.0"
     ]
   },
   {
@@ -127,7 +163,8 @@
     "names": [
       "GPL2 w/ CPE",
       "GPLv2+CE",
-      "GPLv2 with classpath exception"
+      "GPLv2 with classpath exception",
+      "GPLv2 license, includes the CLASSPATH exception"
     ]
   },
   {
@@ -184,20 +221,34 @@
     "names": [
       "GNU Lesser General Public License (LGPL), version 3 or later",
       "GNU Lesser General Public License (LGPL), version 3.0 or later",
-      "GNU Lesser General Public License v3.0 or later"
+      "GNU Lesser General Public License v3.0 or later",
+      "Lesser General Public License, version 3 or greater"
     ]
   },
   {
     "exp": "MIT",
     "names": [
       "MIT License",
-      "The MIT License"
+      "The MIT License",
+      "The MIT License (MIT)"
+    ]
+  },
+  {
+    "exp": "MPL-1.0",
+    "names": [
+      "Mozilla Public License"
     ]
   },
   {
     "exp": "MPL-1.1",
     "names": [
       "MPL 1.1"
+    ]
+  },
+  {
+    "exp": "MPL-2.0",
+    "names": [
+      "MPL 2.0"
     ]
   },
   {
@@ -211,6 +262,12 @@
     "names": [
       "The JSON License",
       "JSON License"
+    ]
+  },
+  {
+    "exp": "W3C",
+    "names": [
+      "The W3C Software License"
     ]
   }
 ]

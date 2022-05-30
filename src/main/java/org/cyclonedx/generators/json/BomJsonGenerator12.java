@@ -18,10 +18,8 @@
  */
 package org.cyclonedx.generators.json;
 
-import java.io.StringReader;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
@@ -61,14 +59,12 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
     /**
      * Creates a CycloneDX BOM from a set of Components.
      * @return an JSON Document representing a CycloneDX BoM
-     * @since 5.0.0
+     * @since 7.0.0
      */
-    public JsonObject toJsonObject() {
+    public JsonNode toJsonNode() {
         try {
-            JsonReader reader = Json.createReader(new StringReader(toJson(this.bom, false)));
-
-            return reader.readObject();
-        } catch (GeneratorException e) {
+            return mapper.readTree(toJson(this.bom, false));
+        } catch (GeneratorException | JsonProcessingException e) {
             return null;
         }
     }

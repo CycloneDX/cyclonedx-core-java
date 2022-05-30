@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://cyclonedx.org/schema/bom-1.3.schema.json",
+  "$id": "http://cyclonedx.org/schema/bom-1.3a.schema.json",
   "type": "object",
   "title": "CycloneDX Software Bill-of-Material Specification",
   "$comment" : "CycloneDX JSON schema is published under the terms of the Apache License 2.0.",
@@ -158,7 +158,7 @@
           "description": "The date and time (timestamp) when the document was created."
         },
         "hashes": {
-          "$id": "#/properties/hashes",
+          "$id": "#/definitions/tool/properties/hashes",
           "type": "array",
           "items": {"$ref": "#/definitions/hash"},
           "title": "Hashes",
@@ -395,7 +395,7 @@
           "title": "External References"
         },
         "components": {
-          "$id": "#/properties/components",
+          "$id": "#/definitions/component/properties/components",
           "type": "array",
           "items": {"$ref": "#/definitions/component"},
           "uniqueItems": true,
@@ -809,7 +809,7 @@
           ]
         },
         "hashes": {
-          "$id": "#/properties/hashes",
+          "$id": "#/definitions/externalReference/properties/hashes",
           "type": "array",
           "items": {"$ref": "#/definitions/hash"},
           "title": "Hashes",
@@ -918,7 +918,7 @@
           "title": "External References"
         },
         "services": {
-          "$id": "#/properties/services",
+          "$id": "#/definitions/service/properties/services",
           "type": "array",
           "items": {"$ref": "#/definitions/service"},
           "uniqueItems": true,

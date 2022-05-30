@@ -43,7 +43,6 @@ import org.cyclonedx.model.vulnerability.Vulnerability10.Recommendation;
 import org.cyclonedx.model.vulnerability.Vulnerability10.Score;
 import org.cyclonedx.model.vulnerability.Vulnerability10.ScoreSource;
 import org.cyclonedx.model.vulnerability.Vulnerability10.Severity;
-import org.cyclonedx.model.Source;
 
 public class ExtensionDeserializer extends StdDeserializer<Extension>
 {
@@ -190,8 +189,8 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     return c;
   }
 
-  private Source processSource(final JsonNode sourceNode) {
-    Source source = new Source();
+  private Vulnerability10.Source processSource(final JsonNode sourceNode) {
+    Vulnerability10.Source source = new Vulnerability10.Source();
     source.setName(getAsString("name", sourceNode));
     if (sourceNode.get(Vulnerability10.URL) != null) {
       try {

@@ -158,6 +158,32 @@ public class BomXmlGeneratorTest {
     }
 
     @Test
+    public void schema13GenerationTest() throws Exception {
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_13, createCommonBom("/bom-1.3.xml"));
+        Document doc = generator.generate();
+        testDocument(doc);
+
+        assertTrue(generator instanceof BomXmlGenerator13);
+        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
+    }
+
+    @Test
+    public void schema14GenerationTest() throws Exception {
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_14, createCommonBom("/bom-1.4.xml"));
+        Document doc = generator.generate();
+        testDocument(doc);
+
+        assertTrue(generator instanceof BomXmlGenerator14);
+        assertEquals(CycloneDxSchema.Version.VERSION_14, generator.getSchemaVersion());
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+    }
+
+    @Test
     public void invalidUrlTest() throws Exception {
         Component c = new Component();
         c.setName("Component-A");

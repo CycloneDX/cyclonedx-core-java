@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.cyclonedx.util.LicenseDeserializer;
-import org.cyclonedx.util.PropertyDeserializer;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,7 +36,7 @@ import com.github.packageurl.PackageURL;
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "component")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
     {"supplier",
      "author",
@@ -59,7 +57,9 @@ import com.github.packageurl.PackageURL;
      "externalReferences",
      "properties",
      "components",
-     "evidence"
+     "evidence",
+     "releaseNotes",
+     "signature"
     })
 public class Component extends ExtensibleElement {
 
@@ -114,13 +114,13 @@ public class Component extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
     private String bomRef;
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty(isAttribute = true, localName = "mime-type")
     private String mimeType;
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private OrganizationalEntity supplier;
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private String author;
-    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private String publisher;
     private String group;
     private String name;
@@ -132,20 +132,25 @@ public class Component extends ExtensibleElement {
     private String copyright;
     private String cpe;
     private String purl;
-    @VersionFilter(versions = {"1.2", "1.3"})
+    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
     private Swid swid;
     private Boolean modified;
-    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private Pedigree pedigree;
-    @VersionFilter(versions = {"1.1", "1.2", "1.3"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private List<Property> properties;
     private List<Component> components;
-    @VersionFilter(versions = {"1.3"})
+    @VersionFilter(versions = {"1.3", "1.4"})
     private Evidence evidence;
     @JacksonXmlProperty(isAttribute = true)
     private Type type;
+    @VersionFilter(versions = {"1.4"})
+    private ReleaseNotes releaseNotes;
+    @JsonOnly
+    @VersionFilter(versions = {"1.4"})
+    private Signature signature;
 
     public String getBomRef() {
         return bomRef;
@@ -339,7 +344,6 @@ public class Component extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
-	@JsonDeserialize(using = PropertyDeserializer.class)
     public List<Property> getProperties() {
         return properties;
     }
@@ -388,9 +392,17 @@ public class Component extends ExtensibleElement {
         this.type = type;
     }
 
+    public ReleaseNotes getReleaseNotes() { return releaseNotes; }
+
+    public void setReleaseNotes(ReleaseNotes releaseNotes) { this.releaseNotes = releaseNotes; }
+
+    public Signature getSignature() { return signature; }
+
+    public void setSignature(Signature signature) { this.signature = signature; }
+
     @Override
     public int hashCode() {
-        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright, cpe, purl, swid, modified, components, evidence, type);
+        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright, cpe, purl, swid, modified, components, evidence, releaseNotes, type);
     }
 
     @Override
@@ -416,6 +428,7 @@ public class Component extends ExtensibleElement {
                 Objects.equals(components, component.components) &&
                 Objects.equals(evidence, component.evidence) &&
                 Objects.equals(mimeType, component.mimeType) &&
+                Objects.equals(releaseNotes, component.releaseNotes) &&
                 Objects.equals(type, component.type);
     }
 }

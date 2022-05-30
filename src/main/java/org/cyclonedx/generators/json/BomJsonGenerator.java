@@ -18,15 +18,14 @@
  */
 package org.cyclonedx.generators.json;
 
-import javax.json.JsonObject;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.CycloneDxSchema;
 
 public interface BomJsonGenerator {
 
     CycloneDxSchema.Version getSchemaVersion();
 
-    JsonObject toJsonObject();
+    JsonNode toJsonNode();
 
     String toJsonString();
 
