@@ -43,6 +43,10 @@ public class BomParserFactory {
     }
 
     public static Parser createParser(final byte[] bytes) throws ParseException {
+        if(bytes.length < 1) {
+            throw new ParseException("Cannot create parser from empty byte array.");
+        }
+
         if (bytes[0] == 123) {
             return new JsonParser();
         } else if (bytes[0] == 60) {
