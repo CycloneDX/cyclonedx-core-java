@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/${specVersion}" version="1">
+    <components>
+        <component type="library">
+            <group>org.example</group>
+            <name>mylibrary</name>
+            <version>1.0.0</version>
+            <externalReferences>
+                <reference type="bom">
+                    <url>https://example.org/support/sbom/portal-server/1.0.0</url>
+                    <comment>An external SBOM that describes what this component includes</comment>
+                    <hashes>
+                        <hash alg="MD5">2cd42512b65500dc7ba0ff13490b0b73</hash>
+                        <hash alg="SHA-1">226247b40160f2892fa4c7851b5b913d5d10912d</hash>
+                        <hash alg="SHA-256">09a72795a920c1a9c0209cfb8395f8d97089832d249cba8c0938a3423b3ed1d1</hash>
+                    </hashes>
+                </reference>
+            </externalReferences>
+        </component>
+    </components>
+</bom>
