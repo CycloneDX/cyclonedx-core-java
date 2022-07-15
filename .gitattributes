@@ -1,0 +1,10 @@
+* text=auto
+
+# This file is used for computing hashes which must not differ by platform
+src/test/resources/hashtest.txt text eol=lf
+
+# Shell scripts must always use LF even on Windows
+*.sh  text eol=lf
+
+# These are explicitly Windows files and should use crlf
+*.bat  text eol=crlf
