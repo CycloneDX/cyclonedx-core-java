@@ -33,8 +33,8 @@ public class LicenseResolverTest {
         LicenseChoice l3 = LicenseResolver.resolve("https://www.opensource.org/licenses/MIT");
         LicenseChoice l4 = LicenseResolver.resolve("https://www.opensource.org/licenses/Apache-2.0");
         LicenseChoice l5 = LicenseResolver.resolve("https://www.apache.org/licenses/LICENSE-2.0");
-        assertEquals("GPL-3.0-or-later", l1.getLicenses().get(0).getId());
-        assertEquals("GPL-3.0-or-later", l2.getLicenses().get(0).getId());
+        assertEquals("GPL-3.0-only", l1.getLicenses().get(0).getId());
+        assertEquals("GPL-3.0-only", l2.getLicenses().get(0).getId());
         assertEquals("MIT", l3.getLicenses().get(0).getId());
         assertEquals("Apache-2.0", l4.getLicenses().get(0).getId());
         assertEquals("Apache-2.0", l5.getLicenses().get(0).getId());
