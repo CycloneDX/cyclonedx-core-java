@@ -167,7 +167,7 @@ public class JsonParserTest {
         // End Services
 
         // Begin Dependencies
-        assertEquals(1, bom.getDependencies().size());
+        assertEquals(2, bom.getDependencies().size());
         Dependency d1 = bom.getDependencies().get(0);
         assertNotNull(d1);
         assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
@@ -295,7 +295,7 @@ public class JsonParserTest {
         // End Services
 
         // Begin Dependencies
-        assertEquals(1, bom.getDependencies().size());
+        assertEquals(2, bom.getDependencies().size());
         Dependency d1 = bom.getDependencies().get(0);
         assertNotNull(d1);
         assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
@@ -303,6 +303,13 @@ public class JsonParserTest {
         Dependency d11 = d1.getDependencies().get(0);
         assertEquals("pkg:npm/acme/common@1.0.0", d11.getRef());
         assertNull(d11.getDependencies());
+        Dependency d2 = bom.getDependencies().get(1);
+        assertEquals("pkg:npm/acme/component@2.0.0", d2.getRef());
+        assertEquals(3, d2.getDependencies().size());
+        Dependency d21 = d2.getDependencies().get(0);
+        assertEquals("pkg:npm/acme/common@1.1.0", d21.getRef());
+        Dependency d22 = d2.getDependencies().get(1);
+        assertEquals("pkg:npm/acme/common@2.2.0", d22.getRef());
     }
 
     @Test
@@ -320,10 +327,10 @@ public class JsonParserTest {
         assertVulnerabilities(bom);
 
         // Dependencies
-        assertEquals(1, bom.getDependencies().size());
+        assertEquals(2, bom.getDependencies().size());
         Dependency d1 = bom.getDependencies().get(0);
         assertNotNull(d1);
-        assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
+        assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
     }
 
     private void assertVulnerabilities(final Bom bom) {

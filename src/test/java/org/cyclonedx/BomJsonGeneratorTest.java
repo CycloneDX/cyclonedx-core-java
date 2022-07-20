@@ -84,6 +84,20 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
+    public void schema12MultipleDependenciesJsonTest() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.2.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_12, bom);
+        assertTrue(generator instanceof BomJsonGenerator12);
+        assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        File file = writeToFile(generator.toJsonString());
+        JsonParser jsonParser = new JsonParser();
+        assertTrue(jsonParser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+    }
+
+    @Test
     public void schema13EmptyComponentsJsonTest() throws Exception {
         final Bom bom =  new Bom();
         bom.setComponents(new ArrayList<>());
@@ -94,6 +108,20 @@ public class BomJsonGeneratorTest {
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
+    }
+
+    @Test
+    public void schema13MultipleDependenciesJsonTest() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.3.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
+        assertTrue(generator instanceof BomJsonGenerator13);
+        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        File file = writeToFile(generator.toJsonString());
+        JsonParser jsonParser = new JsonParser();
+        assertTrue(jsonParser.isValid(file, CycloneDxSchema.Version.VERSION_13));
     }
 
     @Test
@@ -120,6 +148,20 @@ public class BomJsonGeneratorTest {
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+    }
+
+    @Test
+    public void schema14MultipleDependenciesJsonTest() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.4.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_14, bom);
+        assertTrue(generator instanceof BomJsonGenerator14);
+        assertEquals(CycloneDxSchema.Version.VERSION_14, generator.getSchemaVersion());
+        File file = writeToFile(generator.toJsonString());
+        JsonParser jsonParser = new JsonParser();
+        assertTrue(jsonParser.isValid(file, CycloneDxSchema.Version.VERSION_14));
     }
 
     private File writeToFile(String jsonString) throws Exception {

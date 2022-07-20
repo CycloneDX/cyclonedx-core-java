@@ -29,25 +29,26 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.DependencyList;
 
-public class DependencySerializer extends StdSerializer<List<Dependency>>
+public class DependencySerializer extends StdSerializer<DependencyList>
 {
   private final String REF = "ref";
 
   private boolean useNamespace = false;
 
   public DependencySerializer(final boolean useNamespace) {
-    this(null);
+    super(DependencyList.class, false);
     this.useNamespace = useNamespace;
   }
 
-  public DependencySerializer(final Class<List<Dependency>> t) {
+  public DependencySerializer(final Class<DependencyList> t) {
     super(t);
   }
 
   @Override
   public void serialize(
-      final List<Dependency> dependencies, final JsonGenerator generator, final SerializerProvider provider)
+      final DependencyList dependencies, final JsonGenerator generator, final SerializerProvider provider)
       throws IOException
   {
     try {
