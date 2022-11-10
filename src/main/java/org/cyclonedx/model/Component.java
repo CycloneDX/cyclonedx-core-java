@@ -269,19 +269,15 @@ public class Component extends ExtensibleElement {
     }
 
     /**
-     * @deprecated CPE will be removed in a future version of the CycloneDX specification.
      * @return the Common Platform Enumeration of the component
      */
-    @Deprecated
     public String getCpe() {
         return cpe;
     }
 
     /**
-     * @deprecated CPE will be removed in a future version of the CycloneDX specification.
      * @param cpe a valid CPE 2.2 or CPE 2.3 string
      */
-    @Deprecated
     public void setCpe(String cpe) {
         this.cpe = cpe;
     }
