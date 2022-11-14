@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class LicenseResolverTest {
 
@@ -49,6 +50,24 @@ public class LicenseResolverTest {
         assertNotNull(c1.getLicenses().get(0).getAttachmentText().getText());
         assertEquals("plain/text", c1.getLicenses().get(0).getAttachmentText().getContentType());
         assertEquals("base64", c1.getLicenses().get(0).getAttachmentText().getEncoding());
+
+        LicenseResolver.LicenseTextSettings textSettings = new LicenseResolver.LicenseTextSettings( true, LicenseResolver.LicenseEncoding.NONE);
+        LicenseChoice c2 = LicenseResolver.resolve("GPL-3.0-only", textSettings);
+        assertEquals(1, c2.getLicenses().size());
+        assertEquals("GPL-3.0-only", c2.getLicenses().get(0).getId());
+        assertEquals("https://www.gnu.org/licenses/gpl-3.0-standalone.html", c2.getLicenses().get(0).getUrl());
+        assertNotNull(c2.getLicenses().get(0).getAttachmentText().getText());
+        assertEquals("plain/text", c2.getLicenses().get(0).getAttachmentText().getContentType());
+        assertNull(c2.getLicenses().get(0).getAttachmentText().getEncoding());
+
+        textSettings = new LicenseResolver.LicenseTextSettings( true, LicenseResolver.LicenseEncoding.BASE64);
+        LicenseChoice c3 = LicenseResolver.resolve("GPL-3.0-only", textSettings);
+        assertEquals(1, c3.getLicenses().size());
+        assertEquals("GPL-3.0-only", c3.getLicenses().get(0).getId());
+        assertEquals("https://www.gnu.org/licenses/gpl-3.0-standalone.html", c3.getLicenses().get(0).getUrl());
+        assertNotNull(c3.getLicenses().get(0).getAttachmentText().getText());
+        assertEquals("plain/text", c3.getLicenses().get(0).getAttachmentText().getContentType());
+        assertEquals("base64", c3.getLicenses().get(0).getAttachmentText().getEncoding());
     }
 
     @Test
