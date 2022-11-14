@@ -25,6 +25,7 @@ import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.AttachmentText;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -200,7 +201,7 @@ public final class LicenseResolver {
                         break;
                     case BASE64:
                         attachment.setEncoding(licenseTextSettings.getEncoding().toString());
-                        attachment.setText(Base64.getEncoder().encodeToString(text.getBytes()));
+                        attachment.setText(Base64.getEncoder().encodeToString(text.getBytes(Charset.defaultCharset())));
                         break;
                     default:
                         throw new IllegalArgumentException("Unhandled License Encoding:" + licenseTextSettings.getEncoding().toString() );
@@ -219,7 +220,7 @@ public final class LicenseResolver {
         BASE64("base64"),
         NONE("none");
 
-        private String encodingName;
+        private final String encodingName;
 
         /**
          * Constructor with a string representation of the enum value
