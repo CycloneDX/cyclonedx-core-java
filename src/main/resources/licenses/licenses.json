@@ -5238,7 +5238,8 @@
       "seeAlso": [
         "https://www.gnu.org/licenses/lgpl-3.0-standalone.html",
         "https://www.gnu.org/licenses/lgpl+gpl-3.0.txt",
-        "https://opensource.org/licenses/LGPL-3.0"
+        "https://opensource.org/licenses/LGPL-3.0",
+        "https://www.gnu.org/licenses/lgpl-3.0.html"
       ],
       "isOsiApproved": true
     },
