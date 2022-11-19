@@ -313,6 +313,17 @@ public class JsonParserTest {
     }
 
     @Test
+    public void testValidBomLink() throws Exception {
+        final File file = new File(this.getClass().getResource("/bom-1.4-bomlink.json").getFile());
+        final JsonParser parser = new JsonParser();
+        Bom bom = parser.parse(file);
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+        ExternalReference ref = bom.getComponents().get(0).getExternalReferences().get(0);
+        assertEquals("bom", ref.getType().getTypeName());
+        assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", ref.getUrl());
+    }
+
+    @Test
     public void testParsedObjects14Bom() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.4.json"));
         final JsonParser parser = new JsonParser();
