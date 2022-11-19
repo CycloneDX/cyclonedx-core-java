@@ -308,6 +308,19 @@ public class BomXmlGeneratorTest {
         assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
     }
 
+    @Test
+    public void schema14JBomLinkGenerationTest() throws Exception {
+        Bom bom = createCommonBom("/bom-1.4-bomlink.xml");
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_14, bom);
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+        Bom bom2 = parser.parse(file);
+        assertNotNull(bom2.getComponents().get(0).getExternalReferences());
+        assertEquals("bom", bom2.getComponents().get(0).getExternalReferences().get(0).getType().getTypeName());
+        assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", bom2.getComponents().get(0).getExternalReferences().get(0).getUrl());
+    }
+
     private File writeToFile(String xmlString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
             writer.write(xmlString);

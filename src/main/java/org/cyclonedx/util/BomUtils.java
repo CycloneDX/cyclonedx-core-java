@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -95,11 +96,21 @@ public final class BomUtils {
         throw new IllegalArgumentException("Unable to find algorithm matching '"+digest.getAlgorithm()+"'. Known algorithms: "+ Arrays.stream(Hash.Algorithm.values()).map(Hash.Algorithm::getSpec).sorted().collect(Collectors.joining()));
     }
 
+    @Deprecated
     public static boolean validateUrlString(String url) {
         try {
             new URL(url).toURI();
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
+            return false;
+        }
+    }
+
+    public static boolean validateUriString(String uri) {
+        try {
+            new URI(uri);
+            return true;
+        } catch (URISyntaxException e) {
             return false;
         }
     }

@@ -46,7 +46,7 @@ public class ExternalReferenceSerializer extends StdSerializer<ExternalReference
   public void serialize(
       final ExternalReference extRef, final JsonGenerator gen, final SerializerProvider provider) throws IOException
   {
-    final BiPredicate<Type, String> validateExternalReference = (type, url) -> (type != null && url != null && BomUtils.validateUrlString(url));
+    final BiPredicate<Type, String> validateExternalReference = (type, url) -> (type != null && url != null && BomUtils.validateUriString(url));
     if (gen instanceof ToXmlGenerator) {
       final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
       final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
