@@ -82,6 +82,7 @@ public abstract class CycloneDxSchema {
     /**
      * Returns the CycloneDX JsonSchema for the specified schema version.
      * @param schemaVersion The version to return the schema for
+     * @param mapper is to provide a Jackson ObjectMapper
      * @return a Schema
      * @throws IOException when errors are encountered
      * @since 6.0.0
