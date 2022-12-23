@@ -35,7 +35,7 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier", "licenses", "properties"})
+@JsonPropertyOrder({"timestamp", "component", "manufacture", "supplier", "licenses", "properties", "tools", "authors"})
 public class Metadata extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)
