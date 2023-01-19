@@ -32,14 +32,14 @@ as well as the output format options. Use the latest possible version of this li
 the CycloneDX version supported by the target system.
 
 | Version | Schema Version | Format(s) |
-| ------- | ----------------- | --------- |
-| 7.x | CycloneDX v1.4 | XML/JSON |
-| 6.x | CycloneDX v1.4 | XML/JSON |
-| 5.x | CycloneDX v1.3 | XML/JSON |
-| 4.x | CycloneDX v1.2 | XML/JSON |
-| 3.x | CycloneDX v1.2 | XML/JSON |
-| 2.x | CycloneDX v1.1 | XML |
-| 1.x | CycloneDX v1.0 | XML |
+|---------|----------------|-----------|
+| 7.x     | CycloneDX v1.4 | XML/JSON  |
+| 6.x     | CycloneDX v1.4 | XML/JSON  |
+| 5.x     | CycloneDX v1.3 | XML/JSON  |
+| 4.x     | CycloneDX v1.2 | XML/JSON  |
+| 3.x     | CycloneDX v1.2 | XML/JSON  |
+| 2.x     | CycloneDX v1.1 | XML       |
+| 1.x     | CycloneDX v1.0 | XML       |
 
 ## Library API Documentation
 

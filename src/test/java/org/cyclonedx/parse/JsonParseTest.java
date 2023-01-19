@@ -29,12 +29,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class JsonParseTest extends BaseParseTest {
-
     @TestFactory
-    public Collection<DynamicTest> dynamicTestsWithCollection() throws Exception {
+    public Collection<DynamicTest> dynamicTestsWithCollection() {
         final List<File> files = getAllResources();
         final List<DynamicTest> dynamicTests = new ArrayList<>();
-        for (final File file: files) {
+        for (final File file : files) {
             if (file.getName().endsWith(".json")) {
                 if (file.getName().startsWith("valid")) {
                     //dynamicTests.add(DynamicTest.dynamicTest(file.getName(), () -> assertNotNull(parseBom(file))));
@@ -42,9 +41,9 @@ public class JsonParseTest extends BaseParseTest {
                         final Bom bom = parseBom(file);
                         assertNotNull(bom);
                         super.generateBomJson(file.getName(), bom);
-
                     }));
-                } else if (file.getName().startsWith("invalid")) {
+                }
+                else if (file.getName().startsWith("invalid")) {
 
                 }
             }

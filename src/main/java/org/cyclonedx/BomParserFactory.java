@@ -24,17 +24,17 @@ import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.Parser;
 import org.cyclonedx.parsers.XmlParser;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class BomParserFactory {
 
     private BomParserFactory() {}
 
     public static Parser createParser(final File file) throws ParseException {
-        try (final InputStream fis = new FileInputStream(file)) {
+        try (final InputStream fis = Files.newInputStream(file.toPath())) {
             final byte[] bytes = IOUtils.toByteArray(fis, 1);
             return createParser(bytes);
         } catch (IOException e) {
