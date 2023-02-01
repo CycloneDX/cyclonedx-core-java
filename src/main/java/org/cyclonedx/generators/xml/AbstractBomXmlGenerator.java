@@ -129,7 +129,7 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
     /**
      * Creates a text representation of a CycloneDX BoM Document. This method
      * calls {@link #toXmlString()} and will return an empty string if {@link #toXmlString()}
-     * throws an exception. Its preferred to call {@link #toXmlString()} directly
+     * throws an exception. It's preferred to call {@link #toXmlString()} directly
      * so that exceptions can be caught.
      * @return a String of the BoM
      * @since 1.1.0

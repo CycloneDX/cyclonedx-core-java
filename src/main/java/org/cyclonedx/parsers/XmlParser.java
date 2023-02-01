@@ -40,11 +40,11 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,7 +68,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     public Bom parse(final File file) throws ParseException {
         try {
             final String schemaVersion = identifySchemaVersion(
-                    extractAllNamespaceDeclarations(new InputSource(new FileInputStream(file))));
+                extractAllNamespaceDeclarations(new InputSource(Files.newInputStream(file.toPath()))));
 
             return injectSchemaVersion(mapper.readValue(file, Bom.class), schemaVersion);
         } catch (IOException | XPathExpressionException e) {

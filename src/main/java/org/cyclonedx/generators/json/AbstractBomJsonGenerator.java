@@ -50,9 +50,9 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         setupPrettyPrinter(this.prettyPrinter);
     }
 
-	public ObjectMapper getMapper() {
-		return mapper;
-	}
+    public ObjectMapper getMapper() {
+        return mapper;
+    }
 	
     private void setupPrettyPrinter(final DefaultPrettyPrinter prettyPrinter) {
         prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
