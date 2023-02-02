@@ -45,6 +45,7 @@ public class License extends ExtensibleElement {
     private AttachmentText attachmentText;
     private String url;
 
+    @VersionFilter(versions = {"1.5"})
     private List<Property> properties;
 
     public String getId() {
