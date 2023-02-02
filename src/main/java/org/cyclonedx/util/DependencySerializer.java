@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.DependencyList;
 
@@ -135,7 +136,7 @@ public class DependencySerializer extends StdSerializer<DependencyList>
     QName qName;
 
     if (useNamespace) {
-      qName = new QName("http://cyclonedx.org/schema/ext/dependency-graph/1.0", dependencies, "dg");
+      qName = new QName(CycloneDxSchema.NS_DEPENDENCY_GRAPH_10, dependencies, "dg");
       toXmlGenerator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
     } else {
       qName = new QName(dependencies);

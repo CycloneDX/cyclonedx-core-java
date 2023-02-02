@@ -41,11 +41,17 @@ public class JsonSchemaVerificationTest extends BaseSchemaVerificationTest {
                 final CycloneDxSchema.Version schemaVersion;
                 if (file.endsWith("-1.2.json")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_12;
-                } else if (file.endsWith("-1.3.json")) {
+                }
+                else if (file.endsWith("-1.3.json")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_13;
-                } else if (file.endsWith("-1.4.json")) {
+                }
+                else if (file.endsWith("-1.4.json")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_14;
-                } else {
+                }
+                else if (file.endsWith("-1.5.json")) {
+                    schemaVersion = CycloneDxSchema.Version.VERSION_15;
+                }
+                else {
                     schemaVersion = null;
                 }
                 if (file.startsWith("valid") && schemaVersion != null) {
