@@ -39,28 +39,28 @@ import java.util.Objects;
 public class Metadata extends ExtensibleElement {
 
     @JsonSerialize(using = CustomDateSerializer.class)
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private Date timestamp = new Date();
 
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private List<Tool> tools;
 
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private List<OrganizationalContact> authors;
 
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private Component component;
 
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private OrganizationalEntity manufacture;
 
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private OrganizationalEntity supplier;
 
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private LicenseChoice license;
 
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
 
     public Date getTimestamp() {

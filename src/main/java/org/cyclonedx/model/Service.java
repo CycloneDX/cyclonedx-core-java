@@ -67,12 +67,12 @@ public class Service extends ExtensibleElement {
     private List<ServiceData> data;
     private LicenseChoice license;
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
     private List<Service> services;
     private ReleaseNotes releaseNotes;
     @JsonOnly
-    @VersionFilter(versions = {"1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private Signature signature;
 
     public String getBomRef() {
