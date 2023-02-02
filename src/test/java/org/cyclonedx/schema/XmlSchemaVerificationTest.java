@@ -42,15 +42,23 @@ public class XmlSchemaVerificationTest extends BaseSchemaVerificationTest {
                 final CycloneDxSchema.Version schemaVersion;
                 if (file.endsWith("-1.0.xml")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_10;
-                } else if (file.endsWith("-1.1.xml")) {
+                }
+                else if (file.endsWith("-1.1.xml")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_11;
-                } else if (file.endsWith("-1.2.xml")) {
+                }
+                else if (file.endsWith("-1.2.xml")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_12;
-                } else if (file.endsWith("-1.3.xml")) {
+                }
+                else if (file.endsWith("-1.3.xml")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_13;
-                } else if (file.endsWith("-1.4.xml")) {
+                }
+                else if (file.endsWith("-1.4.xml")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_14;
-                } else {
+                }
+                else if (file.endsWith("-1.5.xml")) {
+                    schemaVersion = CycloneDxSchema.Version.VERSION_15;
+                }
+                else {
                     schemaVersion = null;
                 }
                 if (file.startsWith("valid") && schemaVersion != null) {

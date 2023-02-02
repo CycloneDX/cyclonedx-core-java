@@ -470,6 +470,27 @@ public class XmlParserTest {
     }
 
     @Test
+    public void testParsedObjects15Bom() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.5.xml"));
+        final XmlParser parser = new XmlParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        assertEquals("1.5", bom.getSpecVersion());
+        assertEquals(1, bom.getVersion());
+
+        assertMetadata(bom.getMetadata());
+        assertComponent(bom);
+        assertServices(bom);
+        assertVulnerabilities(bom);
+
+        // Dependencies
+        assertEquals(1, bom.getDependencies().size());
+        Dependency d1 = bom.getDependencies().get(0);
+        assertNotNull(d1);
+        assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
+    }
+
+    @Test
     public void testParsedObjects14Bom_WithVulnsExtension() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/valid-ext-vulnerability-1.4.xml"));
         final XmlParser parser = new XmlParser();

@@ -19,6 +19,8 @@
 package org.cyclonedx.schema;
 
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.CycloneDxSchema.Version;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -26,14 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseSchemaVerificationTest {
-
     List<String> getAllResources() throws Exception {
         final List<String> files = new ArrayList<>();
-        files.addAll(getResources("1.0/"));
-        files.addAll(getResources("1.1/"));
-        files.addAll(getResources("1.2/"));
-        files.addAll(getResources("1.3/"));
-        files.addAll(getResources("1.4/"));
+
+        for (Version version : CycloneDxSchema.ALL_VERSIONS) {
+            files.addAll(getResources(version.getVersionString()));
+        }
         return files;
     }
 
