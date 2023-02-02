@@ -463,6 +463,16 @@ limitations under the License.
                         an externalReference should also be specified for completeness.</xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="properties" type="bom:propertiesType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Provides the ability to document properties in a name/value store.
+                        This provides flexibility to include data not officially supported in the standard
+                        without having to use additional namespaces or create extensions. Property names
+                        of interest to the general public are encouraged to be registered in the
+                        CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                        Formal registration is OPTIONAL.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation>
@@ -471,6 +481,14 @@ limitations under the License.
                 </xs:annotation>
             </xs:any>
         </xs:sequence>
+        <xs:attribute name="bom-ref" type="bom:refType">
+            <xs:annotation>
+                <xs:documentation>
+                    An optional identifier which can be used to reference the license elsewhere in the BOM.
+                    Uniqueness is enforced within all elements and children of the root-level bom element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="attachedTextType">
@@ -594,7 +612,6 @@ limitations under the License.
             </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
-
     <xs:simpleType name="hashAlg">
         <xs:restriction base="xs:string">
             <xs:enumeration value="MD5"/>
@@ -609,6 +626,107 @@ limitations under the License.
             <xs:enumeration value="BLAKE2b-384"/>
             <xs:enumeration value="BLAKE2b-512"/>
             <xs:enumeration value="BLAKE3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="licenseTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="academic">
+                <xs:annotation>
+                    <xs:documentation>A license that grants use of software solely for the purpose
+                        of education or research.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="appliance">
+                <xs:annotation>
+                    <xs:documentation>A license covering use of software embedded in a specific
+                        piece of hardware.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="client-access">
+                <xs:annotation>
+                    <xs:documentation>A Client Access License (CAL) allows client computers to access
+                        services provided by server software.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="concurrent-user">
+                <xs:annotation>
+                    <xs:documentation>A Concurrent User license (aka floating license) limits the
+                        number of licenses for a software application and licenses are shared among
+                        a larger number of users.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="core-points">
+                <xs:annotation>
+                    <xs:documentation>A license where the core of a computer's processor is assigned
+                        a specific number of points.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="custom-metric">
+                <xs:annotation>
+                    <xs:documentation>A license for which consumption is measured by non-standard
+                        metrics.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="device">
+                <xs:annotation>
+                    <xs:documentation>A license which covers a defined number of installations on
+                        computers and other types of devices.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="evaluation">
+                <xs:annotation>
+                    <xs:documentation>A license which grants permission to install and use software
+                        for trial purposes.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="named-user">
+                <xs:annotation>
+                    <xs:documentation>A license that grants access to the software to one or more
+                        pre-defined users.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="node-locked">
+                <xs:annotation>
+                    <xs:documentation>A license that grants access to the software on one or more
+                        pre-defined computers or devices.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="oem">
+                <xs:annotation>
+                    <xs:documentation>An Original Equipment Manufacturer license that is delivered
+                        with hardware, cannot be transferred to other hardware, and is valid for the
+                        life of the hardware.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="perpetual">
+                <xs:annotation>
+                    <xs:documentation>A license where the software is sold on a one-time basis and
+                        the licensee can use a copy of the software indefinitely.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="processor-points">
+                <xs:annotation>
+                    <xs:documentation>A license where each installation consumes points per
+                        processor.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="subscription">
+                <xs:annotation>
+                    <xs:documentation>A license where the licensee pays a fee to use the software
+                        or service.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="user">
+                <xs:annotation>
+                    <xs:documentation>A license that grants access to the software or service by a
+                        specified number of users.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="other">
+                <xs:annotation>
+                    <xs:documentation>Another license type.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
 
@@ -778,6 +896,11 @@ limitations under the License.
                     <xs:documentation>URL to release notes</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="security-contact">
+                <xs:annotation>
+                    <xs:documentation>Specifies a way to contact the maintainer, supplier, or provider in the event of a security incident. Common URIs include links to a disclosure procedure, a mailto (RFC-2368) that specifies an email address, a tel (RFC-3966) that specifies a phone number, or dns (RFC-4501]) that specifies the records containing DNS Security TXT.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
             <xs:enumeration value="other">
                 <xs:annotation>
                     <xs:documentation>Use this if no other types accurately describe the purpose of the external reference</xs:documentation>
@@ -802,7 +925,6 @@ limitations under the License.
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-
     <xs:complexType name="externalReference">
         <xs:sequence>
             <xs:element name="url" type="xs:anyURI" minOccurs="1" maxOccurs="1">
@@ -811,8 +933,9 @@ limitations under the License.
                         are URIs and therefore can accept any URL scheme including https, mailto, tel, and dns.
                         External references may also include formally registered URNs such as CycloneDX BOM-Link to
                         reference CycloneDX BOMs or any object within a BOM. BOM-Link transforms applicable external
-                        references into relationships that can be expressed in a BOM or across BOMs. Refer to:</xs:documentation>
-                    https://cyclonedx.org/capabilities/bomlink/
+                        references into relationships that can be expressed in a BOM or across BOMs. Refer to:
+                        https://cyclonedx.org/capabilities/bomlink/
+                    </xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="1">
@@ -1963,6 +2086,20 @@ limitations under the License.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
+                        <xs:element name="firstIssued" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">
+                                    The date and time (timestamp) when the analysis was first issued.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="lastUpdated" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="en">
+                                    The date and time (timestamp) when the analysis was last updated.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -2107,6 +2244,111 @@ limitations under the License.
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="annotationsType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="annotation" type="bom:annotationType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Allows any undeclared elements as long as the elements are placed in a different namespace.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+        <xs:anyAttribute namespace="##any" processContents="lax">
+            <xs:annotation>
+                <xs:documentation>User-defined attributes may be used on this element as long as they
+                    do not have the same name as an existing attribute used by the schema.</xs:documentation>
+            </xs:annotation>
+        </xs:anyAttribute>
+    </xs:complexType>
+
+    <xs:complexType name="annotatorChoiceType">
+        <xs:choice>
+            <xs:element name="organization" type="bom:organizationalEntity" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The organization that created the annotation</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="individual" type="bom:organizationalContact" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The person that created the annotation</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="component" type="bom:component" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The tool or component that created the annotation</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="service" type="bom:service" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The service that created the annotation</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="annotationType">
+        <xs:sequence>
+            <xs:element name="subjects" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The objects in the BOM identified by their bom-ref's. This is often components or services, but may be any object type supporting bom-refs.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="subject" type="bom:bomReferenceType"/>
+                        <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Allows any undeclared elements as long as the elements are placed in a different namespace.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:any>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="annotator" type="bom:annotatorChoiceType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The organization, individual, component, or service which created the textual content
+                        of the annotation.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="timestamp" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The date and time (timestamp) when the annotation was created.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="text" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The person(s) or organization(s) that published the component</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Allows any undeclared elements as long as the elements are placed in a different namespace.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+        <xs:attribute name="bom-ref" type="bom:refType">
+            <xs:annotation>
+                <xs:documentation>
+                    An optional identifier which can be used to reference the annotation elsewhere in the BOM.
+                    Uniqueness is enforced within all elements and children of the root-level bom element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:anyAttribute namespace="##any" processContents="lax">
+            <xs:annotation>
+                <xs:documentation>User-defined attributes may be used on this element as long as they
+                    do not have the same name as an existing attribute used by the schema.</xs:documentation>
+            </xs:annotation>
+        </xs:anyAttribute>
     </xs:complexType>
 
     <xs:simpleType name="severityType" final="restriction">
@@ -2383,6 +2625,15 @@ limitations under the License.
                 <xs:element name="vulnerabilities" type="bom:vulnerabilitiesType" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
                         <xs:documentation>Vulnerabilities identified in components or services.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="annotations" type="bom:annotationsType" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>Comments made by people, organizations, or tools about any object with
+                            a bom-ref, such as components, services, vulnerabilities, or the BOM itself. Unlike
+                            inventory information, annotations may contain opinion or commentary from various
+                            stakeholders. Annotations may be inline (with inventory) or externalized via BOM-Link,
+                            and may optionally be signed.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
