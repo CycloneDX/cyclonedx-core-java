@@ -50,6 +50,7 @@ import org.cyclonedx.util.VulnerabilityDeserializer;
         "compositions",
         "properties",
         "vulnerabilities",
+        "annotations",
         "signature"
 })
 public class Bom extends ExtensibleElement {
@@ -78,6 +79,9 @@ public class Bom extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
     private List<Vulnerability> vulnerabilities;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private List<Annotation> annotations;
 
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
@@ -187,6 +191,16 @@ public class Bom extends ExtensibleElement {
     public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
 
     public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
+
+    @JacksonXmlElementWrapper(localName = "annotations")
+    @JacksonXmlProperty(localName = "annotation")
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(List<Annotation> annotations) {
+        this.annotations = annotations;
+    }
 
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
