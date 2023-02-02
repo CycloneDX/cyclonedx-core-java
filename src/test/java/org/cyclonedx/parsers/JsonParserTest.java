@@ -344,6 +344,27 @@ public class JsonParserTest {
         assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
     }
 
+    @Test
+    public void testParsedObjects15Bom() throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.5.json"));
+        final JsonParser parser = new JsonParser();
+        final Bom bom = parser.parse(bomBytes);
+
+        assertEquals("1.5", bom.getSpecVersion());
+        assertEquals(1, bom.getVersion());
+
+        assertMetadata(bom.getMetadata());
+        assertComponent(bom);
+        assertServices(bom);
+        assertVulnerabilities(bom);
+
+        // Dependencies
+        assertEquals(2, bom.getDependencies().size());
+        Dependency d1 = bom.getDependencies().get(0);
+        assertNotNull(d1);
+        assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
+    }
+
     private void assertVulnerabilities(final Bom bom) {
         final List<Vulnerability> vulnerabilities = bom.getVulnerabilities();
         assertEquals(1, vulnerabilities.size());

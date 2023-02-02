@@ -60,19 +60,14 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
 
     private void setupObjectMapper(final ObjectMapper mapper) {
         mapper.setAnnotationIntrospector(
-            new VersionXmlAnnotationIntrospector(
-                String.valueOf(this.getSchemaVersion().getVersion())));
+            new VersionXmlAnnotationIntrospector(String.valueOf(this.getSchemaVersion().getVersion())));
 
         if (this.getSchemaVersion().getVersion() == 1.0) {
             // NO-OP
-        } else if (this.getSchemaVersion().getVersion() == 1.1) {
-            registerDependencyModule(mapper, true);
-        } else if (this.getSchemaVersion().getVersion() == 1.2) {
-            registerDependencyModule(mapper, false);
-        } else if (this.getSchemaVersion().getVersion() == 1.3) {
-            registerDependencyModule(mapper, false);
-        } else if (this.getSchemaVersion().getVersion() == 1.4) {
-            registerDependencyModule(mapper, false);
+        }
+        else {
+            boolean useNamespace = this.getSchemaVersion().getVersion() == 1.1;
+            registerDependencyModule(mapper, useNamespace);
         }
     }
 
