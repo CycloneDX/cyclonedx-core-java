@@ -66,7 +66,7 @@ public class Bom extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1"})
     private List<Service> services;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(versions = {"1.0"})
     private DependencyList dependencies;
 
     @VersionFilter(versions = {"1.0"})
