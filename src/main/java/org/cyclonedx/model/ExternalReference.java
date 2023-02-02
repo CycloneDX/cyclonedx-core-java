@@ -68,6 +68,8 @@ public class ExternalReference {
         BUILD_SYSTEM("build-system"),
         @JsonProperty("release-notes")
         RELEASE_NOTES("release-notes"),
+        @JsonProperty("security-contact")
+        SECURITY_CONTACT("security-contact"),
         @JsonProperty("other")
         OTHER("other");
 
