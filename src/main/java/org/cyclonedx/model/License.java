@@ -31,7 +31,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "text", "url", "properties"})
+@JsonPropertyOrder({"id", "name", "licensing", "text", "url", "properties"})
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
