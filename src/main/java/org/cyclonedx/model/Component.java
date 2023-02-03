@@ -117,11 +117,11 @@ public class Component extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true, localName = "mime-type")
     @JsonProperty("mime-type")
     private String mimeType;
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private OrganizationalEntity supplier;
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private String author;
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0"})
     private String publisher;
     private String group;
     private String name;
@@ -133,24 +133,24 @@ public class Component extends ExtensibleElement {
     private String copyright;
     private String cpe;
     private String purl;
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private Swid swid;
     private Boolean modified;
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0"})
     private Pedigree pedigree;
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0"})
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
     private List<Component> components;
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private Evidence evidence;
     @JacksonXmlProperty(isAttribute = true)
     private Type type;
-    @VersionFilter(versions = {"1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private ReleaseNotes releaseNotes;
     @JsonOnly
-    @VersionFilter(versions = {"1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private Signature signature;
 
     public String getBomRef() {

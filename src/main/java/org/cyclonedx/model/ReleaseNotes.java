@@ -58,7 +58,7 @@ public class ReleaseNotes
   private String socialImage;
   private String description;
   @JsonSerialize(using = CustomDateSerializer.class)
-  @VersionFilter(versions = {"1.4"})
+  @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
   private Date timestamp;
   private List<String> aliases;
   private List<String> tags;

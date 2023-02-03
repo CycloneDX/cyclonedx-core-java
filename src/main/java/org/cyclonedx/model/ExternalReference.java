@@ -87,7 +87,7 @@ public class ExternalReference {
     private Type type;
     private String comment;
 
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Hash> hashes;
 
     public String getUrl() {

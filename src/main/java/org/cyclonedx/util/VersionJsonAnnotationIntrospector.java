@@ -36,7 +36,7 @@ public class VersionJsonAnnotationIntrospector extends JacksonAnnotationIntrospe
     public boolean hasIgnoreMarker(final AnnotatedMember m) {
         if (m.hasAnnotation(VersionFilter.class)) {
             VersionFilter filter = m.getAnnotation(VersionFilter.class);
-            if (Arrays.stream(filter.versions()).noneMatch(v -> v.equals(version))) {
+            if (Arrays.stream(filter.versions()).anyMatch(v -> v.equals(version))) {
                 return true;
             }
         }
