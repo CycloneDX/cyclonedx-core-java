@@ -80,11 +80,11 @@ public class Licensing extends ExtensibleElement
 
   private List<String> altIds;
 
-  private OrganizationalEntity licensor;
+  private OrganizationalInstance licensor;
 
-  private OrganizationalEntity licensee;
+  private OrganizationalInstance licensee;
 
-  private OrganizationalEntity purchaser;
+  private OrganizationalInstance purchaser;
 
   private String purchaseOrder;
 
@@ -102,27 +102,27 @@ public class Licensing extends ExtensibleElement
     this.altIds = altIds;
   }
 
-  public OrganizationalEntity getLicensor() {
+  public OrganizationalInstance getLicensor() {
     return licensor;
   }
 
-  public void setLicensor(final OrganizationalEntity licensor) {
+  public void setLicensor(final OrganizationalInstance licensor) {
     this.licensor = licensor;
   }
 
-  public OrganizationalEntity getLicensee() {
+  public OrganizationalInstance getLicensee() {
     return licensee;
   }
 
-  public void setLicensee(final OrganizationalEntity licensee) {
+  public void setLicensee(final OrganizationalInstance licensee) {
     this.licensee = licensee;
   }
 
-  public OrganizationalEntity getPurchaser() {
+  public OrganizationalInstance getPurchaser() {
     return purchaser;
   }
 
-  public void setPurchaser(final OrganizationalEntity purchaser) {
+  public void setPurchaser(final OrganizationalInstance purchaser) {
     this.purchaser = purchaser;
   }
 
