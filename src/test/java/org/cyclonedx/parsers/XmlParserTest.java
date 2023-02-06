@@ -488,7 +488,15 @@ public class XmlParserTest {
         Dependency d1 = bom.getDependencies().get(0);
         assertNotNull(d1);
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
+
+        //Assert Licensing
+        //Assert Vulnerability Rejected
+        //Assert Annotations
+        //Assert Bom Properties
+        //Assert License Properties
+        //Assert Vulnerabilities Timestamps
     }
+
 
     @Test
     public void testParsedObjects14Bom_WithVulnsExtension() throws Exception {
@@ -569,6 +577,9 @@ public class XmlParserTest {
         assertEquals("An optional explanation of why the application is not affected by the vulnerable component.",
             vuln.getAnalysis().getDetail());
         assertEquals("update", vuln.getAnalysis().getResponses().get(0).getResponseName());
+        //Vulnerability Analysis Timestamp 1.5
+        assertNotNull(vuln.getAnalysis().getFirstIssued());
+        assertNotNull(vuln.getAnalysis().getLastUpdated());
 
         //Affects
         assertEquals(1, vuln.getAffects().size());
@@ -646,7 +657,10 @@ public class XmlParserTest {
         assertEquals("Acme Application", component.getSwid().getName());
         assertEquals("9.1.1", component.getSwid().getVersion());
         assertEquals("swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1", component.getSwid().getTagId());
-        assertEquals(1, component.getExternalReferences().size());
+        assertEquals(2, component.getExternalReferences().size());
+
+        //Security Contact
+        assertSecurityContact(component.getExternalReferences().get(1));
 
         //Evidence
         assertNotNull(component.getEvidence());
@@ -655,6 +669,12 @@ public class XmlParserTest {
         assertEquals("Apache-2.0", component.getEvidence().getLicenseChoice().getLicenses().get(0).getId());
         assertEquals("http://www.apache.org/licenses/LICENSE-2.0",
             component.getEvidence().getLicenseChoice().getLicenses().get(0).getUrl());
+    }
+
+    private void assertSecurityContact(ExternalReference externalReference){
+        assertEquals(externalReference.getType(), ExternalReference.Type.SECURITY_CONTACT);
+        assertEquals(externalReference.getComment(), "test");
+        assertEquals(externalReference.getUrl(), "http://example.org/docs");
     }
 
     private void assertMetadata(final Metadata metadata) {

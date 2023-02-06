@@ -110,6 +110,10 @@
                     <url>http://example.org/docs</url>
                     <comment>All component versions are documented here</comment>
                 </reference>
+                <reference type="security-contact">
+                    <url>http://example.org/docs</url>
+                    <comment>test</comment>
+                </reference>
             </externalReferences>
             <evidence>
                 <licenses>
@@ -261,6 +265,8 @@
                     <response>update</response>
                 </responses>
                 <detail>An optional explanation of why the application is not affected by the vulnerable component.</detail>
+                <firstIssued>2020-04-07T07:01:00Z</firstIssued>
+                <lastUpdated>2020-04-07T07:01:00Z</lastUpdated>
             </analysis>
             <affects>
                 <target>
