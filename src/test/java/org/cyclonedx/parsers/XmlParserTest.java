@@ -523,6 +523,7 @@ public class XmlParserTest {
         assertNotNull(vuln.getCreated());
         assertNotNull(vuln.getPublished());
         assertNotNull(vuln.getUpdated());
+        assertNotNull(vuln.getRejected());
 
         //Source
         assertEquals("Sonatype", vuln.getSource().getName());
