@@ -98,8 +98,41 @@
                 <hash alg="BLAKE3">26cdc7fb3fd65fc3b621a4ef70bc7d2489d5c19e70c76cf7ec20e538df0047cf</hash>
             </hashes>
             <licenses>
-                <license>
+                <license bom-ref="acme-license-1">
                     <id>Apache-2.0</id>
+                    <licensing>
+                        <altIds>
+                            <altId>acme</altId>
+                            <altId>acme-license</altId>
+                        </altIds>
+                        <licensor>
+                            <organization>
+                                <name>Acme Inc</name>
+                                <contact>
+                                    <name>Acme Licensing Fulfillment</name>
+                                    <email>licensing@example.com</email>
+                                </contact>
+                            </organization>
+                        </licensor>
+                        <licensee>
+                            <organization>
+                                <name>Example Co.</name>
+                            </organization>
+                        </licensee>
+                        <purchaser>
+                            <individual>
+                                <name>Samantha Wright</name>
+                                <email>samantha.wright@gmail.com</email>
+                                <phone>800-555-1212</phone>
+                            </individual>
+                        </purchaser>
+                        <purchaseOrder>PO-12345</purchaseOrder>
+                        <licenseTypes>
+                            <licenseType>appliance</licenseType>
+                        </licenseTypes>
+                        <lastRenewal>2022-04-13T20:20:39+00:00</lastRenewal>
+                        <expiration>2023-04-13T20:20:39+00:00</expiration>
+                    </licensing>
                     <properties>
                         <property name="Foo">Bar</property>
                     </properties>
