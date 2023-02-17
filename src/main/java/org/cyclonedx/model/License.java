@@ -40,7 +40,7 @@ public class License extends ExtensibleElement {
     private String id;
     private String name;
 
-    @VersionFilter(versions = {"1.5"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private Licensing licensing;
 
     @JacksonXmlProperty(localName = "text")

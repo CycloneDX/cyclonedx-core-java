@@ -27,6 +27,7 @@ import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Licensing;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -713,13 +714,21 @@ public class XmlParserTest {
 
         assertEquals(licenseChoice.getLicenses().size(), 1);
         License license = licenseChoice.getLicenses().get(0);
+        assertNull(license);
 
         if (version == Version.VERSION_15) {
             assertEquals(license.getProperties().size(), 1);
+
+            //Dev Licensing
+            assertLicensing(license.getLicensing());
         }
         else {
             assertNull(license.getProperties());
         }
+    }
+
+    private void assertLicensing(final Licensing licensing){
+        assertNotNull(licensing);
     }
 
     private void assertMetadata(final Metadata metadata) {
