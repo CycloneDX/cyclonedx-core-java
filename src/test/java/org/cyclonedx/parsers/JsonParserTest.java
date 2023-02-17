@@ -380,6 +380,7 @@ public class JsonParserTest {
         assertNotNull(vuln.getCreated());
         assertNotNull(vuln.getPublished());
         assertNotNull(vuln.getUpdated());
+        assertNotNull(vuln.getRejected());
 
         //Assert Vulnerability Rejected
         if (version == Version.VERSION_15) {
