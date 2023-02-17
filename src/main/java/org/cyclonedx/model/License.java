@@ -35,12 +35,16 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
+    @JsonProperty("bom-ref")
+    private String bomRef;
     @JacksonXmlProperty(localName = "id")
     @JsonProperty("id")
     private String id;
     private String name;
 
-    @VersionFilter(versions = {"1.5"})
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private Licensing licensing;
 
     @JacksonXmlProperty(localName = "text")
@@ -50,6 +54,14 @@ public class License extends ExtensibleElement {
 
     @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<Property> properties;
+
+    public String getBomRef() {
+        return bomRef;
+    }
+
+    public void setBomRef(final String bomRef) {
+        this.bomRef = bomRef;
+    }
 
     public String getId() {
         return id;
@@ -110,11 +122,12 @@ public class License extends ExtensibleElement {
                 Objects.equals(name, license.name) &&
                 Objects.equals(url, license.url) &&
                 Objects.equals(attachmentText, license.attachmentText) &&
+                Objects.equals(licensing, license.licensing) &&
                 Objects.equals(properties, license.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText, properties);
+        return Objects.hash(id, name, url, attachmentText, properties, licensing);
     }
 }

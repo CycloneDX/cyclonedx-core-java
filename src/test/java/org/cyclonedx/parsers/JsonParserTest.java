@@ -27,9 +27,11 @@ import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Licensing;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.OrganizationalChoice;
 import org.cyclonedx.model.ReleaseNotes;
 import org.cyclonedx.model.ReleaseNotes.Notes;
 import org.cyclonedx.model.ReleaseNotes.Resolves;
@@ -568,15 +570,58 @@ public class JsonParserTest {
         assertNotNull(licenseChoice);
         assertNull(licenseChoice.getExpression());
 
-        assertEquals(licenseChoice.getLicenses().size(), 1);
+        assertEquals(1, licenseChoice.getLicenses().size());
         License license = licenseChoice.getLicenses().get(0);
+        assertNotNull(license);
 
-        if (version == Version.VERSION_15) {
-            assertEquals(license.getProperties().size(), 1);
+
+        if (version == Version.VERSION_14) {
+            assertNull(license.getProperties());
+            assertNull(license.getBomRef());
         }
         else {
-            assertNull(license.getProperties());
+            //Dev Licensing
+            assertLicensing(license.getLicensing());
+            assertEquals(license.getProperties().size(), 1);
+            assertNotNull(license.getBomRef());
         }
+    }
+
+    private void assertLicensing(final Licensing licensing) {
+        assertNotNull(licensing);
+
+        assertEquals(2, licensing.getAltIds().size());
+        assertNotNull(licensing.getPurchaseOrder());
+        assertLicensor(licensing.getLicensor());
+        assertLicensee(licensing.getLicensee());
+        assertPurchaser(licensing.getPurchaser());
+        assertNotNull(licensing.getExpiration());
+        assertNotNull(licensing.getLastRenewal());
+        assertEquals(licensing.getLicenseTypes().size(), 1);
+    }
+
+    private void assertLicensor(OrganizationalChoice licensor) {
+        assertNull(licensor.getIndividual());
+        assertNotNull(licensor.getOrganization());
+        assertEquals(licensor.getOrganization().getName(), "Acme Inc");
+        assertEquals(licensor.getOrganization().getContacts().size(), 1);
+        assertNull(licensor.getOrganization().getUrls());
+    }
+
+    private void assertLicensee(OrganizationalChoice licensee) {
+        assertNull(licensee.getIndividual());
+        assertNotNull(licensee.getOrganization());
+        assertEquals(licensee.getOrganization().getName(), "Example Co.");
+        assertNull(licensee.getOrganization().getContacts());
+        assertNull(licensee.getOrganization().getUrls());
+    }
+
+    private void assertPurchaser(OrganizationalChoice purchaser) {
+        assertNull(purchaser.getOrganization());
+        assertNotNull(purchaser.getIndividual());
+        assertEquals(purchaser.getIndividual().getName(), "Samantha Wright");
+        assertEquals(purchaser.getIndividual().getEmail(), "samantha.wright@gmail.com");
+        assertEquals(purchaser.getIndividual().getPhone(), "800-555-1212");
     }
 
     private void assertMetadata(final Metadata metadata) {

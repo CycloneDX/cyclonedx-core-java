@@ -30,8 +30,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.model.vulnerability.Vulnerability;
-import org.cyclonedx.util.DependencyDeserializer;
-import org.cyclonedx.util.VulnerabilityDeserializer;
+import org.cyclonedx.util.deserializer.DependencyDeserializer;
+import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
 
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")

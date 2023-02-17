@@ -21,7 +21,7 @@ package org.cyclonedx.model;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.cyclonedx.util.ExtensionSerializer;
+import org.cyclonedx.util.serializer.ExtensionSerializer;
 
 @JsonSerialize(using = ExtensionSerializer.class)
 public class Extension {
