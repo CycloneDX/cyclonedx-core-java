@@ -5,15 +5,6 @@
   "version": 1,
   "metadata": {
     "timestamp": "2020-04-07T07:01:00Z",
-    "lifecycles": [
-      {
-        "phase": "build"
-      },
-      {
-        "name": "platform-integration-testing",
-        "description": "Integration testing specific to the runtime platform"
-      }
-    ],
     "tools": [
       {
         "vendor": "Awesome Vendor",
@@ -174,44 +165,7 @@
       "licenses": [
         {
           "license": {
-            "bom-ref": "acme-license-1",
             "id": "Apache-2.0",
-            "licensing": {
-              "altIds": [
-                "acme", "acme-license"
-              ],
-              "licensor": {
-                "organization": {
-                  "name": "Acme Inc",
-                  "contact": [
-                    {
-                      "name": "Acme Licensing Fulfillment",
-                      "email": "licensing@example.com"
-                    },
-                    {
-                      "name": "Acme Licensing Test",
-                      "email": "licensing@test.com"
-                    }
-                  ]
-                }
-              },
-              "licensee": {
-                "organization": {
-                  "name": "Example Co."
-                }
-              },
-              "purchaser": {
-                "individual": {
-                  "name": "Samantha Wright",
-                  "email": "samantha.wright@gmail.com",
-                  "phone": "800-555-1212"
-                }
-              },
-              "purchaseOrder": "PO-12345",
-              "licenseTypes": ["appliance"],
-              "lastRenewal": "2022-04-13T20:20:39+00:00",
-              "expiration": "2023-04-13T20:20:39+00:00"
-            },
             "properties": [
               {
                 "name": "Foo",
@@ -246,8 +200,8 @@
         "licenses": [
           {
             "license": {
-              "id": "Apache-2.0",
-              "url": "http://www.apache.org/licenses/LICENSE-2.0"
+                "id": "Apache-2.0",
+                "url": "http://www.apache.org/licenses/LICENSE-2.0"
             }
           }
         ],
@@ -265,7 +219,7 @@
       "provider": {
         "name": "Partner Org",
         "url": [
-          "https://partner.org"
+            "https://partner.org"
         ],
         "contact": [
           {
@@ -280,29 +234,29 @@
       "version": "2020-Q2",
       "description": "Provides real-time stock information",
       "endpoints": [
-        "https://partner.org/api/v1/lookup",
-        "https://partner.org/api/v1/stock"
+          "https://partner.org/api/v1/lookup",
+          "https://partner.org/api/v1/stock"
       ],
       "authenticated": true,
       "x-trust-boundary": true,
       "data": [
-        {
-          "flow": "inbound",
-          "classification": "PII"
-        },
-        {
-          "flow": "outbound",
-          "classification": "PIFI"
-        },
-        {
-          "flow": "bi-directional",
-          "classification": "pubic"
-        },
-        {
-          "flow": "unknown",
-          "classification": "partner-data"
-        }
-      ],
+          {
+            "flow": "inbound",
+            "classification": "PII"
+          },
+          {
+            "flow": "outbound",
+            "classification": "PIFI"
+          },
+          {
+            "flow": "bi-directional",
+            "classification": "pubic"
+          },
+          {
+            "flow": "unknown",
+            "classification": "partner-data"
+          }
+        ],
       "licenses": [
         {
           "license": {
@@ -311,15 +265,15 @@
         }
       ],
       "externalReferences": [
-        {
-          "type": "website",
-          "url": "http://partner.org"
-        },
-        {
-          "type": "documentation",
-          "url": "http://api.partner.org/swagger"
-        }
-      ]
+          {
+            "type": "website",
+            "url": "http://partner.org"
+          },
+          {
+            "type": "documentation",
+            "url": "http://api.partner.org/swagger"
+          }
+        ]
     }
   ],
   "dependencies": [
@@ -339,28 +293,22 @@
     }
   ],
   "compositions": [
-    {
-      "aggregate": "complete",
-      "assemblies": [
-        "pkg:maven/partner/shaded-library@1.0"
-      ],
-      "dependencies": [
-        "acme-application-1.0"
-      ]
-    },
-    {
-      "aggregate": "unknown",
-      "assemblies": [
-        "pkg:maven/acme/library@3.0"
-      ]
-    }
-  ],
-  "properties": [
-    {
-      "name": "Foo",
-      "value": "Bar"
-    }
-  ],
+      {
+        "aggregate": "complete",
+        "assemblies": [
+            "pkg:maven/partner/shaded-library@1.0"
+        ],
+        "dependencies": [
+          "acme-application-1.0"
+        ]
+      },
+      {
+        "aggregate": "unknown",
+        "assemblies": [
+          "pkg:maven/acme/library@3.0"
+        ]
+      }
+    ],
   "vulnerabilities": [
     {
       "bom-ref": "6eee14da-8f42-4cc4-bb65-203235f02415",
@@ -412,8 +360,8 @@
           {
             "name": "Acme, Inc.",
             "url": [
-              "https://example.com"
-            ]
+            "https://example.com"
+             ]
           }
         ],
         "individuals": [
@@ -447,18 +395,18 @@
         "lastUpdated": "2022-02-01T00:00:00.000Z"
       },
       "affects": [
-        {
+         {
           "ref": "pkg:maven/com.acme/jackson-databind@2.9.9",
-          "versions": [
-            {
-              "range": "vers:semver/<2.6.7.5",
-              "status": "affected"
-            },
-            {
-              "version": "2.9.9",
-              "status": "affected"
-            }
-          ]
+          "versions":  [
+              {
+                "range": "vers:semver/<2.6.7.5",
+                "status": "affected"
+              },
+              {
+                "version": "2.9.9",
+                "status": "affected"
+              }
+            ]
         }
       ],
       "properties": [
@@ -479,30 +427,6 @@
           "value": "Foo"
         }
       ]
-    }
-  ],
-  "annotations": [
-    {
-      "bom-ref": "annotation-1",
-      "subjects": [
-        "component-a"
-      ],
-      "annotator": {
-        "organization": {
-          "name": "Acme, Inc.",
-          "url": [
-            "https://example.com"
-          ],
-          "contact": [
-            {
-              "name": "Acme Professional Services",
-              "email": "professional.services@example.com"
-            }
-          ]
-        }
-      },
-      "timestamp": "2022-01-01T00:00:00Z",
-      "text": "This is a sample annotation made by an organization"
     }
   ]
 }

@@ -2,15 +2,6 @@
 <bom serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79" version="1" xmlns="http://cyclonedx.org/schema/bom/1.5">
     <metadata>
         <timestamp>2020-04-07T07:01:00Z</timestamp>
-        <lifecycles>
-            <lifecycle>
-                <phase>build</phase>
-            </lifecycle>
-            <lifecycle>
-                <name>platform-integration-testing</name>
-                <description>Integration testing specific to the runtime platform</description>
-            </lifecycle>
-        </lifecycles>
         <tools>
             <tool>
                 <vendor>Awesome Vendor</vendor>
@@ -107,44 +98,8 @@
                 <hash alg="BLAKE3">26cdc7fb3fd65fc3b621a4ef70bc7d2489d5c19e70c76cf7ec20e538df0047cf</hash>
             </hashes>
             <licenses>
-                <license bom-ref="acme-license-1">
+                <license>
                     <id>Apache-2.0</id>
-                    <licensing>
-                        <altIds>
-                            <altId>acme-license</altId>
-                        </altIds>
-                        <licensor>
-                            <organization>
-                                <name>Acme Inc</name>
-                                <contact>
-                                    <name>Acme Licensing Fulfillment</name>
-                                    <email>licensing@example.com</email>
-                                </contact>
-                                <contact>
-                                    <name>Acme Licensing Test</name>
-                                    <email>licensing@test.com</email>
-                                </contact>
-                            </organization>
-                        </licensor>
-                        <licensee>
-                            <organization>
-                                <name>Example Co.</name>
-                            </organization>
-                        </licensee>
-                        <purchaser>
-                            <individual>
-                                <name>Samantha Wright</name>
-                                <email>samantha.wright@gmail.com</email>
-                                <phone>800-555-1212</phone>
-                            </individual>
-                        </purchaser>
-                        <purchaseOrder>PO-12345</purchaseOrder>
-                        <licenseTypes>
-                            <licenseType>appliance</licenseType>
-                        </licenseTypes>
-                        <lastRenewal>2022-04-13T20:20:39+00:00</lastRenewal>
-                        <expiration>2023-04-13T20:20:39+00:00</expiration>
-                    </licensing>
                     <properties>
                         <property name="Foo">Bar</property>
                     </properties>
@@ -240,9 +195,6 @@
             </assemblies>
         </composition>
     </compositions>
-    <properties>
-        <property name="Foo">Bar</property>
-    </properties>
     <vulnerabilities>
         <vulnerability bom-ref="6eee14da-8f42-4cc4-bb65-203235f02415">
             <id>SONATYPE-2021123</id>
@@ -345,23 +297,4 @@
             </properties>
         </vulnerability>
     </vulnerabilities>
-    <annotations>
-        <annotation bom-ref="annotation-1">
-            <subjects>
-                <subject ref="component-a"/>
-            </subjects>
-            <annotator>
-                <organization>
-                    <name>Acme, Inc.</name>
-                    <url>https://example.com</url>
-                    <contact>
-                        <name>Acme Professional Services</name>
-                        <email>professional.services@example.com</email>
-                    </contact>
-                </organization>
-            </annotator>
-            <timestamp>2020-04-07T07:01:00Z</timestamp>
-            <text>This is a sample annotation made by an organization</text>
-        </annotation>
-    </annotations>
 </bom>
