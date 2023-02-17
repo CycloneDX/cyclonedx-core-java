@@ -98,7 +98,45 @@
                 <hash alg="BLAKE3">26cdc7fb3fd65fc3b621a4ef70bc7d2489d5c19e70c76cf7ec20e538df0047cf</hash>
             </hashes>
             <licenses>
-                <expression>EPL-2.0 OR GPL-2.0-with-classpath-exception</expression>
+                <license bom-ref="acme-license-1">
+                    <id>Apache-2.0</id>
+                    <licensing>
+                        <altIds>
+                            <altId>acme</altId>
+                            <altId>acme-license</altId>
+                        </altIds>
+                        <licensor>
+                            <organization>
+                                <name>Acme Inc</name>
+                                <contact>
+                                    <name>Acme Licensing Fulfillment</name>
+                                    <email>licensing@example.com</email>
+                                </contact>
+                            </organization>
+                        </licensor>
+                        <licensee>
+                            <organization>
+                                <name>Example Co.</name>
+                            </organization>
+                        </licensee>
+                        <purchaser>
+                            <individual>
+                                <name>Samantha Wright</name>
+                                <email>samantha.wright@gmail.com</email>
+                                <phone>800-555-1212</phone>
+                            </individual>
+                        </purchaser>
+                        <purchaseOrder>PO-12345</purchaseOrder>
+                        <licenseTypes>
+                            <licenseType>appliance</licenseType>
+                        </licenseTypes>
+                        <lastRenewal>2022-04-13T20:20:39+00:00</lastRenewal>
+                        <expiration>2023-04-13T20:20:39+00:00</expiration>
+                    </licensing>
+                    <properties>
+                        <property name="Foo">Bar</property>
+                    </properties>
+                </license>
             </licenses>
             <copyright>Copyright Example Inc. All rights reserved.</copyright>
             <cpe>cpe:/a:example:myapplication:1.0.0</cpe>
@@ -109,6 +147,10 @@
                 <reference type="documentation">
                     <url>http://example.org/docs</url>
                     <comment>All component versions are documented here</comment>
+                </reference>
+                <reference type="security-contact">
+                    <url>http://example.org/docs</url>
+                    <comment>test</comment>
                 </reference>
             </externalReferences>
             <evidence>
@@ -186,6 +228,9 @@
             </assemblies>
         </composition>
     </compositions>
+    <properties>
+        <property name="Foo">Bar</property>
+    </properties>
     <vulnerabilities>
         <vulnerability bom-ref="6eee14da-8f42-4cc4-bb65-203235f02415">
             <id>SONATYPE-2021123</id>
@@ -230,6 +275,7 @@
             <created>2020-04-07T07:01:00Z</created>
             <published>2020-04-07T07:01:00Z</published>
             <updated>2020-04-07T07:01:00Z</updated>
+            <rejected>2023-02-16T07:01:00Z</rejected>
             <credits>
                 <organizations>
                     <organization>
@@ -261,6 +307,8 @@
                     <response>update</response>
                 </responses>
                 <detail>An optional explanation of why the application is not affected by the vulnerable component.</detail>
+                <firstIssued>2020-04-07T07:01:00Z</firstIssued>
+                <lastUpdated>2020-04-07T07:01:00Z</lastUpdated>
             </analysis>
             <affects>
                 <target>
