@@ -20,7 +20,6 @@ package org.cyclonedx.parsers;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -461,7 +460,7 @@ public class XmlParserTest {
         assertMetadata(bom.getMetadata());
         assertComponent(bom);
         assertServices(bom);
-        assertVulnerabilities(bom, Version.VERSION_15);
+        assertVulnerabilities(bom);
 
         // Dependencies
         assertEquals(1, bom.getDependencies().size());
@@ -482,7 +481,7 @@ public class XmlParserTest {
         assertMetadata(bom.getMetadata());
         assertComponent(bom);
         assertServices(bom);
-        assertVulnerabilities(bom, Version.VERSION_15);
+        assertVulnerabilities(bom);
 
         // Dependencies
         assertEquals(1, bom.getDependencies().size());
@@ -491,6 +490,7 @@ public class XmlParserTest {
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
 
         //Assert Licensing
+        //Assert Vulnerability Rejected
         //Assert Annotations
         //Assert Bom Properties
         //Assert License Properties
@@ -509,7 +509,7 @@ public class XmlParserTest {
         assertNull(bom.getVulnerabilities());
     }
 
-    private void assertVulnerabilities(final Bom bom, final Version version) {
+    private void assertVulnerabilities(final Bom bom) {
         final List<Vulnerability> vulnerabilities = bom.getVulnerabilities();
         assertEquals(1, vulnerabilities.size());
         Vulnerability vuln = vulnerabilities.get(0);
@@ -522,14 +522,7 @@ public class XmlParserTest {
         assertEquals(184, vuln.getCwes().get(0));
         assertNotNull(vuln.getCreated());
         assertNotNull(vuln.getPublished());
-
-        //Assert Vulnerability Rejected
-        if (version == Version.VERSION_15) {
-            assertNotNull(vuln.getUpdated());
-        }
-        else {
-            assertNull(vuln.getUpdated());
-        }
+        assertNotNull(vuln.getUpdated());
 
         //Source
         assertEquals("Sonatype", vuln.getSource().getName());
