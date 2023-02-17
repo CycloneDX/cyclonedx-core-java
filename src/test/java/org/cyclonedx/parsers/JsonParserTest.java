@@ -365,8 +365,8 @@ public class JsonParserTest {
         assertNotNull(d1);
         assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
     }
-
-    private void assertVulnerabilities(final Bom bom, Version version) {
+    
+    private void assertVulnerabilities(final Bom bom, final Version version) {
         final List<Vulnerability> vulnerabilities = bom.getVulnerabilities();
         assertEquals(1, vulnerabilities.size());
         Vulnerability vuln = vulnerabilities.get(0);
@@ -380,7 +380,14 @@ public class JsonParserTest {
         assertNotNull(vuln.getCreated());
         assertNotNull(vuln.getPublished());
         assertNotNull(vuln.getUpdated());
-        assertNotNull(vuln.getRejected());
+
+        //Assert Vulnerability Rejected
+        if (version == Version.VERSION_15) {
+            assertNotNull(vuln.getRejected());
+        }
+        else {
+            assertNull(vuln.getRejected());
+        }
 
         //Source
         assertEquals("Sonatype", vuln.getSource().getName());
