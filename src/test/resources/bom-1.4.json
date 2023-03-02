@@ -165,13 +165,7 @@
       "licenses": [
         {
           "license": {
-            "id": "Apache-2.0",
-            "properties": [
-              {
-                "name": "Foo",
-                "value": "Bar"
-              }
-            ]
+            "id": "Apache-2.0"
           }
         }
       ],
