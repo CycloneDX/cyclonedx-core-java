@@ -470,6 +470,9 @@ public class XmlParserTest {
         Dependency d1 = bom.getDependencies().get(0);
         assertNotNull(d1);
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
+
+        //Assert Bom Properties
+        assertNull(bom.getProperties());
     }
 
     @Test
@@ -492,10 +495,13 @@ public class XmlParserTest {
         assertNotNull(d1);
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
 
+        //Assert Bom Properties
+        assertEquals(bom.getProperties().size(), 1);
+
         //Assert Licensing
         //Assert Vulnerability Rejected
         //Assert Annotations
-        //Assert Bom Properties
+
         //Assert License Properties
         //Assert Vulnerabilities Timestamps
     }
