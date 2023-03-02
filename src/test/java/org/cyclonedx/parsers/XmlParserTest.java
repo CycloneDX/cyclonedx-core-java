@@ -524,6 +524,14 @@ public class XmlParserTest {
         assertNotNull(vuln.getPublished());
         assertNotNull(vuln.getUpdated());
 
+        //Assert Vulnerability Rejected
+        if (version != Version.VERSION_14) {
+            assertNotNull(vuln.getRejected());
+        }
+        else {
+            assertNull(vuln.getRejected());
+        }
+
         //Source
         assertEquals("Sonatype", vuln.getSource().getName());
         assertEquals("https://www.vuln.com", vuln.getSource().getUrl());
