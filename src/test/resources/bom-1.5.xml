@@ -195,6 +195,9 @@
             </assemblies>
         </composition>
     </compositions>
+    <properties>
+        <property name="Foo">Bar</property>
+    </properties>
     <vulnerabilities>
         <vulnerability bom-ref="6eee14da-8f42-4cc4-bb65-203235f02415">
             <id>SONATYPE-2021123</id>
