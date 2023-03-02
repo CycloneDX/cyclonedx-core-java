@@ -32,7 +32,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"altIds", "licensor", "licensee", "purchaser", "purchaseOrder", "licenseTypes", "lastRenewal", "expiration"})
 @JsonRootName("licensing")
 public class Licensing extends ExtensibleElement
@@ -85,11 +85,11 @@ public class Licensing extends ExtensibleElement
 
   private List<String> altIds;
 
-  private OrganizationalInstance licensor;
+  private OrganizationalChoice licensor;
 
-  private OrganizationalInstance licensee;
+  private OrganizationalChoice licensee;
 
-  private OrganizationalInstance purchaser;
+  private OrganizationalChoice purchaser;
 
   private String purchaseOrder;
 
@@ -111,31 +111,31 @@ public class Licensing extends ExtensibleElement
 
   @JacksonXmlProperty(localName = "licensor")
   @JsonProperty("licensor")
-  public OrganizationalInstance getLicensor() {
+  public OrganizationalChoice getLicensor() {
     return licensor;
   }
 
-  public void setLicensor(final OrganizationalInstance licensor) {
+  public void setLicensor(final OrganizationalChoice licensor) {
     this.licensor = licensor;
   }
 
   @JacksonXmlProperty(localName = "licensee")
   @JsonProperty("licensee")
-  public OrganizationalInstance getLicensee() {
+  public OrganizationalChoice getLicensee() {
     return licensee;
   }
 
-  public void setLicensee(final OrganizationalInstance licensee) {
+  public void setLicensee(final OrganizationalChoice licensee) {
     this.licensee = licensee;
   }
 
   @JacksonXmlProperty(localName = "purchaser")
   @JsonProperty("purchaser")
-  public OrganizationalInstance getPurchaser() {
+  public OrganizationalChoice getPurchaser() {
     return purchaser;
   }
 
-  public void setPurchaser(final OrganizationalInstance purchaser) {
+  public void setPurchaser(final OrganizationalChoice purchaser) {
     this.purchaser = purchaser;
   }
 

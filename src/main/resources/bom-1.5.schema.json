@@ -627,6 +627,11 @@
       ],
       "additionalProperties": false,
       "properties": {
+        "bom-ref": {
+          "$ref": "#/definitions/refType",
+          "title": "BOM Reference",
+          "description": "An optional identifier which can be used to reference the license elsewhere in the BOM. Every bom-ref MUST be unique within the BOM."
+        },
         "id": {
           "$ref": "spdx.schema.json",
           "title": "License ID (SPDX)",

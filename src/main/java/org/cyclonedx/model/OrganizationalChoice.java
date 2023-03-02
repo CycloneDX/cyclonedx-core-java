@@ -22,12 +22,10 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.cyclonedx.util.deserializer.OrganizationalInstanceDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class OrganizationalInstance
+public class OrganizationalChoice
 {
   private OrganizationalContact individual;
 
@@ -59,7 +57,7 @@ public class OrganizationalInstance
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrganizationalInstance that = (OrganizationalInstance) o;
+    OrganizationalChoice that = (OrganizationalChoice) o;
     return Objects.equals(individual, that.individual) &&
         Objects.equals(organization, that.organization);
   }

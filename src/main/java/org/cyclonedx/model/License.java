@@ -35,6 +35,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
+    @JsonProperty("bom-ref")
+    private String bomRef;
     @JacksonXmlProperty(localName = "id")
     @JsonProperty("id")
     private String id;
@@ -50,6 +54,14 @@ public class License extends ExtensibleElement {
 
     @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
     private List<Property> properties;
+
+    public String getBomRef() {
+        return bomRef;
+    }
+
+    public void setBomRef(final String bomRef) {
+        this.bomRef = bomRef;
+    }
 
     public String getId() {
         return id;
