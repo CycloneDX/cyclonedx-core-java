@@ -102,7 +102,6 @@
                     <id>Apache-2.0</id>
                     <licensing>
                         <altIds>
-                            <altId>acme</altId>
                             <altId>acme-license</altId>
                         </altIds>
                         <licensor>

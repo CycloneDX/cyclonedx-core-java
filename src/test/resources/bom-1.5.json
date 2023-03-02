@@ -165,6 +165,7 @@
       "licenses": [
         {
           "license": {
+            "bom-ref": "acme-license-1",
             "id": "Apache-2.0",
             "licensing": {
               "altIds": [
