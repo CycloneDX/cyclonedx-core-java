@@ -31,7 +31,7 @@ import org.cyclonedx.model.Licensing;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
-import org.cyclonedx.model.OrganizationalInstance;
+import org.cyclonedx.model.OrganizationalChoice;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.ReleaseNotes;
 import org.cyclonedx.model.ReleaseNotes.Notes;
@@ -719,11 +719,13 @@ public class XmlParserTest {
 
         if (version == Version.VERSION_14) {
             assertNull(license.getProperties());
+            assertNull(license.getBomRef());
         }
         else {
             //Dev Licensing
             assertLicensing(license.getLicensing());
             assertEquals(license.getProperties().size(), 1);
+            assertNotNull(license.getBomRef());
         }
     }
 
@@ -740,7 +742,7 @@ public class XmlParserTest {
         assertEquals(licensing.getLicenseTypes().size(), 1);
     }
 
-    private void assertLicensor(OrganizationalInstance licensor) {
+    private void assertLicensor(OrganizationalChoice licensor) {
         assertNull(licensor.getIndividual());
         assertNotNull(licensor.getOrganization());
         assertEquals(licensor.getOrganization().getName(), "Acme Inc");
@@ -748,7 +750,7 @@ public class XmlParserTest {
         assertNull(licensor.getOrganization().getUrls());
     }
 
-    private void assertLicensee(OrganizationalInstance licensee) {
+    private void assertLicensee(OrganizationalChoice licensee) {
         assertNull(licensee.getIndividual());
         assertNotNull(licensee.getOrganization());
         assertEquals(licensee.getOrganization().getName(), "Example Co.");
@@ -756,7 +758,7 @@ public class XmlParserTest {
         assertNull(licensee.getOrganization().getUrls());
     }
 
-    private void assertPurchaser(OrganizationalInstance purchaser) {
+    private void assertPurchaser(OrganizationalChoice purchaser) {
         assertNull(purchaser.getOrganization());
         assertNotNull(purchaser.getIndividual());
         assertEquals(purchaser.getIndividual().getName(), "Samantha Wright");
