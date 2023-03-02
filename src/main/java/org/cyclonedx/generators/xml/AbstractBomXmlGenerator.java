@@ -27,7 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.util.DependencySerializer;
+import org.cyclonedx.util.serializer.DependencySerializer;
 import org.cyclonedx.util.VersionXmlAnnotationIntrospector;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;

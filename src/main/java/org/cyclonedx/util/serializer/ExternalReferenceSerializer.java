@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-package org.cyclonedx.util;
+package org.cyclonedx.util.serializer;
 
 import java.io.IOException;
 import java.util.function.BiPredicate;
@@ -30,7 +30,7 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.ExternalReference.Type;
 import org.cyclonedx.model.Hash;
-
+import org.cyclonedx.util.BomUtils;
 
 public class ExternalReferenceSerializer extends StdSerializer<ExternalReference>
 {

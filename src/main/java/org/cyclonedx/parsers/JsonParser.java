@@ -26,7 +26,6 @@ import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
 
 import java.io.File;
 import java.io.IOException;

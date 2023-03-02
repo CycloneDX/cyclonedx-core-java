@@ -166,6 +166,38 @@
         {
           "license": {
             "id": "Apache-2.0",
+            "licensing": {
+              "altIds": [
+                "acme", "acme-license"
+              ],
+              "licensor": {
+                "organization": {
+                  "name": "Acme Inc",
+                  "contact": [
+                    {
+                      "name": "Acme Licensing Fulfillment",
+                      "email": "licensing@example.com"
+                    }
+                  ]
+                }
+              },
+              "licensee": {
+                "organization": {
+                  "name": "Example Co."
+                }
+              },
+              "purchaser": {
+                "individual": {
+                  "name": "Samantha Wright",
+                  "email": "samantha.wright@gmail.com",
+                  "phone": "800-555-1212"
+                }
+              },
+              "purchaseOrder": "PO-12345",
+              "licenseTypes": ["appliance"],
+              "lastRenewal": "2022-04-13T20:20:39+00:00",
+              "expiration": "2023-04-13T20:20:39+00:00"
+            },
             "properties": [
               {
                 "name": "Foo",

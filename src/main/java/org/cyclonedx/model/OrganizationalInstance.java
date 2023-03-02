@@ -18,10 +18,54 @@
  */
 package org.cyclonedx.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.cyclonedx.util.OrganizationalInstanceDeserializer;
+import java.util.Objects;
 
-@JsonDeserialize(using = OrganizationalInstanceDeserializer.class)
-public abstract class OrganizationalInstance extends ExtensibleElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.cyclonedx.util.deserializer.OrganizationalInstanceDeserializer;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class OrganizationalInstance
 {
+  private OrganizationalContact individual;
+
+  private OrganizationalEntity organization;
+
+  public OrganizationalContact getIndividual() {
+    return individual;
+  }
+
+  public void setIndividual(final OrganizationalContact individual) {
+    this.individual = individual;
+    this.organization = null;
+  }
+
+  public OrganizationalEntity getOrganization() {
+    return organization;
+  }
+
+  public void setOrganization(final OrganizationalEntity organization) {
+    this.organization = organization;
+    this.individual = null;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OrganizationalInstance that = (OrganizationalInstance) o;
+    return Objects.equals(individual, that.individual) &&
+        Objects.equals(organization, that.organization);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(individual, organization);
+  }
 }
