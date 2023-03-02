@@ -20,6 +20,7 @@ package org.cyclonedx.parsers;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -458,9 +459,9 @@ public class XmlParserTest {
         assertEquals(1, bom.getVersion());
 
         assertMetadata(bom.getMetadata());
-        assertComponent(bom);
+        assertComponent(bom, Version.VERSION_14);
         assertServices(bom);
-        assertVulnerabilities(bom);
+        assertVulnerabilities(bom, Version.VERSION_14);
 
         // Dependencies
         assertEquals(1, bom.getDependencies().size());
@@ -479,15 +480,22 @@ public class XmlParserTest {
         assertEquals(1, bom.getVersion());
 
         assertMetadata(bom.getMetadata());
-        assertComponent(bom);
+        assertComponent(bom, Version.VERSION_15);
         assertServices(bom);
-        assertVulnerabilities(bom);
+        assertVulnerabilities(bom, Version.VERSION_15);
 
         // Dependencies
         assertEquals(1, bom.getDependencies().size());
         Dependency d1 = bom.getDependencies().get(0);
         assertNotNull(d1);
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", d1.getRef());
+
+        //Assert Licensing
+        //Assert Vulnerability Rejected
+        //Assert Annotations
+        //Assert Bom Properties
+        //Assert License Properties
+        //Assert Vulnerabilities Timestamps
     }
 
     @Test
@@ -501,7 +509,7 @@ public class XmlParserTest {
         assertNull(bom.getVulnerabilities());
     }
 
-    private void assertVulnerabilities(final Bom bom) {
+    private void assertVulnerabilities(final Bom bom, final Version version) {
         final List<Vulnerability> vulnerabilities = bom.getVulnerabilities();
         assertEquals(1, vulnerabilities.size());
         Vulnerability vuln = vulnerabilities.get(0);
@@ -570,6 +578,15 @@ public class XmlParserTest {
             vuln.getAnalysis().getDetail());
         assertEquals("update", vuln.getAnalysis().getResponses().get(0).getResponseName());
 
+        //Vulnerability Analysis Timestamp 1.5
+        if (version != Version.VERSION_14) {
+            assertNotNull(vuln.getAnalysis().getFirstIssued());
+            assertNotNull(vuln.getAnalysis().getLastUpdated());
+        } else {
+            assertNull(vuln.getAnalysis().getFirstIssued());
+            assertNull(vuln.getAnalysis().getLastUpdated());
+        }
+
         //Affects
         assertEquals(1, vuln.getAffects().size());
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.9", vuln.getAffects().get(0).getRef());
@@ -631,7 +648,7 @@ public class XmlParserTest {
         assertEquals("http://api.partner.org/swagger", s.getExternalReferences().get(1).getUrl());
     }
 
-    private void assertComponent(final Bom bom) {
+    private void assertComponent(final Bom bom, final Version version) {
         final List<Component> components = bom.getComponents();
         assertEquals(1, components.size());
         Component component = components.get(0);
@@ -646,7 +663,15 @@ public class XmlParserTest {
         assertEquals("Acme Application", component.getSwid().getName());
         assertEquals("9.1.1", component.getSwid().getVersion());
         assertEquals("swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1", component.getSwid().getTagId());
-        assertEquals(1, component.getExternalReferences().size());
+
+        if (version == Version.VERSION_14) {
+            assertEquals(1, component.getExternalReferences().size());
+        }
+        else {
+            assertEquals(2, component.getExternalReferences().size());
+            //Security Contact
+            assertSecurityContact(component.getExternalReferences().get(1));
+        }
 
         //Evidence
         assertNotNull(component.getEvidence());
@@ -655,6 +680,12 @@ public class XmlParserTest {
         assertEquals("Apache-2.0", component.getEvidence().getLicenseChoice().getLicenses().get(0).getId());
         assertEquals("http://www.apache.org/licenses/LICENSE-2.0",
             component.getEvidence().getLicenseChoice().getLicenses().get(0).getUrl());
+    }
+
+    private void assertSecurityContact(ExternalReference externalReference){
+        assertEquals(externalReference.getType(), ExternalReference.Type.SECURITY_CONTACT);
+        assertEquals(externalReference.getComment(), "test");
+        assertEquals(externalReference.getUrl(), "http://example.org/docs");
     }
 
     private void assertMetadata(final Metadata metadata) {
