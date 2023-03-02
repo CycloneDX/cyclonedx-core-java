@@ -18,18 +18,20 @@
  */
 package org.cyclonedx.model;
 
+import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "text", "url"})
+@JsonPropertyOrder({"id", "name", "text", "url", "properties"})
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
@@ -42,6 +44,9 @@ public class License extends ExtensibleElement {
     @JsonProperty("text")
     private AttachmentText attachmentText;
     private String url;
+
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    private List<Property> properties;
 
     public String getId() {
         return id;
@@ -67,6 +72,16 @@ public class License extends ExtensibleElement {
         this.url = url;
     }
 
+    @JacksonXmlElementWrapper(localName = "properties")
+    @JacksonXmlProperty(localName = "property")
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(final List<Property> properties) {
+        this.properties = properties;
+    }
+
     public AttachmentText getAttachmentText() {
         return attachmentText;
     }
@@ -83,11 +98,12 @@ public class License extends ExtensibleElement {
         return Objects.equals(id, license.id) &&
                 Objects.equals(name, license.name) &&
                 Objects.equals(url, license.url) &&
-                Objects.equals(attachmentText, license.attachmentText);
+                Objects.equals(attachmentText, license.attachmentText) &&
+                Objects.equals(properties, license.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText);
+        return Objects.hash(id, name, url, attachmentText, properties);
     }
 }
