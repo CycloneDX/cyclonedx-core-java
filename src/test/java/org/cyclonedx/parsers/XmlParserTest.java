@@ -525,15 +525,7 @@ public class XmlParserTest {
         assertNotNull(vuln.getUpdated());
 
         //Assert Vulnerability Rejected
-        if (version == Version.VERSION_15) {
-            assertNotNull(vuln.getRejected());
-        }
-        else {
-            assertNull(vuln.getRejected());
-        }
-
-        //Assert Vulnerability Rejected
-        if (version == Version.VERSION_15) {
+        if (version != Version.VERSION_14) {
             assertNotNull(vuln.getRejected());
         }
         else {
