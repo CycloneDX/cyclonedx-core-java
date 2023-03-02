@@ -262,10 +262,10 @@ public class XmlParserTest {
         assertEquals(2, bom.getMetadata().getTools().get(0).getHashes().size());
         assertEquals("SHA-1", bom.getMetadata().getTools().get(0).getHashes().get(0).getAlgorithm());
         assertEquals("25ed8e31b995bb927966616df2a42b979a2717f0", bom.getMetadata().getTools().get(0).getHashes().get(0).getValue());
-        //assertEquals(1, bom.getMetadata().getAuthors().size());
-        //assertEquals("Samantha Wright", bom.getMetadata().getAuthors().get(0).getName());
-        //assertEquals("samantha.wright@example.com", bom.getMetadata().getAuthors().get(0).getEmail());
-        //assertEquals("800-555-1212", bom.getMetadata().getAuthors().get(0).getPhone());
+        assertEquals(1, bom.getMetadata().getAuthors().size());
+        assertEquals("Samantha Wright", bom.getMetadata().getAuthors().get(0).getName());
+        assertEquals("samantha.wright@example.com", bom.getMetadata().getAuthors().get(0).getEmail());
+        assertEquals("800-555-1212", bom.getMetadata().getAuthors().get(0).getPhone());
         assertEquals("Acme Application", bom.getMetadata().getComponent().getName());
         assertEquals("9.1.1", bom.getMetadata().getComponent().getVersion());
         assertEquals(Component.Type.APPLICATION, bom.getMetadata().getComponent().getType());
@@ -779,10 +779,10 @@ public class XmlParserTest {
             metadata.getTools().get(0).getHashes().get(0).getValue());
 
         //Author
-       // assertEquals(1, metadata.getAuthors().size());
-        //assertEquals("Samantha Wright", metadata.getAuthors().get(0).getName());
-        //assertEquals("samantha.wright@example.com", metadata.getAuthors().get(0).getEmail());
-        //assertEquals("800-555-1212", metadata.getAuthors().get(0).getPhone());
+        assertEquals(1, metadata.getAuthors().size());
+        assertEquals("Samantha Wright", metadata.getAuthors().get(0).getName());
+        assertEquals("samantha.wright@example.com", metadata.getAuthors().get(0).getEmail());
+        assertEquals("800-555-1212", metadata.getAuthors().get(0).getPhone());
 
         //Component
         Component component = metadata.getComponent();
