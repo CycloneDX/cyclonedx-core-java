@@ -164,7 +164,47 @@
       ],
       "licenses": [
         {
-          "expression": "EPL-2.0 OR GPL-2.0-with-classpath-exception"
+          "license": {
+            "id": "Apache-2.0",
+            "licensing": {
+              "altIds": [
+                "acme", "acme-license"
+              ],
+              "licensor": {
+                "organization": {
+                  "name": "Acme Inc",
+                  "contact": [
+                    {
+                      "name": "Acme Licensing Fulfillment",
+                      "email": "licensing@example.com"
+                    }
+                  ]
+                }
+              },
+              "licensee": {
+                "organization": {
+                  "name": "Example Co."
+                }
+              },
+              "purchaser": {
+                "individual": {
+                  "name": "Samantha Wright",
+                  "email": "samantha.wright@gmail.com",
+                  "phone": "800-555-1212"
+                }
+              },
+              "purchaseOrder": "PO-12345",
+              "licenseTypes": ["appliance"],
+              "lastRenewal": "2022-04-13T20:20:39+00:00",
+              "expiration": "2023-04-13T20:20:39+00:00"
+            },
+            "properties": [
+              {
+                "name": "Foo",
+                "value": "Bar"
+              }
+            ]
+          }
         }
       ],
       "copyright": "Copyright Example Inc. All rights reserved.",
@@ -181,6 +221,11 @@
           "type": "documentation",
           "url": "http://example.org/docs",
           "comment": "All component versions are documented here"
+        },
+        {
+          "type": "security-contact",
+          "url": "http://example.org/docs",
+          "comment": "test"
         }
       ],
       "evidence": {
@@ -296,6 +341,12 @@
         ]
       }
     ],
+  "properties": [
+    {
+      "name": "Foo",
+      "value": "Bar"
+    }
+  ],
   "vulnerabilities": [
     {
       "bom-ref": "6eee14da-8f42-4cc4-bb65-203235f02415",
@@ -341,6 +392,7 @@
       "created": "2020-04-07T07:01:00Z",
       "published": "2020-04-07T07:01:00Z",
       "updated": "2020-04-07T07:01:00Z",
+      "rejected": "2023-02-13T07:01:00Z",
       "credits": {
         "organizations": [
           {
@@ -376,7 +428,9 @@
         "response": [
           "update"
         ],
-        "detail": "An optional explanation of why the application is not affected by the vulnerable component."
+        "detail": "An optional explanation of why the application is not affected by the vulnerable component.",
+        "firstIssued": "2022-01-01T00:00:00.000Z",
+        "lastUpdated": "2022-02-01T00:00:00.000Z"
       },
       "affects": [
          {
