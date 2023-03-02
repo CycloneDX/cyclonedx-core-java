@@ -25,6 +25,8 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.License;
+import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -523,7 +525,10 @@ public class JsonParserTest {
         assertEquals(Component.Type.LIBRARY, component.getType());
         assertEquals("pkg:maven/com.acme/jackson-databind@2.9.4", component.getPurl());
         assertEquals(12, component.getHashes().size());
-        assertNotNull(component.getLicenseChoice().getExpression());
+
+        //Licenses
+        assertLicense(component.getLicenseChoice(), version);
+
         assertEquals("Copyright Example Inc. All rights reserved.", component.getCopyright());
         assertEquals("Acme Application", component.getSwid().getName());
         assertEquals("9.1.1", component.getSwid().getVersion());
@@ -547,10 +552,25 @@ public class JsonParserTest {
             component.getEvidence().getLicenseChoice().getLicenses().get(0).getUrl());
     }
 
-    private void assertSecurityContact(ExternalReference externalReference){
+    private void assertSecurityContact(ExternalReference externalReference) {
         assertEquals(externalReference.getType(), ExternalReference.Type.SECURITY_CONTACT);
         assertEquals(externalReference.getComment(), "test");
         assertEquals(externalReference.getUrl(), "http://example.org/docs");
+    }
+
+    private void assertLicense(LicenseChoice licenseChoice, final Version version) {
+        assertNotNull(licenseChoice);
+        assertNull(licenseChoice.getExpression());
+
+        assertEquals(licenseChoice.getLicenses().size(), 1);
+        License license = licenseChoice.getLicenses().get(0);
+
+        if (version == Version.VERSION_15) {
+            assertEquals(license.getProperties().size(), 1);
+        }
+        else {
+            assertNull(license.getProperties());
+        }
     }
 
     private void assertMetadata(final Metadata metadata) {
