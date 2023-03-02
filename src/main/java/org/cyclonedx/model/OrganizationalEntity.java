@@ -31,7 +31,7 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"name", "url", "contact"})
-public class OrganizationalEntity extends OrganizationalInstance {
+public class OrganizationalEntity {
 
     private String name;
 
