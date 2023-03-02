@@ -181,6 +181,11 @@
           "type": "documentation",
           "url": "http://example.org/docs",
           "comment": "All component versions are documented here"
+        },
+        {
+          "type": "security-contact",
+          "url": "http://example.org/docs",
+          "comment": "test"
         }
       ],
       "evidence": {
@@ -376,7 +381,9 @@
         "response": [
           "update"
         ],
-        "detail": "An optional explanation of why the application is not affected by the vulnerable component."
+        "detail": "An optional explanation of why the application is not affected by the vulnerable component.",
+        "firstIssued": "2022-01-01T00:00:00.000Z",
+        "lastUpdated": "2022-02-01T00:00:00.000Z"
       },
       "affects": [
          {
