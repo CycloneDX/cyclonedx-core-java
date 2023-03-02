@@ -579,7 +579,7 @@ public class XmlParserTest {
         assertEquals("update", vuln.getAnalysis().getResponses().get(0).getResponseName());
 
         //Vulnerability Analysis Timestamp 1.5
-        if(version!=Version.VERSION_14) {
+        if (version != Version.VERSION_14) {
             assertNotNull(vuln.getAnalysis().getFirstIssued());
             assertNotNull(vuln.getAnalysis().getLastUpdated());
         } else {
