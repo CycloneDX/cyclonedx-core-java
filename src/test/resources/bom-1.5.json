@@ -200,8 +200,8 @@
         "licenses": [
           {
             "license": {
-                "id": "Apache-2.0",
-                "url": "http://www.apache.org/licenses/LICENSE-2.0"
+              "id": "Apache-2.0",
+              "url": "http://www.apache.org/licenses/LICENSE-2.0"
             }
           }
         ],
@@ -219,7 +219,7 @@
       "provider": {
         "name": "Partner Org",
         "url": [
-            "https://partner.org"
+          "https://partner.org"
         ],
         "contact": [
           {
@@ -234,29 +234,29 @@
       "version": "2020-Q2",
       "description": "Provides real-time stock information",
       "endpoints": [
-          "https://partner.org/api/v1/lookup",
-          "https://partner.org/api/v1/stock"
+        "https://partner.org/api/v1/lookup",
+        "https://partner.org/api/v1/stock"
       ],
       "authenticated": true,
       "x-trust-boundary": true,
       "data": [
-          {
-            "flow": "inbound",
-            "classification": "PII"
-          },
-          {
-            "flow": "outbound",
-            "classification": "PIFI"
-          },
-          {
-            "flow": "bi-directional",
-            "classification": "pubic"
-          },
-          {
-            "flow": "unknown",
-            "classification": "partner-data"
-          }
-        ],
+        {
+          "flow": "inbound",
+          "classification": "PII"
+        },
+        {
+          "flow": "outbound",
+          "classification": "PIFI"
+        },
+        {
+          "flow": "bi-directional",
+          "classification": "pubic"
+        },
+        {
+          "flow": "unknown",
+          "classification": "partner-data"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -265,15 +265,15 @@
         }
       ],
       "externalReferences": [
-          {
-            "type": "website",
-            "url": "http://partner.org"
-          },
-          {
-            "type": "documentation",
-            "url": "http://api.partner.org/swagger"
-          }
-        ]
+        {
+          "type": "website",
+          "url": "http://partner.org"
+        },
+        {
+          "type": "documentation",
+          "url": "http://api.partner.org/swagger"
+        }
+      ]
     }
   ],
   "dependencies": [
@@ -293,22 +293,22 @@
     }
   ],
   "compositions": [
-      {
-        "aggregate": "complete",
-        "assemblies": [
-            "pkg:maven/partner/shaded-library@1.0"
-        ],
-        "dependencies": [
-          "acme-application-1.0"
-        ]
-      },
-      {
-        "aggregate": "unknown",
-        "assemblies": [
-          "pkg:maven/acme/library@3.0"
-        ]
-      }
-    ],
+    {
+      "aggregate": "complete",
+      "assemblies": [
+        "pkg:maven/partner/shaded-library@1.0"
+      ],
+      "dependencies": [
+        "acme-application-1.0"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "assemblies": [
+        "pkg:maven/acme/library@3.0"
+      ]
+    }
+  ],
   "properties": [
     {
       "name": "Foo",
@@ -366,8 +366,8 @@
           {
             "name": "Acme, Inc.",
             "url": [
-            "https://example.com"
-             ]
+              "https://example.com"
+            ]
           }
         ],
         "individuals": [
@@ -401,18 +401,18 @@
         "lastUpdated": "2022-02-01T00:00:00.000Z"
       },
       "affects": [
-         {
+        {
           "ref": "pkg:maven/com.acme/jackson-databind@2.9.9",
-          "versions":  [
-              {
-                "range": "vers:semver/<2.6.7.5",
-                "status": "affected"
-              },
-              {
-                "version": "2.9.9",
-                "status": "affected"
-              }
-            ]
+          "versions": [
+            {
+              "range": "vers:semver/<2.6.7.5",
+              "status": "affected"
+            },
+            {
+              "version": "2.9.9",
+              "status": "affected"
+            }
+          ]
         }
       ],
       "properties": [
@@ -433,6 +433,30 @@
           "value": "Foo"
         }
       ]
+    }
+  ],
+  "annotations": [
+    {
+      "bom-ref": "annotation-1",
+      "subjects": [
+        "component-a"
+      ],
+      "annotator": {
+        "organization": {
+          "name": "Acme, Inc.",
+          "url": [
+            "https://example.com"
+          ],
+          "contact": [
+            {
+              "name": "Acme Professional Services",
+              "email": "professional.services@example.com"
+            }
+          ]
+        }
+      },
+      "timestamp": "2022-01-01T00:00:00Z",
+      "text": "This is a sample annotation made by an organization"
     }
   ]
 }

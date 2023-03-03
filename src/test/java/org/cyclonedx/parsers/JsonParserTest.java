@@ -21,6 +21,8 @@ package org.cyclonedx.parsers;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.CycloneDxSchema.Version;
+import org.cyclonedx.model.Annotation;
+import org.cyclonedx.model.Annotator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -348,6 +350,9 @@ public class JsonParserTest {
 
         //Assert Bom Properties
         assertNull(bom.getProperties());
+
+        //Assert Annotations
+        assertNull(bom.getAnnotations());
     }
 
     @Test
@@ -372,6 +377,36 @@ public class JsonParserTest {
 
         //Assert Bom Properties
         assertEquals(bom.getProperties().size(), 1);
+
+        //Assert Annotations
+        assertAnnotations(bom);
+    }
+
+
+    private void assertAnnotations(final Bom bom) {
+        List<Annotation> annotations = bom.getAnnotations();
+
+        assertEquals(annotations.size(), 1);
+
+        Annotation annotation = annotations.get(0);
+        assertNotNull(annotation.getBomRef());
+        assertNotNull(annotation.getText());
+        assertNotNull(annotation.getTimestamp());
+
+        assertEquals(annotation.getSubjects().size(), 1);
+        assertAnnotator(annotation.getAnnotator());
+    }
+
+    private void assertAnnotator(final Annotator annotator) {
+        assertNotNull(annotator);
+        assertNull(annotator.getIndividual());
+        assertNull(annotator.getComponent());
+        assertNull(annotator.getService());
+
+        assertNotNull(annotator.getOrganization());
+        assertEquals(annotator.getOrganization().getName(), "Acme, Inc.");
+        assertEquals(annotator.getOrganization().getContacts().size(), 1);
+        assertEquals(annotator.getOrganization().getUrls().size(), 1);
     }
     
     private void assertVulnerabilities(final Bom bom, final Version version) {

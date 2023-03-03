@@ -18,12 +18,14 @@
  */
 package org.cyclonedx.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"organization", "individual", "component", "service"})
 public class Annotator extends ExtensibleElement
 {
@@ -35,20 +37,26 @@ public class Annotator extends ExtensibleElement
 
   private Service service;
 
-  public OrganizationalEntity getOrganization() {
-    return organization;
-  }
-
-  public void setOrganization(final OrganizationalEntity organization) {
-    this.organization = organization;
-  }
-
   public OrganizationalContact getIndividual() {
     return individual;
   }
 
   public void setIndividual(final OrganizationalContact individual) {
     this.individual = individual;
+    this.organization = null;
+    this.component = null;
+    this.service = null;
+  }
+
+  public OrganizationalEntity getOrganization() {
+    return organization;
+  }
+
+  public void setOrganization(final OrganizationalEntity organization) {
+    this.organization = organization;
+    this.component = null;
+    this.service = null;
+    this.individual = null;
   }
 
   public Component getComponent() {
@@ -57,6 +65,9 @@ public class Annotator extends ExtensibleElement
 
   public void setComponent(final Component component) {
     this.component = component;
+    this.organization = null;
+    this.service = null;
+    this.individual = null;
   }
 
   public Service getService() {
@@ -65,5 +76,26 @@ public class Annotator extends ExtensibleElement
 
   public void setService(final Service service) {
     this.service = service;
+    this.organization = null;
+    this.component = null;
+    this.individual = null;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Annotator)) {
+      return false;
+    }
+    Annotator that = (Annotator) o;
+    return individual.equals(that.individual) && organization.equals(that.organization) &&
+        component.equals(that.component) && service.equals(that.service);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(individual, organization, component, service);
   }
 }

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.util.CustomDateSerializer;
@@ -48,7 +49,7 @@ public class Annotation extends ExtensibleElement
     @JsonProperty("bom-ref")
     private String bomRef;
 
-    private List<String> subjects;
+    private List<BomReference> subjects;
 
     private Annotator annotator;
 
@@ -67,11 +68,13 @@ public class Annotation extends ExtensibleElement
         this.bomRef = bomRef;
     }
 
-    public List<String> getSubjects() {
+    @JacksonXmlElementWrapper(localName = "subjects")
+    @JacksonXmlProperty(localName = "subject")
+    public List<BomReference> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(final List<String> subjects) {
+    public void setSubjects(final List<BomReference> subjects) {
         this.subjects = subjects;
     }
 

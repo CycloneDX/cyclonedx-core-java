@@ -300,4 +300,23 @@
             </properties>
         </vulnerability>
     </vulnerabilities>
+    <annotations>
+        <annotation bom-ref="annotation-1">
+            <subjects>
+                <subject ref="component-a"/>
+            </subjects>
+            <annotator>
+                <organization>
+                    <name>Acme, Inc.</name>
+                    <url>https://example.com</url>
+                    <contact>
+                        <name>Acme Professional Services</name>
+                        <email>professional.services@example.com</email>
+                    </contact>
+                </organization>
+            </annotator>
+            <timestamp>2020-04-07T07:01:00Z</timestamp>
+            <text>This is a sample annotation made by an organization</text>
+        </annotation>
+    </annotations>
 </bom>
