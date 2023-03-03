@@ -273,6 +273,7 @@ public class Bom extends ExtensibleElement {
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(compositions, bom.compositions) &&
                 Objects.equals(vulnerabilities, bom.vulnerabilities) &&
+                Objects.equals(annotations, bom.annotations) &&
                 Objects.equals(properties, bom.properties) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
                 Objects.equals(specVersion, bom.specVersion);
@@ -280,6 +281,7 @@ public class Bom extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities, properties, version, serialNumber, specVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities,
+            annotations, properties, version, serialNumber, specVersion);
     }
 }
