@@ -499,13 +499,6 @@ public class XmlParserTest {
 
         //Assert Bom Properties
         assertEquals(bom.getProperties().size(), 1);
-
-        //Assert Licensing
-        //Assert Vulnerability Rejected
-        //Assert Annotations
-
-        //Assert License Properties
-        //Assert Vulnerabilities Timestamps
     }
 
     @Test
@@ -732,7 +725,7 @@ public class XmlParserTest {
     private void assertLicensing(final Licensing licensing) {
         assertNotNull(licensing);
 
-        assertEquals(2, licensing.getAltIds().size());
+        assertEquals(1, licensing.getAltIds().size());
         assertNotNull(licensing.getPurchaseOrder());
         assertLicensor(licensing.getLicensor());
         assertLicensee(licensing.getLicensee());

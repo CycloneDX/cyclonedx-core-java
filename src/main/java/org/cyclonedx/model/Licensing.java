@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 
@@ -93,6 +94,8 @@ public class Licensing extends ExtensibleElement
 
   private String purchaseOrder;
 
+  @JacksonXmlElementWrapper(localName = "licenseTypes")
+  @JacksonXmlProperty(localName = "licenseType")
   private List<LicensingType> licenseTypes;
 
   @JsonSerialize(using = CustomDateSerializer.class)
@@ -101,6 +104,8 @@ public class Licensing extends ExtensibleElement
   @JsonSerialize(using = CustomDateSerializer.class)
   private Date expiration = new Date();
 
+  @JacksonXmlElementWrapper(localName = "altIds")
+  @JacksonXmlProperty(localName = "altId")
   public List<String> getAltIds() {
     return altIds;
   }
