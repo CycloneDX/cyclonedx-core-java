@@ -122,11 +122,12 @@ public class License extends ExtensibleElement {
                 Objects.equals(name, license.name) &&
                 Objects.equals(url, license.url) &&
                 Objects.equals(attachmentText, license.attachmentText) &&
+                Objects.equals(licensing, license.licensing) &&
                 Objects.equals(properties, license.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText, properties);
+        return Objects.hash(id, name, url, attachmentText, properties, licensing);
     }
 }
