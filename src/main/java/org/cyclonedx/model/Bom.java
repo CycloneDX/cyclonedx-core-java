@@ -183,11 +183,25 @@ public class Bom extends ExtensibleElement {
         this.compositions = compositions;
     }
 
+    public void addComposition(Composition composition) {
+        if (compositions == null) {
+            compositions = new ArrayList<>();
+        }
+        compositions.add(composition);
+    }
+
     @JacksonXmlElementWrapper(localName = "vulnerabilities")
     @JacksonXmlProperty(localName = "vulnerability")
     public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
 
     public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
+
+    public void addVulnerability(Vulnerability vulnerability) {
+        if (vulnerabilities == null) {
+            vulnerabilities = new ArrayList<>();
+        }
+        vulnerabilities.add(vulnerability);
+    }
 
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")

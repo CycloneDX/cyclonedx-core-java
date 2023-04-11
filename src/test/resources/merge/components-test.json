@@ -1,0 +1,80 @@
+{
+  "bomFormat" : "CycloneDX",
+  "specVersion" : "1.4",
+  "version" : 1,
+  "metadata" : {
+    "timestamp" : "2023-04-11T14:43:02Z",
+    "component" : {
+      "name" : "Thing",
+      "version" : "1",
+      "bom-ref" : "Thing@1"
+    }
+  },
+  "components" : [
+    {
+      "name" : "System1",
+      "version" : "1",
+      "components" : [
+        {
+          "name" : "Component1",
+          "version" : "1",
+          "bom-ref" : "System1@1:Component1@1"
+        }
+      ],
+      "bom-ref" : "System1@1:System1@1"
+    },
+    {
+      "name" : "System2",
+      "version" : "1",
+      "components" : [
+        {
+          "name" : "Component2",
+          "version" : "1",
+          "bom-ref" : "System2@1:Component2@1"
+        }
+      ],
+      "bom-ref" : "System2@1:System2@1"
+    }
+  ],
+  "dependencies" : [
+    {
+      "ref" : "Thing@1",
+      "dependsOn" : [
+        "System1@1:System1@1",
+        "System2@1:System2@1"
+      ]
+    },
+    {
+      "ref" : "System1@1:System1@1",
+      "dependsOn" : [
+        "System1@1:Component1@1"
+      ]
+    },
+    {
+      "ref" : "System2@1:System2@1",
+      "dependsOn" : [
+        "System2@1:Component2@1"
+      ]
+    }
+  ],
+  "compositions" : [
+    {
+      "aggregate" : "complete",
+      "assemblies" : [
+        "System1@1:System1@1"
+      ],
+      "dependencies" : [
+        "System1@1:System1@1"
+      ]
+    },
+    {
+      "aggregate" : "complete",
+      "assemblies" : [
+        "System2@1:System2@1"
+      ],
+      "dependencies" : [
+        "System2@1:System2@1"
+      ]
+    }
+  ]
+}
