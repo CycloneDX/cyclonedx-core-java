@@ -201,21 +201,25 @@ public class XmlParser extends CycloneDxSchema implements Parser {
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException e) {
+                    System.out.println(e.getMessage());
                     exceptions.add(new ParseException(e.getMessage(), e));
                 }
 
                 @Override
                 public void fatalError(SAXParseException e) {
+                    System.out.println(e.getMessage());
                     exceptions.add(new ParseException(e.getMessage(), e));
                 }
 
                 @Override
                 public void error(SAXParseException e) {
+                    System.out.println(e.getMessage());
                     exceptions.add(new ParseException(e.getMessage(), e));
                 }
             });
             validator.validate(source);
         } catch (SAXException e) {
+            System.out.println(e.getMessage());
             exceptions.add(new ParseException(e.getMessage(), e));
         }
         return exceptions;

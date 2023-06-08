@@ -25,6 +25,8 @@ import org.cyclonedx.model.Annotation;
 import org.cyclonedx.model.Annotator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Composition;
+import org.cyclonedx.model.Composition.Aggregate;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
@@ -344,6 +346,7 @@ public class JsonParserTest {
         assertMetadata(bom.getMetadata(), Version.VERSION_14);
         assertComponent(bom, Version.VERSION_14);
         assertServices(bom);
+        assertCompositions(bom, Version.VERSION_14);
         assertVulnerabilities(bom, Version.VERSION_14);
 
         // Dependencies
@@ -371,6 +374,7 @@ public class JsonParserTest {
         assertMetadata(bom.getMetadata(), Version.VERSION_15);
         assertComponent(bom, Version.VERSION_15);
         assertServices(bom);
+        assertCompositions(bom, Version.VERSION_15);
         assertVulnerabilities(bom, Version.VERSION_15);
 
         // Dependencies
@@ -417,7 +421,27 @@ public class JsonParserTest {
         assertEquals(annotator.getOrganization().getContacts().size(), 1);
         assertEquals(annotator.getOrganization().getUrls().size(), 1);
     }
-    
+
+    private void assertCompositions(final Bom bom, final Version version) {
+        final List<Composition> compositions = bom.getCompositions();
+        assertEquals(2, compositions.size());
+        Composition composition = compositions.get(0);
+
+        assertEquals(composition.getAggregate(), Aggregate.COMPLETE);
+        assertNotNull(composition.getAssemblies());
+        assertNotNull(composition.getDependencies());
+
+        //Assert Vulnerability Rejected
+        if (version == Version.VERSION_15) {
+            assertNotNull(composition.getVulnerabilities());
+            assertEquals("6eee14da-8f42-4cc4-bb65-203235f02415", composition.getBomRef());
+        }
+        else {
+            assertNull(composition.getVulnerabilities());
+            assertNull(composition.getBomRef());
+        }
+    }
+
     private void assertVulnerabilities(final Bom bom, final Version version) {
         final List<Vulnerability> vulnerabilities = bom.getVulnerabilities();
         assertEquals(1, vulnerabilities.size());
