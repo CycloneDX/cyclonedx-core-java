@@ -352,7 +352,7 @@ public class JsonParserTest {
         assertNull(bom.getProperties());
 
         //Assert Annotations
-        assertNull(bom.getAnnotations());
+        assertAnnotations(bom, Version.VERSION_14);
     }
 
     @Test
@@ -379,22 +379,27 @@ public class JsonParserTest {
         assertEquals(bom.getProperties().size(), 1);
 
         //Assert Annotations
-        assertAnnotations(bom);
+        assertAnnotations(bom, Version.VERSION_15);
     }
 
 
-    private void assertAnnotations(final Bom bom) {
-        List<Annotation> annotations = bom.getAnnotations();
+    private void assertAnnotations(final Bom bom, final Version version) {
 
-        assertEquals(annotations.size(), 1);
+        if(version== Version.VERSION_15) {
+            List<Annotation> annotations = bom.getAnnotations();
 
-        Annotation annotation = annotations.get(0);
-        assertNotNull(annotation.getBomRef());
-        assertNotNull(annotation.getText());
-        assertNotNull(annotation.getTimestamp());
+            assertEquals(annotations.size(), 1);
 
-        assertEquals(annotation.getSubjects().size(), 1);
-        assertAnnotator(annotation.getAnnotator());
+            Annotation annotation = annotations.get(0);
+            assertNotNull(annotation.getBomRef());
+            assertNotNull(annotation.getText());
+            assertNotNull(annotation.getTimestamp());
+
+            assertEquals(annotation.getSubjects().size(), 1);
+            assertAnnotator(annotation.getAnnotator());
+        } else {
+            assertNull(bom.getAnnotations());
+        }
     }
 
     private void assertAnnotator(final Annotator annotator) {
