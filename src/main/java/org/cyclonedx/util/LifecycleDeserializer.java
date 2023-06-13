@@ -27,8 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.LifecycleChoice;
-import org.cyclonedx.model.LifecycleChoice.PhaseClass;
-import org.cyclonedx.model.LifecycleChoice.PhaseEnum;
+import org.cyclonedx.model.LifecycleChoice.Phase;
 import org.cyclonedx.model.Lifecycles;
 
 public class LifecycleDeserializer
@@ -39,9 +38,8 @@ public class LifecycleDeserializer
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
     List<LifecycleChoice> choices = new ArrayList<>();
-    JsonNode lifecycleNode = node.get("lifecycles");
-    if (lifecycleNode != null && lifecycleNode.isArray()) {
-      for (JsonNode choiceNode : lifecycleNode) {
+    if (node != null && node.isArray()) {
+      for (JsonNode choiceNode : node) {
         LifecycleChoice choice = createLifecycleChoice(choiceNode);
         if (choice != null) {
           choices.add(choice);
@@ -55,22 +53,19 @@ public class LifecycleDeserializer
   }
 
   private LifecycleChoice createLifecycleChoice(JsonNode choiceNode) {
+    LifecycleChoice choice = new LifecycleChoice();
     JsonNode phaseNode = choiceNode.get("phase");
     if (phaseNode != null) {
-      PhaseEnum phase = PhaseEnum.fromString(phaseNode.asText());
-      LifecycleChoice choice = new LifecycleChoice();
-      choice.setPhaseEnum(phase);
+      Phase phase = Phase.fromString(phaseNode.asText());
+      choice.setPhase(phase);
       return choice;
     }
 
     JsonNode nameNode = choiceNode.get("name");
     JsonNode descriptionNode = choiceNode.get("description");
     if (nameNode != null && descriptionNode != null) {
-      PhaseClass phaseClass = new PhaseClass();
-      phaseClass.setName(nameNode.asText());
-      phaseClass.setDescription(descriptionNode.asText());
-      LifecycleChoice choice = new LifecycleChoice();
-      choice.setPhaseClass(phaseClass);
+      choice.setName(nameNode.asText());
+      choice.setDescription(descriptionNode.asText());
       return choice;
     }
 
