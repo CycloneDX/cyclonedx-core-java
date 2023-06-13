@@ -36,9 +36,7 @@ public class LifecycleSerializer
       xmlGenerator.writeEndArray();
       xmlGenerator.writeEndObject();
     } else {
-      jsonGenerator.writeStartArray();
-      createLifecycleChoice(lifecycles, jsonGenerator);
-      jsonGenerator.writeEndArray();
+      jsonGenerator.writeObjectField("lifecycles", lifecycles.getLifecycleChoice());
     }
   }
 
