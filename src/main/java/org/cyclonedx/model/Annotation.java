@@ -54,7 +54,7 @@ public class Annotation extends ExtensibleElement
     private Annotator annotator;
 
     @JsonSerialize(using = CustomDateSerializer.class)
-    private Date timestamp = new Date();
+    private Date timestamp;
 
     private String text;
 
