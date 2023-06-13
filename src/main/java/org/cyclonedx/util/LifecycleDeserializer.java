@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.LifecycleChoice;
 import org.cyclonedx.model.LifecycleChoice.Phase;
 import org.cyclonedx.model.Lifecycles;
@@ -34,21 +35,47 @@ public class LifecycleDeserializer
     extends JsonDeserializer<Lifecycles>
 {
   @Override
-  public Lifecycles deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+  public Lifecycles deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+      throws IOException
+  {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-
     List<LifecycleChoice> choices = new ArrayList<>();
-    if (node != null && node.isArray()) {
-      for (JsonNode choiceNode : node) {
-        LifecycleChoice choice = createLifecycleChoice(choiceNode);
-        if (choice != null) {
-          choices.add(choice);
+
+    if (jsonParser instanceof FromXmlParser) {
+      JsonNode lifecycleNode = node.get("lifecycle");
+
+      if (lifecycleNode != null) {
+        // If it's an array of lifecycle
+        if (lifecycleNode.isArray()) {
+          for (JsonNode choiceNode : lifecycleNode) {
+            LifecycleChoice choice = createLifecycleChoice(choiceNode);
+            if (choice != null) {
+              choices.add(choice);
+            }
+          }
+        }
+        // If it's a single lifecycle
+        else {
+          LifecycleChoice choice = createLifecycleChoice(lifecycleNode);
+          if (choice != null) {
+            choices.add(choice);
+          }
+        }
+      }
+    }
+    else {
+      if (node != null && node.isArray()) {
+        for (JsonNode choiceNode : node) {
+          LifecycleChoice choice = createLifecycleChoice(choiceNode);
+          if (choice != null) {
+            choices.add(choice);
+          }
         }
       }
     }
 
     Lifecycles lifecycles = new Lifecycles();
-    lifecycles.setLifecycles(choices);
+    lifecycles.setLifecycleChoice(choices);
     return lifecycles;
   }
 
