@@ -19,17 +19,27 @@
 package org.cyclonedx.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@XmlAccessorType(XmlAccessType.FIELD)
 public class LifecycleChoice
 {
     @JsonProperty("phase")
+    @JacksonXmlProperty(localName = "phase")
     private Phase phase;
 
     @JsonProperty("name")
+    @JacksonXmlProperty(localName = "phase")
     private String name;
 
     @JsonProperty("description")
+    @JacksonXmlProperty(localName = "phase")
     private String description;
 
     public enum Phase
@@ -67,29 +77,6 @@ public class LifecycleChoice
                 }
             }
             throw new IllegalArgumentException("Invalid phase: " + value);
-        }
-    }
-
-    public static class PhaseClass {
-
-        private String name;
-
-        private String description;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
-        }
-
-        public void setDescription(final String description) {
-            this.description = description;
         }
     }
 
