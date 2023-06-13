@@ -739,7 +739,7 @@ public class XmlParserTest {
         assertNull(licensor.getIndividual());
         assertNotNull(licensor.getOrganization());
         assertEquals(licensor.getOrganization().getName(), "Acme Inc");
-        assertEquals(licensor.getOrganization().getContacts().size(), 1);
+        assertEquals(licensor.getOrganization().getContacts().size(), 2);
         assertNull(licensor.getOrganization().getUrls());
     }
 
