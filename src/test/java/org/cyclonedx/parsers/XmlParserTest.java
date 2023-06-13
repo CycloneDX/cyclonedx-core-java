@@ -27,6 +27,8 @@ import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.LifecycleChoice;
+import org.cyclonedx.model.LifecycleChoice.Phase;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -460,7 +462,7 @@ public class XmlParserTest {
         assertEquals("1.4", bom.getSpecVersion());
         assertEquals(1, bom.getVersion());
 
-        assertMetadata(bom.getMetadata());
+        assertMetadata(bom.getMetadata(), Version.VERSION_14);
         assertComponent(bom, Version.VERSION_14);
         assertServices(bom);
         assertVulnerabilities(bom, Version.VERSION_14);
@@ -484,7 +486,7 @@ public class XmlParserTest {
         assertEquals("1.5", bom.getSpecVersion());
         assertEquals(1, bom.getVersion());
 
-        assertMetadata(bom.getMetadata());
+        assertMetadata(bom.getMetadata(), Version.VERSION_15);
         assertComponent(bom, Version.VERSION_15);
         assertServices(bom);
         assertVulnerabilities(bom, Version.VERSION_15);
@@ -722,9 +724,26 @@ public class XmlParserTest {
         }
     }
 
-    private void assertMetadata(final Metadata metadata) {
+    private void assertMetadata(final Metadata metadata, final Version version) {
         assertNotNull(metadata);
         assertNotNull(metadata.getTimestamp());
+
+        //Lifecycles
+        if(version == Version.VERSION_15) {
+            assertNotNull(metadata.getLifecycles());
+            assertEquals(2, metadata.getLifecycles().getLifecycleChoice().size());
+            LifecycleChoice firstChoice = metadata.getLifecycles().getLifecycleChoice().get(0);
+            assertEquals(Phase.BUILD.getPhaseName(), firstChoice.getPhase().getPhaseName());
+            assertNull(firstChoice.getName());
+            assertNull(firstChoice.getDescription());
+
+            LifecycleChoice secondChoice = metadata.getLifecycles().getLifecycleChoice().get(1);
+            assertEquals("platform-integration-testing", secondChoice.getName());
+            assertNotNull(secondChoice.getDescription());
+            assertNull(secondChoice.getPhase());
+        } else {
+            assertNull(metadata.getLifecycles());
+        }
 
         //Tool
         assertEquals(1, metadata.getTools().size());
