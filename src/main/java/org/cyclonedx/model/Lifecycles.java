@@ -21,17 +21,24 @@ package org.cyclonedx.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Lifecycles
 {
-    private List<LifecycleChoice> lifecycles;
+    @JacksonXmlProperty(localName = "lifecycle")
+    private List<LifecycleChoice> lifecycleChoice;
 
-    public List<LifecycleChoice> getLifecycles() {
-        return lifecycles;
+    public List<LifecycleChoice> getLifecycleChoice() {
+        return lifecycleChoice;
     }
 
-    public void setLifecycles(final List<LifecycleChoice> lifecycles) {
-        this.lifecycles = lifecycles;
+    public void setLifecycleChoice(final List<LifecycleChoice> lifecycleChoice) {
+        this.lifecycleChoice = lifecycleChoice;
     }
 }

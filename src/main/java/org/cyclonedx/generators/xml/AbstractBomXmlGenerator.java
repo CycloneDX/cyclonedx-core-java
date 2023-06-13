@@ -28,6 +28,7 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.serializer.DependencySerializer;
+import org.cyclonedx.util.LifecycleSerializer;
 import org.cyclonedx.util.VersionXmlAnnotationIntrospector;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -69,6 +70,10 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
             boolean useNamespace = this.getSchemaVersion().getVersion() == 1.1;
             registerDependencyModule(mapper, useNamespace);
         }
+
+        SimpleModule lifecycleModule = new SimpleModule();
+        lifecycleModule.addSerializer(new LifecycleSerializer(true));
+        mapper.registerModule(lifecycleModule);
     }
 
     private void registerDependencyModule(final ObjectMapper mapper, final boolean useNamespace) {
