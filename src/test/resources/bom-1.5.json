@@ -178,6 +178,10 @@
                     {
                       "name": "Acme Licensing Fulfillment",
                       "email": "licensing@example.com"
+                    },
+                    {
+                      "name": "Acme Licensing Test",
+                      "email": "licensing@test.com"
                     }
                   ]
                 }
