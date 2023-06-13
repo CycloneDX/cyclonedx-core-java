@@ -27,9 +27,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.deserializer.OrganizationalChoiceDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -86,10 +88,13 @@ public class Licensing extends ExtensibleElement
 
   private List<String> altIds;
 
+  @JsonDeserialize(using = OrganizationalChoiceDeserializer.class)
   private OrganizationalChoice licensor;
 
+  @JsonDeserialize(using = OrganizationalChoiceDeserializer.class)
   private OrganizationalChoice licensee;
 
+  @JsonDeserialize(using = OrganizationalChoiceDeserializer.class)
   private OrganizationalChoice purchaser;
 
   private String purchaseOrder;
