@@ -111,6 +111,10 @@
                                     <name>Acme Licensing Fulfillment</name>
                                     <email>licensing@example.com</email>
                                 </contact>
+                                <contact>
+                                    <name>Acme Licensing Test</name>
+                                    <email>licensing@test.com</email>
+                                </contact>
                             </organization>
                         </licensor>
                         <licensee>
