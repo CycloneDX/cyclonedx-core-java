@@ -26,6 +26,7 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.BomReference;
 import org.cyclonedx.util.ComponentWrapperSerializer;
 import org.cyclonedx.util.LicenseChoiceSerializer;
+import org.cyclonedx.util.LifecycleSerializer;
 import org.cyclonedx.util.TrimStringSerializer;
 import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
 import org.cyclonedx.util.DependencySerializer;
@@ -72,8 +73,11 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         mapper.registerModule(stringModule);
 
         licenseModule.addSerializer(new LicenseChoiceSerializer());
-
         mapper.registerModule(licenseModule);
+
+        SimpleModule lifecycleModule = new SimpleModule();
+        lifecycleModule.addSerializer(new LifecycleSerializer(false));
+        mapper.registerModule(lifecycleModule);
 
         depModule.addSerializer(new DependencySerializer(false));
         mapper.registerModule(depModule);

@@ -29,7 +29,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.CustomDateSerializer;
 import org.cyclonedx.util.LicenseDeserializer;
 import org.cyclonedx.util.LifecycleDeserializer;
-import org.cyclonedx.util.LifecycleSerializer;
 
 import java.util.ArrayList;
 import java.util.Date;
