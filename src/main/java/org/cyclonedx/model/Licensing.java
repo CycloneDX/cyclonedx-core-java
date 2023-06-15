@@ -104,10 +104,10 @@ public class Licensing extends ExtensibleElement
   private List<LicensingType> licenseTypes;
 
   @JsonSerialize(using = CustomDateSerializer.class)
-  private Date lastRenewal = new Date();
+  private Date lastRenewal;
 
   @JsonSerialize(using = CustomDateSerializer.class)
-  private Date expiration = new Date();
+  private Date expiration;
 
   @JacksonXmlElementWrapper(localName = "altIds")
   @JacksonXmlProperty(localName = "altId")
