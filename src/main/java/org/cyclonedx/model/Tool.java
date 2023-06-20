@@ -29,6 +29,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"vendor", "name", "version", "hashes", "externalReferences"})
+@Deprecated
 public class Tool extends ExtensibleElement {
 
     private String vendor;
