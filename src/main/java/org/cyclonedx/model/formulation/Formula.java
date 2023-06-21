@@ -33,7 +33,6 @@ import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.Service;
 
-@JacksonXmlRootElement(localName = "formula")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
@@ -106,6 +105,8 @@ public class Formula
         this.components = components;
     }
 
+    @JacksonXmlElementWrapper(localName = "workflows")
+    @JacksonXmlProperty(localName = "workflow")
     public List<Workflow> getWorkflows() {
         return workflows;
     }

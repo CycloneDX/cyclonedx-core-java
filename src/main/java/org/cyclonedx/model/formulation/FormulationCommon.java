@@ -3,6 +3,8 @@ package org.cyclonedx.model.formulation;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,30 +12,19 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.DependencyList;
-import org.cyclonedx.model.ExtensibleElement;
-import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.BasicDataAbstract;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.OutputType;
-import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
+import org.cyclonedx.model.formulation.task.Step;
 import org.cyclonedx.model.formulation.trigger.Trigger;
 import org.cyclonedx.model.formulation.workspace.Workspace;
 import org.cyclonedx.util.CustomDateSerializer;
 import org.cyclonedx.util.DependencyDeserializer;
 
-public abstract class FormulationCommon extends ExtensibleElement
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public abstract class FormulationCommon extends BasicDataAbstract
 {
-  @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
-  @JsonProperty("bom-ref")
-  protected String bomRef;
-
-  protected String uid;
-
-  protected String name;
-
-  protected String description;
-
-  protected List<ResourceReferenceChoice> resourceReferences;
-
   protected Trigger trigger;
 
   protected List<TaskType> taskTypes;
@@ -53,70 +44,39 @@ public abstract class FormulationCommon extends ExtensibleElement
   @JsonProperty("runtimeTopology")
   protected DependencyList runtimeTopology;
 
-  @JsonProperty("taskDependencyGraph")
-  protected DependencyList taskDependencyGraph;
+  @JsonProperty("taskDependencies")
+  protected DependencyList taskDependencies;
 
-  protected List<Property> properties;
+  private List<Step> steps;
 
-
-  @JacksonXmlElementWrapper(useWrapping = false)
-  //@JsonDeserialize(using = DependencyDeserializer.class)
-  public List<Dependency> getTaskDependencyGraph() {
-    return taskDependencyGraph;
+  @JacksonXmlElementWrapper(localName = "steps")
+  @JacksonXmlProperty(localName = "step")
+  public List<Step> getSteps() {
+    return steps;
   }
 
-  public void setTaskDependencyGraph(List<Dependency> taskDependencyGraph) {
-    this.taskDependencyGraph = new DependencyList(taskDependencyGraph);
+  public void setSteps(final List<Step> steps) {
+    this.steps = steps;
   }
 
   @JacksonXmlElementWrapper(useWrapping = false)
-  //@JsonDeserialize(using = DependencyDeserializer.class)
+  @JsonDeserialize(using = DependencyDeserializer.class)
+  public List<Dependency> getTaskDependencies() {
+    return taskDependencies;
+  }
+
+  public void setTaskDependencies(List<Dependency> taskDependencies) {
+    this.taskDependencies = new DependencyList(taskDependencies);
+  }
+
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JsonDeserialize(using = DependencyDeserializer.class)
   public List<Dependency> getRuntimeTopology() {
     return runtimeTopology;
   }
 
   public void setRuntimeTopology(List<Dependency> runtimeTopology) {
     this.runtimeTopology = new DependencyList(runtimeTopology);
-  }
-
-  public String getBomRef() {
-    return bomRef;
-  }
-
-  public void setBomRef(final String bomRef) {
-    this.bomRef = bomRef;
-  }
-
-  public String getUid() {
-    return uid;
-  }
-
-  public void setUid(final String uid) {
-    this.uid = uid;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(final String name) {
-    this.name = name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(final String description) {
-    this.description = description;
-  }
-
-  public List<ResourceReferenceChoice> getResourceReferences() {
-    return resourceReferences;
-  }
-
-  public void setResourceReferences(final List<ResourceReferenceChoice> resourceReferences) {
-    this.resourceReferences = resourceReferences;
   }
 
   public Trigger getTrigger() {
@@ -127,6 +87,8 @@ public abstract class FormulationCommon extends ExtensibleElement
     this.trigger = trigger;
   }
 
+  @JacksonXmlElementWrapper(localName = "taskTypes")
+  @JacksonXmlProperty(localName = "taskType")
   public List<TaskType> getTaskTypes() {
     return taskTypes;
   }
@@ -135,6 +97,8 @@ public abstract class FormulationCommon extends ExtensibleElement
     this.taskTypes = taskTypes;
   }
 
+  @JacksonXmlElementWrapper(localName = "inputs")
+  @JacksonXmlProperty(localName = "input")
   public List<InputType> getInputTypes() {
     return inputTypes;
   }
@@ -143,6 +107,8 @@ public abstract class FormulationCommon extends ExtensibleElement
     this.inputTypes = inputTypes;
   }
 
+  @JacksonXmlElementWrapper(localName = "outputs")
+  @JacksonXmlProperty(localName = "output")
   public List<OutputType> getOutputTypes() {
     return outputTypes;
   }
@@ -167,6 +133,8 @@ public abstract class FormulationCommon extends ExtensibleElement
     this.timeEnd = timeEnd;
   }
 
+  @JacksonXmlElementWrapper(localName = "workspaces")
+  @JacksonXmlProperty(localName = "workspace")
   public List<Workspace> getWorkspaces() {
     return workspaces;
   }
@@ -175,34 +143,40 @@ public abstract class FormulationCommon extends ExtensibleElement
     this.workspaces = workspaces;
   }
 
-  public void setRuntimeTopology(final DependencyList runtimeTopology) {
-    this.runtimeTopology = runtimeTopology;
-  }
-
-  public void setTaskDependencyGraph(final DependencyList taskDependencyGraph) {
-    this.taskDependencyGraph = taskDependencyGraph;
-  }
-
-  public List<Property> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(final List<Property> properties) {
-    this.properties = properties;
-  }
-
   public enum TaskType {
-    COPY,
-    CLONE,
-    LINT,
-    SCAN,
-    MERGE,
-    BUILD,
-    TEST,
-    DELIVER,
-    DEPLOY,
-    RELEASE,
-    CLEAN,
-    OTHER
+    @JsonProperty("copy")
+    COPY("copy"),
+    @JsonProperty("clone")
+    CLONE("clone"),
+    @JsonProperty("LINT")
+    LINT("LINT"),
+    @JsonProperty("scan")
+    SCAN("scan"),
+    @JsonProperty("merge")
+    MERGE("merge"),
+    @JsonProperty("build")
+    BUILD("build"),
+    @JsonProperty("test")
+    TEST("test"),
+    @JsonProperty("deliver")
+    DELIVER("deliver"),
+    @JsonProperty("deploy")
+    DEPLOY("deploy"),
+    @JsonProperty("release")
+    RELEASE("release"),
+    @JsonProperty("clean")
+    CLEAN("clean"),
+    @JsonProperty("other")
+    OTHER("other");
+
+    private final String name;
+
+    public String getTypeName() {
+      return this.name;
+    }
+
+    TaskType(String name) {
+      this.name = name;
+    }
   }
 }

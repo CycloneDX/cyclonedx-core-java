@@ -18,34 +18,35 @@
  */
 package org.cyclonedx.util;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.cyclonedx.model.ExternalReference;
-import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
+import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.EnvVariableChoice;
 
-import java.io.IOException;
-
-public class ResourceReferenceChoiceDeserializer extends JsonDeserializer<ResourceReferenceChoice>
+public class EnvVariableChoiceDeserializer
+    extends JsonDeserializer<EnvVariableChoice>
 {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
-  public ResourceReferenceChoice deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+  public EnvVariableChoice deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    ResourceReferenceChoice resourceReferenceChoice = new ResourceReferenceChoice();
+    EnvVariableChoice envReferenceChoice = new EnvVariableChoice();
 
-    if (node.has("ref")) {
-      String ref = node.get("ref").asText();
-      resourceReferenceChoice.setRef(ref);
+    if (node.has("value")) {
+      String value = node.get("value").asText();
+      envReferenceChoice.setValue(value);
     } else if (node.has("externalReference")) {
-      JsonNode externalReferenceNode = node.get("externalReference");
-      ExternalReference externalReference = objectMapper.treeToValue(externalReferenceNode, ExternalReference.class);
-      resourceReferenceChoice.setExternalReference(externalReference);
+      JsonNode externalReferenceNode = node.get("property");
+      Property property = objectMapper.treeToValue(externalReferenceNode, Property.class);
+      envReferenceChoice.setEnvironmentVar(property);
     }
 
-    return resourceReferenceChoice;
+    return envReferenceChoice;
   }
 }

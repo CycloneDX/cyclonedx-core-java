@@ -2,6 +2,8 @@ package org.cyclonedx.model.formulation.trigger;
 
 import java.util.List;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.Property;
 
 public class Condition {
@@ -25,6 +27,8 @@ public class Condition {
     this.expression = expression;
   }
 
+  @JacksonXmlElementWrapper(localName = "properties")
+  @JacksonXmlProperty(localName = "property")
   public List<Property> getProperties() {
     return properties;
   }

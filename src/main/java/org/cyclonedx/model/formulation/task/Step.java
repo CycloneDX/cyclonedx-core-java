@@ -2,6 +2,8 @@ package org.cyclonedx.model.formulation.task;
 
 import java.util.List;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.Property;
 
@@ -31,6 +33,8 @@ public class Step extends ExtensibleElement
     this.description = description;
   }
 
+  @JacksonXmlElementWrapper(localName = "commands")
+  @JacksonXmlProperty(localName = "command")
   public List<Command> getCommands() {
     return commands;
   }
@@ -39,6 +43,8 @@ public class Step extends ExtensibleElement
     this.commands = commands;
   }
 
+  @JacksonXmlElementWrapper(localName = "properties")
+  @JacksonXmlProperty(localName = "property")
   public List<Property> getProperties() {
     return properties;
   }

@@ -2,6 +2,8 @@ package org.cyclonedx.model.formulation.trigger;
 
 import java.util.List;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
@@ -63,6 +65,8 @@ public class Event {
     this.target = target;
   }
 
+  @JacksonXmlElementWrapper(localName = "properties")
+  @JacksonXmlProperty(localName = "property")
   public List<Property> getProperties() {
     return properties;
   }

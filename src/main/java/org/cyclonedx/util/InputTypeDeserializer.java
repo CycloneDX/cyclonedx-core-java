@@ -19,6 +19,7 @@
 package org.cyclonedx.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.EnvVariableChoice;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.InputType.Parameter;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
@@ -60,7 +62,7 @@ public class InputTypeDeserializer extends JsonDeserializer<InputType> {
       inputType.setParameters(parameters);
     } else if (node.has("environmentVars")) {
       JsonNode environmentVarsNode = node.get("environmentVars");
-      List<Property> environmentVars = objectMapper.convertValue(environmentVarsNode, new TypeReference<List<Property>>() {});
+      List<EnvVariableChoice> environmentVars = objectMapper.convertValue(environmentVarsNode, new TypeReference<List<EnvVariableChoice>>() {});
       inputType.setEnvironmentVars(environmentVars);
     } else if (node.has("data")) {
       JsonNode dataNode = node.get("data");

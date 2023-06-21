@@ -2,28 +2,21 @@ package org.cyclonedx.model.formulation.workspace;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.BasicDataAbstract;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
-public class Workspace extends ExtensibleElement
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class Workspace extends BasicDataAbstract
 {
-
-  @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
-  @JsonProperty("bom-ref")
-  private String bomRef;
-
-  private String uid;
-
-  private String name;
-
   private List<String> aliases;
-
-  private String description;
-
-  private List<ResourceReferenceChoice> resourceReferences;
 
   private AccessMode accessMode;
 
@@ -34,8 +27,6 @@ public class Workspace extends ExtensibleElement
   private String volumeRequest;
 
   private Volume volume;
-
-  private List<Property> properties;
 
   public enum AccessMode {
 
@@ -85,6 +76,8 @@ public class Workspace extends ExtensibleElement
     this.name = name;
   }
 
+  @JacksonXmlElementWrapper(localName = "aliases")
+  @JacksonXmlProperty(localName = "alias")
   public List<String> getAliases() {
     return aliases;
   }
@@ -101,6 +94,8 @@ public class Workspace extends ExtensibleElement
     this.description = description;
   }
 
+  @JacksonXmlElementWrapper(localName = "resourceReferences")
+  @JacksonXmlProperty(localName = "resourceReference")
   public List<ResourceReferenceChoice> getResourceReferences() {
     return resourceReferences;
   }
@@ -149,6 +144,8 @@ public class Workspace extends ExtensibleElement
     this.volume = volume;
   }
 
+  @JacksonXmlElementWrapper(localName = "properties")
+  @JacksonXmlProperty(localName = "property")
   public List<Property> getProperties() {
     return properties;
   }

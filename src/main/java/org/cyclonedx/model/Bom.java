@@ -191,6 +191,8 @@ public class Bom extends ExtensibleElement {
         this.compositions = compositions;
     }
 
+    @JacksonXmlElementWrapper(localName = "formulation")
+    @JacksonXmlProperty(localName = "formula")
     public List<Formula> getFormulation() {
         return formulation;
     }
