@@ -50,6 +50,7 @@ import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
         "compositions",
         "properties",
         "vulnerabilities",
+        "annotations",
         "signature"
 })
 public class Bom extends ExtensibleElement {
@@ -78,6 +79,9 @@ public class Bom extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
     private List<Vulnerability> vulnerabilities;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private List<Annotation> annotations;
 
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
@@ -188,6 +192,16 @@ public class Bom extends ExtensibleElement {
 
     public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
 
+    @JacksonXmlElementWrapper(localName = "annotations")
+    @JacksonXmlProperty(localName = "annotation")
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(List<Annotation> annotations) {
+        this.annotations = annotations;
+    }
+
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
     public List<Property> getProperties() {
@@ -259,6 +273,7 @@ public class Bom extends ExtensibleElement {
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(compositions, bom.compositions) &&
                 Objects.equals(vulnerabilities, bom.vulnerabilities) &&
+                Objects.equals(annotations, bom.annotations) &&
                 Objects.equals(properties, bom.properties) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
                 Objects.equals(specVersion, bom.specVersion);
@@ -266,6 +281,7 @@ public class Bom extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities, properties, version, serialNumber, specVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities,
+            annotations, properties, version, serialNumber, specVersion);
     }
 }

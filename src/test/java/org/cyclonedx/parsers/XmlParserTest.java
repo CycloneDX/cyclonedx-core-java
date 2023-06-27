@@ -21,6 +21,8 @@ package org.cyclonedx.parsers;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.CycloneDxSchema.Version;
+import org.cyclonedx.model.Annotation;
+import org.cyclonedx.model.Annotator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -28,6 +30,8 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Licensing;
+import org.cyclonedx.model.LifecycleChoice;
+import org.cyclonedx.model.LifecycleChoice.Phase;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -462,7 +466,7 @@ public class XmlParserTest {
         assertEquals("1.4", bom.getSpecVersion());
         assertEquals(1, bom.getVersion());
 
-        assertMetadata(bom.getMetadata());
+        assertMetadata(bom.getMetadata(), Version.VERSION_14);
         assertComponent(bom, Version.VERSION_14);
         assertServices(bom);
         assertVulnerabilities(bom, Version.VERSION_14);
@@ -475,6 +479,9 @@ public class XmlParserTest {
 
         //Assert Bom Properties
         assertNull(bom.getProperties());
+
+        //Assert Annotations
+        assertAnnotations(bom, Version.VERSION_14);
     }
 
     @Test
@@ -486,7 +493,7 @@ public class XmlParserTest {
         assertEquals("1.5", bom.getSpecVersion());
         assertEquals(1, bom.getVersion());
 
-        assertMetadata(bom.getMetadata());
+        assertMetadata(bom.getMetadata(), Version.VERSION_15);
         assertComponent(bom, Version.VERSION_15);
         assertServices(bom);
         assertVulnerabilities(bom, Version.VERSION_15);
@@ -499,6 +506,39 @@ public class XmlParserTest {
 
         //Assert Bom Properties
         assertEquals(bom.getProperties().size(), 1);
+
+        //Assert Annotations
+        assertAnnotations(bom, Version.VERSION_15);
+    }
+
+    private void assertAnnotations(final Bom bom, final Version version) {
+        if(version== Version.VERSION_15) {
+            List<Annotation> annotations = bom.getAnnotations();
+
+            assertEquals(annotations.size(), 1);
+
+            Annotation annotation = annotations.get(0);
+            assertNotNull(annotation.getBomRef());
+            assertNotNull(annotation.getText());
+            assertNotNull(annotation.getTimestamp());
+
+            assertEquals(annotation.getSubjects().size(), 1);
+            assertAnnotator(annotation.getAnnotator());
+        } else {
+            assertNull(bom.getAnnotations());
+        }
+    }
+
+    private void assertAnnotator(final Annotator annotator) {
+        assertNotNull(annotator);
+        assertNull(annotator.getIndividual());
+        assertNull(annotator.getComponent());
+        assertNull(annotator.getService());
+
+        assertNotNull(annotator.getOrganization());
+        assertEquals(annotator.getOrganization().getName(), "Acme, Inc.");
+        assertEquals(annotator.getOrganization().getContacts().size(), 1);
+        assertEquals(annotator.getOrganization().getUrls().size(), 1);
     }
 
     @Test
@@ -721,7 +761,7 @@ public class XmlParserTest {
             assertNotNull(license.getBomRef());
         }
     }
-
+  
     private void assertLicensing(final Licensing licensing) {
         assertNotNull(licensing);
 
@@ -759,9 +799,26 @@ public class XmlParserTest {
         assertEquals(purchaser.getIndividual().getPhone(), "800-555-1212");
     }
 
-    private void assertMetadata(final Metadata metadata) {
+    private void assertMetadata(final Metadata metadata, final Version version) {
         assertNotNull(metadata);
         assertNotNull(metadata.getTimestamp());
+
+        //Lifecycles
+        if(version == Version.VERSION_15) {
+            assertNotNull(metadata.getLifecycles());
+            assertEquals(2, metadata.getLifecycles().getLifecycleChoice().size());
+            LifecycleChoice firstChoice = metadata.getLifecycles().getLifecycleChoice().get(0);
+            assertEquals(Phase.BUILD.getPhaseName(), firstChoice.getPhase().getPhaseName());
+            assertNull(firstChoice.getName());
+            assertNull(firstChoice.getDescription());
+
+            LifecycleChoice secondChoice = metadata.getLifecycles().getLifecycleChoice().get(1);
+            assertEquals("platform-integration-testing", secondChoice.getName());
+            assertNotNull(secondChoice.getDescription());
+            assertNull(secondChoice.getPhase());
+        } else {
+            assertNull(metadata.getLifecycles());
+        }
 
         //Tool
         assertEquals(1, metadata.getTools().size());
