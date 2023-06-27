@@ -16,43 +16,41 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-package org.cyclonedx.util;
+package org.cyclonedx.util.serializer;
 
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.cyclonedx.model.License;
-import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.ComponentWrapper;
 
-public class LicenseChoiceSerializer extends StdSerializer<LicenseChoice>
+public class ComponentWrapperSerializer extends StdSerializer<ComponentWrapper>
 {
-  public LicenseChoiceSerializer() {
-    this(LicenseChoice.class);
+  private ObjectMapper mapper;
+
+  public ComponentWrapperSerializer(final ObjectMapper mapper) {
+    this(ComponentWrapper.class);
+
+    this.mapper = mapper;
   }
 
-  public LicenseChoiceSerializer(final Class t) {
+  public ComponentWrapperSerializer(final Class<ComponentWrapper> t) {
     super(t);
+
+    mapper = new ObjectMapper();
   }
 
   @Override
   public void serialize(
-      final LicenseChoice lc, final JsonGenerator gen, final SerializerProvider provider)
+      final ComponentWrapper componentWrapper,
+      final JsonGenerator generator,
+      final SerializerProvider serializerProvider)
       throws IOException
   {
-    gen.writeStartArray();
-    if (lc != null && lc.getLicenses() != null && !lc.getLicenses().isEmpty()) {
-      for (License l : lc.getLicenses()) {
-        gen.writeStartObject();
-        provider.defaultSerializeField("license", l, gen);
-        gen.writeEndObject();
-      }
-    } else if (lc != null && lc.getExpression() != null) {
-      gen.writeStartObject();
-      gen.writeStringField("expression", lc.getExpression());
-      gen.writeEndObject();
+    if (componentWrapper.getComponents() != null) {
+      mapper.writeValue(generator, componentWrapper.getComponents());
     }
-    gen.writeEndArray();
   }
 }

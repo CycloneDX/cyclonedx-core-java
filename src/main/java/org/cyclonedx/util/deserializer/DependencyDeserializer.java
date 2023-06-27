@@ -16,36 +16,42 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-package org.cyclonedx.util;
+package org.cyclonedx.util.deserializer;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.cyclonedx.model.vulnerability.Vulnerability;
+import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
+import org.cyclonedx.model.Dependency;
 
-
-public class VulnerabilityDeserializer
-    extends StdDeserializer<List<Vulnerability>>
+public class DependencyDeserializer extends StdDeserializer<List<Dependency>>
 {
-  public VulnerabilityDeserializer() {
+  public DependencyDeserializer() {
     this(null);
   }
 
-  public VulnerabilityDeserializer(final Class<?> vc) {
+  public DependencyDeserializer(final Class<?> vc) {
     super(vc);
   }
 
   @Override
-  public List<Vulnerability> deserialize(final JsonParser parser, final DeserializationContext context)
+  public List<Dependency> deserialize(
+      final JsonParser parser, final DeserializationContext context)
+      throws IOException
   {
-    try {
-      return parser.readValueAs(new TypeReference<List<Vulnerability>>(){});
+    Dependency[] dependencies = parser.readValueAs(Dependency[].class);
+    if (parser instanceof FromXmlParser) {
+      if (dependencies != null && dependencies.length > 0) {
+        return dependencies[0].getDependencies();
+      }
+    } else {
+      return Arrays.asList(dependencies.clone());
     }
-    catch (Exception e) {
-      return null;
-    }
+
+    return null;
   }
 }
