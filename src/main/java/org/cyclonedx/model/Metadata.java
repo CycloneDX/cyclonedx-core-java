@@ -28,19 +28,34 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.CustomDateSerializer;
 import org.cyclonedx.util.LicenseDeserializer;
+import org.cyclonedx.util.LifecycleDeserializer;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"timestamp", "tools", "authors", "component", "manufacture", "supplier", "licenses", "properties"})
-public class Metadata extends ExtensibleElement {
+@JsonPropertyOrder({
+    "timestamp", "lifecycles", "tools", "authors", "component", "manufacture", "supplier", "licenses", "properties"
+})
+public class Metadata
+    extends ExtensibleElement
+{
 
     @JsonSerialize(using = CustomDateSerializer.class)
     @VersionFilter(versions = {"1.0", "1.1"})
     private Date timestamp = new Date();
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @JsonProperty("lifecycles")
+    @JsonDeserialize(using = LifecycleDeserializer.class)
+    @XmlElementWrapper(name = "lifecycles")
+    @XmlElement(name = "lifecycle")
+    private Lifecycles lifecycles;
 
     @VersionFilter(versions = {"1.0", "1.1"})
     private List<Tool> tools;
@@ -157,6 +172,14 @@ public class Metadata extends ExtensibleElement {
         this.properties.add(property);
     }
 
+    public Lifecycles getLifecycles() {
+        return lifecycles;
+    }
+
+    public void setLifecycles(final Lifecycles lifecycles) {
+        this.lifecycles = lifecycles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -169,11 +192,13 @@ public class Metadata extends ExtensibleElement {
                 Objects.equals(manufacture, metadata.manufacture) &&
                 Objects.equals(supplier, metadata.supplier) &&
                 Objects.equals(license, metadata.license) &&
+                Objects.equals(lifecycles, metadata.lifecycles) &&
                 Objects.equals(properties, metadata.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, tools, authors, component, manufacture, supplier, license, properties);
+        return Objects.hash(timestamp, tools, authors, component, manufacture, supplier, license, properties,
+            lifecycles);
     }
 }

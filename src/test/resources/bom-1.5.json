@@ -5,6 +5,15 @@
   "version": 1,
   "metadata": {
     "timestamp": "2020-04-07T07:01:00Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      },
+      {
+        "name": "platform-integration-testing",
+        "description": "Integration testing specific to the runtime platform"
+      }
+    ],
     "tools": [
       {
         "vendor": "Awesome Vendor",
