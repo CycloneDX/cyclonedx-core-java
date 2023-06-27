@@ -26,10 +26,6 @@
                     {
                       "name": "Acme Licensing Fulfillment",
                       "email": "licensing@example.com"
-                    },
-                    {
-                      "name": "Acme Licensing",
-                      "email": "licensing@example.com"
                     }
                   ]
                 }
