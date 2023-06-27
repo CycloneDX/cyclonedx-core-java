@@ -72,14 +72,22 @@ public class Component extends ExtensibleElement {
         LIBRARY("library"),
         @JsonProperty("container")
         CONTAINER("container"),
+        @JsonProperty("platform")
+        PLATFORM("platform"),
         @JsonProperty("operating-system")
         OPERATING_SYSTEM("operating-system"),
         @JsonProperty("device")
         DEVICE("device"),
+        @JsonProperty("device-driver")
+        DEVICE_DRIVER("device-driver"),
         @JsonProperty("firmware")
         FIRMWARE("firmware"),
         @JsonProperty("file")
-        FILE("file");
+        FILE("file"),
+        @JsonProperty("machine-learning-model")
+        MACHINE_LEARNING_MODEL("machine-learning-model"),
+        @JsonProperty("data")
+        DATA("data");
 
         private final String name;
 
