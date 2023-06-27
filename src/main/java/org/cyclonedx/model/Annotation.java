@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import org.cyclonedx.util.CustomDateSerializer;
+import org.cyclonedx.util.serializer.CustomDateSerializer;
 
 @JacksonXmlRootElement(localName = "annotations")
 @JsonIgnoreProperties(ignoreUnknown = true)
