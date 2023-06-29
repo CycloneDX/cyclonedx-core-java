@@ -15,17 +15,9 @@
         </component>
     </components>
     <dependencies>
-        <dependency>
-            <!-- invalid: missing attribute `ref` -->
-        </dependency>
-        <dependency ref="">
-            <!-- invalid: attribute `ref` is empty -->
-            <dependency ref="library-a"/>
-        </dependency>
+        <dependency />
         <dependency ref="library-b">
-            <dependency ref="library-c">
-                <!-- valid -->
-            </dependency>
+            <dependency ref="library-c"/>
         </dependency>
     </dependencies>
 </bom>

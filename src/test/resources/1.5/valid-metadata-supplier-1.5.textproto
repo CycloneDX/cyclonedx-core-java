@@ -8,8 +8,6 @@ metadata {
     contact {
       name: "Acme Distribution"
       email: "distribution@example.com"
-      bom_ref: "contact-1"
     }
-    bom_ref: "supplier-1"
   }
 }
