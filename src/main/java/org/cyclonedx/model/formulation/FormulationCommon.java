@@ -20,6 +20,7 @@ import org.cyclonedx.model.formulation.trigger.Trigger;
 import org.cyclonedx.model.formulation.workspace.Workspace;
 import org.cyclonedx.util.deserializer.DependencyDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
+import org.cyclonedx.util.serializer.DependencySerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -29,22 +30,28 @@ public abstract class FormulationCommon extends BasicDataAbstract
 
   protected List<TaskType> taskTypes;
 
-  protected List<InputType> inputTypes;
+  protected List<InputType> inputs;
 
-  protected List<OutputType> outputTypes;
+  protected List<OutputType> outputs;
 
   @JsonSerialize(using = CustomDateSerializer.class)
+  @JsonProperty("timeStart")
   protected Date timeStart;
 
   @JsonSerialize(using = CustomDateSerializer.class)
+  @JsonProperty("timeEnd")
   protected Date timeEnd;
 
   protected List<Workspace> workspaces;
 
   @JsonProperty("runtimeTopology")
+  @JacksonXmlProperty(localName = "runtimeTopology")
+  @JsonSerialize(using = DependencySerializer.class, as = DependencyList.class)
   protected DependencyList runtimeTopology;
 
   @JsonProperty("taskDependencies")
+  @JacksonXmlProperty(localName = "taskDependencies")
+  @JsonSerialize(using = DependencySerializer.class, as = DependencyList.class)
   protected DependencyList taskDependencies;
 
   private List<Step> steps;
@@ -99,22 +106,22 @@ public abstract class FormulationCommon extends BasicDataAbstract
 
   @JacksonXmlElementWrapper(localName = "inputs")
   @JacksonXmlProperty(localName = "input")
-  public List<InputType> getInputTypes() {
-    return inputTypes;
+  public List<InputType> getInputs() {
+    return inputs;
   }
 
-  public void setInputTypes(final List<InputType> inputTypes) {
-    this.inputTypes = inputTypes;
+  public void setInputs(final List<InputType> inputTypes) {
+    this.inputs = inputTypes;
   }
 
   @JacksonXmlElementWrapper(localName = "outputs")
   @JacksonXmlProperty(localName = "output")
-  public List<OutputType> getOutputTypes() {
-    return outputTypes;
+  public List<OutputType> getOutputs() {
+    return outputs;
   }
 
-  public void setOutputTypes(final List<OutputType> outputTypes) {
-    this.outputTypes = outputTypes;
+  public void setOutputs(final List<OutputType> outputTypes) {
+    this.outputs = outputTypes;
   }
 
   public Date getTimeStart() {

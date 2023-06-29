@@ -36,11 +36,25 @@ import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.OrganizationalChoice;
+import org.cyclonedx.model.Property;
 import org.cyclonedx.model.ReleaseNotes;
 import org.cyclonedx.model.ReleaseNotes.Notes;
 import org.cyclonedx.model.ReleaseNotes.Resolves;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.ServiceData;
+import org.cyclonedx.model.formulation.Formula;
+import org.cyclonedx.model.formulation.Workflow;
+import org.cyclonedx.model.formulation.common.InputType;
+import org.cyclonedx.model.formulation.common.OutputType;
+import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
+import org.cyclonedx.model.formulation.task.Command;
+import org.cyclonedx.model.formulation.task.Step;
+import org.cyclonedx.model.formulation.task.Task;
+import org.cyclonedx.model.formulation.trigger.Condition;
+import org.cyclonedx.model.formulation.trigger.Event;
+import org.cyclonedx.model.formulation.trigger.Trigger;
+import org.cyclonedx.model.formulation.workspace.Volume;
+import org.cyclonedx.model.formulation.workspace.Workspace;
 import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.Justification;
 import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.State;
@@ -357,6 +371,9 @@ public class JsonParserTest {
 
         //Assert Annotations
         assertAnnotations(bom, Version.VERSION_14);
+
+        //Assert Formulation
+        assertFormulation(bom, Version.VERSION_14);
     }
 
     @Test
@@ -384,8 +401,261 @@ public class JsonParserTest {
 
         //Assert Annotations
         assertAnnotations(bom, Version.VERSION_15);
+
+        //Assert Formulation
+        assertFormulation(bom, Version.VERSION_15);
     }
 
+   private void assertFormulation(final Bom bom, final Version version) {
+       if(version== Version.VERSION_15) {
+           List<Formula> formulas = bom.getFormulation();
+
+           assertEquals(2, formulas.size());
+
+           Formula formula = formulas.get(0);
+           assertNotNull(formula.getBomRef());
+           assertNotNull(formula.getComponents());
+           assertNull(formula.getServices());
+           assertNull(formula.getProperties());
+           assertWorkflows(formula.getWorkflows());
+       } else {
+           assertNull(bom.getFormulation());
+       }
+   }
+   private void assertWorkflows(List<Workflow> workflows) {
+       assertEquals(workflows.size(), 3);
+
+       Workflow workflow = workflows.get(0);
+       assertNotNull(workflow.getBomRef());
+       assertNotNull(workflow.getUid());
+       assertNotNull(workflow.getName());
+       assertNotNull(workflow.getDescription());
+       assertNotNull(workflow.getResourceReferences());
+
+       //assertNotNull(workflow.getTimeEnd());
+       //assertNotNull(workflow.getTimeStart());
+       //assertNotNull(workflow.getRuntimeTopology());
+       //assertNotNull(workflow.getTaskDependencies());
+
+       assertTasks(workflow.getTasks());
+       //assertSteps(workflow.getSteps());
+       //assertTrigger(workflow.getTrigger());
+       //assertInputs(workflow.getInputTypes());
+       //assertOutputs(workflow.getOutputTypes());
+       //assertProperties(workflow.getProperties());
+       //assertWorkspaces(workflow.getWorkspaces());
+   }
+
+    private void assertWorkspaces(List<Workspace> workspaces) {
+        assertEquals(workspaces.size(), 1);
+        assertNotNull(workspaces);
+
+        Workspace workspace = workspaces.get(0);
+        assertNotNull(workspace.getBomRef());
+        assertNotNull(workspace.getUid());
+        assertNotNull(workspace.getName());
+        assertNotNull(workspace.getDescription());
+        assertNotNull(workspace.getResourceReferences());
+
+
+        assertNotNull(workspace.getAccessMode());
+        assertNotNull(workspace.getMountPath());
+        assertNotNull(workspace.getManagedDataType());
+        assertNotNull(workspace.getVolumeRequest());
+
+        assertVolume(workspace.getVolume());
+
+        assertProperties(workspace.getProperties());
+    }
+
+    private void assertVolume(Volume volume) {
+        assertNotNull(volume);
+
+        assertNotNull(volume.getUid());
+        assertNotNull(volume.getName());
+        assertNotNull(volume.getMode());
+        assertNotNull(volume.getPath());
+        assertNotNull(volume.getSizeAllocated());
+        assertNotNull(volume.getPersistent());
+        assertNotNull(volume.getRemote());
+
+        assertProperties(volume.getProperties());
+    }
+
+   private void assertTrigger(Trigger trigger) {
+       assertNotNull(trigger);
+
+       assertNotNull(trigger.getBomRef());
+       assertNotNull(trigger.getUid());
+       assertNotNull(trigger.getName());
+       assertNotNull(trigger.getDescription());
+       assertNotNull(trigger.getResourceReferences());
+       assertNotNull(trigger.getType());
+       assertNotNull(trigger.getTimeActivated());
+
+       //Event
+       assertEvent(trigger.getEvent());
+       //Conditions
+       assertConditions(trigger.getConditions());
+       //Inputs
+       assertInputs(trigger.getInputs());
+       //Outputs
+       assertOutputs(trigger.getOutputs());
+
+       assertProperties(trigger.getProperties());
+   }
+
+    private void assertOutputs(List<OutputType> outputs){
+        assertEquals(outputs.size(), 1);
+
+        OutputType outputType = outputs.get(0);
+        assertNotNull(outputType.getType());
+        //Source
+        assertResourceReference(outputType.getSource());
+        //Target
+        assertResourceReference(outputType.getTarget());
+        assertOutputData(outputType);
+
+        assertProperties(outputType.getProperties());
+    }
+
+    private void assertOutputData(OutputType outputType) {
+        if (outputType.getResource() != null) {
+            assertNull(outputType.getData());
+            assertNull(outputType.getEnvironmentVars());
+        }
+        else if (outputType.getData() != null) {
+            assertNull(outputType.getResource());
+            assertNull(outputType.getEnvironmentVars());
+        }
+        else if (outputType.getEnvironmentVars() != null) {
+            assertNull(outputType.getResource());
+            assertNull(outputType.getData());
+        }
+        else {
+            assertNull(outputType.getResource());
+            assertNull(outputType.getData());
+            assertNull(outputType.getEnvironmentVars());
+        }
+    }
+
+   private void assertInputs(List<InputType> inputs){
+       assertEquals(inputs.size(), 1);
+
+       InputType inputType = inputs.get(0);
+       //Source
+       assertResourceReference(inputType.getSource());
+       //Target
+       assertResourceReference(inputType.getTarget());
+       assertInputData(inputType);
+
+       assertProperties(inputType.getProperties());
+   }
+
+    private void assertInputData(InputType inputType) {
+        if (inputType.getResource() != null) {
+            assertNull(inputType.getParameters());
+            assertNull(inputType.getData());
+            assertNull(inputType.getEnvironmentVars());
+        }
+        else if (inputType.getParameters() != null) {
+            assertNull(inputType.getResource());
+            assertNull(inputType.getData());
+            assertNull(inputType.getEnvironmentVars());
+        }
+        else if (inputType.getData() != null) {
+            assertNull(inputType.getResource());
+            assertNull(inputType.getParameters());
+            assertNull(inputType.getEnvironmentVars());
+        }
+        else if (inputType.getEnvironmentVars() != null) {
+            assertNull(inputType.getResource());
+            assertNull(inputType.getParameters());
+            assertNull(inputType.getData());
+        }
+        else {
+            assertNull(inputType.getResource());
+            assertNull(inputType.getParameters());
+            assertNull(inputType.getData());
+            assertNull(inputType.getEnvironmentVars());
+        }
+    }
+
+    private void assertConditions(List<Condition> conditions) {
+        assertEquals(conditions.size(), 1);
+
+        Condition condition = conditions.get(0);
+
+        assertNotNull(condition.getDescription());
+        assertNotNull(condition.getExpression());
+
+        assertProperties(condition.getProperties());
+    }
+
+    private void assertEvent(Event event) {
+        assertNotNull(event);
+
+        assertNotNull(event.getUid());
+        assertNotNull(event.getDescription());
+        assertNotNull(event.getTimeReceived());
+        assertNotNull(event.getData());
+
+        //Source
+        assertResourceReference(event.getSource());
+        //Target
+        assertResourceReference(event.getTarget());
+
+        assertProperties(event.getProperties());
+    }
+
+    private void assertResourceReference(ResourceReferenceChoice resourceReferenceChoice) {
+        assertNotNull(resourceReferenceChoice);
+
+        if (resourceReferenceChoice.getExternalReference() != null) {
+            assertNull(resourceReferenceChoice.getRef());
+        }
+        else {
+            assertNull(resourceReferenceChoice.getExternalReference());
+        }
+    }
+
+   private void assertTasks(List<Task> tasks){
+       assertEquals(tasks.size(), 3);
+
+       Task task = tasks.get(0);
+       assertNotNull(task.getBomRef());
+       assertNotNull(task.getUid());
+       assertNotNull(task.getName());
+       assertNotNull(task.getDescription());
+       assertNotNull(task.getResourceReferences());
+       assertNotNull(task.getTaskTypes());
+   }
+
+    private void assertSteps(List<Step> steps){
+        assertEquals(steps.size(), 1);
+
+        Step step = steps.get(0);
+        assertNotNull(step.getName());
+        assertNotNull(step.getDescription());
+        assertCommands(step.getCommands());
+        assertProperties(step.getProperties());
+    }
+
+    private void assertCommands(List<Command> commands){
+        assertEquals(commands.size(), 1);
+
+        Command command = commands.get(0);
+        assertNotNull(command.getExecuted());
+        assertProperties(command.getProperties());
+    }
+
+    private void assertProperties(List<Property> properties){
+        assertEquals(properties.size(), 1);
+
+        Property property = properties.get(0);
+        assertNotNull(property.getName());
+        assertNotNull(property.getValue());
+    }
 
     private void assertAnnotations(final Bom bom, final Version version) {
 

@@ -14,7 +14,7 @@ import org.cyclonedx.model.formulation.task.Task;
 @JsonPropertyOrder(
     {
         "uid", "name", "description", "resourceReferences", "tasks", "taskDependencies", "taskTypes", "trigger",
-        "steps", "inputTypes", "outputTypes", "timeStart", "timeEnd", "workspaces", "runtimeTopology", "properties"
+        "steps", "inputs", "outputs", "timeStart", "timeEnd", "workspaces", "runtimeTopology", "properties"
     })
 public class Workflow extends FormulationCommon
 {

@@ -46,7 +46,7 @@ public class CollectionTypeSerializer extends SimpleSerializers
                                                     JsonSerializer<Object> elementValueSerializer)
   {
     if (isDependencyListType(type)) {
-      return new DependencySerializer(useNamespace);
+      return new DependencySerializer(useNamespace, null);
     }
     return findSerializer(config, type, beanDescription);
   }

@@ -3,21 +3,21 @@ package org.cyclonedx.model.formulation.common;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.Property;
-import org.cyclonedx.util.EnvVariableChoiceDeserializer;
+import org.cyclonedx.util.deserializer.EnvVariableChoiceDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(using = EnvVariableChoiceDeserializer.class)
 public class EnvVariableChoice
 {
+  @JacksonXmlProperty(localName = "value")
   private String value;
 
+  @JacksonXmlProperty(localName = "environmentVar")
   private Property environmentVar;
 
-  @JacksonXmlProperty(localName = "value")
   public String getValue() {
     return value;
   }
@@ -26,7 +26,6 @@ public class EnvVariableChoice
     this.value = value;
   }
 
-  @JacksonXmlProperty(localName = "environmentVar")
   public Property getEnvironmentVar() {
     return environmentVar;
   }

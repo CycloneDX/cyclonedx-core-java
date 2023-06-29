@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-package org.cyclonedx.util;
+package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
 
@@ -31,8 +31,6 @@ import org.cyclonedx.model.formulation.common.EnvVariableChoice;
 public class EnvVariableChoiceDeserializer
     extends JsonDeserializer<EnvVariableChoice>
 {
-  private final ObjectMapper objectMapper = new ObjectMapper();
-
   @Override
   public EnvVariableChoice deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
@@ -41,10 +39,20 @@ public class EnvVariableChoiceDeserializer
     if (node.has("value")) {
       String value = node.get("value").asText();
       envReferenceChoice.setValue(value);
-    } else if (node.has("externalReference")) {
-      JsonNode externalReferenceNode = node.get("property");
-      Property property = objectMapper.treeToValue(externalReferenceNode, Property.class);
-      envReferenceChoice.setEnvironmentVar(property);
+    } else if (node.has("environmentVar")) {
+      JsonNode envVarNode = node.get("environmentVar");
+      Property prop = new Property();
+
+      if (envVarNode.has("name")) {
+        String name = envVarNode.get("name").asText();
+        prop.setName(name);
+      }
+      if (envVarNode.has("")) {
+        String value = envVarNode.get("").asText();
+        prop.setValue(value);
+      }
+
+      envReferenceChoice.setEnvironmentVar(prop);
     }
 
     return envReferenceChoice;

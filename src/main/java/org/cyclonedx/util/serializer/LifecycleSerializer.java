@@ -1,4 +1,4 @@
-package org.cyclonedx.util;
+package org.cyclonedx.util.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

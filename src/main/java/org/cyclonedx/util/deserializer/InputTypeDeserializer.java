@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-package org.cyclonedx.util;
+package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,19 +40,37 @@ public class InputTypeDeserializer extends JsonDeserializer<InputType> {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
-  public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+  public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+      throws IOException
+  {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
     InputType inputType = new InputType();
 
-    if (node.has("source")) {
+    if(node.has("source")) {
       JsonNode sourceNode = node.get("source");
       ResourceReferenceChoice source = objectMapper.treeToValue(sourceNode, ResourceReferenceChoice.class);
       inputType.setSource(source);
-    } else if (node.has("target")) {
+    }
+
+    if(node.has("target")) {
       JsonNode targetNode = node.get("target");
       ResourceReferenceChoice target = objectMapper.treeToValue(targetNode, ResourceReferenceChoice.class);
       inputType.setTarget(target);
-    } else if (node.has("resource")) {
+    }
+
+    createInputDataInfo(node, inputType);
+
+    if(node.has("properties")) {
+      JsonNode propertiesNode = node.get("properties");
+      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
+      inputType.setProperties(properties);
+    }
+
+    return inputType;
+  }
+
+  private void createInputDataInfo(JsonNode node, InputType inputType ) throws JsonProcessingException {
+    if (node.has("resource")) {
       JsonNode resourceNode = node.get("resource");
       ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
       inputType.setResource(resource);
@@ -62,14 +80,23 @@ public class InputTypeDeserializer extends JsonDeserializer<InputType> {
       inputType.setParameters(parameters);
     } else if (node.has("environmentVars")) {
       JsonNode environmentVarsNode = node.get("environmentVars");
-      List<EnvVariableChoice> environmentVars = objectMapper.convertValue(environmentVarsNode, new TypeReference<List<EnvVariableChoice>>() {});
+      List<EnvVariableChoice> environmentVars = new ArrayList<>();
+      if (environmentVarsNode.isArray()) {
+        // if it's an array
+        for (JsonNode envVarNode : environmentVarsNode) {
+          EnvVariableChoice envVar = objectMapper.treeToValue(envVarNode, EnvVariableChoice.class);
+          environmentVars.add(envVar);
+        }
+      } else {
+        // if it's a single object
+        EnvVariableChoice envVar = objectMapper.treeToValue(environmentVarsNode, EnvVariableChoice.class);
+        environmentVars.add(envVar);
+      }
       inputType.setEnvironmentVars(environmentVars);
     } else if (node.has("data")) {
       JsonNode dataNode = node.get("data");
       AttachmentText data = objectMapper.treeToValue(dataNode, AttachmentText.class);
       inputType.setData(data);
     }
-
-    return inputType;
   }
 }
