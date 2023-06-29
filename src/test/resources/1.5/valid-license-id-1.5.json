@@ -13,8 +13,7 @@
       "licenses": [
         {
           "license": {
-            "id": "Apache-2.0",
-            "bom-ref": "my-license"
+            "id": "Apache-2.0"
           }
         }
       ]
