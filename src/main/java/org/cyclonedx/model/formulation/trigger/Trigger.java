@@ -2,18 +2,32 @@ package org.cyclonedx.model.formulation.trigger;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.formulation.common.BasicDataAbstract;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.OutputType;
+import org.cyclonedx.util.InputTypeDeserializer;
 
-public class Trigger extends BasicDataAbstract
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonPropertyOrder({
+    "uid", "name", "description", "resourceReferences", "type", "event", "conditions", "timeActivated", "inputs",
+    "outputs", "properties"
+})
+public class Trigger
+    extends BasicDataAbstract
 {
   private String type;
   private Event event;
   private List<Condition> conditions;
   private String timeActivated;
+
+  @JsonDeserialize(using = InputTypeDeserializer.class)
   private List<InputType> inputs;
   private List<OutputType> outputs;
 

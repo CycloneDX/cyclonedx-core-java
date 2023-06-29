@@ -18,8 +18,8 @@ import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.formulation.task.Step;
 import org.cyclonedx.model.formulation.trigger.Trigger;
 import org.cyclonedx.model.formulation.workspace.Workspace;
-import org.cyclonedx.util.CustomDateSerializer;
-import org.cyclonedx.util.DependencyDeserializer;
+import org.cyclonedx.util.deserializer.DependencyDeserializer;
+import org.cyclonedx.util.serializer.CustomDateSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
