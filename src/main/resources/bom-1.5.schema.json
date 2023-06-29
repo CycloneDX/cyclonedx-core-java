@@ -216,7 +216,7 @@
               }
             ]
           }
-      },
+        },
         "tools": {
           "oneOf": [
             {
@@ -581,7 +581,7 @@
           "title": "Release notes",
           "description": "Specifies optional release notes."
         },
-         "modelCard": {
+        "modelCard": {
           "$ref": "#/definitions/modelCard",
           "title": "Machine Learning Model Card"
         },

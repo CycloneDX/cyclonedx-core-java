@@ -796,8 +796,8 @@ limitations under the License.
                         of interest to the general public are encouraged to be registered in the
                         CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
                         Formal registration is OPTIONAL.</xs:documentation>
-                </xs:annotation>  
-            </xs:element>    
+                </xs:annotation>
+            </xs:element>
             <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation>
@@ -2495,9 +2495,9 @@ limitations under the License.
                         * minor = A minor release, also known as an update, may contain a smaller number of changes than major releases.
                         * patch = Patch releases are typically unplanned and may resolve defects or important security issues.
                         * pre-release = A pre-release may include alpha, beta, or release candidates and typically have
-                          limited support. They provide the ability to preview a release prior to its general availability.
+                        limited support. They provide the ability to preview a release prior to its general availability.
                         * internal = Internal releases are not for public consumption and are intended to be used exclusively
-                          by the project or manufacturer that produced it.
+                        by the project or manufacturer that produced it.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -2532,7 +2532,7 @@ limitations under the License.
                         <xs:element name="alias" type="xs:normalizedString">
                             <xs:annotation>
                                 <xs:documentation>One or more alternate names the release may be referred to. This may
-                                include unofficial terms used by development and marketing teams (e.g. code names).</xs:documentation>
+                                    include unofficial terms used by development and marketing teams (e.g. code names).</xs:documentation>
                             </xs:annotation>
                         </xs:element>
                     </xs:sequence>
@@ -2565,7 +2565,7 @@ limitations under the License.
                         <xs:element name="note">
                             <xs:annotation>
                                 <xs:documentation>Zero or more release notes containing the locale and content. Multiple
-                                note elements may be specified to support release notes in a wide variety of languages.</xs:documentation>
+                                    note elements may be specified to support release notes in a wide variety of languages.</xs:documentation>
                             </xs:annotation>
                             <xs:complexType>
                                 <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -2612,12 +2612,12 @@ limitations under the License.
         </xs:anyAttribute>
     </xs:complexType>
 
-   <!--
-   Model card support in CycloneDX is derived from TensorFlow Model Card Toolkit released under the Apache 2.0 license and
-   available from https://github.com/tensorflow/model-card-toolkit/blob/main/model_card_toolkit/schema/v0.0.2/model_card.schema.json.
-   In addition, CycloneDX model card support includes portions of VerifyML, also released under the Apache 2.0 license and
-   available from https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/schema/v0.0.4/model_card.schema.json.
-   -->
+    <!--
+    Model card support in CycloneDX is derived from TensorFlow Model Card Toolkit released under the Apache 2.0 license and
+    available from https://github.com/tensorflow/model-card-toolkit/blob/main/model_card_toolkit/schema/v0.0.2/model_card.schema.json.
+    In addition, CycloneDX model card support includes portions of VerifyML, also released under the Apache 2.0 license and
+    available from https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/schema/v0.0.4/model_card.schema.json.
+    -->
     <xs:complexType name="modelCardType">
         <xs:annotation>
             <xs:documentation>
@@ -3438,9 +3438,9 @@ limitations under the License.
                     </xs:annotation>
                     <xs:sequence>
                         <xs:element name="reproductionSteps" type="xs:string" minOccurs="0" maxOccurs="1">
-                                <xs:annotation>
-                                    <xs:documentation>Precise steps to reproduce the vulnerability.</xs:documentation>
-                                </xs:annotation>
+                            <xs:annotation>
+                                <xs:documentation>Precise steps to reproduce the vulnerability.</xs:documentation>
+                            </xs:annotation>
                         </xs:element>
                         <xs:element name="environment" type="xs:string" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
@@ -3700,7 +3700,7 @@ limitations under the License.
             <xs:element name="url" type="xs:anyURI" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>The url of the vulnerability documentation as provided by the source.
-                    For example: https://nvd.nist.gov/vuln/detail/CVE-2021-39182</xs:documentation>
+                        For example: https://nvd.nist.gov/vuln/detail/CVE-2021-39182</xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
@@ -3799,7 +3799,7 @@ limitations under the License.
             </xs:element>
         </xs:choice>
     </xs:complexType>
-    
+
     <xs:complexType name="annotationType">
         <xs:sequence>
             <xs:element name="subjects" minOccurs="0" maxOccurs="1">
