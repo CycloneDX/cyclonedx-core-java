@@ -46,6 +46,7 @@ public class BomJsonGenerator15
       modifiedBom = injectBomFormatAndSpecVersion(bom);
     }
     catch (GeneratorException e) {
+      e.printStackTrace();
     }
     this.bom = modifiedBom != null ? modifiedBom : bom;
   }

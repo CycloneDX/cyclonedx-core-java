@@ -243,6 +243,36 @@
         }
       ],
       "evidence": {
+        "identity": {
+          "field": "purl",
+          "confidence": 1,
+          "methods": [
+            {
+              "technique": "manifest-analysis",
+              "confidence": 1
+            }
+          ],
+          "tools": [
+            {
+              "ref": "test"
+            }
+          ]
+        },
+        "occurrences": [
+           {
+            "bom-ref": "test",
+            "location": "file"
+          }
+        ],
+        "callstack": {
+          "frames": [
+            {
+              "module": "test",
+              "line": 1,
+              "column": 1
+            }
+          ]
+        },
         "licenses": [
           {
             "license": {

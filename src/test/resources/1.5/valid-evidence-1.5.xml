@@ -13,6 +13,11 @@
             </licenses>
             <purl>pkg:maven/com.google.code.findbugs/findbugs-project@3.0.0</purl>
             <evidence>
+                <occurrences>
+                    <occurrence bom-ref="test">
+                        <location>file</location>
+                    </occurrence>
+                </occurrences>
                 <licenses>
                     <license>
                         <id>Apache-2.0</id>

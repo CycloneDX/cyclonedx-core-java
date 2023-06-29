@@ -166,6 +166,33 @@
                 </reference>
             </externalReferences>
             <evidence>
+                <identity>
+                    <field>purl</field>
+                    <confidence>1</confidence>
+                    <methods>
+                        <method>
+                            <technique>manifest-analysis</technique>
+                            <confidence>1</confidence>
+                        </method>
+                    </methods>
+                    <tools>
+                        <tool ref="test"/>
+                    </tools>
+                </identity>
+                <occurrences>
+                    <occurrence bom-ref="test">
+                        <location>file</location>
+                    </occurrence>
+                </occurrences>
+                <callstack>
+                    <frames>
+                        <frame>
+                            <module>test</module>
+                            <line>1</line>
+                            <column>1</column>
+                        </frame>
+                    </frames>
+                </callstack>
                 <licenses>
                     <license>
                         <id>Apache-2.0</id>

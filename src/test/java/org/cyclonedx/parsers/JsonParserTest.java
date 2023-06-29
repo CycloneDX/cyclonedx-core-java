@@ -26,6 +26,8 @@ import org.cyclonedx.model.Annotator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.Evidence;
+import org.cyclonedx.model.Evidence.Callstack;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
@@ -41,6 +43,9 @@ import org.cyclonedx.model.ReleaseNotes.Notes;
 import org.cyclonedx.model.ReleaseNotes.Resolves;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.ServiceData;
+import org.cyclonedx.model.evidence.Frame;
+import org.cyclonedx.model.evidence.Identity;
+import org.cyclonedx.model.evidence.Occurrence;
 import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.Justification;
 import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.State;
@@ -594,12 +599,59 @@ public class JsonParserTest {
         }
 
         //Evidence
-        assertNotNull(component.getEvidence());
-        assertEquals("Copyright 2012 Google Inc. All Rights Reserved.",
-            component.getEvidence().getCopyright().get(0).getText());
-        assertEquals("Apache-2.0", component.getEvidence().getLicenseChoice().getLicenses().get(0).getId());
+        assertEvidence(component.getEvidence(), version);
+    }
+
+    private void assertEvidence(final Evidence evidence, final Version version) {
+        assertNotNull(evidence);
+        assertEquals("Copyright 2012 Google Inc. All Rights Reserved.", evidence.getCopyright().get(0).getText());
+        assertEquals("Apache-2.0", evidence.getLicenseChoice().getLicenses().get(0).getId());
         assertEquals("http://www.apache.org/licenses/LICENSE-2.0",
-            component.getEvidence().getLicenseChoice().getLicenses().get(0).getUrl());
+            evidence.getLicenseChoice().getLicenses().get(0).getUrl());
+
+        if(version== Version.VERSION_15) {
+            assertCallStack(evidence.getCallstack());
+            assertOccurrences(evidence.getOccurrences());
+            assertIdentity(evidence.getIdentity());
+        } else {
+            assertNull(evidence.getCallstack());
+            assertNull(evidence.getIdentity());
+            assertNull(evidence.getOccurrences());
+        }
+    }
+
+    private void assertOccurrences(final List<Occurrence> occurrences){
+        assertEquals(occurrences.size(), 1);
+        Occurrence occurrence = occurrences.get(0);
+
+        assertNotNull(occurrence.getBomRef());
+        assertNotNull(occurrence.getLocation());
+    }
+
+    private void assertCallStack(final Callstack callstack){
+        assertNotNull(callstack);
+
+        assertEquals(callstack.getFrames().size(), 1);
+        Frame frame = callstack.getFrames().get(0);
+
+        assertNotNull(frame.getColumn());
+        assertNotNull(frame.getLine());
+        assertNull(frame.getPackageFrame());
+        assertNull(frame.getFunction());
+        assertNull(frame.getFullFilename());
+        assertNull(frame.getParameters());
+        assertNotNull(frame.getModule());
+    }
+
+    private void assertIdentity(final Identity identity){
+        assertNotNull(identity);
+
+        assertNotNull(identity.getField());
+        assertNotNull(identity.getConfidence());
+        assertNotNull(identity.getMethods());
+        assertNotNull(identity.getTools());
+
+        assertNotNull(identity.getTools().get(0).getRef());
     }
 
     private void assertSecurityContact(ExternalReference externalReference) {
