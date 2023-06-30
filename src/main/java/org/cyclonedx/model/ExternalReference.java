@@ -76,6 +76,10 @@ public class ExternalReference {
         ATTESTATION("attestation"),
         @JsonProperty("threat-model")
         THREAT_MODEL("threat-model"),
+        @JsonProperty("adversary-model")
+        ADVERSARY_MODEL("adversary-model"),
+        @JsonProperty("risk-assessment")
+        RISK_ASSESSMENT("risk-assessment"),
         @JsonProperty("vulnerability-assertion")
         VULNERABILITY_ASSERTION("vulnerability-assertion"),
         @JsonProperty("exploitability-statement")
