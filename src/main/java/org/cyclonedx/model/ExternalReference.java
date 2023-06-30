@@ -60,6 +60,8 @@ public class ExternalReference {
         SUPPORT("support"),
         @JsonProperty("distribution")
         DISTRIBUTION("distribution"),
+        @JsonProperty("distribution-intake")
+        DISTRIBUTION_INTAKE("distribution-intake"),
         @JsonProperty("license")
         LICENSE("license"),
         @JsonProperty("build-meta")
@@ -70,6 +72,32 @@ public class ExternalReference {
         RELEASE_NOTES("release-notes"),
         @JsonProperty("security-contact")
         SECURITY_CONTACT("security-contact"),
+        @JsonProperty("attestation")
+        ATTESTATION("attestation"),
+        @JsonProperty("threat-model")
+        THREAT_MODEL("threat-model"),
+        @JsonProperty("vulnerability-assertion")
+        VULNERABILITY_ASSERTION("vulnerability-assertion"),
+        @JsonProperty("exploitability-statement")
+        EXPLOITABILITY_STATEMENT("exploitability-statement"),
+        @JsonProperty("pentest-report")
+        PENTEST_REPORT("pentest-report"),
+        @JsonProperty("static-analysis-report")
+        STATIC_ANALYSIS_REPORT("static-analysis-report"),
+        @JsonProperty("dynamic-analysis-report")
+        DYNAMIC_ANALYSIS_REPORT("dynamic-analysis-report"),
+        @JsonProperty("runtime-analysis-report")
+        RUNTIME_ANALYSIS_REPORT("runtime-analysis-report"),
+        @JsonProperty("component-analysis-report")
+        COMPONENT_ANALYSIS_REPORT("component-analysis-report"),
+        @JsonProperty("maturity-report")
+        MATURITY_REPORT("maturity-report"),
+        @JsonProperty("certification-report")
+        CERTIFICATION_REPORT("certification-report"),
+        @JsonProperty("codified-infrastructure")
+        CODIFIED_INFRASTRUCTURE("codified-infrastructure"),
+        @JsonProperty("quality-metrics")
+        QUALITY_METRICS("quality-metrics"),
         @JsonProperty("other")
         OTHER("other");
 
