@@ -61,6 +61,8 @@ public class Service extends ExtensibleElement {
     private String description;
     private List<String> endpoints;
     private Boolean authenticated;
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private String trustZone;
     @JacksonXmlProperty(localName = "x-trust-boundary")
     @JsonProperty("x-trust-boundary")
     private Boolean xTrustBoundary;

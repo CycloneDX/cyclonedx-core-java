@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import java.util.Objects;
+import java.util.List;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -58,6 +59,22 @@ public class ServiceData {
     @JacksonXmlText
     @JsonProperty("classification")
     private String classification;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @JsonProperty("name")
+    private String name;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @JsonProperty("description")
+    private String description;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @JsonProperty("source")
+    private List<String> source;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @JsonProperty("destination")
+    private List<String> destination;
 
     public ServiceData() { }
 
