@@ -20,20 +20,17 @@ package org.cyclonedx.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.model.vulnerability.Vulnerability;
-import org.cyclonedx.util.VulnerabilityDeserializer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder({"aggregate", "assemblies", "dependencies", "vulnerabilities"})
 public class Composition {
 
@@ -79,9 +76,8 @@ public class Composition {
     private List<BomReference> assemblies;
     private List<BomReference> dependencies;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.5"})
-    @JsonDeserialize(using = VulnerabilityDeserializer.class)
-    private List<Vulnerability> vulnerabilities;
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private List<BomReference> vulnerabilities;
 
     public String getBomRef() {
         return bomRef;
@@ -135,7 +131,14 @@ public class Composition {
 
     @JacksonXmlElementWrapper(localName = "vulnerabilities")
     @JacksonXmlProperty(localName = "vulnerability")
-    public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
+    public List<BomReference> getVulnerabilities() { return vulnerabilities; }
 
-    public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
+    public void setVulnerabilities(List<BomReference> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
+
+    public void addVulnerability(BomReference vulnerability) {
+        if (vulnerabilities == null) {
+            vulnerabilities = new ArrayList<>();
+        }
+        vulnerabilities.add(vulnerability);
+    }
 }

@@ -424,7 +424,7 @@ public class JsonParserTest {
 
     private void assertCompositions(final Bom bom, final Version version) {
         final List<Composition> compositions = bom.getCompositions();
-        assertEquals(2, compositions.size());
+        assertEquals(3, compositions.size());
         Composition composition = compositions.get(0);
 
         assertEquals(composition.getAggregate(), Aggregate.COMPLETE);
@@ -433,8 +433,9 @@ public class JsonParserTest {
 
         //Assert Vulnerability Rejected
         if (version == Version.VERSION_15) {
+            composition = compositions.get(2);
             assertNotNull(composition.getVulnerabilities());
-            assertEquals("6eee14da-8f42-4cc4-bb65-203235f02415", composition.getBomRef());
+            assertEquals("6eee14da-8f42-4cc4-bb65-203235f02415", composition.getVulnerabilities().get(0).getRef());
         }
         else {
             assertNull(composition.getVulnerabilities());

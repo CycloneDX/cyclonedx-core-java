@@ -187,6 +187,12 @@
                 <assembly ref="pkg:maven/acme/library@3.0"/>
             </assemblies>
         </composition>
+        <composition>
+            <aggregate>unknown</aggregate>
+            <assemblies>
+                <assembly ref="pkg:maven/acme/library@3.1"/>
+            </assemblies>
+        </composition>
     </compositions>
     <vulnerabilities>
         <vulnerability bom-ref="6eee14da-8f42-4cc4-bb65-203235f02415">

@@ -319,6 +319,12 @@
                 <assembly ref="pkg:maven/acme/library@3.0"/>
             </assemblies>
         </composition>
+        <composition>
+            <aggregate>incomplete_first_party_only</aggregate>
+            <vulnerabilities>
+                <vulnerability ref="6eee14da-8f42-4cc4-bb65-203235f02415"/>
+            </vulnerabilities>
+        </composition>
     </compositions>
     <properties>
         <property name="Foo">Bar</property>
