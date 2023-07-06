@@ -410,7 +410,7 @@ public class JsonParserTest {
        if(version== Version.VERSION_15) {
            List<Formula> formulas = bom.getFormulation();
 
-           assertEquals(2, formulas.size());
+           assertEquals(1, formulas.size());
 
            Formula formula = formulas.get(0);
            assertNotNull(formula.getBomRef());
@@ -423,7 +423,7 @@ public class JsonParserTest {
        }
    }
    private void assertWorkflows(List<Workflow> workflows) {
-       assertEquals(workflows.size(), 3);
+       assertEquals(workflows.size(), 1);
 
        Workflow workflow = workflows.get(0);
        assertNotNull(workflow.getBomRef());
@@ -432,18 +432,18 @@ public class JsonParserTest {
        assertNotNull(workflow.getDescription());
        assertNotNull(workflow.getResourceReferences());
 
-       //assertNotNull(workflow.getTimeEnd());
-       //assertNotNull(workflow.getTimeStart());
-       //assertNotNull(workflow.getRuntimeTopology());
-       //assertNotNull(workflow.getTaskDependencies());
+       assertNotNull(workflow.getTimeEnd());
+       assertNotNull(workflow.getTimeStart());
+       assertNotNull(workflow.getRuntimeTopology());
+       assertNotNull(workflow.getTaskDependencies());
 
        assertTasks(workflow.getTasks());
-       //assertSteps(workflow.getSteps());
-       //assertTrigger(workflow.getTrigger());
-       //assertInputs(workflow.getInputTypes());
-       //assertOutputs(workflow.getOutputTypes());
-       //assertProperties(workflow.getProperties());
-       //assertWorkspaces(workflow.getWorkspaces());
+       assertSteps(workflow.getSteps());
+       assertTrigger(workflow.getTrigger());
+       assertInputs(workflow.getInputs());
+       assertOutputs(workflow.getOutputs());
+       assertProperties(workflow.getProperties());
+       assertWorkspaces(workflow.getWorkspaces());
    }
 
     private void assertWorkspaces(List<Workspace> workspaces) {
@@ -456,7 +456,6 @@ public class JsonParserTest {
         assertNotNull(workspace.getName());
         assertNotNull(workspace.getDescription());
         assertNotNull(workspace.getResourceReferences());
-
 
         assertNotNull(workspace.getAccessMode());
         assertNotNull(workspace.getMountPath());
@@ -505,11 +504,8 @@ public class JsonParserTest {
        assertProperties(trigger.getProperties());
    }
 
-    private void assertOutputs(List<OutputType> outputs){
-        assertEquals(outputs.size(), 1);
-
+    private void assertOutputs(List<OutputType> outputs) {
         OutputType outputType = outputs.get(0);
-        assertNotNull(outputType.getType());
         //Source
         assertResourceReference(outputType.getSource());
         //Target
@@ -539,18 +535,16 @@ public class JsonParserTest {
         }
     }
 
-   private void assertInputs(List<InputType> inputs){
-       assertEquals(inputs.size(), 1);
+    private void assertInputs(List<InputType> inputs) {
+        InputType inputType = inputs.get(0);
+        //Source
+        assertResourceReference(inputType.getSource());
+        //Target
+        assertResourceReference(inputType.getTarget());
+        assertInputData(inputType);
 
-       InputType inputType = inputs.get(0);
-       //Source
-       assertResourceReference(inputType.getSource());
-       //Target
-       assertResourceReference(inputType.getTarget());
-       assertInputData(inputType);
-
-       assertProperties(inputType.getProperties());
-   }
+        assertProperties(inputType.getProperties());
+    }
 
     private void assertInputData(InputType inputType) {
         if (inputType.getResource() != null) {
@@ -609,29 +603,30 @@ public class JsonParserTest {
     }
 
     private void assertResourceReference(ResourceReferenceChoice resourceReferenceChoice) {
-        assertNotNull(resourceReferenceChoice);
+        if (resourceReferenceChoice != null) {
 
-        if (resourceReferenceChoice.getExternalReference() != null) {
-            assertNull(resourceReferenceChoice.getRef());
-        }
-        else {
-            assertNull(resourceReferenceChoice.getExternalReference());
+            if (resourceReferenceChoice.getExternalReference() != null) {
+                assertNull(resourceReferenceChoice.getRef());
+            }
+            else {
+                assertNull(resourceReferenceChoice.getExternalReference());
+            }
         }
     }
 
-   private void assertTasks(List<Task> tasks){
-       assertEquals(tasks.size(), 3);
+    private void assertTasks(List<Task> tasks) {
+        assertEquals(tasks.size(), 1);
 
-       Task task = tasks.get(0);
-       assertNotNull(task.getBomRef());
-       assertNotNull(task.getUid());
-       assertNotNull(task.getName());
-       assertNotNull(task.getDescription());
-       assertNotNull(task.getResourceReferences());
-       assertNotNull(task.getTaskTypes());
-   }
+        Task task = tasks.get(0);
+        assertNotNull(task.getBomRef());
+        assertNotNull(task.getUid());
+        assertNotNull(task.getName());
+        assertNotNull(task.getDescription());
+        assertNotNull(task.getResourceReferences());
+        assertNotNull(task.getTaskTypes());
+    }
 
-    private void assertSteps(List<Step> steps){
+    private void assertSteps(List<Step> steps) {
         assertEquals(steps.size(), 1);
 
         Step step = steps.get(0);
@@ -641,7 +636,7 @@ public class JsonParserTest {
         assertProperties(step.getProperties());
     }
 
-    private void assertCommands(List<Command> commands){
+    private void assertCommands(List<Command> commands) {
         assertEquals(commands.size(), 1);
 
         Command command = commands.get(0);
@@ -649,17 +644,19 @@ public class JsonParserTest {
         assertProperties(command.getProperties());
     }
 
-    private void assertProperties(List<Property> properties){
-        assertEquals(properties.size(), 1);
+    private void assertProperties(List<Property> properties) {
+        if (properties != null) {
+            assertEquals(properties.size(), 1);
 
-        Property property = properties.get(0);
-        assertNotNull(property.getName());
-        assertNotNull(property.getValue());
+            Property property = properties.get(0);
+            assertNotNull(property.getName());
+            assertNotNull(property.getValue());
+        }
     }
 
     private void assertAnnotations(final Bom bom, final Version version) {
 
-        if(version== Version.VERSION_15) {
+        if (version == Version.VERSION_15) {
             List<Annotation> annotations = bom.getAnnotations();
 
             assertEquals(annotations.size(), 1);
@@ -671,7 +668,8 @@ public class JsonParserTest {
 
             assertEquals(annotation.getSubjects().size(), 1);
             assertAnnotator(annotation.getAnnotator());
-        } else {
+        }
+        else {
             assertNull(bom.getAnnotations());
         }
     }

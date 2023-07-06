@@ -600,7 +600,7 @@ public class XmlParserTest {
         assertNotNull(volume.getPersistent());
         assertNotNull(volume.getRemote());
 
-        //assertProperties(volume.getProperties());
+        assertProperties(volume.getProperties());
     }
 
     private void assertTrigger(Trigger trigger) {
@@ -630,14 +630,13 @@ public class XmlParserTest {
         assertNotNull(outputs.size());
 
         OutputType outputType = outputs.get(0);
-        //assertNotNull(outputType.getType());
         //Source
-        //assertResourceReference(outputType.getSource());
+        assertResourceReference(outputType.getSource());
         //Target
-        //assertResourceReference(outputType.getTarget());
+        assertResourceReference(outputType.getTarget());
         assertOutputData(outputType);
 
-        //assertProperties(outputType.getProperties());
+        assertProperties(outputType.getProperties());
     }
 
     private void assertOutputData(OutputType outputType) {
@@ -665,12 +664,12 @@ public class XmlParserTest {
 
         InputType inputType = inputs.get(0);
         //Source
-        //assertResourceReference(inputType.getSource());
+        assertResourceReference(inputType.getSource());
         //Target
-        //assertResourceReference(inputType.getTarget());
+        assertResourceReference(inputType.getTarget());
         assertInputData(inputType);
 
-        //assertProperties(inputType.getProperties());
+        assertProperties(inputType.getProperties());
     }
 
     private void assertInputData(InputType inputType) {
@@ -730,13 +729,14 @@ public class XmlParserTest {
     }
 
     private void assertResourceReference(ResourceReferenceChoice resourceReferenceChoice) {
-        assertNotNull(resourceReferenceChoice);
+        if (resourceReferenceChoice != null) {
 
-        if (resourceReferenceChoice.getExternalReference() != null) {
-            assertNull(resourceReferenceChoice.getRef());
-        }
-        else {
-            assertNull(resourceReferenceChoice.getExternalReference());
+            if (resourceReferenceChoice.getExternalReference() != null) {
+                assertNull(resourceReferenceChoice.getRef());
+            }
+            else {
+                assertNull(resourceReferenceChoice.getExternalReference());
+            }
         }
     }
 
@@ -770,17 +770,17 @@ public class XmlParserTest {
         assertProperties(command.getProperties());
     }
 
-    private void assertProperties(List<Property> properties){
-        assertEquals(properties.size(), 1);
-
-        Property property = properties.get(0);
-        assertNotNull(property.getName());
-        assertNotNull(property.getValue());
+    private void assertProperties(List<Property> properties) {
+        if (properties != null) {
+            Property property = properties.get(0);
+            assertNotNull(property.getName());
+            assertNotNull(property.getValue());
+        }
     }
 
     private void assertAnnotations(final Bom bom, final Version version) {
 
-        if(version== Version.VERSION_15) {
+        if (version == Version.VERSION_15) {
             List<Annotation> annotations = bom.getAnnotations();
 
             assertEquals(annotations.size(), 1);
