@@ -5,14 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.cyclonedx.util.deserializer.OutputTypeDeserializer;
 
 @JsonDeserialize(using = OutputTypeDeserializer.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"resource", "environmentVars", "data", "type", "source", "target", "properties"})
 public class OutputType
     extends AbstractType
 {

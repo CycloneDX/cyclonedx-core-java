@@ -49,10 +49,10 @@ import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
         "externalReferences",
         "dependencies",
         "compositions",
-        "formulation",
         "properties",
         "vulnerabilities",
         "annotations",
+        "formulation",
         "signature"
 })
 public class Bom extends ExtensibleElement {
