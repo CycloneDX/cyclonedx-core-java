@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -59,6 +60,7 @@ import com.github.packageurl.PackageURL;
      "components",
      "evidence",
      "releaseNotes",
+     "modelCard",
      "signature"
     })
 public class Component extends ExtensibleElement {
@@ -154,9 +156,14 @@ public class Component extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private Evidence evidence;
     @JacksonXmlProperty(isAttribute = true)
+    @JsonDeserialize(as=Type.class)
     private Type type;
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private ReleaseNotes releaseNotes;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private ModelCard modelCard;
     @JsonOnly
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private Signature signature;
