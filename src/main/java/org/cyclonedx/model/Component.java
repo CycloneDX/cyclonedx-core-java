@@ -161,7 +161,7 @@ public class Component extends ExtensibleElement {
     private ReleaseNotes releaseNotes;
 
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
-    @JacksonXmlElementWrapper(useWrapping = false)
+    @JsonProperty("modelCard")
     private ModelCard modelCard;
     @JsonOnly
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})

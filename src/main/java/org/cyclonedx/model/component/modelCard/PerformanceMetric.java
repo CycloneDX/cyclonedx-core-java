@@ -3,8 +3,7 @@ package org.cyclonedx.model.component.modelCard;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.model.ExtensibleElement;
+import org.cyclonedx.model.ExtensibleElement;;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -15,12 +14,11 @@ public class PerformanceMetric extends ExtensibleElement
 
   private String slice;
 
-  @JacksonXmlProperty(localName = "confidenceInterval")
-  private ConfidentialInterval confidentialInterval;
+  private confidenceInterval confidenceInterval;
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  public static class ConfidentialInterval
+  public static class confidenceInterval
   {
     @JsonProperty("lowerBound")
     private String lowerBound;
@@ -69,11 +67,11 @@ public class PerformanceMetric extends ExtensibleElement
     this.slice = slice;
   }
 
-  public ConfidentialInterval getConfidentialInterval() {
-    return confidentialInterval;
+  public PerformanceMetric.confidenceInterval getConfidenceInterval() {
+    return confidenceInterval;
   }
 
-  public void setConfidentialInterval(final ConfidentialInterval confidentialInterval) {
-    this.confidentialInterval = confidentialInterval;
+  public void setConfidenceInterval(final PerformanceMetric.confidenceInterval confidenceInterval) {
+    this.confidenceInterval = confidenceInterval;
   }
 }
