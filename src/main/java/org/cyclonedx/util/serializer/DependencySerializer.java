@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.CycloneDxSchema;
@@ -41,7 +40,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
 {
   private final String REF = "ref";
 
-  private boolean useNamespace = false;
+  private boolean useNamespace;
 
   private final String parentTagName;
 
