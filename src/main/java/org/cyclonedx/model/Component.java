@@ -156,7 +156,6 @@ public class Component extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private Evidence evidence;
     @JacksonXmlProperty(isAttribute = true)
-    @JsonDeserialize(as=Type.class)
     private Type type;
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private ReleaseNotes releaseNotes;

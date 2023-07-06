@@ -31,10 +31,8 @@ public class ModelParameters extends ExtensibleElement
 
   public static class Approach
   {
-
     private ApproachType type;
 
-    @JsonDeserialize(using = ApproachTypeDeserializer.class)
     public enum ApproachType
     {
       @JsonProperty("supervised")
@@ -48,14 +46,14 @@ public class ModelParameters extends ExtensibleElement
       @JsonProperty("self-supervised")
       SELF_SUPERVISED("self-supervised");
 
-      private final String name;
+      private final String typeName;
 
       public String getTypeName() {
-        return this.name;
+        return this.typeName;
       }
 
       ApproachType(String name) {
-        this.name = name;
+        this.typeName = name;
       }
     }
 
