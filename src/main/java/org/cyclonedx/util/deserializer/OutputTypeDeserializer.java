@@ -35,6 +35,7 @@ import org.cyclonedx.model.formulation.common.EnvVariableChoice;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.InputType.Parameter;
 import org.cyclonedx.model.formulation.common.OutputType;
+import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public class OutputTypeDeserializer
@@ -66,6 +67,12 @@ public class OutputTypeDeserializer
       JsonNode propertiesNode = node.get("properties");
       List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
       outputType.setProperties(properties);
+    }
+
+    if(node.has("type")) {
+      JsonNode typeNode = node.get("type");
+      OutputTypeEnum type = objectMapper.treeToValue(typeNode, OutputTypeEnum.class);
+      outputType.setType(type);
     }
 
     return outputType;

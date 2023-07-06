@@ -39,15 +39,6 @@ public class InputTypeSerializer
   {
     jsonGenerator.writeStartObject();
 
-    if (input.getSource() != null) {
-      jsonGenerator.writeFieldName("source");
-      jsonGenerator.writeObject(input.getSource());
-    }
-    if (input.getTarget() != null) {
-      jsonGenerator.writeFieldName("target");
-      jsonGenerator.writeObject(input.getTarget());
-    }
-
     if (input.getResource() != null) {
       jsonGenerator.writeFieldName("resource");
       jsonGenerator.writeObject( input.getResource());
@@ -76,6 +67,14 @@ public class InputTypeSerializer
       jsonGenerator.writeObject( input.getData());
     }
 
+    if (input.getSource() != null) {
+      jsonGenerator.writeFieldName("source");
+      jsonGenerator.writeObject(input.getSource());
+    }
+    if (input.getTarget() != null) {
+      jsonGenerator.writeFieldName("target");
+      jsonGenerator.writeObject(input.getTarget());
+    }
     if (input.getProperties() != null) {
       jsonGenerator.writeFieldName("properties");
       jsonGenerator.writeObject( input.getProperties());

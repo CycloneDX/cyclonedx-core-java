@@ -3,23 +3,53 @@ package org.cyclonedx.model.formulation.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.cyclonedx.util.deserializer.OutputTypeDeserializer;
 
 @JsonDeserialize(using = OutputTypeDeserializer.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"type", "source", "target", "resource", "environmentVars", "data", "properties"})
-public class OutputType extends AbstractType
+@JsonInclude(Include.NON_NULL)
+@JsonPropertyOrder({"resource", "environmentVars", "data", "type", "source", "target", "properties"})
+public class OutputType
+    extends AbstractType
 {
-  private String type;
+  @JsonProperty("type")
+  private OutputTypeEnum type;
 
-  public String getType() {
+  public OutputTypeEnum getType() {
     return type;
   }
 
-  public void setType(final String type) {
+  public void setType(final OutputTypeEnum type) {
     this.type = type;
+  }
+
+  public enum OutputTypeEnum {
+
+    @JsonProperty("artifact")
+    ARTIFACT("artifact"),
+    @JsonProperty("attestation")
+    ATTESTATION("attestation"),
+    @JsonProperty("log")
+    LOG("log"),
+    @JsonProperty("evidence")
+    EVIDENCE("evidence"),
+    @JsonProperty("metrics")
+    METRICS("metrics"),
+    @JsonProperty("other")
+    OTHER("other");
+
+    private final String name;
+
+    public String getTypeName() {
+      return this.name;
+    }
+
+    OutputTypeEnum(String name) {
+      this.name = name;
+    }
   }
 }

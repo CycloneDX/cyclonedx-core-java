@@ -27,13 +27,17 @@ import javax.xml.stream.XMLStreamException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.DependencyList;
 
-public class DependencySerializer extends StdSerializer<DependencyList>
+public class DependencySerializer extends StdSerializer<DependencyList> implements ContextualSerializer
 {
   private final String REF = "ref";
 
@@ -54,6 +58,11 @@ public class DependencySerializer extends StdSerializer<DependencyList>
   public DependencySerializer(Class<DependencyList> t, String parentTagName) {
     super(t);
     this.parentTagName = parentTagName;
+  }
+
+  @Override
+  public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
+    return new DependencySerializer(useNamespace, property.getName());
   }
 
   @Override
