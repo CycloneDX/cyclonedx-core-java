@@ -14,11 +14,11 @@ public class PerformanceMetric extends ExtensibleElement
 
   private String slice;
 
-  private confidenceInterval confidenceInterval;
+  private ConfidenceInterval confidenceInterval;
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  public static class confidenceInterval
+  public static class ConfidenceInterval
   {
     @JsonProperty("lowerBound")
     private String lowerBound;
@@ -67,11 +67,11 @@ public class PerformanceMetric extends ExtensibleElement
     this.slice = slice;
   }
 
-  public PerformanceMetric.confidenceInterval getConfidenceInterval() {
+  public ConfidenceInterval getConfidenceInterval() {
     return confidenceInterval;
   }
 
-  public void setConfidenceInterval(final PerformanceMetric.confidenceInterval confidenceInterval) {
+  public void setConfidenceInterval(final ConfidenceInterval confidenceInterval) {
     this.confidenceInterval = confidenceInterval;
   }
 }

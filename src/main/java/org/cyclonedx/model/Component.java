@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.modelCard.ComponentData;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -61,6 +62,7 @@ import com.github.packageurl.PackageURL;
      "evidence",
      "releaseNotes",
      "modelCard",
+     "data",
      "signature"
     })
 public class Component extends ExtensibleElement {
@@ -163,6 +165,11 @@ public class Component extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
     @JsonProperty("modelCard")
     private ModelCard modelCard;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @JsonProperty("data")
+    private ComponentData data;
+
     @JsonOnly
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private Signature signature;
@@ -411,9 +418,26 @@ public class Component extends ExtensibleElement {
 
     public void setSignature(Signature signature) { this.signature = signature; }
 
+    public ModelCard getModelCard() {
+        return modelCard;
+    }
+
+    public void setModelCard(final ModelCard modelCard) {
+        this.modelCard = modelCard;
+    }
+
+    public ComponentData getData() {
+        return data;
+    }
+
+    public void setData(final ComponentData data) {
+        this.data = data;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright, cpe, purl, swid, modified, components, evidence, releaseNotes, type);
+        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright,
+            cpe, purl, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
     }
 
     @Override
@@ -440,6 +464,8 @@ public class Component extends ExtensibleElement {
                 Objects.equals(evidence, component.evidence) &&
                 Objects.equals(mimeType, component.mimeType) &&
                 Objects.equals(releaseNotes, component.releaseNotes) &&
+                Objects.equals(data, component.data) &&
+                Objects.equals(modelCard, component.modelCard) &&
                 Objects.equals(type, component.type);
     }
 }
