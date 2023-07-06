@@ -72,6 +72,8 @@ public class ExternalReference {
         RELEASE_NOTES("release-notes"),
         @JsonProperty("security-contact")
         SECURITY_CONTACT("security-contact"),
+        @JsonProperty("model_card")
+        MODEL_CARD("model_card"),
         @JsonProperty("attestation")
         ATTESTATION("attestation"),
         @JsonProperty("threat-model")
