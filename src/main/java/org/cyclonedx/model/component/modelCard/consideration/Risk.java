@@ -3,7 +3,6 @@ package org.cyclonedx.model.component.modelCard.consideration;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.util.deserializer.RiskDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
