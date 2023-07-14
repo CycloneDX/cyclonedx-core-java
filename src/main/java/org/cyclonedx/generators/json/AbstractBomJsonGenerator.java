@@ -25,9 +25,11 @@ import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.BomReference;
 import org.cyclonedx.util.serializer.ComponentWrapperSerializer;
+import org.cyclonedx.util.serializer.InputTypeSerializer;
 import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
+import org.cyclonedx.util.serializer.OutputTypeSerializer;
 import org.cyclonedx.util.serializer.TrimStringSerializer;
-import org.cyclonedx.util.LifecycleSerializer;
+import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
 import org.cyclonedx.util.serializer.DependencySerializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -79,7 +81,15 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         lifecycleModule.addSerializer(new LifecycleSerializer(false));
         mapper.registerModule(lifecycleModule);
 
-        depModule.addSerializer(new DependencySerializer(false));
+        SimpleModule inputTypeModule = new SimpleModule();
+        inputTypeModule.addSerializer(new InputTypeSerializer(false));
+        mapper.registerModule(inputTypeModule);
+
+        SimpleModule outputTypeModule = new SimpleModule();
+        outputTypeModule.addSerializer(new OutputTypeSerializer(false));
+        mapper.registerModule(outputTypeModule);
+
+        depModule.addSerializer(new DependencySerializer(false, null));
         mapper.registerModule(depModule);
 
         componentWrapperModule.addSerializer(new ComponentWrapperSerializer(mapper));

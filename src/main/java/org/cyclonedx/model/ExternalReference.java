@@ -104,6 +104,14 @@ public class ExternalReference {
         CODIFIED_INFRASTRUCTURE("codified-infrastructure"),
         @JsonProperty("quality-metrics")
         QUALITY_METRICS("quality-metrics"),
+        @JsonProperty("log")
+        LOG("log"),
+        @JsonProperty("configuration")
+        CONFIGURATION("configuration"),
+        @JsonProperty("evidence")
+        EVIDENCE("evidence"),
+        @JsonProperty("formulation")
+        FORMULATION("formulation"),
         @JsonProperty("other")
         OTHER("other");
 

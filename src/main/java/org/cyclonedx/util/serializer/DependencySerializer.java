@@ -27,24 +27,41 @@ import javax.xml.stream.XMLStreamException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.DependencyList;
 
-public class DependencySerializer extends StdSerializer<DependencyList>
+public class DependencySerializer extends StdSerializer<DependencyList> implements ContextualSerializer
 {
   private final String REF = "ref";
 
-  private boolean useNamespace = false;
+  private boolean useNamespace;
 
-  public DependencySerializer(final boolean useNamespace) {
+  private final String parentTagName;
+
+  public DependencySerializer(final boolean useNamespace, String parentTagName) {
     super(DependencyList.class, false);
     this.useNamespace = useNamespace;
+    this.parentTagName = parentTagName;
   }
 
-  public DependencySerializer(final Class<DependencyList> t) {
+  public DependencySerializer() {
+    this(false, null);
+  }
+
+  public DependencySerializer(Class<DependencyList> t, String parentTagName) {
     super(t);
+    this.parentTagName = parentTagName;
+  }
+
+  @Override
+  public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
+    return new DependencySerializer(useNamespace, property.getName());
   }
 
   @Override
@@ -90,7 +107,7 @@ public class DependencySerializer extends StdSerializer<DependencyList>
       throws IOException, XMLStreamException
   {
     if (dependencies != null && !dependencies.isEmpty()) {
-      processNamespace(toXmlGenerator, "dependencies");
+      processNamespace(toXmlGenerator, parentTagName);
       toXmlGenerator.writeStartArray();
 
       for (Dependency dependency : dependencies) {
@@ -135,11 +152,13 @@ public class DependencySerializer extends StdSerializer<DependencyList>
   {
     QName qName;
 
+    String dependenciesNamespace = StringUtils.isBlank(dependencies)? "dependencies" : dependencies;
+
     if (useNamespace) {
-      qName = new QName(CycloneDxSchema.NS_DEPENDENCY_GRAPH_10, dependencies, "dg");
+      qName = new QName(CycloneDxSchema.NS_DEPENDENCY_GRAPH_10, dependenciesNamespace, "dg");
       toXmlGenerator.getStaxWriter().setPrefix(qName.getPrefix(), qName.getNamespaceURI());
     } else {
-      qName = new QName(dependencies);
+      qName = new QName(dependenciesNamespace);
     }
 
     toXmlGenerator.setNextName(qName);
