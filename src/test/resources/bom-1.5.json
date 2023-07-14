@@ -429,6 +429,12 @@
       "assemblies": [
         "pkg:maven/acme/library@3.0"
       ]
+    },
+    {
+      "aggregate": "incomplete_first_party_only",
+      "vulnerabilities": [
+          "6eee14da-8f42-4cc4-bb65-203235f02415"
+      ]
     }
   ],
   "properties": [

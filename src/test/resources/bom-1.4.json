@@ -296,6 +296,12 @@
         "assemblies": [
           "pkg:maven/acme/library@3.0"
         ]
+      },
+      {
+        "aggregate": "unknown",
+        "assemblies": [
+          "pkg:maven/acme/library@3.1"
+       ]
       }
     ],
   "vulnerabilities": [

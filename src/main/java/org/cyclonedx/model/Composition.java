@@ -20,6 +20,7 @@ package org.cyclonedx.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -28,10 +29,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"aggregate", "assemblies", "dependencies"})
+@JsonInclude(Include.NON_EMPTY)
+@JsonPropertyOrder({"aggregate", "assemblies", "dependencies", "vulnerabilities"})
 public class Composition {
 
     public enum Aggregate {
@@ -41,8 +41,16 @@ public class Composition {
         INCOMPLETE("incomplete"),
         @JsonProperty("incomplete_first_party_only")
         INCOMPLETE_FIRST_PARTY_ONLY("incomplete_first_party_only"),
+        @JsonProperty("incomplete_first_party_proprietary_only")
+        INCOMPLETE_FIRST_PARTY_PROPRIETARY_ONLY("incomplete_first_party_proprietary_only"),
+        @JsonProperty("incomplete_first_party_opensource_only")
+        INCOMPLETE_FIRST_PARTY_OPENSOURCE_ONLY("incomplete_first_party_opensource_only"),
         @JsonProperty("incomplete_third_party_only")
         INCOMPLETE_THIRD_PARTY_ONLY("incomplete_third_party_only"),
+        @JsonProperty("incomplete_third_party_proprietary_only")
+        INCOMPLETE_THIRD_PARTY_PROPRIETARY_ONLY("incomplete_third_party_proprietary_only"),
+        @JsonProperty("incomplete_third_party_opensource_only")
+        INCOMPLETE_THIRD_PARTY_OPENSOURCE_ONLY("incomplete_third_party_opensource_only"),
         @JsonProperty("unknown")
         UNKNOWN("unknown"),
         @JsonProperty("not_specified")
@@ -59,9 +67,25 @@ public class Composition {
         }
     }
 
+    @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
+    @JsonProperty("bom-ref")
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private String bomRef;
+
     private Aggregate aggregate;
     private List<BomReference> assemblies;
     private List<BomReference> dependencies;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private List<BomReference> vulnerabilities;
+
+    public String getBomRef() {
+        return bomRef;
+    }
+
+    public void setBomRef(String bomRef) {
+        this.bomRef = bomRef;
+    }
 
     public Aggregate getAggregate() {
         return aggregate;
@@ -103,5 +127,18 @@ public class Composition {
             dependencies = new ArrayList<>();
         }
         dependencies.add(dependency);
+    }
+
+    @JacksonXmlElementWrapper(localName = "vulnerabilities")
+    @JacksonXmlProperty(localName = "vulnerability")
+    public List<BomReference> getVulnerabilities() { return vulnerabilities; }
+
+    public void setVulnerabilities(List<BomReference> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
+
+    public void addVulnerability(BomReference vulnerability) {
+        if (vulnerabilities == null) {
+            vulnerabilities = new ArrayList<>();
+        }
+        vulnerabilities.add(vulnerability);
     }
 }
