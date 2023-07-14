@@ -28,8 +28,10 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.serializer.DependencySerializer;
-import org.cyclonedx.util.LifecycleSerializer;
+import org.cyclonedx.util.serializer.InputTypeSerializer;
+import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.VersionXmlAnnotationIntrospector;
+import org.cyclonedx.util.serializer.OutputTypeSerializer;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -74,12 +76,20 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
         SimpleModule lifecycleModule = new SimpleModule();
         lifecycleModule.addSerializer(new LifecycleSerializer(true));
         mapper.registerModule(lifecycleModule);
+
+        SimpleModule inputTypeModule = new SimpleModule();
+        inputTypeModule.addSerializer(new InputTypeSerializer(true));
+        mapper.registerModule(inputTypeModule);
+
+        SimpleModule outputTypeModule = new SimpleModule();
+        outputTypeModule.addSerializer(new OutputTypeSerializer(false));
+        mapper.registerModule(outputTypeModule);
     }
 
     private void registerDependencyModule(final ObjectMapper mapper, final boolean useNamespace) {
         SimpleModule depModule = new SimpleModule();
 
-        depModule.addSerializer(new DependencySerializer(useNamespace));
+        depModule.addSerializer(new DependencySerializer(useNamespace, null));
         mapper.registerModule(depModule);
     }
 
