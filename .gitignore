@@ -3,3 +3,9 @@ target
 .idea/
 dependency-reduced-pom.xml
 .DS_Store
+/bin/
+
+# Eclipse
+.settings/
+.classpath
+.project

@@ -1,0 +1,52 @@
+{
+  "bomFormat" : "CycloneDX",
+  "specVersion" : "1.4",
+  "version" : 1,
+  "metadata" : {
+    "timestamp" : "2023-04-11T15:18:58Z",
+    "component" : {
+      "name" : "Thing",
+      "version" : "1",
+      "bom-ref" : "Thing@1"
+    }
+  },
+  "components" : [
+    {
+      "name" : "System1",
+      "version" : "1",
+      "bom-ref" : "System1@1:System1@1"
+    },
+    {
+      "name" : "System2",
+      "version" : "1",
+      "bom-ref" : "System2@1:System2@1"
+    }
+  ],
+  "dependencies" : [
+    {
+      "ref" : "Thing@1",
+      "dependsOn" : [
+        "System1@1:System1@1",
+        "System2@1:System2@1"
+      ]
+    }
+  ],
+  "vulnerabilities" : [
+    {
+      "id" : "cve1",
+      "affects" : [
+        {
+          "ref" : "Thing@1"
+        }
+      ]
+    },
+    {
+      "id" : "cve2",
+      "affects" : [
+        {
+          "ref" : "Thing@1"
+        }
+      ]
+    }
+  ]
+}

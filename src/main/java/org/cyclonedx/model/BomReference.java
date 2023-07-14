@@ -41,6 +41,10 @@ public class BomReference {
         return ref;
     }
 
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
