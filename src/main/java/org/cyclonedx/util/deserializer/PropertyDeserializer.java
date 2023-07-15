@@ -24,7 +24,7 @@ public class PropertyDeserializer
       property.setValue(textNode.textValue());
     }
     else if (node.has("")) {
-      property.setValue( node.get("").asText());
+      property.setValue(node.get("").asText());
     }
 
     JsonNode contentTypeNode = node.get("name");

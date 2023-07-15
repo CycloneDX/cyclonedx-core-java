@@ -68,9 +68,6 @@
                         <text content-type="text/html" encoding="base64">PGgxPk15IG5ldyByZWxlYXNlPGgxPgo8cD5SZWxlYXNlIG5vdGVzIGhlcmU8L3A+</text>
                     </note>
                 </notes>
-                <properties>
-                    <property name="text">text</property>
-                </properties>
             </releaseNotes>
         </component>
         <manufacture>
@@ -285,7 +282,7 @@
             <data>
                 <classification flow="inbound">PII</classification>
                 <classification flow="outbound">PIFI</classification>
-                <classification flow="bi-directional">pubic</classification>
+                <classification flow="bi-directional">public</classification>
                 <classification flow="unknown">partner-data</classification>
             </data>
             <licenses>

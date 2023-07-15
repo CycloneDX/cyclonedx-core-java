@@ -5,17 +5,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Service;
-import org.cyclonedx.util.deserializer.ToolChoiceDeserializer;
 
-@JsonDeserialize(using = ToolChoiceDeserializer.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ToolChoice
+public class ToolInformation
 {
-
   private List<Component> components;
 
   private List<Service> services;

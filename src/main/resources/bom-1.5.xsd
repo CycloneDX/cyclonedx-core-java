@@ -5415,8 +5415,7 @@ limitations under the License.
                             a bom-ref, such as components, services, vulnerabilities, or the BOM itself. Unlike
                             inventory information, annotations may contain opinion or commentary from various
                             stakeholders. Annotations may be inline (with inventory) or externalized via BOM-Link,
-                            and may optionally be signed.
-                        </xs:documentation>
+                            and may optionally be signed.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="formulation" type="bom:formulationType" minOccurs="0" maxOccurs="1">

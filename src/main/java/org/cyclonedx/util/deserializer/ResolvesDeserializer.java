@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.ReleaseNotes.Resolves;
-import org.cyclonedx.model.ReleaseNotes.Resolves.Type;
 import org.cyclonedx.model.Source;
 
 public class ResolvesDeserializer
@@ -49,7 +48,7 @@ public class ResolvesDeserializer
     Resolves resolves = new Resolves();
 
     if (node.has("type")) {
-      resolves.setType(Type.valueOf(node.get("type").asText().toUpperCase()));
+      resolves.setType(Resolves.Type.valueOf(node.get("type").asText().toUpperCase()));
     }
 
     if (node.has("id")) {

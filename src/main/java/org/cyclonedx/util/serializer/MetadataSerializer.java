@@ -10,7 +10,7 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Property;
-import org.cyclonedx.model.metadata.ToolChoice;
+import org.cyclonedx.model.metadata.ToolInformation;
 
 public class MetadataSerializer
     extends StdSerializer<Metadata>
@@ -105,20 +105,21 @@ public class MetadataSerializer
   }
 
   private void parseTools(Metadata metadata, JsonGenerator jsonGenerator) throws IOException {
-    if (version.getVersion() <= Version.VERSION_14.getVersion()) {
+    if (metadata.getTools() != null) {
       if (isXml && jsonGenerator instanceof ToXmlGenerator) {
         writeArrayFieldXML(metadata.getTools(), (ToXmlGenerator) jsonGenerator, "tool");
-      } else {
+      }
+      else {
         writeArrayFieldJSON(jsonGenerator, "tools", metadata.getTools());
       }
-    } else {
-      ToolChoice choice = metadata.getToolChoice();
+    } else if (version.getVersion() >= Version.VERSION_15.getVersion()) {
+      ToolInformation choice = metadata.getToolChoice();
       if (choice != null) {
         if (isXml && jsonGenerator instanceof ToXmlGenerator) {
           if (choice.getComponents() != null) {
             writeArrayFieldXML(choice.getComponents(), (ToXmlGenerator) jsonGenerator, "component");
           }
-          else if (choice.getServices() != null) {
+          if (choice.getServices() != null) {
             writeArrayFieldXML(choice.getServices(), (ToXmlGenerator) jsonGenerator, "service");
           }
         }
@@ -126,7 +127,7 @@ public class MetadataSerializer
           if (choice.getComponents() != null) {
             writeArrayFieldJSON(jsonGenerator, "components", choice.getComponents());
           }
-          else if (choice.getServices() != null) {
+          if (choice.getServices() != null) {
             writeArrayFieldJSON(jsonGenerator, "services", choice.getServices());
           }
         }

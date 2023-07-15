@@ -26,7 +26,7 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.Tool;
-import org.cyclonedx.model.metadata.ToolChoice;
+import org.cyclonedx.model.metadata.ToolInformation;
 
 public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
@@ -122,34 +122,42 @@ public class MetadataDeserializer
         metadata.setTools(Collections.singletonList(tool));
       }
       else {
-        ToolChoice toolChoice = new ToolChoice();
+        ToolInformation toolInformation = new ToolInformation();
         if (toolsNode.has("components")) {
-          JsonNode componentsNode = toolsNode.get("components");
-          if (componentsNode.isArray()) {
-            List<Component> components = mapper.convertValue(componentsNode, new TypeReference<List<Component>>() { });
-            toolChoice.setComponents(components);
-          }
-          else if (componentsNode.isObject()) {
-            Component component = mapper.convertValue(componentsNode, Component.class);
-            toolChoice.setComponents( Collections.singletonList(component));
-          }
+          parseComponents(toolsNode.get("components"), toolInformation);
         }
         if (toolsNode.has("services")) {
-          JsonNode servicesNode = toolsNode.get("services");
-          if (servicesNode.isArray()) {
-            List<Service> services = mapper.convertValue(servicesNode, new TypeReference<List<Service>>() { });
-            toolChoice.setServices(services);
-          }
-          else if (servicesNode.isObject()) {
-            Service service = mapper.convertValue(servicesNode, Service.class);
-            toolChoice.setServices(Collections.singletonList(service));
-          }
+          parseServices(toolsNode.get("services"), toolInformation);
         }
-        metadata.setToolChoice(toolChoice);
+        metadata.setToolChoice(toolInformation);
       }
     }
 
     return metadata;
+  }
+
+  private void parseComponents(JsonNode componentsNode, ToolInformation toolInformation) {
+    if (componentsNode != null) {
+      if (componentsNode.isArray()) {
+        List<Component> components = mapper.convertValue(componentsNode, new TypeReference<List<Component>>() {});
+        toolInformation.setComponents(components);
+      } else if (componentsNode.isObject()) {
+        Component component = mapper.convertValue(componentsNode, Component.class);
+        toolInformation.setComponents(Collections.singletonList(component));
+      }
+    }
+  }
+
+  private void parseServices(JsonNode servicesNode, ToolInformation toolInformation) {
+    if (servicesNode != null) {
+      if (servicesNode.isArray()) {
+        List<Service> services = mapper.convertValue(servicesNode, new TypeReference<List<Service>>() {});
+        toolInformation.setServices(services);
+      } else if (servicesNode.isObject()) {
+        Service service = mapper.convertValue(servicesNode, Service.class);
+        toolInformation.setServices(Collections.singletonList(service));
+      }
+    }
   }
 
   static List<OrganizationalContact> deserializerOrganizationalContact(JsonNode node, final ObjectMapper mapper) {

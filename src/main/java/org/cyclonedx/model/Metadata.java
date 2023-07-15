@@ -31,7 +31,7 @@ import org.cyclonedx.util.deserializer.LifecycleDeserializer;
 import org.cyclonedx.util.deserializer.MetadataDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
-import org.cyclonedx.model.metadata.ToolChoice;
+import org.cyclonedx.model.metadata.ToolInformation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +67,7 @@ public class Metadata
     @JacksonXmlElementWrapper(localName = "tools")
     @JacksonXmlProperty(localName = "tool")
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
-    private ToolChoice toolChoice;
+    private ToolInformation toolInformation;
 
     @VersionFilter(versions = {"1.0", "1.1"})
     private List<OrganizationalContact> authors;
@@ -192,12 +192,12 @@ public class Metadata
 
     @JacksonXmlElementWrapper(localName = "tools")
     @JacksonXmlProperty(localName = "tool")
-    public ToolChoice getToolChoice() {
-        return toolChoice;
+    public ToolInformation getToolChoice() {
+        return toolInformation;
     }
 
-    public void setToolChoice(final ToolChoice toolChoice) {
-        this.toolChoice = toolChoice;
+    public void setToolChoice(final ToolInformation toolInformation) {
+        this.toolInformation = toolInformation;
     }
 
     @Override
@@ -212,13 +212,13 @@ public class Metadata
                 Objects.equals(supplier, metadata.supplier) &&
                 Objects.equals(license, metadata.license) &&
                 Objects.equals(lifecycles, metadata.lifecycles) &&
-                Objects.equals(toolChoice, metadata.toolChoice) &&
+                Objects.equals(toolInformation, metadata.toolInformation) &&
                 Objects.equals(properties, metadata.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, toolChoice, authors, component, manufacture, supplier, license, properties,
+        return Objects.hash(timestamp, toolInformation, authors, component, manufacture, supplier, license, properties,
             lifecycles);
     }
 }
