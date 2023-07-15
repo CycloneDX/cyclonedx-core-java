@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Lifecycles;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -33,6 +34,8 @@ public class MetadataDeserializer
   private final ObjectMapper mapper = new ObjectMapper();
 
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+
+  private final LifecycleDeserializer lifecycleDeserializer = new LifecycleDeserializer();
 
   @Override
   public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
@@ -57,13 +60,20 @@ public class MetadataDeserializer
       metadata.setManufacture(manufacture);
     }
 
+    if (node.has("lifecycles")) {
+      JsonParser lifecycleParser = node.get("lifecycles").traverse(jsonParser.getCodec());
+      lifecycleParser.nextToken();
+      Lifecycles lifecycles = lifecycleDeserializer.deserialize(lifecycleParser, ctxt);
+      metadata.setLifecycles(lifecycles);
+    }
+
     if (node.has("supplier")) {
       OrganizationalEntity supplier = mapper.convertValue(node.get("supplier"), OrganizationalEntity.class);
       metadata.setSupplier(supplier);
     }
 
     if(node.has("license")) {
-      LicenseChoice license = mapper.convertValue(node.get("license"), LicenseChoice.class);
+      LicenseChoice license = mapper.convertValue(node.get("licenses"), LicenseChoice.class);
       metadata.setLicenseChoice(license);
     }
 
@@ -142,8 +152,12 @@ public class MetadataDeserializer
     return metadata;
   }
 
-  static List<OrganizationalContact> deserializerOrganizationalContact(final JsonNode node, final ObjectMapper mapper) {
+  static List<OrganizationalContact> deserializerOrganizationalContact(JsonNode node, final ObjectMapper mapper) {
     List<OrganizationalContact> organizationalContactList = new ArrayList<>();
+
+    if (node.has("author")) {
+      node = node.get("author");
+    }
 
     if (node.isArray()) {
       for (JsonNode authorNode : node) {

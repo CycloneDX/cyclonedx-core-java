@@ -5,22 +5,13 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
 
 public class PropertyDeserializer
-    extends StdDeserializer<Property> {
-
-  public PropertyDeserializer() {
-    this(null);
-  }
-
-  public PropertyDeserializer(Class<?> vc) {
-    super(vc);
-  }
-
+    extends JsonDeserializer<Property>
+{
   @Override
   public Property deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     ObjectCodec codec = parser.getCodec();

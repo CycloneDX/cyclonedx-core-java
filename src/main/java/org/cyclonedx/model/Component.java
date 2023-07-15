@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.modelCard.ComponentData;
+import org.cyclonedx.util.deserializer.HashesDeserializer;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -256,6 +257,7 @@ public class Component extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "hashes")
     @JacksonXmlProperty(localName = "hash")
+    @JsonDeserialize(using = HashesDeserializer.class)
     public List<Hash> getHashes() {
         return hashes;
     }

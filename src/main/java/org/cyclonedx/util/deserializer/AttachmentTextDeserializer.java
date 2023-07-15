@@ -35,6 +35,9 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
     }
 
     JsonNode contentTypeNode = node.get("content-type");
+    if (contentTypeNode == null || !contentTypeNode.isTextual()) {
+      contentTypeNode = node.get("contentType");
+    }
     if (contentTypeNode != null && contentTypeNode.isTextual()) {
       attachmentText.setContentType(contentTypeNode.textValue());
     }

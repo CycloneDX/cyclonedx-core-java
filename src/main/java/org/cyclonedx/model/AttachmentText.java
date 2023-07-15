@@ -42,7 +42,7 @@ public class AttachmentText {
     private String encoding;
 
     @JacksonXmlProperty(localName = "content-type", isAttribute = true)
-    @JsonProperty("content-type")
+    @JsonProperty("contentType")
     private String contentType;
 
     @JacksonXmlText

@@ -26,7 +26,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.LifecycleChoice;
 import org.cyclonedx.model.LifecycleChoice.Phase;
 import org.cyclonedx.model.Lifecycles;
@@ -41,35 +40,25 @@ public class LifecycleDeserializer
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
     List<LifecycleChoice> choices = new ArrayList<>();
 
-    if (jsonParser instanceof FromXmlParser) {
-      JsonNode lifecycleNode = node.get("lifecycle");
-
-      if (lifecycleNode != null) {
-        // If it's an array of lifecycle
-        if (lifecycleNode.isArray()) {
-          for (JsonNode choiceNode : lifecycleNode) {
-            LifecycleChoice choice = createLifecycleChoice(choiceNode);
-            if (choice != null) {
-              choices.add(choice);
-            }
-          }
-        }
-        // If it's a single lifecycle
-        else {
-          LifecycleChoice choice = createLifecycleChoice(lifecycleNode);
-          if (choice != null) {
-            choices.add(choice);
-          }
-        }
-      }
+    if(node.has("lifecycle")) {
+      node = node.get("lifecycle");
     }
-    else {
-      if (node != null && node.isArray()) {
+
+    if (node != null) {
+      // If it's an array of lifecycle
+      if (node.isArray()) {
         for (JsonNode choiceNode : node) {
           LifecycleChoice choice = createLifecycleChoice(choiceNode);
           if (choice != null) {
             choices.add(choice);
           }
+        }
+      }
+      // If it's a single lifecycle
+      else {
+        LifecycleChoice choice = createLifecycleChoice(node);
+        if (choice != null) {
+          choices.add(choice);
         }
       }
     }
