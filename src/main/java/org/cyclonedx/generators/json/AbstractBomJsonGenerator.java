@@ -27,6 +27,7 @@ import org.cyclonedx.model.BomReference;
 import org.cyclonedx.util.serializer.ComponentWrapperSerializer;
 import org.cyclonedx.util.serializer.InputTypeSerializer;
 import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
+import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
 import org.cyclonedx.util.serializer.TrimStringSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
@@ -45,7 +46,7 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
 
     private final DefaultPrettyPrinter prettyPrinter;
 
-	public AbstractBomJsonGenerator() {
+    public AbstractBomJsonGenerator() {
         this.mapper = new ObjectMapper();
         this.prettyPrinter = new DefaultPrettyPrinter();
 
@@ -80,6 +81,10 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         SimpleModule lifecycleModule = new SimpleModule();
         lifecycleModule.addSerializer(new LifecycleSerializer(false));
         mapper.registerModule(lifecycleModule);
+
+        SimpleModule metadataModule = new SimpleModule();
+        metadataModule.addSerializer(new MetadataSerializer(false, getSchemaVersion()));
+        mapper.registerModule(metadataModule);
 
         SimpleModule inputTypeModule = new SimpleModule();
         inputTypeModule.addSerializer(new InputTypeSerializer(false));
