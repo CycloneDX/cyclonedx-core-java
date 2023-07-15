@@ -239,7 +239,7 @@
           },
           {
             "flow": "bi-directional",
-            "classification": "pubic"
+            "classification": "public"
           },
           {
             "flow": "unknown",

@@ -178,7 +178,7 @@
             "id": "Apache-2.0",
             "licensing": {
               "altIds": [
-                "acme", "acme-license"
+                "acme-license"
               ],
               "licensor": {
                 "organization": {
@@ -372,7 +372,7 @@
         },
         {
           "flow": "bi-directional",
-          "classification": "pubic"
+          "classification": "public"
         },
         {
           "flow": "unknown",

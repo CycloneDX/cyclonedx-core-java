@@ -32,8 +32,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.EnvVariableChoice;
-import org.cyclonedx.model.formulation.common.InputType;
-import org.cyclonedx.model.formulation.common.InputType.Parameter;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
