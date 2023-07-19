@@ -31,6 +31,7 @@ import org.cyclonedx.util.serializer.DependencySerializer;
 import org.cyclonedx.util.serializer.InputTypeSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.VersionXmlAnnotationIntrospector;
+import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -76,6 +77,10 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
         SimpleModule lifecycleModule = new SimpleModule();
         lifecycleModule.addSerializer(new LifecycleSerializer(true));
         mapper.registerModule(lifecycleModule);
+
+        SimpleModule metadataModule = new SimpleModule();
+        metadataModule.addSerializer(new MetadataSerializer(true, getSchemaVersion()));
+        mapper.registerModule(metadataModule);
 
         SimpleModule inputTypeModule = new SimpleModule();
         inputTypeModule.addSerializer(new InputTypeSerializer(true));

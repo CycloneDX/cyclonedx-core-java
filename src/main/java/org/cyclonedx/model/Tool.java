@@ -23,12 +23,15 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.deserializer.HashesDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"vendor", "name", "version", "hashes", "externalReferences"})
+@Deprecated
 public class Tool extends ExtensibleElement {
 
     private String vendor;
@@ -63,6 +66,7 @@ public class Tool extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "hashes")
     @JacksonXmlProperty(localName = "hash")
+    @JsonDeserialize(using = HashesDeserializer.class)
     public List<Hash> getHashes() {
         return hashes;
     }

@@ -543,7 +543,7 @@
                             <uid>event-1</uid>
                             <description>Description here</description>
                             <timeReceived>2023-01-01T00:00:00+00:00</timeReceived>
-                            <data>FooBar</data>
+                            <data content-type="text/plain">FooBar</data>
                             <source>
                                 <ref>component-g</ref>
                             </source>

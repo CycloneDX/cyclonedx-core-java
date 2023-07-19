@@ -22,16 +22,26 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.cyclonedx.util.deserializer.OrganizationalEntityDeserializer;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"name", "url", "contact"})
+@JsonDeserialize(using = OrganizationalEntityDeserializer.class)
 public class OrganizationalEntity {
+
+    @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
+    @JsonProperty("bom-ref")
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private String bomRef;
 
     private String name;
 
@@ -76,6 +86,14 @@ public class OrganizationalEntity {
         this.contact.add(contact);
     }
 
+    public String getBomRef() {
+        return bomRef;
+    }
+
+    public void setBomRef(final String bomRef) {
+        this.bomRef = bomRef;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,11 +101,12 @@ public class OrganizationalEntity {
         OrganizationalEntity that = (OrganizationalEntity) o;
         return Objects.equals(name, that.name) &&
                 Objects.equals(url, that.url) &&
-                Objects.equals(contact, that.contact);
+                Objects.equals(contact, that.contact) &&
+                Objects.equals(bomRef, that.bomRef);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, url, contact);
+        return Objects.hash(name, url, contact, bomRef);
     }
 }

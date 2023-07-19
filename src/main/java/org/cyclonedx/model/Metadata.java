@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,8 +28,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.deserializer.LifecycleDeserializer;
+import org.cyclonedx.util.deserializer.MetadataDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
+import org.cyclonedx.model.metadata.ToolInformation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +44,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 @JsonPropertyOrder({
     "timestamp", "lifecycles", "tools", "authors", "component", "manufacture", "supplier", "licenses", "properties"
 })
+@JsonDeserialize(using = MetadataDeserializer.class)
 public class Metadata
     extends ExtensibleElement
 {
@@ -57,7 +61,13 @@ public class Metadata
     private Lifecycles lifecycles;
 
     @VersionFilter(versions = {"1.0", "1.1"})
+    @Deprecated
     private List<Tool> tools;
+
+    @JacksonXmlElementWrapper(localName = "tools")
+    @JacksonXmlProperty(localName = "tool")
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private ToolInformation toolInformation;
 
     @VersionFilter(versions = {"1.0", "1.1"})
     private List<OrganizationalContact> authors;
@@ -87,6 +97,7 @@ public class Metadata
 
     @JacksonXmlElementWrapper(localName = "tools")
     @JacksonXmlProperty(localName = "tool")
+    @JsonIgnore
     public List<Tool> getTools() {
         return tools;
     }
@@ -179,25 +190,35 @@ public class Metadata
         this.lifecycles = lifecycles;
     }
 
+    @JacksonXmlElementWrapper(localName = "tools")
+    @JacksonXmlProperty(localName = "tool")
+    public ToolInformation getToolChoice() {
+        return toolInformation;
+    }
+
+    public void setToolChoice(final ToolInformation toolInformation) {
+        this.toolInformation = toolInformation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Metadata metadata = (Metadata) o;
         return Objects.equals(timestamp, metadata.timestamp) &&
-                Objects.equals(tools, metadata.tools) &&
                 Objects.equals(authors, metadata.authors) &&
                 Objects.equals(component, metadata.component) &&
                 Objects.equals(manufacture, metadata.manufacture) &&
                 Objects.equals(supplier, metadata.supplier) &&
                 Objects.equals(license, metadata.license) &&
                 Objects.equals(lifecycles, metadata.lifecycles) &&
+                Objects.equals(toolInformation, metadata.toolInformation) &&
                 Objects.equals(properties, metadata.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, tools, authors, component, manufacture, supplier, license, properties,
+        return Objects.hash(timestamp, toolInformation, authors, component, manufacture, supplier, license, properties,
             lifecycles);
     }
 }

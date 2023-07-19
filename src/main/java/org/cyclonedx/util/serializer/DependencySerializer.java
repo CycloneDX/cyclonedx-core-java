@@ -152,7 +152,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
   {
     QName qName;
 
-    String dependenciesNamespace = StringUtils.isBlank(dependencies)? "dependencies" : dependencies;
+    String dependenciesNamespace = StringUtils.isBlank(dependencies) ? "dependencies" : dependencies;
 
     if (useNamespace) {
       qName = new QName(CycloneDxSchema.NS_DEPENDENCY_GRAPH_10, dependenciesNamespace, "dg");

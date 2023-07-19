@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
+import org.cyclonedx.util.deserializer.StringListDeserializer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,6 +127,7 @@ public class Service extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "endpoints")
     @JacksonXmlProperty(localName = "endpoint")
+    @JsonDeserialize(using = StringListDeserializer.class)
     public List<String> getEndpoints() {
         return endpoints;
     }
