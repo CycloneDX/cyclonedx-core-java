@@ -210,30 +210,46 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     if (ratings != null) {
       if (ratings.isArray() && !ratings.isEmpty()) {
         for (JsonNode rating : ratings) {
-          ratingsList.add(processRating(rating));
+          ratingsList.addAll(processRatingIntermediate(rating));
         }
       } else {
-        ratingsList.add(processRating(ratings));
+        ratingsList.addAll(processRatingIntermediate(ratings));
       }
     }
     return ratingsList.isEmpty() ? null : ratingsList;
   }
 
+  private List<Rating> processRatingIntermediate(final JsonNode ratingNode) {
+    List<Rating> ratingsList = new ArrayList<>();
+
+    JsonNode r = ratingNode.get(Vulnerability10.RATING);
+
+    if (r != null) {
+      if (r.isArray() && !r.isEmpty()) {
+        for (JsonNode rating : r) {
+          ratingsList.add(processRating(rating));
+        }
+      } else {
+        ratingsList.add(processRating(r));
+      }
+    }
+    return ratingsList;
+  }
+
   private Rating processRating(final JsonNode ratingNode) {
     Rating rating = new Rating();
-    JsonNode r = ratingNode.get(Vulnerability10.RATING);
-    if (r != null) {
-      if (r.get(Vulnerability10.SCORE) != null) {
+    if (ratingNode != null) {
+      if (ratingNode.get(Vulnerability10.SCORE) != null) {
         Score score = new Score();
-        JsonNode s = r.get(Vulnerability10.SCORE);
+        JsonNode s = ratingNode.get(Vulnerability10.SCORE);
         score.setBase(getAsDouble(Vulnerability10.BASE, s));
         score.setImpact(getAsDouble(Vulnerability10.IMPACT, s));
         score.setExploitability(getAsDouble(Vulnerability10.EXPLOITABILITY, s));
         rating.setScore(score);
       }
-      rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, r)));
-      rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, r)));
-      rating.setVector(getAsString(Vulnerability10.VECTOR, r));
+      rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, ratingNode)));
+      rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, ratingNode)));
+      rating.setVector(getAsString(Vulnerability10.VECTOR, ratingNode));
     }
 
     return rating;
