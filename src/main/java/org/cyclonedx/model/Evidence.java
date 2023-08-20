@@ -40,7 +40,6 @@ public class Evidence extends ExtensibleElement {
 
     @JacksonXmlProperty(localName = "licenses")
     @JsonProperty("licenses")
-    @JsonDeserialize(using = LicenseDeserializer.class)
     public LicenseChoice getLicenseChoice() {
         return license;
     }

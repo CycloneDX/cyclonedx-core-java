@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,7 +32,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.LifecycleChoice.Phase;
+import org.cyclonedx.util.deserializer.LicensingTypeDeserializer;
 import org.cyclonedx.util.deserializer.OrganizationalChoiceDeserializer;
+import org.cyclonedx.util.deserializer.StringListDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -84,6 +88,16 @@ public class Licensing extends ExtensibleElement
     LicensingType(String name) {
       this.name = name;
     }
+
+    @JsonCreator
+    public static LicensingType fromString(String value) {
+      for (LicensingType type : LicensingType.values()) {
+        if (type.name.equalsIgnoreCase(value)) {
+          return type;
+        }
+      }
+      throw new IllegalArgumentException("Invalid licensing type: " + value);
+    }
   }
 
   private List<String> altIds;
@@ -101,6 +115,7 @@ public class Licensing extends ExtensibleElement
 
   @JacksonXmlElementWrapper(localName = "licenseTypes")
   @JacksonXmlProperty(localName = "licenseType")
+  @JsonDeserialize(using = LicensingTypeDeserializer.class)
   private List<LicensingType> licenseTypes;
 
   @JsonSerialize(using = CustomDateSerializer.class)
@@ -111,6 +126,7 @@ public class Licensing extends ExtensibleElement
 
   @JacksonXmlElementWrapper(localName = "altIds")
   @JacksonXmlProperty(localName = "altId")
+  @JsonDeserialize(using = StringListDeserializer.class)
   public List<String> getAltIds() {
     return altIds;
   }

@@ -25,7 +25,6 @@ import java.util.Objects;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.modelCard.ComponentData;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
-import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -275,7 +274,6 @@ public class Component extends ExtensibleElement {
 
     @JacksonXmlProperty(localName = "licenses")
     @JsonProperty("licenses")
-    @JsonDeserialize(using = LicenseDeserializer.class)
     public LicenseChoice getLicenseChoice() {
         return license;
     }

@@ -30,7 +30,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.deserializer.LifecycleDeserializer;
 import org.cyclonedx.util.deserializer.MetadataDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
-import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.model.metadata.ToolInformation;
 import java.util.ArrayList;
 import java.util.Date;
@@ -156,7 +155,6 @@ public class Metadata
 
     @JacksonXmlProperty(localName = "licenses")
     @JsonProperty("licenses")
-    @JsonDeserialize(using = LicenseDeserializer.class)
     public LicenseChoice getLicenseChoice() {
         return license;
     }

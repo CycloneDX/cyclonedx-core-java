@@ -741,6 +741,14 @@ public class AbstractParserTest
       assertNull(metadata.getLifecycles());
     }
 
+    //License
+    if (version.getVersion() > Version.VERSION_12.getVersion()) {
+      assertNotNull(metadata.getLicenseChoice());
+    }
+    else {
+      assertNull(metadata.getLicenseChoice());
+    }
+
     //Tool
     assertEquals(1, metadata.getTools().size());
     assertEquals("Awesome Vendor", metadata.getTools().get(0).getVendor());

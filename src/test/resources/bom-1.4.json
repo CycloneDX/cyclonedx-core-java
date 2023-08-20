@@ -103,7 +103,14 @@
           "email": "distribution@example.com"
         }
       ]
-    }
+    },
+    "licenses": [
+      {
+        "license": {
+          "id": "Apache-2.0"
+        }
+      }
+    ]
   },
   "components": [
     {

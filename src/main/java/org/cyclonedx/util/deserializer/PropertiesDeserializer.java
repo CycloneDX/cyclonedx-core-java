@@ -18,17 +18,28 @@ public class PropertiesDeserializer
   @Override
   public List<Property> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
     JsonNode node = p.getCodec().readTree(p);
-    List<Property> propertiesList = new ArrayList<>();
 
-    JsonNode propertyNodeItem = node.get("property");
-    if (propertyNodeItem.isArray()) {
-      for (JsonNode propertyNode : propertyNodeItem) {
-        propertiesList.add(parseProperty(propertyNode, p, ctxt));
-      }
-    } else {
-      propertiesList.add(parseProperty(propertyNodeItem, p, ctxt));
+    if (node.has("property")) {
+      return parseProperties(node.get("property"), p, ctxt);
     }
-    return propertiesList;
+    else {
+      return parseProperties(node, p, ctxt);
+    }
+  }
+
+  private List<Property> parseProperties(JsonNode node, JsonParser p, DeserializationContext ctxt) throws IOException {
+    List<Property> properties = new ArrayList<>();
+    if (node.isArray()) {
+      for (JsonNode resolvesNode : node) {
+        Property type = parseProperty(resolvesNode, p, ctxt);
+        properties.add(type);
+      }
+    }
+    else {
+      Property type = parseProperty(node, p, ctxt);
+      properties.add(type);
+    }
+    return properties;
   }
 
   private Property parseProperty(JsonNode node, JsonParser p, DeserializationContext ctxt) throws IOException {

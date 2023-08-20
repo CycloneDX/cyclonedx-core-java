@@ -25,6 +25,9 @@ public class StringListDeserializer
     else if (p.getCurrentName().equalsIgnoreCase("endpoints")) {
       return deserializeList(node, "endpoint");
     }
+    else if (p.getCurrentName().equalsIgnoreCase("altIds")) {
+      return deserializeList(node, "altId");
+    }
     return null;
   }
 

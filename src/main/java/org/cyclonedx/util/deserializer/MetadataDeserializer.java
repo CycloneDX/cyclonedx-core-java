@@ -72,7 +72,7 @@ public class MetadataDeserializer
       metadata.setSupplier(supplier);
     }
 
-    if(node.has("license")) {
+    if(node.has("licenses")) {
       LicenseChoice license = mapper.convertValue(node.get("licenses"), LicenseChoice.class);
       metadata.setLicenseChoice(license);
     }

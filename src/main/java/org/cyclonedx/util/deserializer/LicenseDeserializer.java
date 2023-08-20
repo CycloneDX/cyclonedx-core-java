@@ -19,58 +19,46 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 
 public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
 {
-  private final ObjectMapper mapper;
-
-  public LicenseDeserializer() {
-    this.mapper = new ObjectMapper();
-  }
-
   @Override
   public LicenseChoice deserialize(
-    final JsonParser p, final DeserializationContext ctxt) throws IOException
+      final JsonParser p, final DeserializationContext ctxt) throws IOException
   {
-    if (p instanceof FromXmlParser) {
-      return p.readValueAs(LicenseChoice.class);
-    }
-    ArrayNode nodes = p.readValueAsTree();
+    JsonNode rootNode = p.getCodec().readTree(p);
 
-    TypeFactory factory = TypeFactory.defaultInstance();
-    MapType type = factory.constructMapType(HashMap.class, String.class, License.class);
-    LicenseChoice licenseChoice = new LicenseChoice();
+    ArrayNode nodes = (rootNode.isArray() ? (ArrayNode) rootNode : new ArrayNode(null).add(rootNode));
+
     for (JsonNode node : nodes) {
-      HashMap<String, License> map;
-      try
-      {
-        map = this.mapper.readValue(node.toString(), type);
-        if(map.get("license") != null)
-        {
-          licenseChoice.addLicense(map.get("license"));
-        }
+      LicenseChoice licenseChoice = new LicenseChoice();
+
+      if (node.has("license")) {
+        processLicenseNode(p, node.get("license"), licenseChoice);
+        return licenseChoice;
       }
-      catch(JsonProcessingException e)
-      {
-        // Check for expressions
-        licenseChoice = this.mapper.readValue(node.toString(), LicenseChoice.class);
+      else if (node.has("expression")) {
+        licenseChoice.setExpression(node.get("expression").asText());
+        return licenseChoice;
       }
     }
+    return null;
+  }
 
-    return licenseChoice;
+  private void processLicenseNode(JsonParser p, JsonNode licenseNode, LicenseChoice licenseChoice) throws IOException {
+    ArrayNode licenseNodes = (licenseNode.isArray() ? (ArrayNode) licenseNode : new ArrayNode(null).add(licenseNode));
+
+    for (JsonNode license : licenseNodes) {
+      License licenseObj = p.getCodec().treeToValue(license, License.class);
+      licenseChoice.addLicense(licenseObj);
+    }
   }
 }

@@ -77,6 +77,11 @@
                 <email>distribution@example.com</email>
             </contact>
         </supplier>
+        <licenses>
+            <license>
+                <id>Apache-2.0</id>
+            </license>
+        </licenses>
     </metadata>
     <components>
         <component type="library" bom-ref="pkg:maven/com.acme/jackson-databind@2.9.4">
