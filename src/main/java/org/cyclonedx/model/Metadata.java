@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -55,8 +53,8 @@ public class Metadata
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
     @JsonProperty("lifecycles")
     @JsonDeserialize(using = LifecycleDeserializer.class)
-    @XmlElementWrapper(name = "lifecycles")
-    @XmlElement(name = "lifecycle")
+    @JacksonXmlElementWrapper(localName = "lifecycles")
+    @JacksonXmlProperty(localName = "lifecycle")
     private Lifecycles lifecycles;
 
     @VersionFilter(versions = {"1.0", "1.1"})

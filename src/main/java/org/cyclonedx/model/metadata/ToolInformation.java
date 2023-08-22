@@ -1,15 +1,12 @@
 package org.cyclonedx.model.metadata;
 
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Service;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@XmlAccessorType(XmlAccessType.FIELD)
 public class ToolInformation
 {
   private List<Component> components;

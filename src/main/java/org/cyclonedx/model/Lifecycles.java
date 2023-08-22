@@ -22,11 +22,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Lifecycles
 {
     @JacksonXmlProperty(localName = "lifecycle")
