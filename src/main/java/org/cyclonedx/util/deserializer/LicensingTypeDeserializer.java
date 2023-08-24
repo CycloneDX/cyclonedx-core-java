@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.Licensing.LicensingType;
 
 public class LicensingTypeDeserializer
@@ -26,16 +27,14 @@ public class LicensingTypeDeserializer
 
   private List<LicensingType> parseLicenseTypes(JsonNode node) {
     List<LicensingType> types = new ArrayList<>();
-    if (node.isArray()) {
-      for (JsonNode resolvesNode : node) {
-        LicensingType type = parseType(resolvesNode);
-        types.add(type);
-      }
-    }
-    else {
-      LicensingType type = parseType(node);
+
+    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+
+    for (JsonNode resolvesNode : nodes) {
+      LicensingType type = parseType(resolvesNode);
       types.add(type);
     }
+
     return types;
   }
 

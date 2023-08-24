@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Collections;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -36,6 +33,8 @@ public class MetadataDeserializer
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 
   private final LifecycleDeserializer lifecycleDeserializer = new LifecycleDeserializer();
+
+  private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
 
   @Override
   public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
@@ -90,23 +89,11 @@ public class MetadataDeserializer
       }
     }
 
-    if(node.has("properties")) {
-      JsonNode propertiesNode = node.get("properties");
-
-      if (propertiesNode.isObject()) {
-        List<Property> properties = new ArrayList<>();
-        Iterator<Entry<String, JsonNode>> fields = propertiesNode.fields();
-        while (fields.hasNext()) {
-          Map.Entry<String, JsonNode> field = fields.next();
-          if (field.getValue().isArray()) {
-            for (JsonNode propertyNode : field.getValue()) {
-              Property property = mapper.convertValue(propertyNode, Property.class);
-              properties.add(property);
-            }
-          }
-        }
-        metadata.setProperties(properties);
-      }
+    if (node.has("properties")) {
+      JsonParser propertiesParser = node.get("properties").traverse(jsonParser.getCodec());
+      propertiesParser.nextToken();
+      List<Property> properties = propertiesDeserializer.deserialize(propertiesParser, ctxt);
+      metadata.setProperties(properties);
     }
 
     JsonNode toolsNode = node.get("tools");

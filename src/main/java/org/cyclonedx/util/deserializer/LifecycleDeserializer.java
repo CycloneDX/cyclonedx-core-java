@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.LifecycleChoice;
 import org.cyclonedx.model.LifecycleChoice.Phase;
 import org.cyclonedx.model.Lifecycles;
@@ -45,18 +46,9 @@ public class LifecycleDeserializer
     }
 
     if (node != null) {
-      // If it's an array of lifecycle
-      if (node.isArray()) {
-        for (JsonNode choiceNode : node) {
-          LifecycleChoice choice = createLifecycleChoice(choiceNode);
-          if (choice != null) {
-            choices.add(choice);
-          }
-        }
-      }
-      // If it's a single lifecycle
-      else {
-        LifecycleChoice choice = createLifecycleChoice(node);
+      ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+      for (JsonNode choiceNode : nodes) {
+        LifecycleChoice choice = createLifecycleChoice(choiceNode);
         if (choice != null) {
           choices.add(choice);
         }

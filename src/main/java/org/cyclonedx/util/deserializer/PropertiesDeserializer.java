@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.Property;
 
 public class PropertiesDeserializer
@@ -29,14 +30,9 @@ public class PropertiesDeserializer
 
   private List<Property> parseProperties(JsonNode node, JsonParser p, DeserializationContext ctxt) throws IOException {
     List<Property> properties = new ArrayList<>();
-    if (node.isArray()) {
-      for (JsonNode resolvesNode : node) {
-        Property type = parseProperty(resolvesNode, p, ctxt);
-        properties.add(type);
-      }
-    }
-    else {
-      Property type = parseProperty(node, p, ctxt);
+    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+    for (JsonNode resolvesNode : nodes) {
+      Property type = parseProperty(resolvesNode, p, ctxt);
       properties.add(type);
     }
     return properties;

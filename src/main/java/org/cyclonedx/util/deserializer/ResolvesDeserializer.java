@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.ReleaseNotes.Resolves;
 import org.cyclonedx.model.Source;
 
@@ -31,14 +32,10 @@ public class ResolvesDeserializer
 
   private List<Resolves> parseResolvesNode(JsonNode node) {
     List<Resolves> resolvesList = new ArrayList<>();
-    if (node.isArray()) {
-      for (JsonNode resolvesNode : node) {
-        Resolves resolves = parseResolves(resolvesNode);
-        resolvesList.add(resolves);
-      }
-    }
-    else {
-      Resolves resolves = parseResolves(node);
+    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+
+    for (JsonNode resolvesNode : nodes) {
+      Resolves resolves = parseResolves(resolvesNode);
       resolvesList.add(resolves);
     }
     return resolvesList;

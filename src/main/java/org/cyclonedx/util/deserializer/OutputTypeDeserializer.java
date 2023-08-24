@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.EnvVariableChoice;
@@ -82,17 +83,13 @@ public class OutputTypeDeserializer
       ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
       outputType.setResource(resource);
     } else if (node.has("environmentVars")) {
-      JsonNode environmentVarsNode = node.get("environmentVars");
+      JsonNode nodes = node.get("environmentVars");
       List<EnvVariableChoice> environmentVars = new ArrayList<>();
-      if (environmentVarsNode.isArray()) {
-        // if it's an array
-        for (JsonNode envVarNode : environmentVarsNode) {
-          EnvVariableChoice envVar = objectMapper.treeToValue(envVarNode, EnvVariableChoice.class);
-          environmentVars.add(envVar);
-        }
-      } else {
-        // if it's a single object
-        EnvVariableChoice envVar = objectMapper.treeToValue(environmentVarsNode, EnvVariableChoice.class);
+
+      ArrayNode environmentVarsNode = (nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(null).add(nodes));
+
+      for (JsonNode envVarNode : environmentVarsNode) {
+        EnvVariableChoice envVar = objectMapper.treeToValue(envVarNode, EnvVariableChoice.class);
         environmentVars.add(envVar);
       }
       outputType.setEnvironmentVars(environmentVars);

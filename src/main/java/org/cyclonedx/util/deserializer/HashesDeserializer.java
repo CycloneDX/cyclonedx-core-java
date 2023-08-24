@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.Hash;
 
 public class HashesDeserializer
@@ -26,14 +27,10 @@ public class HashesDeserializer
 
   private List<Hash> parseHashes(JsonNode node) {
     List<Hash> hashes = new ArrayList<>();
-    if (node.isArray()) {
-      for (JsonNode resolvesNode : node) {
-        Hash hash = parseHash(resolvesNode);
-        hashes.add(hash);
-      }
-    }
-    else {
-      Hash hash = parseHash(node);
+    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+
+    for (JsonNode resolvesNode : nodes) {
+      Hash hash = parseHash(resolvesNode);
       hashes.add(hash);
     }
     return hashes;

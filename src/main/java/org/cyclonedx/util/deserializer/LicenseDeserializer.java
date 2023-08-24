@@ -35,19 +35,20 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
       final JsonParser p, final DeserializationContext ctxt) throws IOException
   {
     JsonNode rootNode = p.getCodec().readTree(p);
+    if (!rootNode.isEmpty()) {
+      ArrayNode nodes = (rootNode.isArray() ? (ArrayNode) rootNode : new ArrayNode(null).add(rootNode));
 
-    ArrayNode nodes = (rootNode.isArray() ? (ArrayNode) rootNode : new ArrayNode(null).add(rootNode));
+      for (JsonNode node : nodes) {
+        LicenseChoice licenseChoice = new LicenseChoice();
 
-    for (JsonNode node : nodes) {
-      LicenseChoice licenseChoice = new LicenseChoice();
-
-      if (node.has("license")) {
-        processLicenseNode(p, node.get("license"), licenseChoice);
-        return licenseChoice;
-      }
-      else if (node.has("expression")) {
-        licenseChoice.setExpression(node.get("expression").asText());
-        return licenseChoice;
+        if (node.has("license")) {
+          processLicenseNode(p, node.get("license"), licenseChoice);
+          return licenseChoice;
+        }
+        else if (node.has("expression")) {
+          licenseChoice.setExpression(node.get("expression").asText());
+          return licenseChoice;
+        }
       }
     }
     return null;

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.ReleaseNotes.Notes;
 
@@ -29,15 +30,12 @@ public class NotesDeserializer
     }
   }
 
-  private List<Notes> parseNode (JsonNode node) throws JsonProcessingException {
+  private List<Notes> parseNode(JsonNode node) throws JsonProcessingException {
     List<Notes> list = new ArrayList<>();
-    if (node.isArray()) {
-      for (JsonNode noteNode : node) {
-        Notes notes = parseNotes(noteNode);
-        list.add(notes);
-      }
-    } else {
-      Notes notes = parseNotes(node);
+
+    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+    for (JsonNode noteNode : nodes) {
+      Notes notes = parseNotes(noteNode);
       list.add(notes);
     }
     return list;
