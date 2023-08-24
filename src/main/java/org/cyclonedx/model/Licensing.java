@@ -32,7 +32,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.model.LifecycleChoice.Phase;
 import org.cyclonedx.util.deserializer.LicensingTypeDeserializer;
 import org.cyclonedx.util.deserializer.OrganizationalChoiceDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
