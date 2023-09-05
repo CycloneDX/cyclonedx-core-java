@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
 
 import java.util.ArrayList;
@@ -187,6 +188,7 @@ public class Service extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "externalReferences")
     @JacksonXmlProperty(localName = "reference")
+    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     public List<ExternalReference> getExternalReferences() {
         return externalReferences;
     }
