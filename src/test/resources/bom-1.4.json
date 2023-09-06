@@ -103,7 +103,14 @@
           "email": "distribution@example.com"
         }
       ]
-    }
+    },
+    "licenses": [
+      {
+        "license": {
+          "id": "Apache-2.0"
+        }
+      }
+    ]
   },
   "components": [
     {
@@ -164,7 +171,9 @@
       ],
       "licenses": [
         {
-          "expression": "EPL-2.0 OR GPL-2.0-with-classpath-exception"
+          "license": {
+            "id": "Apache-2.0"
+          }
         }
       ],
       "copyright": "Copyright Example Inc. All rights reserved.",
@@ -237,7 +246,7 @@
           },
           {
             "flow": "bi-directional",
-            "classification": "pubic"
+            "classification": "public"
           },
           {
             "flow": "unknown",
@@ -294,6 +303,12 @@
         "assemblies": [
           "pkg:maven/acme/library@3.0"
         ]
+      },
+      {
+        "aggregate": "unknown",
+        "assemblies": [
+          "pkg:maven/acme/library@3.1"
+       ]
       }
     ],
   "vulnerabilities": [

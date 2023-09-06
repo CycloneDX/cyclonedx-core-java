@@ -25,6 +25,7 @@ import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.json.BomJsonGenerator12;
 import org.cyclonedx.generators.json.BomJsonGenerator13;
 import org.cyclonedx.generators.json.BomJsonGenerator14;
+import org.cyclonedx.generators.json.BomJsonGenerator15;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
@@ -175,6 +176,18 @@ public class BomJsonGeneratorTest {
         assertNotNull(bom2.getComponents().get(0).getExternalReferences());
         assertEquals("bom", bom2.getComponents().get(0).getExternalReferences().get(0).getType().getTypeName());
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", bom2.getComponents().get(0).getExternalReferences().get(0).getUrl());
+    }
+
+    @Test
+    public void schema15JsonObjectGenerationTest() throws Exception {
+        Bom bom = createCommonBom("/bom-1.5.xml");
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_15, bom);
+        assertTrue(generator instanceof BomJsonGenerator15);
+        assertEquals(CycloneDxSchema.Version.VERSION_15, generator.getSchemaVersion());
+
+        File file = writeToFile(generator.toJsonString());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_15));
     }
 
     private File writeToFile(String jsonString) throws Exception {

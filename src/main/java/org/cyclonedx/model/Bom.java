@@ -29,9 +29,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.cyclonedx.model.formulation.Formula;
 import org.cyclonedx.model.vulnerability.Vulnerability;
-import org.cyclonedx.util.DependencyDeserializer;
-import org.cyclonedx.util.VulnerabilityDeserializer;
+import org.cyclonedx.util.deserializer.DependencyDeserializer;
+import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
+import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
 
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")
@@ -48,8 +50,10 @@ import org.cyclonedx.util.VulnerabilityDeserializer;
         "externalReferences",
         "dependencies",
         "compositions",
-        "vulnerabilities",
         "properties",
+        "vulnerabilities",
+        "annotations",
+        "formulation",
         "signature"
 })
 public class Bom extends ExtensibleElement {
@@ -58,29 +62,35 @@ public class Bom extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
 
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = { "1.0", "1.1" })
     private Metadata metadata;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
     private List<Component> components;
 
-    @VersionFilter(versions = {"1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1"})
     private List<Service> services;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0"})
     private DependencyList dependencies;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(versions = {"1.0"})
+    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     private List<ExternalReference> externalReferences;
 
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Composition> compositions;
 
-    @VersionFilter(versions = {"1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private List<Formula> formulation;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
     private List<Vulnerability> vulnerabilities;
 
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private List<Annotation> annotations;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -96,7 +106,7 @@ public class Bom extends ExtensibleElement {
     private String bomFormat;
 
     @JsonOnly
-    @VersionFilter(versions = {"1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private Signature signature;
 
     public Metadata getMetadata() {
@@ -183,11 +193,31 @@ public class Bom extends ExtensibleElement {
         this.compositions = compositions;
     }
 
+    @JacksonXmlElementWrapper(localName = "formulation")
+    @JacksonXmlProperty(localName = "formula")
+    public List<Formula> getFormulation() {
+        return formulation;
+    }
+
+    public void setFormulation(final List<Formula> formulation) {
+        this.formulation = formulation;
+    }
+
     @JacksonXmlElementWrapper(localName = "vulnerabilities")
     @JacksonXmlProperty(localName = "vulnerability")
     public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
 
     public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
+
+    @JacksonXmlElementWrapper(localName = "annotations")
+    @JacksonXmlProperty(localName = "annotation")
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(List<Annotation> annotations) {
+        this.annotations = annotations;
+    }
 
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
@@ -260,6 +290,7 @@ public class Bom extends ExtensibleElement {
                 Objects.equals(externalReferences, bom.externalReferences) &&
                 Objects.equals(compositions, bom.compositions) &&
                 Objects.equals(vulnerabilities, bom.vulnerabilities) &&
+                Objects.equals(annotations, bom.annotations) &&
                 Objects.equals(properties, bom.properties) &&
                 Objects.equals(serialNumber, bom.serialNumber) &&
                 Objects.equals(specVersion, bom.specVersion);
@@ -267,6 +298,7 @@ public class Bom extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities, properties, version, serialNumber, specVersion);
+        return Objects.hash(metadata, components, dependencies, externalReferences, compositions, vulnerabilities,
+            annotations, properties, version, serialNumber, specVersion);
     }
 }

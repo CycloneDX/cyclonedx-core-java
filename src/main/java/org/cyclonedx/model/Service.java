@@ -25,7 +25,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.util.LicenseDeserializer;
+import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
+import org.cyclonedx.util.deserializer.StringListDeserializer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,12 +69,12 @@ public class Service extends ExtensibleElement {
     private List<ServiceData> data;
     private LicenseChoice license;
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
     private List<Service> services;
     private ReleaseNotes releaseNotes;
     @JsonOnly
-    @VersionFilter(versions = {"1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     private Signature signature;
 
     public String getBomRef() {
@@ -125,6 +127,7 @@ public class Service extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "endpoints")
     @JacksonXmlProperty(localName = "endpoint")
+    @JsonDeserialize(using = StringListDeserializer.class)
     public List<String> getEndpoints() {
         return endpoints;
     }
@@ -175,7 +178,6 @@ public class Service extends ExtensibleElement {
 
     @JacksonXmlProperty(localName = "licenses")
     @JsonProperty("licenses")
-    @JsonDeserialize(using = LicenseDeserializer.class)
     public LicenseChoice getLicense() {
         return license;
     }
@@ -186,6 +188,7 @@ public class Service extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "externalReferences")
     @JacksonXmlProperty(localName = "reference")
+    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     public List<ExternalReference> getExternalReferences() {
         return externalReferences;
     }

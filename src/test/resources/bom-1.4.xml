@@ -77,6 +77,11 @@
                 <email>distribution@example.com</email>
             </contact>
         </supplier>
+        <licenses>
+            <license>
+                <id>Apache-2.0</id>
+            </license>
+        </licenses>
     </metadata>
     <components>
         <component type="library" bom-ref="pkg:maven/com.acme/jackson-databind@2.9.4">
@@ -98,7 +103,9 @@
                 <hash alg="BLAKE3">26cdc7fb3fd65fc3b621a4ef70bc7d2489d5c19e70c76cf7ec20e538df0047cf</hash>
             </hashes>
             <licenses>
-                <expression>EPL-2.0 OR GPL-2.0-with-classpath-exception</expression>
+                <license>
+                    <id>Apache-2.0</id>
+                </license>
             </licenses>
             <copyright>Copyright Example Inc. All rights reserved.</copyright>
             <cpe>cpe:/a:example:myapplication:1.0.0</cpe>
@@ -148,7 +155,7 @@
             <data>
                 <classification flow="inbound">PII</classification>
                 <classification flow="outbound">PIFI</classification>
-                <classification flow="bi-directional">pubic</classification>
+                <classification flow="bi-directional">public</classification>
                 <classification flow="unknown">partner-data</classification>
             </data>
             <licenses>
@@ -183,6 +190,12 @@
             <aggregate>unknown</aggregate>
             <assemblies>
                 <assembly ref="pkg:maven/acme/library@3.0"/>
+            </assemblies>
+        </composition>
+        <composition>
+            <aggregate>unknown</aggregate>
+            <assemblies>
+                <assembly ref="pkg:maven/acme/library@3.1"/>
             </assemblies>
         </composition>
     </compositions>

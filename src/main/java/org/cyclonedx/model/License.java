@@ -18,30 +18,52 @@
  */
 package org.cyclonedx.model;
 
+import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "text", "url"})
+@JsonPropertyOrder({"id", "name", "licensing", "text", "url", "properties"})
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
+    @JsonProperty("bom-ref")
+    private String bomRef;
     @JacksonXmlProperty(localName = "id")
     @JsonProperty("id")
     private String id;
     private String name;
 
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    private Licensing licensing;
+
     @JacksonXmlProperty(localName = "text")
     @JsonProperty("text")
     private AttachmentText attachmentText;
     private String url;
+
+    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    private List<Property> properties;
+
+    public String getBomRef() {
+        return bomRef;
+    }
+
+    public void setBomRef(final String bomRef) {
+        this.bomRef = bomRef;
+    }
 
     public String getId() {
         return id;
@@ -59,12 +81,31 @@ public class License extends ExtensibleElement {
         this.name = name;
     }
 
+    public Licensing getLicensing() {
+        return licensing;
+    }
+
+    public void setLicensing(final Licensing licensing) {
+        this.licensing = licensing;
+    }
+
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @JacksonXmlElementWrapper(localName = "properties")
+    @JacksonXmlProperty(localName = "property")
+    @JsonDeserialize(using = PropertiesDeserializer.class)
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(final List<Property> properties) {
+        this.properties = properties;
     }
 
     public AttachmentText getAttachmentText() {
@@ -83,11 +124,13 @@ public class License extends ExtensibleElement {
         return Objects.equals(id, license.id) &&
                 Objects.equals(name, license.name) &&
                 Objects.equals(url, license.url) &&
-                Objects.equals(attachmentText, license.attachmentText);
+                Objects.equals(attachmentText, license.attachmentText) &&
+                Objects.equals(licensing, license.licensing) &&
+                Objects.equals(properties, license.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText);
+        return Objects.hash(id, name, url, attachmentText, properties, licensing);
     }
 }

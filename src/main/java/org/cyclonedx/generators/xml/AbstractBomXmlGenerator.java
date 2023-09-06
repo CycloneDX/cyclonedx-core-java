@@ -27,8 +27,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
-import org.cyclonedx.util.DependencySerializer;
+import org.cyclonedx.util.serializer.DependencySerializer;
+import org.cyclonedx.util.serializer.InputTypeSerializer;
+import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.VersionXmlAnnotationIntrospector;
+import org.cyclonedx.util.serializer.MetadataSerializer;
+import org.cyclonedx.util.serializer.OutputTypeSerializer;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -60,26 +64,37 @@ public abstract class AbstractBomXmlGenerator extends CycloneDxSchema implements
 
     private void setupObjectMapper(final ObjectMapper mapper) {
         mapper.setAnnotationIntrospector(
-            new VersionXmlAnnotationIntrospector(
-                String.valueOf(this.getSchemaVersion().getVersion())));
+            new VersionXmlAnnotationIntrospector(String.valueOf(this.getSchemaVersion().getVersion())));
 
         if (this.getSchemaVersion().getVersion() == 1.0) {
             // NO-OP
-        } else if (this.getSchemaVersion().getVersion() == 1.1) {
-            registerDependencyModule(mapper, true);
-        } else if (this.getSchemaVersion().getVersion() == 1.2) {
-            registerDependencyModule(mapper, false);
-        } else if (this.getSchemaVersion().getVersion() == 1.3) {
-            registerDependencyModule(mapper, false);
-        } else if (this.getSchemaVersion().getVersion() == 1.4) {
-            registerDependencyModule(mapper, false);
         }
+        else {
+            boolean useNamespace = this.getSchemaVersion().getVersion() == 1.1;
+            registerDependencyModule(mapper, useNamespace);
+        }
+
+        SimpleModule lifecycleModule = new SimpleModule();
+        lifecycleModule.addSerializer(new LifecycleSerializer(true));
+        mapper.registerModule(lifecycleModule);
+
+        SimpleModule metadataModule = new SimpleModule();
+        metadataModule.addSerializer(new MetadataSerializer(true, getSchemaVersion()));
+        mapper.registerModule(metadataModule);
+
+        SimpleModule inputTypeModule = new SimpleModule();
+        inputTypeModule.addSerializer(new InputTypeSerializer(true));
+        mapper.registerModule(inputTypeModule);
+
+        SimpleModule outputTypeModule = new SimpleModule();
+        outputTypeModule.addSerializer(new OutputTypeSerializer(false));
+        mapper.registerModule(outputTypeModule);
     }
 
     private void registerDependencyModule(final ObjectMapper mapper, final boolean useNamespace) {
         SimpleModule depModule = new SimpleModule();
 
-        depModule.addSerializer(new DependencySerializer(useNamespace));
+        depModule.addSerializer(new DependencySerializer(useNamespace, null));
         mapper.registerModule(depModule);
     }
 

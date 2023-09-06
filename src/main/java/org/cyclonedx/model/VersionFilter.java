@@ -26,5 +26,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface VersionFilter {
+  //Versions that are excluded by the filter
   String[] versions();
 }

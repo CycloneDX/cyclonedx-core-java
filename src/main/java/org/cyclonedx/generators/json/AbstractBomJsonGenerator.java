@@ -24,11 +24,15 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.BomReference;
-import org.cyclonedx.util.ComponentWrapperSerializer;
-import org.cyclonedx.util.LicenseChoiceSerializer;
-import org.cyclonedx.util.TrimStringSerializer;
+import org.cyclonedx.util.serializer.ComponentWrapperSerializer;
+import org.cyclonedx.util.serializer.InputTypeSerializer;
+import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
+import org.cyclonedx.util.serializer.MetadataSerializer;
+import org.cyclonedx.util.serializer.OutputTypeSerializer;
+import org.cyclonedx.util.serializer.TrimStringSerializer;
+import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
-import org.cyclonedx.util.DependencySerializer;
+import org.cyclonedx.util.serializer.DependencySerializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -42,7 +46,7 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
 
     private final DefaultPrettyPrinter prettyPrinter;
 
-	public AbstractBomJsonGenerator() {
+    public AbstractBomJsonGenerator() {
         this.mapper = new ObjectMapper();
         this.prettyPrinter = new DefaultPrettyPrinter();
 
@@ -72,10 +76,25 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
         mapper.registerModule(stringModule);
 
         licenseModule.addSerializer(new LicenseChoiceSerializer());
-
         mapper.registerModule(licenseModule);
 
-        depModule.addSerializer(new DependencySerializer(false));
+        SimpleModule lifecycleModule = new SimpleModule();
+        lifecycleModule.addSerializer(new LifecycleSerializer(false));
+        mapper.registerModule(lifecycleModule);
+
+        SimpleModule metadataModule = new SimpleModule();
+        metadataModule.addSerializer(new MetadataSerializer(false, getSchemaVersion()));
+        mapper.registerModule(metadataModule);
+
+        SimpleModule inputTypeModule = new SimpleModule();
+        inputTypeModule.addSerializer(new InputTypeSerializer(false));
+        mapper.registerModule(inputTypeModule);
+
+        SimpleModule outputTypeModule = new SimpleModule();
+        outputTypeModule.addSerializer(new OutputTypeSerializer(false));
+        mapper.registerModule(outputTypeModule);
+
+        depModule.addSerializer(new DependencySerializer(false, null));
         mapper.registerModule(depModule);
 
         componentWrapperModule.addSerializer(new ComponentWrapperSerializer(mapper));

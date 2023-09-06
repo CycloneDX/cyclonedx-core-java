@@ -20,14 +20,22 @@ package org.cyclonedx.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder({"name", "email", "phone"})
-public class OrganizationalContact extends ExtensibleElement {
+public class OrganizationalContact {
 
+    @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
+    @JsonProperty("bom-ref")
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    private String bomRef;
     private String name;
     private String email;
     private String phone;
@@ -56,6 +64,14 @@ public class OrganizationalContact extends ExtensibleElement {
         this.phone = phone;
     }
 
+    public String getBomRef() {
+        return bomRef;
+    }
+
+    public void setBomRef(final String bomRef) {
+        this.bomRef = bomRef;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,11 +79,12 @@ public class OrganizationalContact extends ExtensibleElement {
         OrganizationalContact that = (OrganizationalContact) o;
         return Objects.equals(name, that.name) &&
                 Objects.equals(email, that.email) &&
-                Objects.equals(phone, that.phone);
+                Objects.equals(phone, that.phone) &&
+            Objects.equals(bomRef, that.bomRef);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, phone);
+        return Objects.hash(name, email, phone, bomRef);
     }
 }

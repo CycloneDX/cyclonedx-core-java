@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.util.ExternalReferenceSerializer;
+import org.cyclonedx.util.serializer.ExternalReferenceSerializer;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -60,6 +60,8 @@ public class ExternalReference {
         SUPPORT("support"),
         @JsonProperty("distribution")
         DISTRIBUTION("distribution"),
+        @JsonProperty("distribution-intake")
+        DISTRIBUTION_INTAKE("distribution-intake"),
         @JsonProperty("license")
         LICENSE("license"),
         @JsonProperty("build-meta")
@@ -68,6 +70,48 @@ public class ExternalReference {
         BUILD_SYSTEM("build-system"),
         @JsonProperty("release-notes")
         RELEASE_NOTES("release-notes"),
+        @JsonProperty("security-contact")
+        SECURITY_CONTACT("security-contact"),
+        @JsonProperty("model_card")
+        MODEL_CARD("model_card"),
+        @JsonProperty("attestation")
+        ATTESTATION("attestation"),
+        @JsonProperty("threat-model")
+        THREAT_MODEL("threat-model"),
+        @JsonProperty("adversary-model")
+        ADVERSARY_MODEL("adversary-model"),
+        @JsonProperty("risk-assessment")
+        RISK_ASSESSMENT("risk-assessment"),
+        @JsonProperty("vulnerability-assertion")
+        VULNERABILITY_ASSERTION("vulnerability-assertion"),
+        @JsonProperty("exploitability-statement")
+        EXPLOITABILITY_STATEMENT("exploitability-statement"),
+        @JsonProperty("pentest-report")
+        PENTEST_REPORT("pentest-report"),
+        @JsonProperty("static-analysis-report")
+        STATIC_ANALYSIS_REPORT("static-analysis-report"),
+        @JsonProperty("dynamic-analysis-report")
+        DYNAMIC_ANALYSIS_REPORT("dynamic-analysis-report"),
+        @JsonProperty("runtime-analysis-report")
+        RUNTIME_ANALYSIS_REPORT("runtime-analysis-report"),
+        @JsonProperty("component-analysis-report")
+        COMPONENT_ANALYSIS_REPORT("component-analysis-report"),
+        @JsonProperty("maturity-report")
+        MATURITY_REPORT("maturity-report"),
+        @JsonProperty("certification-report")
+        CERTIFICATION_REPORT("certification-report"),
+        @JsonProperty("codified-infrastructure")
+        CODIFIED_INFRASTRUCTURE("codified-infrastructure"),
+        @JsonProperty("quality-metrics")
+        QUALITY_METRICS("quality-metrics"),
+        @JsonProperty("log")
+        LOG("log"),
+        @JsonProperty("configuration")
+        CONFIGURATION("configuration"),
+        @JsonProperty("evidence")
+        EVIDENCE("evidence"),
+        @JsonProperty("formulation")
+        FORMULATION("formulation"),
         @JsonProperty("other")
         OTHER("other");
 
@@ -80,6 +124,15 @@ public class ExternalReference {
         Type(String name) {
             this.name = name;
         }
+
+        public static Type fromString(String text) {
+            for (Type t : Type.values()) {
+                if (t.name.equals(text)) {
+                    return t;
+                }
+            }
+            return null;
+        }
     }
 
     private String url;
@@ -87,7 +140,7 @@ public class ExternalReference {
     private Type type;
     private String comment;
 
-    @VersionFilter(versions = {"1.3", "1.4"})
+    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Hash> hashes;
 
     public String getUrl() {

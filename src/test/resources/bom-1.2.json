@@ -243,8 +243,12 @@
           "flow": "outbound"
         },
         {
-          "classification": "pubic",
+          "classification": "public",
           "flow": "bi-directional"
+        },
+        {
+          "classification": "public",
+          "flow": "unknown"
         }
       ],
       "licenses": [

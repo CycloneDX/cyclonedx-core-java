@@ -37,7 +37,7 @@ public class VersionXmlAnnotationIntrospector extends JacksonXmlAnnotationIntros
   public boolean hasIgnoreMarker(final AnnotatedMember m) {
     if (m.hasAnnotation(VersionFilter.class)) {
       VersionFilter filter = m.getAnnotation(VersionFilter.class);
-      if (Arrays.stream(filter.versions()).noneMatch(v -> v.equals(version))) {
+      if (Arrays.asList(filter.versions()).contains(version)) {
         return true;
       }
     }

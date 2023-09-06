@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<bom serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79" version="1" xmlns="http://cyclonedx.org/schema/bom/1.5">
+    <metadata>
+        <tools>
+            <tool>
+                <vendor>Awesome Vendor</vendor>
+                <name>Awesome Tool</name>
+                <version>9.1.2</version>
+                <hashes>
+                    <hash alg="SHA-1">25ed8e31b995bb927966616df2a42b979a2717f0</hash>
+                    <hash alg="SHA-256">a74f733635a19aefb1f73e5947cef59cd7440c6952ef0f03d09d974274cbd6df</hash>
+                </hashes>
+                <externalReferences>
+                    <reference type="bom">
+                        <url>https://example.org/support/sbom/awesome-tool/9.1.2</url>
+                        <comment>An external SBOM that describes what this tool includes</comment>
+                        <hashes>
+                            <hash alg="SHA-256">f498a8ff2dd007e29c2074f5e4b01a9a01775c3ff3aeaf6906ea503bc5791b7b</hash>
+                        </hashes>
+                    </reference>
+                </externalReferences>
+            </tool>
+        </tools>
+    </metadata>
+    <components />
+</bom>

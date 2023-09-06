@@ -1,0 +1,39 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "tools": [
+      {
+        "vendor": "Awesome Vendor",
+        "name": "Awesome Tool",
+        "version": "9.1.2",
+        "hashes": [
+          {
+            "alg": "SHA-1",
+            "content": "25ed8e31b995bb927966616df2a42b979a2717f0"
+          },
+          {
+            "alg": "SHA-256",
+            "content": "a74f733635a19aefb1f73e5947cef59cd7440c6952ef0f03d09d974274cbd6df"
+          }
+        ],
+        "externalReferences": [
+          {
+            "type": "bom",
+            "url": "https://example.org/support/sbom/awesome-tool/9.1.2",
+            "comment": "An external SBOM that describes what this tool includes",
+            "hashes": [
+              {
+                "alg": "SHA-256",
+                "content": "708f1f53b41f11f02d12a11b1a38d2905d47b099afc71a0f1124ef8582ec7313"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "components": []
+}

@@ -188,7 +188,8 @@
             <data>
                 <classification flow="inbound">PII</classification>
                 <classification flow="outbound">PIFI</classification>
-                <classification flow="bi-directional">pubic</classification>
+                <classification flow="bi-directional">public</classification>
+                <classification flow="unknown">public</classification>
             </data>
             <licenses>
                 <license>

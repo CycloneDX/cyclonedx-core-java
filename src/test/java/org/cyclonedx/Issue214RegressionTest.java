@@ -26,6 +26,7 @@ import org.cyclonedx.generators.xml.AbstractBomXmlGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator13;
 import org.cyclonedx.generators.xml.BomXmlGenerator14;
+import org.cyclonedx.generators.xml.BomXmlGenerator15;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExternalReference;
@@ -47,16 +48,12 @@ public class Issue214RegressionTest
         performJsonTest(CycloneDxSchema.Version.VERSION_13, BomJsonGenerator13.class);
     }
 
-
-
     @Test
     public void schema14JsonObjectGenerationTest()
         throws IOException, ReflectiveOperationException
     {
         performJsonTest(CycloneDxSchema.Version.VERSION_14, BomJsonGenerator14.class);
     }
-
-
 
     @Test
     public void schema13XmlObjectGenerationTest()
@@ -65,8 +62,6 @@ public class Issue214RegressionTest
         performXmlTest(CycloneDxSchema.Version.VERSION_13, BomXmlGenerator13.class);
     }
 
-
-
     @Test
     public void schema14XmlObjectGenerationTest()
         throws ParserConfigurationException, IOException, ReflectiveOperationException
@@ -74,7 +69,12 @@ public class Issue214RegressionTest
         performXmlTest(CycloneDxSchema.Version.VERSION_14, BomXmlGenerator14.class);
     }
 
-
+    @Test
+    public void schema15XmlObjectGenerationTest()
+        throws ParserConfigurationException, IOException, ReflectiveOperationException
+    {
+        performXmlTest(CycloneDxSchema.Version.VERSION_15, BomXmlGenerator15.class);
+    }
 
     private <G extends AbstractBomXmlGenerator> void performXmlTest(final CycloneDxSchema.Version pSpecVersion,
         final Class<G> pExpectedGeneratorClass)
@@ -93,8 +93,6 @@ public class Issue214RegressionTest
         validate(actual, XmlParser.class, pSpecVersion);
     }
 
-
-
     private <G extends AbstractBomJsonGenerator> void performJsonTest(final CycloneDxSchema.Version pSpecVersion,
         final Class<G> pExpectedGeneratorClass)
         throws IOException, ReflectiveOperationException
@@ -110,8 +108,6 @@ public class Issue214RegressionTest
         Assertions.assertEquals(expected, actual);
         validate(actual, JsonParser.class, pSpecVersion);
     }
-
-
 
     private String xmlDocumentToString(final Document doc)
     {
@@ -137,8 +133,6 @@ public class Issue214RegressionTest
         return null;
     }
 
-
-
     private String readFixture(final String pPath, final CycloneDxSchema.Version pSpecVersion)
     {
         try (InputStream is = getClass().getResourceAsStream(pPath)) {
@@ -156,8 +150,6 @@ public class Issue214RegressionTest
         }
         return null;
     }
-
-
 
     private Bom createIssue214Bom()
     {
@@ -184,8 +176,6 @@ public class Issue214RegressionTest
         return bom;
     }
 
-
-
     private <P extends Parser> void validate(final String pDocument, final Class<P> pParserType,
         final CycloneDxSchema.Version pSpecVersion)
         throws IOException, ReflectiveOperationException
@@ -203,8 +193,6 @@ public class Issue214RegressionTest
             }
         }
     }
-
-
 
     private File writeToFile(final String pDocument, final String pSuffix)
         throws IOException
