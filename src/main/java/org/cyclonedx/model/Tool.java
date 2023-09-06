@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -77,6 +78,7 @@ public class Tool extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "externalReferences")
     @JacksonXmlProperty(localName = "reference")
+    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     public List<ExternalReference> getExternalReferences() {
         return externalReferences;
     }

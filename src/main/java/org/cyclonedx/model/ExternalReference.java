@@ -124,6 +124,15 @@ public class ExternalReference {
         Type(String name) {
             this.name = name;
         }
+
+        public static Type fromString(String text) {
+            for (Type t : Type.values()) {
+                if (t.name.equals(text)) {
+                    return t;
+                }
+            }
+            return null;
+        }
     }
 
     private String url;

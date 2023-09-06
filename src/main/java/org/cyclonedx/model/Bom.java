@@ -32,6 +32,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.model.formulation.Formula;
 import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.util.deserializer.DependencyDeserializer;
+import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
 
 @SuppressWarnings("unused")
@@ -73,6 +74,7 @@ public class Bom extends ExtensibleElement {
     private DependencyList dependencies;
 
     @VersionFilter(versions = {"1.0"})
+    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     private List<ExternalReference> externalReferences;
 
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
