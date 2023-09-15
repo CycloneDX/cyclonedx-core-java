@@ -11,8 +11,8 @@ CycloneDX Core (Java)
 =========
 
 The CycloneDX core module provides a model representation of the SBOM along with utilities to assist in creating, 
-validating, and parsing SBOMs. CycloneDX is a lightweight software bill of materials (SBOM) specification designed for 
-use in application security contexts and supply chain component analysis.
+validating, and parsing SBOMs. OWASP CycloneDX is a full-stack Bill of Materials (BOM) standard that provides advanced
+supply chain capabilities for cyber risk reduction
 
 Maven Usage
 -------------------
@@ -21,7 +21,7 @@ Maven Usage
 <dependency>
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
-    <version>7.3.2</version>
+    <version>8.0.0</version>
 </dependency>
 ```
 
@@ -33,6 +33,7 @@ the CycloneDX version supported by the target system.
 
 | Version | Schema Version | Format(s) |
 |---------|----------------|-----------|
+| 8.x     | CycloneDX v1.5 | XML/JSON  |
 | 7.x     | CycloneDX v1.4 | XML/JSON  |
 | 6.x     | CycloneDX v1.4 | XML/JSON  |
 | 5.x     | CycloneDX v1.3 | XML/JSON  |
