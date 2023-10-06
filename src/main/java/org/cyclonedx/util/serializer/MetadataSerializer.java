@@ -115,6 +115,8 @@ public class MetadataSerializer
     } else if (version.getVersion() >= Version.VERSION_15.getVersion()) {
       ToolInformation choice = metadata.getToolChoice();
       if (choice != null) {
+        jsonGenerator.writeFieldName("tools");
+        jsonGenerator.writeStartObject();
         if (isXml && jsonGenerator instanceof ToXmlGenerator) {
           if (choice.getComponents() != null) {
             writeArrayFieldXML(choice.getComponents(), (ToXmlGenerator) jsonGenerator, "component");
@@ -131,6 +133,7 @@ public class MetadataSerializer
             writeArrayFieldJSON(jsonGenerator, "services", choice.getServices());
           }
         }
+        jsonGenerator.writeEndObject();
       }
     }
   }
