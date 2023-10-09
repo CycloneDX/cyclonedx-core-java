@@ -327,6 +327,13 @@ public class XmlParserTest
     }
 
     @Test
+    public void testParsedObjects15Bom_validTools() throws Exception {
+        final Bom bom = getXmlBom("1.5/valid-metadata-tool-1.5.xml");
+        assertCommonBomProperties(bom, Version.VERSION_15);
+        assertMetadata_validTools(bom.getMetadata());
+    }
+
+    @Test
     public void testParsedObjects14Bom_WithVulnsExtension() throws Exception {
         final Bom bom = getXmlBom("valid-ext-vulnerability-1.4.xml");
 
