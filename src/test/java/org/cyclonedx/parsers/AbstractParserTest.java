@@ -871,6 +871,25 @@ public class AbstractParserTest
     assertEquals("distribution@example.com", metadata.getSupplier().getContacts().get(0).getEmail());
   }
 
+  void assertMetadata_validTools(final Metadata metadata) {
+    assertNotNull(metadata);
+    assertNotNull(metadata.getTimestamp());
+
+    assertNull(metadata.getLifecycles());
+    assertNull(metadata.getLicenseChoice());
+    assertNull(metadata.getAuthors());
+    assertNull(metadata.getComponent());
+    assertNull(metadata.getManufacture());
+    assertNull(metadata.getAuthors());
+    assertNull(metadata.getSupplier());
+    assertNull(metadata.getProperties());
+    assertNull(metadata.getSupplier());
+    assertNull(metadata.getTools());
+
+    assertEquals(1, metadata.getToolChoice().getComponents().size());
+    assertEquals(1, metadata.getToolChoice().getServices().size());
+  }
+
   void assertCommonBomProperties(Bom bom, Version version) {
     assertEquals(version.getVersionString(), bom.getSpecVersion());
     assertEquals(1, bom.getVersion());

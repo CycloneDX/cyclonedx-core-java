@@ -178,4 +178,11 @@ public class JsonParserTest
         //Assert Formulation
         assertFormulation(bom, Version.VERSION_15);
     }
+
+    @Test
+    public void testParsedObjects15Bom_validTools() throws Exception {
+        final Bom bom = getJsonBom("1.5/valid-metadata-tool-1.5.json");
+        assertCommonBomProperties(bom, Version.VERSION_15);
+        assertMetadata_validTools(bom.getMetadata());
+    }
 }
