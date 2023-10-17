@@ -341,4 +341,17 @@ public class XmlParserTest
         assertEquals(1, bom.getVersion());
         assertNull(bom.getVulnerabilities());
     }
+
+    @Test
+    public void testIssue338RegressionWithSingleTool() throws Exception {
+        final Bom bom = getXmlBom("regression/issue338-single-tool.xml");
+        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+    }
+
+    @Test
+    public void testIssue338RegressionWithMultipleTools() throws Exception {
+        final Bom bom = getXmlBom("regression/issue338-multiple-tools.xml");
+        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+        assertEquals("acme-tool-b", bom.getMetadata().getTools().get(1).getName());
+    }
 }

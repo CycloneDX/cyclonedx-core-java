@@ -185,4 +185,17 @@ public class JsonParserTest
         assertCommonBomProperties(bom, Version.VERSION_15);
         assertMetadata_validTools(bom.getMetadata());
     }
+
+    @Test
+    public void testIssue338RegressionWithSingleTool() throws Exception {
+        final Bom bom = getJsonBom("regression/issue338-single-tool.json");
+        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+    }
+
+    @Test
+    public void testIssue338RegressionWithMultipleTools() throws Exception {
+        final Bom bom = getJsonBom("regression/issue338-multiple-tools.json");
+        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+        assertEquals("acme-tool-b", bom.getMetadata().getTools().get(1).getName());
+    }
 }
