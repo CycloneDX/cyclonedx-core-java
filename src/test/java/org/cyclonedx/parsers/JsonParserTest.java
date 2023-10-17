@@ -185,4 +185,11 @@ public class JsonParserTest
         assertCommonBomProperties(bom, Version.VERSION_15);
         assertMetadata_validTools(bom.getMetadata());
     }
+
+    @Test
+    public void testIssue336Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue336.json");
+        assertEquals("foo", bom.getMetadata().getComponent().getProperties().get(0).getName());
+        assertEquals("bar", bom.getMetadata().getComponent().getProperties().get(0).getValue());
+    }
 }

@@ -341,4 +341,11 @@ public class XmlParserTest
         assertEquals(1, bom.getVersion());
         assertNull(bom.getVulnerabilities());
     }
+
+    @Test
+    public void testIssue336Regression() throws Exception {
+        final Bom bom = getXmlBom("regression/issue336.xml");
+        assertEquals("foo", bom.getMetadata().getComponent().getProperties().get(0).getName());
+        assertEquals("bar", bom.getMetadata().getComponent().getProperties().get(0).getValue());
+    }
 }

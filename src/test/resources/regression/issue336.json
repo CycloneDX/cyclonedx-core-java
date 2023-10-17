@@ -1,0 +1,17 @@
+{
+  "bomFormat" : "CycloneDX",
+  "specVersion" : "1.4",
+  "serialNumber": "urn:uuid:1624fa6f-aebe-4dba-8ead-f2c876c9b832",
+  "version" : 1,
+  "metadata": {
+    "component": {
+      "name": "acme-app",
+      "properties": [
+        {
+          "name": "foo",
+          "value": "bar"
+        }
+      ]
+    }
+  }
+}
