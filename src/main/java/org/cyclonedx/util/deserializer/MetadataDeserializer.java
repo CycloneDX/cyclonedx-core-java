@@ -105,8 +105,19 @@ public class MetadataDeserializer
         metadata.setTools(tools);
       }
       else if (toolsNode.has("tool")) {
-        Tool tool = mapper.convertValue(toolsNode.get("tool"), Tool.class);
-        metadata.setTools(Collections.singletonList(tool));
+        final JsonNode toolNode = toolsNode.get("tool");
+        // When deserializing XML BOMs, and multiple tools are provided, Jackson's internal
+        // representation looks like this:
+        //   {"tool": [{"name": "foo"}, {"name": "bar"}]}
+        // If only a single tool is provided, it looks like this:
+        //   {"tool": {"name": "foo"}}
+        if (toolNode.isArray()) {
+          List<Tool> tools = mapper.convertValue(toolsNode.get("tool"), new TypeReference<List<Tool>>() { });
+          metadata.setTools(tools);
+        } else {
+          Tool tool = mapper.convertValue(toolsNode.get("tool"), Tool.class);
+          metadata.setTools(Collections.singletonList(tool));
+        }
       }
       else {
         ToolInformation toolInformation = new ToolInformation();
