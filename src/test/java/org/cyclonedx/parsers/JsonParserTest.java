@@ -163,6 +163,9 @@ public class JsonParserTest
         assertCompositions(bom, Version.VERSION_15);
         assertVulnerabilities(bom, Version.VERSION_15);
 
+        //Assert Metadata License Choice
+        assertEquals(2, bom.getMetadata().getLicenseChoice().getLicenses().size());
+
         // Dependencies
         assertEquals(2, bom.getDependencies().size());
         Dependency d1 = bom.getDependencies().get(0);
