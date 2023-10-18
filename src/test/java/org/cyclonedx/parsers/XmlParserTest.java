@@ -343,6 +343,13 @@ public class XmlParserTest
     }
 
     @Test
+    public void testIssue336Regression() throws Exception {
+        final Bom bom = getXmlBom("regression/issue336.xml");
+        assertEquals("foo", bom.getMetadata().getComponent().getProperties().get(0).getName());
+        assertEquals("bar", bom.getMetadata().getComponent().getProperties().get(0).getValue());
+    }
+    
+    @Test
     public void testIssue338RegressionWithSingleTool() throws Exception {
         final Bom bom = getXmlBom("regression/issue338-single-tool.xml");
         assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());

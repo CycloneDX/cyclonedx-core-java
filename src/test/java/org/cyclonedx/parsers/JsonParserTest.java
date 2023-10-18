@@ -187,6 +187,13 @@ public class JsonParserTest
     }
 
     @Test
+    public void testIssue336Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue336.json");
+        assertEquals("foo", bom.getMetadata().getComponent().getProperties().get(0).getName());
+        assertEquals("bar", bom.getMetadata().getComponent().getProperties().get(0).getValue());
+    }
+    
+    @Test
     public void testIssue338RegressionWithSingleTool() throws Exception {
         final Bom bom = getJsonBom("regression/issue338-single-tool.json");
         assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
