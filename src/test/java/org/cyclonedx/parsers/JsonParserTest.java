@@ -192,4 +192,17 @@ public class JsonParserTest
         assertEquals("foo", bom.getMetadata().getComponent().getProperties().get(0).getName());
         assertEquals("bar", bom.getMetadata().getComponent().getProperties().get(0).getValue());
     }
+    
+    @Test
+    public void testIssue338RegressionWithSingleTool() throws Exception {
+        final Bom bom = getJsonBom("regression/issue338-single-tool.json");
+        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+    }
+
+    @Test
+    public void testIssue338RegressionWithMultipleTools() throws Exception {
+        final Bom bom = getJsonBom("regression/issue338-multiple-tools.json");
+        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+        assertEquals("acme-tool-b", bom.getMetadata().getTools().get(1).getName());
+    }
 }
