@@ -118,6 +118,11 @@
         "license": {
           "id": "Apache-2.0"
         }
+      },
+      {
+        "license": {
+          "id": "MIT"
+        }
       }
     ]
   },

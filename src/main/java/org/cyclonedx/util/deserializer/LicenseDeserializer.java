@@ -37,19 +37,18 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
     JsonNode rootNode = p.getCodec().readTree(p);
     if (!rootNode.isEmpty()) {
       ArrayNode nodes = (rootNode.isArray() ? (ArrayNode) rootNode : new ArrayNode(null).add(rootNode));
+      LicenseChoice licenseChoice = new LicenseChoice();
 
       for (JsonNode node : nodes) {
-        LicenseChoice licenseChoice = new LicenseChoice();
-
         if (node.has("license")) {
           processLicenseNode(p, node.get("license"), licenseChoice);
-          return licenseChoice;
         }
         else if (node.has("expression")) {
           licenseChoice.setExpression(node.get("expression").asText());
           return licenseChoice;
         }
       }
+      return licenseChoice;
     }
     return null;
   }
