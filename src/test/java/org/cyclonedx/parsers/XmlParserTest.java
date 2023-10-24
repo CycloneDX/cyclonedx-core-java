@@ -361,4 +361,10 @@ public class XmlParserTest
         assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
         assertEquals("acme-tool-b", bom.getMetadata().getTools().get(1).getName());
     }
+
+    @Test
+    public void testIssue343Regression() throws Exception {
+        final Bom bom = getXmlBom("regression/issue343-empty-hashes.xml");
+        assertEquals(0, bom.getComponents().get(0).getHashes().size());
+    }
 }
