@@ -208,4 +208,10 @@ public class JsonParserTest
         assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
         assertEquals("acme-tool-b", bom.getMetadata().getTools().get(1).getName());
     }
+
+    @Test
+    public void testIssue343Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue343-empty-hashes.json");
+        assertEquals(0, bom.getComponents().get(0).getHashes().size());
+    }
 }
