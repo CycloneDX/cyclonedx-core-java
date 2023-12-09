@@ -32,6 +32,8 @@ import java.util.List;
 
 public final class LicenseResolver {
 
+    private static LicenseList licenses;
+
     /**
      * Private constructor.
      */
@@ -101,9 +103,11 @@ public final class LicenseResolver {
     private static LicenseChoice resolveLicenseString(String licenseString, LicenseTextSettings licenseTextSettings, final ObjectMapper mapper)
         throws IOException
     {
-        final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/licenses.json");
+        if (licenses == null) {
+          final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/licenses.json");
 
-        final LicenseList licenses = mapper.readValue(is, LicenseList.class);
+          licenses = mapper.readValue(is, LicenseList.class);        
+        }
 
         if (licenses != null && licenses.licenses != null && !licenses.licenses.isEmpty()) {
             for (LicenseDetail licenseDetail : licenses.licenses) {
