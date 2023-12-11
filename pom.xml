@@ -81,7 +81,7 @@
         <maven.javadoc.plugin.version>3.6.3</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
         <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
-        <maven.github.release.plugin.version>1.4.0</maven.github.release.plugin.version>
+        <maven.github.release.plugin.version>1.6.0</maven.github.release.plugin.version>
         <project.build.outputTimestamp>2023-10-25T16:32:28Z</project.build.outputTimestamp>
     </properties>
 
