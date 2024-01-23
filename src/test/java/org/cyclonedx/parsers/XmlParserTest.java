@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.parsers;
 
+import org.apache.commons.io.FileUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.model.Bom;
@@ -123,6 +124,17 @@ public class XmlParserTest
     private void testPedigreeFromExample(final Pedigree pedigree) {
         assertEquals(2, pedigree.getPatches().size());
         assertEquals(2, pedigree.getPatches().get(1).getResolves().size());
+    }
+
+    @Test
+    public void testValid12BomWithMetadataPedigree() throws Exception {
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-metadata-pedigree.xml")).getFile());
+        final byte[] bytes = FileUtils.readFileToByteArray(file);
+        final XmlParser parser = new XmlParser();
+        final boolean valid = parser.isValid(bytes, CycloneDxSchema.Version.VERSION_12);
+        assertTrue(valid);
+
+        parser.parse(bytes);
     }
 
     @Test
@@ -348,7 +360,7 @@ public class XmlParserTest
         assertEquals("foo", bom.getMetadata().getComponent().getProperties().get(0).getName());
         assertEquals("bar", bom.getMetadata().getComponent().getProperties().get(0).getValue());
     }
-    
+
     @Test
     public void testIssue338RegressionWithSingleTool() throws Exception {
         final Bom bom = getXmlBom("regression/issue338-single-tool.xml");
