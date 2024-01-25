@@ -11,7 +11,12 @@
         <ancestors>
           <component type="library">
             <group>org.example</group>
-            <name>sample-library-ancestor</name>
+            <name>sample-library-ancestor-1</name>
+            <version>1.0.0</version>
+          </component>
+          <component type="library">
+            <group>org.example</group>
+            <name>sample-library-ancestor-2</name>
             <version>1.0.0</version>
           </component>
         </ancestors>
@@ -23,11 +28,6 @@
           </component>
         </descendants>
         <variants>
-          <component type="library">
-            <group>org.example</group>
-            <name>sample-library-variant</name>
-            <version>1.0.2</version>
-          </component>
         </variants>
       </pedigree>
     </component>
