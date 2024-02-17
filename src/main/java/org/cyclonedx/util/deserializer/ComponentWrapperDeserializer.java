@@ -20,10 +20,15 @@ package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.Ancestors;
 import org.cyclonedx.model.Component;
@@ -72,10 +77,25 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
         return null;
     }
 
-    Component[] components = parser.readValueAs(Component[].class);
-
-    wrapper.setComponents(Arrays.asList(components));
-
+    List<Component> components = Collections.emptyList();
+    JsonToken currentToken = parser.currentToken();
+    if (currentToken == JsonToken.START_ARRAY) {
+      components = Arrays.asList(parser.readValueAs(Component[].class));
+    } else if (currentToken == JsonToken.START_OBJECT) {
+      // This is possible for XML input when tree has been read, then parsed with token buffer parser
+      ObjectNode node = parser.readValueAs(ObjectNode.class);
+      if (node.has("component")) {
+        JsonNode component = node.get("component");
+        JsonParser componentsParser = component.traverse(parser.getCodec());
+        if (component.isArray()) {
+          components = Arrays.asList(componentsParser.readValueAs(Component[].class));
+        } else {
+          components = Collections.singletonList(componentsParser.readValueAs(Component.class));
+        }
+      }
+    }
+    wrapper.setComponents(components);
     return wrapper;
+
   }
 }

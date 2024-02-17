@@ -18,6 +18,10 @@
  */
 package org.cyclonedx.parsers;
 
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.model.Bom;
@@ -25,15 +29,11 @@ import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Pedigree;
-import org.junit.jupiter.api.Test;
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 public class XmlParserTest
     extends AbstractParserTest
@@ -123,6 +123,20 @@ public class XmlParserTest
     private void testPedigreeFromExample(final Pedigree pedigree) {
         assertEquals(2, pedigree.getPatches().size());
         assertEquals(2, pedigree.getPatches().get(1).getResolves().size());
+    }
+
+    @Test
+    public void testValid12BomWithMetadataPedigree() throws Exception {
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-metadata-pedigree.xml")).getFile());
+        final XmlParser parser = new XmlParser();
+        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        assertTrue(valid);
+
+        final Bom bom = parser.parse(file);
+        Pedigree pedigree = bom.getMetadata().getComponent().getPedigree();
+        assertEquals(2, pedigree.getAncestors().getComponents().size());
+        assertEquals(1, pedigree.getDescendants().getComponents().size());
+        assertEquals(0, pedigree.getVariants().getComponents().size());
     }
 
     @Test
@@ -348,7 +362,7 @@ public class XmlParserTest
         assertEquals("foo", bom.getMetadata().getComponent().getProperties().get(0).getName());
         assertEquals("bar", bom.getMetadata().getComponent().getProperties().get(0).getValue());
     }
-    
+
     @Test
     public void testIssue338RegressionWithSingleTool() throws Exception {
         final Bom bom = getXmlBom("regression/issue338-single-tool.xml");
