@@ -34,6 +34,16 @@ public final class LicenseResolver {
 
     private static LicenseList licenses;
 
+    static {
+        try {
+            final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/licenses.json");
+            licenses = new ObjectMapper().readValue(is, LicenseList.class);
+        } catch (IOException e) {
+            // Handle loading error gracefully
+            throw new RuntimeException("Failed to load license data", e);
+        }
+    }
+
     /**
      * Private constructor.
      */
@@ -103,12 +113,6 @@ public final class LicenseResolver {
     private static LicenseChoice resolveLicenseString(String licenseString, LicenseTextSettings licenseTextSettings, final ObjectMapper mapper)
         throws IOException
     {
-        if (licenses == null) {
-          final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/licenses.json");
-
-          licenses = mapper.readValue(is, LicenseList.class);        
-        }
-
         if (licenses != null && licenses.licenses != null && !licenses.licenses.isEmpty()) {
             for (LicenseDetail licenseDetail : licenses.licenses) {
 
