@@ -117,6 +117,12 @@ public class ExternalReference {
         FORMULATION("formulation"),
         @JsonProperty("rfc-9116")
         RFC_9116("rfc-9116"),
+        @VersionFilter(Version.VERSION_16)
+        @JsonProperty("electronic-signature")
+        ELECTRONIC_SIGNATURE("electronic-signature"),
+        @VersionFilter(Version.VERSION_16)
+        @JsonProperty("digital-signature")
+        DIGITAL_SIGNATURE("digital-signature"),
         @JsonProperty("other")
         OTHER("other");
 

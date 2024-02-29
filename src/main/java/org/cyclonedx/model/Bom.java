@@ -30,6 +30,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.Version;
+import org.cyclonedx.model.definition.Definition;
 import org.cyclonedx.model.formulation.Formula;
 import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.util.deserializer.DependencyDeserializer;
@@ -55,6 +56,8 @@ import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
         "vulnerabilities",
         "annotations",
         "formulation",
+        "attestations",
+        "definition",
         "signature"
 })
 public class Bom extends ExtensibleElement {
@@ -83,6 +86,9 @@ public class Bom extends ExtensibleElement {
 
     @VersionFilter(Version.VERSION_15)
     private List<Formula> formulation;
+
+    @VersionFilter(value = Version.VERSION_16)
+    private Definition definition;
 
     @VersionFilter(Version.VERSION_14)
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
