@@ -51,6 +51,9 @@ public class JsonSchemaVerificationTest extends BaseSchemaVerificationTest {
                 else if (file.endsWith("-1.5.json")) {
                     schemaVersion = CycloneDxSchema.Version.VERSION_15;
                 }
+                else if (file.endsWith("-1.6.json")) {
+                    schemaVersion = CycloneDxSchema.Version.VERSION_16;
+                }
                 else {
                     schemaVersion = null;
                 }
