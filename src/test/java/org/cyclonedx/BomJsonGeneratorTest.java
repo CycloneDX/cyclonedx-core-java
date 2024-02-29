@@ -26,6 +26,7 @@ import org.cyclonedx.generators.json.BomJsonGenerator12;
 import org.cyclonedx.generators.json.BomJsonGenerator13;
 import org.cyclonedx.generators.json.BomJsonGenerator14;
 import org.cyclonedx.generators.json.BomJsonGenerator15;
+import org.cyclonedx.generators.json.BomJsonGenerator16;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
@@ -189,6 +190,19 @@ public class BomJsonGeneratorTest {
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_15));
     }
+
+    @Test
+    public void schema16JsonObjectGenerationTest() throws Exception {
+        Bom bom = createCommonBom("/bom-1.6.xml");
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
+        assertTrue(generator instanceof BomJsonGenerator16);
+        assertEquals(CycloneDxSchema.Version.VERSION_16, generator.getSchemaVersion());
+
+        File file = writeToFile(generator.toJsonString());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_16));
+    }
+
 
     private File writeToFile(String jsonString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {

@@ -61,6 +61,8 @@ public abstract class CycloneDxSchema
 
   public static final String NS_BOM_15 = "http://cyclonedx.org/schema/bom/1.5";
 
+  public static final String NS_BOM_16 = "http://cyclonedx.org/schema/bom/1.6";
+
   public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
 
   public static final String NS_BOM_LATEST = NS_BOM_15;
@@ -76,7 +78,8 @@ public abstract class CycloneDxSchema
     VERSION_12(CycloneDxSchema.NS_BOM_12, "1.2", 1.2),
     VERSION_13(CycloneDxSchema.NS_BOM_13, "1.3", 1.3),
     VERSION_14(CycloneDxSchema.NS_BOM_14, "1.4", 1.4),
-    VERSION_15(CycloneDxSchema.NS_BOM_15, "1.5", 1.5);
+    VERSION_15(CycloneDxSchema.NS_BOM_15, "1.5", 1.5),
+    VERSION_16(CycloneDxSchema.NS_BOM_16, "1.6", 1.6);
 
     private final String namespace;
 
@@ -128,6 +131,8 @@ public abstract class CycloneDxSchema
         getClass().getClassLoader().getResource("bom-1.4.schema.json").toExternalForm());
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json",
         getClass().getClassLoader().getResource("bom-1.5.schema.json").toExternalForm());
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json",
+        getClass().getClassLoader().getResource("bom-1.6.schema.json").toExternalForm());
     config.setUriMappings(offlineMappings);
     JsonNode schemaNode = mapper.readTree(spdxInstream);
     JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersionDetector.detect(schemaNode));
@@ -144,8 +149,11 @@ public abstract class CycloneDxSchema
     else if (CycloneDxSchema.Version.VERSION_14 == schemaVersion) {
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.4.schema.json");
     }
-    else {
+    else if(Version.VERSION_15 == schemaVersion){
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.5.schema.json");
+    }
+    else {
+      return this.getClass().getClassLoader().getResourceAsStream("bom-1.6.schema.json");
     }
   }
 
@@ -173,8 +181,11 @@ public abstract class CycloneDxSchema
     else if (CycloneDxSchema.Version.VERSION_14 == schemaVersion) {
       return getXmlSchema14();
     }
-    else {
+    else if (CycloneDxSchema.Version.VERSION_15 == schemaVersion) {
       return getXmlSchema15();
+    }
+    else {
+      return getXmlSchema16();
     }
   }
 
@@ -258,13 +269,28 @@ public abstract class CycloneDxSchema
    *
    * @return a Schema
    * @throws SAXException a SAXException
-   * @since TBD
+   * @since 8.0.1
    */
   private Schema getXmlSchema15() throws SAXException {
     // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
     return getXmlSchema(
         this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
         this.getClass().getClassLoader().getResourceAsStream("bom-1.5.xsd")
+    );
+  }
+
+  /**
+   * Returns the CycloneDX XML Schema from the specifications XSD.
+   *
+   * @return a Schema
+   * @throws SAXException a SAXException
+   * @since 9.0.1
+   */
+  private Schema getXmlSchema16() throws SAXException {
+    // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
+    return getXmlSchema(
+        this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+        this.getClass().getClassLoader().getResourceAsStream("bom-1.6.xsd")
     );
   }
 
