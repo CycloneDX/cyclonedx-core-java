@@ -4,13 +4,11 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.cyclonedx.model.formulation.common.EnvVariableChoice;
 import org.cyclonedx.model.formulation.common.InputType;
 
 public class InputTypeSerializer
-    extends StdSerializer<InputType>
+    extends AbstractDataTypeSerializer<InputType>
 {
   private final boolean isXml;
 
@@ -48,38 +46,25 @@ public class InputTypeSerializer
       jsonGenerator.writeObject( input.getParameters());
     }
     else if (input.getEnvironmentVars() != null && !input.getEnvironmentVars().isEmpty()) {
-      jsonGenerator.writeArrayFieldStart("environmentVars");
-      for (EnvVariableChoice envVarChoice : input.getEnvironmentVars()) {
-        if (envVarChoice.getEnvironmentVar() != null) {
-          jsonGenerator.writeStartObject();
-          jsonGenerator.writeObjectField("environmentVar", envVarChoice.getEnvironmentVar());
-          jsonGenerator.writeEndObject();
-        } else if (envVarChoice.getValue() != null) {
-          jsonGenerator.writeStartObject();
-          jsonGenerator.writeObjectField("value", envVarChoice.getValue());
-          jsonGenerator.writeEndObject();
-        }
-      }
-      jsonGenerator.writeEndArray();
+      parseEnvironmentVars(jsonGenerator, input.getEnvironmentVars());
     }
     else if (input.getData() != null) {
       jsonGenerator.writeFieldName("data");
       jsonGenerator.writeObject( input.getData());
     }
 
-    if (input.getSource() != null) {
-      jsonGenerator.writeFieldName("source");
-      jsonGenerator.writeObject(input.getSource());
-    }
-    if (input.getTarget() != null) {
-      jsonGenerator.writeFieldName("target");
-      jsonGenerator.writeObject(input.getTarget());
-    }
-    if (input.getProperties() != null) {
-      jsonGenerator.writeFieldName("properties");
-      jsonGenerator.writeObject( input.getProperties());
-    }
+    writeField(jsonGenerator, "source", input.getSource());
+    writeField(jsonGenerator, "target", input.getTarget());
+    writeField(jsonGenerator, "properties", input.getProperties());
+
     jsonGenerator.writeEndObject();
+  }
+
+  private void writeField(JsonGenerator jsonGenerator, String fieldName, Object fieldValue) throws IOException {
+    if (fieldValue != null) {
+      jsonGenerator.writeFieldName(fieldName);
+      jsonGenerator.writeObject(fieldValue);
+    }
   }
 
   @Override

@@ -29,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.util.serializer.ExtensibleTypesSerializer;
 import org.cyclonedx.util.deserializer.ExtensionDeserializer;
 

@@ -35,6 +35,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class BaseParseTest {
 
@@ -49,8 +50,8 @@ public abstract class BaseParseTest {
     List<File> getResources(final String resourceDirectory) {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
         final URL url = loader.getResource(resourceDirectory);
-        final String path = url.getPath();
-        return Arrays.asList(new File(path).listFiles());
+        final String path = Objects.requireNonNull(url).getPath();
+        return Arrays.asList(Objects.requireNonNull(new File(path).listFiles()));
     }
 
     Bom parseBom(File file) throws ParseException {

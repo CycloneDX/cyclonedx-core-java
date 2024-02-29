@@ -32,7 +32,7 @@ public class LicenseChoiceSerializer extends StdSerializer<LicenseChoice>
     this(LicenseChoice.class);
   }
 
-  public LicenseChoiceSerializer(final Class t) {
+  public LicenseChoiceSerializer(final Class<LicenseChoice> t) {
     super(t);
   }
 
