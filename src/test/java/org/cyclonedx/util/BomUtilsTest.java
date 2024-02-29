@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static org.apache.commons.io.FileUtils.ONE_KB;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +45,7 @@ public class BomUtilsTest {
 
     @Test
     public void calculateHashesTest() throws Exception {
-        final File file = new File(this.getClass().getResource("/hashtest.txt").toURI());
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/hashtest.txt")).toURI());
 
         final List<Hash> hashes = BomUtils.calculateHashes(file, Version.VERSION_12);
 

@@ -43,9 +43,9 @@ public class XmlParseTest extends BaseParseTest {
                         super.generateBomXml(file.getName(), bom);
                     }));
                 }
-                else if (file.getName().startsWith("invalid")) {
+                /*else if (file.getName().startsWith("invalid")) {
 
-                }
+                }*/
             }
         }
         return dynamicTests;
