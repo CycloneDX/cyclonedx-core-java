@@ -2,13 +2,11 @@ package org.cyclonedx.model.attestation.affirmation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.cyclonedx.model.Signature;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonDeserialize(using = SignatoryChoiceDeserializer.class)
-public class SignatoryChoice
+public class SignatoryInformationChoice
 {
   private Signature signature;
 

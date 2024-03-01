@@ -56,8 +56,8 @@ import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
         "vulnerabilities",
         "annotations",
         "formulation",
-        "attestations",
-        "definition"
+        "declarations",
+        "definitions",
         "signature"
 })
 public class Bom extends ExtensibleElement {
@@ -88,7 +88,10 @@ public class Bom extends ExtensibleElement {
     private List<Formula> formulation;
 
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
-    private Definition definition;
+    private Declarations declarations;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    private Definition definitions;
 
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
@@ -241,6 +244,22 @@ public class Bom extends ExtensibleElement {
             this.properties = new ArrayList<>();
         }
         this.properties.add(property);
+    }
+
+    public Declarations getDeclarations() {
+        return declarations;
+    }
+
+    public void setDeclarations(final Declarations declarations) {
+        this.declarations = declarations;
+    }
+
+    public Definition getDefinitions() {
+        return definitions;
+    }
+
+    public void setDefinitions(final Definition definitions) {
+        this.definitions = definitions;
     }
 
     public int getVersion() {

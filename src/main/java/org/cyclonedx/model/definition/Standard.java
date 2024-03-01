@@ -2,14 +2,29 @@ package org.cyclonedx.model.definition;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Signature;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonPropertyOrder({
+    "name",
+    "version",
+    "description",
+    "owner",
+    "requirements",
+    "levels",
+    "externalReferences",
+    "signature"
+})
 public class Standard
 {
-
   @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
   @JsonProperty("bom-ref")
   private String bomRef;
@@ -22,7 +37,7 @@ public class Standard
 
   private String owner;
 
-  private Requirement requirements;
+  private List<Requirement> requirements;
 
   private List<Level> levels;
 
@@ -70,11 +85,13 @@ public class Standard
     this.owner = owner;
   }
 
-  public Requirement getRequirements() {
+  @JacksonXmlElementWrapper(localName = "requirements")
+  @JacksonXmlProperty(localName = "requirement")
+  public List<Requirement> getRequirements() {
     return requirements;
   }
 
-  public void setRequirements(final Requirement requirements) {
+  public void setRequirements(final List<Requirement> requirements) {
     this.requirements = requirements;
   }
 
