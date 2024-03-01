@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.modelCard.ComponentData;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
@@ -65,7 +66,9 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "releaseNotes",
      "modelCard",
      "data",
-     "signature"
+     "cryptoProperties",
+     "signature",
+     "provides"
     })
 public class Component extends ExtensibleElement {
 
@@ -93,7 +96,10 @@ public class Component extends ExtensibleElement {
         @JsonProperty("machine-learning-model")
         MACHINE_LEARNING_MODEL("machine-learning-model"),
         @JsonProperty("data")
-        DATA("data");
+        DATA("data"),
+        @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+        @JsonProperty("cryptographic-asset")
+        CRYPTOGRAPHIC_ASSET("cryptographic-asset");
 
         private final String name;
 
@@ -171,6 +177,14 @@ public class Component extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
     @JsonProperty("data")
     private ComponentData data;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    @JsonProperty("cryptoProperties")
+    private CryptoProperties cryptoProperties;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    @JsonProperty("provides")
+    private List<String> provides;
 
     @JsonOnly
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
@@ -436,6 +450,22 @@ public class Component extends ExtensibleElement {
 
     public void setData(final ComponentData data) {
         this.data = data;
+    }
+
+    public CryptoProperties getCryptoProperties() {
+        return cryptoProperties;
+    }
+
+    public void setCryptoProperties(final CryptoProperties cryptoProperties) {
+        this.cryptoProperties = cryptoProperties;
+    }
+
+    public List<String> getProvides() {
+        return provides;
+    }
+
+    public void setProvides(final List<String> provides) {
+        this.provides = provides;
     }
 
     @Override
