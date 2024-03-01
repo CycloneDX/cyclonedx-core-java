@@ -134,6 +134,8 @@ public class Component extends ExtensibleElement {
     private String mimeType;
     @VersionFilter(versions = {"1.0", "1.1"})
     private OrganizationalEntity supplier;
+
+    @Deprecated
     @VersionFilter(versions = {"1.0", "1.1"})
     private String author;
     @VersionFilter(versions = {"1.0"})
@@ -176,6 +178,14 @@ public class Component extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
     @JsonProperty("tags")
     private Tags tags;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    @JsonProperty("authors")
+    private List<OrganizationalContact> authors;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
 
     @JsonOnly
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
@@ -441,6 +451,30 @@ public class Component extends ExtensibleElement {
 
     public void setData(final ComponentData data) {
         this.data = data;
+    }
+
+    public Tags getTags() {
+        return tags;
+    }
+
+    public void setTags(final Tags tags) {
+        this.tags = tags;
+    }
+
+    public List<OrganizationalContact> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(final List<OrganizationalContact> authors) {
+        this.authors = authors;
+    }
+
+    public OrganizationalEntity getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(final OrganizationalEntity manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     @Override
