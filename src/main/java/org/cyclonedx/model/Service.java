@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
 
@@ -47,6 +48,7 @@ import java.util.List;
         "licenses",
         "externalReferences",
         "properties",
+        "tags",
         "services",
         "releaseNotes",
         "signature"
@@ -71,6 +73,8 @@ public class Service extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     @VersionFilter(versions = {"1.0", "1.1", "1.2"})
     private List<Property> properties;
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    private Tags tags;
     private List<Service> services;
     private ReleaseNotes releaseNotes;
     @JsonOnly

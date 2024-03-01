@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.modelCard.ComponentData;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
@@ -171,6 +172,10 @@ public class Component extends ExtensibleElement {
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
     @JsonProperty("data")
     private ComponentData data;
+
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    @JsonProperty("tags")
+    private Tags tags;
 
     @JsonOnly
     @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
