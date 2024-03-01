@@ -5,17 +5,18 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.component.modelCard.data.Governance;
+import org.cyclonedx.util.deserializer.StringListDeserializer;
 
-
-@JacksonXmlRootElement(localName = "data")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "name",
     "contents",
-    "dataClassification",
+    "classification",
     "sensitiveData",
     "governance"
 })
@@ -25,19 +26,20 @@ public class Data
 
   private Contents contents;
 
-  private DataClassification dataClassification;
+  private String classification;
 
   private List<String> sensitiveData;
 
   private Governance governance;
 
-  public String getData() {
-    return data;
+  public String getName() {
+    return name;
   }
 
-  public void setData(final String data) {
-    this.data = data;
+  public void setName(final String name) {
+    this.name = name;
   }
+
 
   public Contents getContents() {
     return contents;
@@ -47,14 +49,8 @@ public class Data
     this.contents = contents;
   }
 
-  public DataClassification getDataClassification() {
-    return dataClassification;
-  }
-
-  public void setDataClassification(final DataClassification dataClassification) {
-    this.dataClassification = dataClassification;
-  }
-
+ @JacksonXmlElementWrapper(useWrapping = false)
+ @JacksonXmlProperty(localName = "sensitiveData")
   public List<String> getSensitiveData() {
     return sensitiveData;
   }
@@ -69,5 +65,13 @@ public class Data
 
   public void setGovernance(final Governance governance) {
     this.governance = governance;
+  }
+
+  public String getClassification() {
+    return classification;
+  }
+
+  public void setClassification(final String classification) {
+    this.classification = classification;
   }
 }

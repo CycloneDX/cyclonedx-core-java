@@ -1,19 +1,19 @@
 package org.cyclonedx.model.attestation.evidence;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.Signature;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 
-@JacksonXmlRootElement(localName = "evidence")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
@@ -36,7 +36,7 @@ public class Evidence
 
   private String description;
 
-  private Data data;
+  private List<Data> data;
 
   @JsonSerialize(using = CustomDateSerializer.class)
   private Date created;
@@ -74,11 +74,15 @@ public class Evidence
     this.description = description;
   }
 
-  public Data getData() {
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "data")
+  //@JsonDeserialize(using = DataDeserializer.class)
+  @JsonProperty("data")
+  public List<Data> getData() {
     return data;
   }
 
-  public void setData(final Data data) {
+  public void setData(final List<Data> data) {
     this.data = data;
   }
 

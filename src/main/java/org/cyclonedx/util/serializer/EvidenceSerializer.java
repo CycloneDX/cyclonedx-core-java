@@ -42,27 +42,28 @@ public class EvidenceSerializer
   private void serializeJson(final JsonGenerator gen, final Evidence evidence, SerializerProvider serializerProvider) throws IOException {
     gen.writeStartObject();
     if (CollectionUtils.isNotEmpty(evidence.getIdentities())) {
-        if(version.getVersion()>=Version.VERSION_16.getVersion()) {
-          gen.writeObjectField("identity", evidence.getIdentities());
-        } else {
-          gen.writeObjectField("identity", evidence.getIdentities().get(0));
-        }
+      if (version.getVersion() >= Version.VERSION_16.getVersion()) {
+        gen.writeObjectField("identity", evidence.getIdentities());
+      }
+      else {
+        gen.writeObjectField("identity", evidence.getIdentities().get(0));
+      }
     }
 
-    if(CollectionUtils.isNotEmpty(evidence.getOccurrences())) {
+    if (CollectionUtils.isNotEmpty(evidence.getOccurrences())) {
       gen.writeObjectField("occurrences", evidence.getOccurrences());
     }
 
-    if(evidence.getCallstack()!=null) {
+    if (evidence.getCallstack() != null) {
       gen.writeObjectField("callstack", evidence.getCallstack());
     }
 
-    if(evidence.getLicenseChoice() != null) {
+    if (evidence.getLicenseChoice() != null) {
       gen.writeFieldName("licenses");
       new LicenseChoiceSerializer().serialize(evidence.getLicenseChoice(), gen, serializerProvider);
     }
 
-    if(CollectionUtils.isNotEmpty(evidence.getCopyright())) {
+    if (CollectionUtils.isNotEmpty(evidence.getCopyright())) {
       gen.writeFieldName("copyright");
       gen.writeStartArray();
       for (Copyright item : evidence.getCopyright()) {

@@ -2,12 +2,26 @@ package org.cyclonedx.model.attestation;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.Signature;
 import org.cyclonedx.model.attestation.affirmation.Affirmation;
 import org.cyclonedx.model.attestation.evidence.Evidence;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonPropertyOrder({
+    "assessors",
+    "attestations",
+    "claims",
+    "evidence",
+    "targets",
+    "affirmation",
+    "signature"
+})
 public class Declarations
 {
   private List<Assessor> assessors;

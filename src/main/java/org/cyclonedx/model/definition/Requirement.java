@@ -2,11 +2,29 @@ package org.cyclonedx.model.definition;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.util.deserializer.StringListDeserializer;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonPropertyOrder({
+    "identifier",
+    "title",
+    "text",
+    "descriptions",
+    "openCre",
+    "parent",
+    "properties",
+    "externalReferences"
+})
 public class Requirement
 {
   @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
@@ -60,6 +78,8 @@ public class Requirement
     this.text = text;
   }
 
+  @JacksonXmlElementWrapper(localName = "descriptions")
+  @JacksonXmlProperty(localName = "description")
   public List<String> getDescriptions() {
     return descriptions;
   }
@@ -68,6 +88,8 @@ public class Requirement
     this.descriptions = descriptions;
   }
 
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "openCre")
   public List<String> getOpenCre() {
     return openCre;
   }
@@ -84,6 +106,8 @@ public class Requirement
     this.parent = parent;
   }
 
+  @JacksonXmlElementWrapper(localName = "properties")
+  @JacksonXmlProperty(localName = "property")
   public List<Property> getProperties() {
     return properties;
   }
@@ -92,6 +116,8 @@ public class Requirement
     this.properties = properties;
   }
 
+  @JacksonXmlElementWrapper(localName = "externalReferences")
+  @JacksonXmlProperty(localName = "externalReference")
   public List<ExternalReference> getExternalReferences() {
     return externalReferences;
   }

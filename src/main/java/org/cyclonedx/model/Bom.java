@@ -30,6 +30,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.Version;
+import org.cyclonedx.model.attestation.Declarations;
 import org.cyclonedx.model.definition.Definition;
 import org.cyclonedx.model.formulation.Formula;
 import org.cyclonedx.model.vulnerability.Vulnerability;
@@ -56,8 +57,8 @@ import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
         "vulnerabilities",
         "annotations",
         "formulation",
-        "attestations",
-        "definition",
+        "declarations",
+        "definitions",
         "signature"
 })
 public class Bom extends ExtensibleElement {
@@ -87,8 +88,11 @@ public class Bom extends ExtensibleElement {
     @VersionFilter(Version.VERSION_15)
     private List<Formula> formulation;
 
-    @VersionFilter(value = Version.VERSION_16)
-    private Definition definition;
+    @VersionFilter(Version.VERSION_16)
+    private Definition definitions;
+
+    @VersionFilter(Version.VERSION_16)
+    private Declarations declarations;
 
     @VersionFilter(Version.VERSION_14)
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
@@ -241,6 +245,22 @@ public class Bom extends ExtensibleElement {
             this.properties = new ArrayList<>();
         }
         this.properties.add(property);
+    }
+
+    public Declarations getDeclarations() {
+        return declarations;
+    }
+
+    public void setDeclarations(final Declarations declarations) {
+        this.declarations = declarations;
+    }
+
+    public Definition getDefinitions() {
+        return definitions;
+    }
+
+    public void setDefinitions(final Definition definitions) {
+        this.definitions = definitions;
     }
 
     public int getVersion() {
