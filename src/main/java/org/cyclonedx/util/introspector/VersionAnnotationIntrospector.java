@@ -16,19 +16,19 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-package org.cyclonedx.util;
+package org.cyclonedx.util.introspector;
 
-import java.util.Arrays;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.VersionFilter;
-import org.cyclonedx.model.XmlOnly;
 
-public class VersionJsonAnnotationIntrospector extends JacksonAnnotationIntrospector
+public abstract class VersionAnnotationIntrospector
+    extends JacksonAnnotationIntrospector
 {
-    private final String version;
+    protected final Version version;
 
-    public VersionJsonAnnotationIntrospector(final String version) {
+    public VersionAnnotationIntrospector(final Version version) {
         this.version = version;
     }
 
@@ -36,13 +36,15 @@ public class VersionJsonAnnotationIntrospector extends JacksonAnnotationIntrospe
     public boolean hasIgnoreMarker(final AnnotatedMember m) {
         if (m.hasAnnotation(VersionFilter.class)) {
             VersionFilter filter = m.getAnnotation(VersionFilter.class);
-            if (Arrays.asList(filter.versions()).contains(version)) {
+            if (filter.value().getVersion() > version.getVersion()) {
                 return true;
             }
         }
-        if (m.hasAnnotation(XmlOnly.class)) {
+        if (shouldIgnore(m)) {
             return true;
         }
         return super.hasIgnoreMarker(m);
     }
+
+    protected abstract boolean shouldIgnore(final AnnotatedMember m);
 }

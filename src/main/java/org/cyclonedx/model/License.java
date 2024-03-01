@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
 @SuppressWarnings("unused")
@@ -37,7 +38,7 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
     private String bomRef;
@@ -46,7 +47,7 @@ public class License extends ExtensibleElement {
     private String id;
     private String name;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private Licensing licensing;
 
     @JacksonXmlProperty(localName = "text")
@@ -54,7 +55,7 @@ public class License extends ExtensibleElement {
     private AttachmentText attachmentText;
     private String url;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private List<Property> properties;
 
     public String getBomRef() {

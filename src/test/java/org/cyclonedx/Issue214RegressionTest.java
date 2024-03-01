@@ -45,38 +45,38 @@ public class Issue214RegressionTest
     public void schema13JsonObjectGenerationTest()
         throws IOException, ReflectiveOperationException
     {
-        performJsonTest(CycloneDxSchema.Version.VERSION_13, BomJsonGenerator13.class);
+        performJsonTest(Version.VERSION_13, BomJsonGenerator13.class);
     }
 
     @Test
     public void schema14JsonObjectGenerationTest()
         throws IOException, ReflectiveOperationException
     {
-        performJsonTest(CycloneDxSchema.Version.VERSION_14, BomJsonGenerator14.class);
+        performJsonTest(Version.VERSION_14, BomJsonGenerator14.class);
     }
 
     @Test
     public void schema13XmlObjectGenerationTest()
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
-        performXmlTest(CycloneDxSchema.Version.VERSION_13, BomXmlGenerator13.class);
+        performXmlTest(Version.VERSION_13, BomXmlGenerator13.class);
     }
 
     @Test
     public void schema14XmlObjectGenerationTest()
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
-        performXmlTest(CycloneDxSchema.Version.VERSION_14, BomXmlGenerator14.class);
+        performXmlTest(Version.VERSION_14, BomXmlGenerator14.class);
     }
 
     @Test
     public void schema15XmlObjectGenerationTest()
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
-        performXmlTest(CycloneDxSchema.Version.VERSION_15, BomXmlGenerator15.class);
+        performXmlTest(Version.VERSION_15, BomXmlGenerator15.class);
     }
 
-    private <G extends AbstractBomXmlGenerator> void performXmlTest(final CycloneDxSchema.Version pSpecVersion,
+    private <G extends AbstractBomXmlGenerator> void performXmlTest(final Version pSpecVersion,
         final Class<G> pExpectedGeneratorClass)
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
@@ -93,7 +93,7 @@ public class Issue214RegressionTest
         validate(actual, XmlParser.class, pSpecVersion);
     }
 
-    private <G extends AbstractBomJsonGenerator> void performJsonTest(final CycloneDxSchema.Version pSpecVersion,
+    private <G extends AbstractBomJsonGenerator> void performJsonTest(final Version pSpecVersion,
         final Class<G> pExpectedGeneratorClass)
         throws IOException, ReflectiveOperationException
     {
@@ -133,7 +133,7 @@ public class Issue214RegressionTest
         return null;
     }
 
-    private String readFixture(final String pPath, final CycloneDxSchema.Version pSpecVersion)
+    private String readFixture(final String pPath, final Version pSpecVersion)
     {
         try (InputStream is = getClass().getResourceAsStream(pPath)) {
             if (is != null) {
@@ -177,7 +177,7 @@ public class Issue214RegressionTest
     }
 
     private <P extends Parser> void validate(final String pDocument, final Class<P> pParserType,
-        final CycloneDxSchema.Version pSpecVersion)
+        final Version pSpecVersion)
         throws IOException, ReflectiveOperationException
     {
         File tempFile = null;

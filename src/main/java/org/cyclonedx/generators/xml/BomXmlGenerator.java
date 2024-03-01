@@ -18,19 +18,17 @@
  */
 package org.cyclonedx.generators.xml;
 
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
 import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
 
 public interface BomXmlGenerator {
-
-    CycloneDxSchema.Version getSchemaVersion();
+    Version getSchemaVersion();
 
     Document generate() throws ParserConfigurationException;
 
     String toXmlString() throws GeneratorException;
 
     String toString();
-
 }
