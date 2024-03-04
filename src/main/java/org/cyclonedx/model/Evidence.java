@@ -46,7 +46,11 @@ public class Evidence
     private List<Copyright> copyright;
 
     @VersionFilter(Version.VERSION_15)
+    @Deprecated
     private Identity identity;
+
+    @VersionFilter(Version.VERSION_16)
+    private List<Identity> identities;
 
     @VersionFilter(Version.VERSION_15)
     private List<Occurrence> occurrences;
