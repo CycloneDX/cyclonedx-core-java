@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.ExtensibleElement;
+import org.cyclonedx.model.VersionFilter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -15,6 +16,18 @@ public class Occurrence extends ExtensibleElement
   private String bomRef;
 
   private String location;
+
+  @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+  private Integer line;
+
+  @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+  private Integer offset;
+
+  @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+  private Integer symbol;
+
+  @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+  private String additionalContext;
 
   public String getBomRef() {
     return bomRef;
@@ -30,5 +43,37 @@ public class Occurrence extends ExtensibleElement
 
   public void setLocation(final String location) {
     this.location = location;
+  }
+
+  public Integer getLine() {
+    return line;
+  }
+
+  public void setLine(final Integer line) {
+    this.line = line;
+  }
+
+  public Integer getOffset() {
+    return offset;
+  }
+
+  public void setOffset(final Integer offset) {
+    this.offset = offset;
+  }
+
+  public Integer getSymbol() {
+    return symbol;
+  }
+
+  public void setSymbol(final Integer symbol) {
+    this.symbol = symbol;
+  }
+
+  public String getAdditionalContext() {
+    return additionalContext;
+  }
+
+  public void setAdditionalContext(final String additionalContext) {
+    this.additionalContext = additionalContext;
   }
 }
