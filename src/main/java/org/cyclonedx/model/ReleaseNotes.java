@@ -68,6 +68,7 @@ public class ReleaseNotes
   @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
   private Date timestamp;
   private List<String> aliases;
+  @JsonProperty("tags")
   private Tags tags;
   private List<Resolves> resolves;
   private List<Notes> notes;

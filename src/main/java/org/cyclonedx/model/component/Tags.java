@@ -5,19 +5,22 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.util.deserializer.StringListDeserializer;
+import org.cyclonedx.util.deserializer.TagsDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonDeserialize(using = TagsDeserializer.class)
 public class Tags
 {
   private List<String> tags;
 
-  @JacksonXmlElementWrapper(localName = "tags")
-  @JacksonXmlProperty(localName = "tag")
-  @JsonDeserialize(using = StringListDeserializer.class)
+  public Tags() {
+  }
+
+  public Tags(List<String> tags){
+    this.tags = tags;
+  }
+
   public List<String> getTags() {
     return tags;
   }
