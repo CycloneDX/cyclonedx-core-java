@@ -18,7 +18,7 @@
  */
 package org.cyclonedx.parsers;
 
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import java.io.File;
@@ -82,7 +82,7 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    List<ParseException> validate(File file, CycloneDxSchema.Version schemaVersion) throws IOException;
+    List<ParseException> validate(File file, Version schemaVersion) throws IOException;
 
     /**
      * Validates a CycloneDX BOM.
@@ -101,7 +101,7 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    List<ParseException> validate(byte[] bomBytes, CycloneDxSchema.Version schemaVersion) throws IOException;
+    List<ParseException> validate(byte[] bomBytes, Version schemaVersion) throws IOException;
 
     /**
      * Validates a CycloneDX BOM.
@@ -120,7 +120,7 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    List<ParseException> validate(Reader reader, CycloneDxSchema.Version schemaVersion) throws IOException;
+    List<ParseException> validate(Reader reader, Version schemaVersion) throws IOException;
 
     /**
      * Validates a CycloneDX BOM.
@@ -139,7 +139,7 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    List<ParseException> validate(InputStream inputStream, CycloneDxSchema.Version schemaVersion) throws IOException;
+    List<ParseException> validate(InputStream inputStream, Version schemaVersion) throws IOException;
 
     /**
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
@@ -158,7 +158,7 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    boolean isValid(File file, CycloneDxSchema.Version schemaVersion) throws IOException;
+    boolean isValid(File file, Version schemaVersion) throws IOException;
 
     /**
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
@@ -177,7 +177,7 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    boolean isValid(byte[] bomBytes, CycloneDxSchema.Version schemaVersion) throws IOException;
+    boolean isValid(byte[] bomBytes, Version schemaVersion) throws IOException;
 
     /**
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
@@ -196,7 +196,7 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    boolean isValid(Reader reader, CycloneDxSchema.Version schemaVersion) throws IOException;
+    boolean isValid(Reader reader, Version schemaVersion) throws IOException;
 
     /**
      * Verifies a CycloneDX BOM conforms to the latest version of the specification.
@@ -215,6 +215,6 @@ public interface Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    boolean isValid(InputStream inputStream, CycloneDxSchema.Version schemaVersion) throws IOException;
+    boolean isValid(InputStream inputStream, Version schemaVersion) throws IOException;
 
 }

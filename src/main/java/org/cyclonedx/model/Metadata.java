@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.deserializer.LifecycleDeserializer;
 import org.cyclonedx.util.deserializer.MetadataDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
@@ -47,41 +48,41 @@ public class Metadata
 {
 
     @JsonSerialize(using = CustomDateSerializer.class)
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     private Date timestamp = new Date();
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     @JsonProperty("lifecycles")
     @JsonDeserialize(using = LifecycleDeserializer.class)
     @JacksonXmlElementWrapper(localName = "lifecycles")
     @JacksonXmlProperty(localName = "lifecycle")
     private Lifecycles lifecycles;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     @Deprecated
     private List<Tool> tools;
 
     @JacksonXmlElementWrapper(localName = "tools")
     @JacksonXmlProperty(localName = "tool")
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private ToolInformation toolInformation;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     private List<OrganizationalContact> authors;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     private Component component;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity manufacture;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(Version.VERSION_13)
     private LicenseChoice license;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
 
     public Date getTimestamp() {

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.cyclonedx.Version;
 import org.cyclonedx.util.deserializer.OrganizationalEntityDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,7 +41,7 @@ public class OrganizationalEntity {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private String bomRef;
 
     private String name;

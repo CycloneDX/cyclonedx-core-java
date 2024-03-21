@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
 
@@ -69,12 +70,12 @@ public class Service extends ExtensibleElement {
     private List<ServiceData> data;
     private LicenseChoice license;
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
     private List<Service> services;
     private ReleaseNotes releaseNotes;
     @JsonOnly
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(Version.VERSION_14)
     private Signature signature;
 
     public String getBomRef() {

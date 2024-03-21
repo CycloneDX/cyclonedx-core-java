@@ -20,7 +20,6 @@ package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.json.BomJsonGenerator12;
 import org.cyclonedx.generators.json.BomJsonGenerator13;
@@ -65,10 +64,10 @@ public class BomJsonGeneratorTest {
         Bom bom =  createCommonBom("/bom-1.2.xml");
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_12, bom);
         assertTrue(generator instanceof BomJsonGenerator12);
-        assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+        assertTrue(parser.isValid(file, Version.VERSION_12));
     }
 
     @Test
@@ -93,10 +92,10 @@ public class BomJsonGeneratorTest {
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_12, bom);
         assertTrue(generator instanceof BomJsonGenerator12);
-        assertEquals(CycloneDxSchema.Version.VERSION_12, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser jsonParser = new JsonParser();
-        assertTrue(jsonParser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+        assertTrue(jsonParser.isValid(file, Version.VERSION_12));
     }
 
     @Test
@@ -106,10 +105,10 @@ public class BomJsonGeneratorTest {
         bom.setDependencies(new ArrayList<>());
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
         assertTrue(generator instanceof BomJsonGenerator13);
-        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_13, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
+        assertTrue(parser.isValid(file, Version.VERSION_13));
     }
 
     @Test
@@ -120,10 +119,10 @@ public class BomJsonGeneratorTest {
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
         assertTrue(generator instanceof BomJsonGenerator13);
-        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_13, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser jsonParser = new JsonParser();
-        assertTrue(jsonParser.isValid(file, CycloneDxSchema.Version.VERSION_13));
+        assertTrue(jsonParser.isValid(file, Version.VERSION_13));
     }
 
     @Test
@@ -132,11 +131,11 @@ public class BomJsonGeneratorTest {
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
 
         assertTrue(generator instanceof BomJsonGenerator13);
-        assertEquals(CycloneDxSchema.Version.VERSION_13, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_13, generator.getSchemaVersion());
 
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_13));
+        assertTrue(parser.isValid(file, Version.VERSION_13));
     }
 
     @Test
@@ -145,11 +144,11 @@ public class BomJsonGeneratorTest {
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_14, bom);
 
         assertTrue(generator instanceof BomJsonGenerator14);
-        assertEquals(CycloneDxSchema.Version.VERSION_14, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_14, generator.getSchemaVersion());
 
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+        assertTrue(parser.isValid(file, Version.VERSION_14));
     }
 
     @Test
@@ -160,10 +159,10 @@ public class BomJsonGeneratorTest {
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_14, bom);
         assertTrue(generator instanceof BomJsonGenerator14);
-        assertEquals(CycloneDxSchema.Version.VERSION_14, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_14, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser jsonParser = new JsonParser();
-        assertTrue(jsonParser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+        assertTrue(jsonParser.isValid(file, Version.VERSION_14));
     }
 
     @Test
@@ -172,7 +171,7 @@ public class BomJsonGeneratorTest {
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_14, bom);
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+        assertTrue(parser.isValid(file, Version.VERSION_14));
         Bom bom2 = parser.parse(file);
         assertNotNull(bom2.getComponents().get(0).getExternalReferences());
         assertEquals("bom", bom2.getComponents().get(0).getExternalReferences().get(0).getType().getTypeName());
@@ -184,11 +183,11 @@ public class BomJsonGeneratorTest {
         Bom bom = createCommonBom("/bom-1.5.xml");
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_15, bom);
         assertTrue(generator instanceof BomJsonGenerator15);
-        assertEquals(CycloneDxSchema.Version.VERSION_15, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_15, generator.getSchemaVersion());
 
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_15));
+        assertTrue(parser.isValid(file, Version.VERSION_15));
     }
 
     @Test
@@ -196,11 +195,11 @@ public class BomJsonGeneratorTest {
         Bom bom = createCommonBom("/bom-1.6.xml");
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
         assertTrue(generator instanceof BomJsonGenerator16);
-        assertEquals(CycloneDxSchema.Version.VERSION_16, generator.getSchemaVersion());
+        assertEquals(Version.VERSION_16, generator.getSchemaVersion());
 
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_16));
+        assertTrue(parser.isValid(file, Version.VERSION_16));
     }
 
 

@@ -18,7 +18,7 @@
  */
 package org.cyclonedx.schema;
 
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.parsers.JsonParser;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -38,21 +38,21 @@ public class JsonSchemaVerificationTest extends BaseSchemaVerificationTest {
         final List<DynamicTest> dynamicTests = new ArrayList<>();
         for (final String file: files) {
             if (file.endsWith(".json")) {
-                final CycloneDxSchema.Version schemaVersion;
+                final Version schemaVersion;
                 if (file.endsWith("-1.2.json")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_12;
+                    schemaVersion = Version.VERSION_12;
                 }
                 else if (file.endsWith("-1.3.json")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_13;
+                    schemaVersion = Version.VERSION_13;
                 }
                 else if (file.endsWith("-1.4.json")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_14;
+                    schemaVersion = Version.VERSION_14;
                 }
                 else if (file.endsWith("-1.5.json")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_15;
+                    schemaVersion = Version.VERSION_15;
                 }
                 else if (file.endsWith("-1.6.json")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_16;
+                    schemaVersion = Version.VERSION_16;
                 }
                 else {
                     schemaVersion = null;
@@ -69,7 +69,7 @@ public class JsonSchemaVerificationTest extends BaseSchemaVerificationTest {
         return dynamicTests;
     }
 
-    private boolean isValidJson(CycloneDxSchema.Version version, String resource) throws Exception {
+    private boolean isValidJson(Version version, String resource) throws Exception {
         final File file = new File(this.getClass().getResource(resource).getFile());
         final JsonParser parser = new JsonParser();
         return parser.isValid(file, version);

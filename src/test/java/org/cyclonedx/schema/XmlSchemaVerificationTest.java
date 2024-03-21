@@ -18,7 +18,7 @@
  */
 package org.cyclonedx.schema;
 
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -39,27 +39,27 @@ public class XmlSchemaVerificationTest extends BaseSchemaVerificationTest {
         final List<DynamicTest> dynamicTests = new ArrayList<>();
         for (final String file: files) {
             if (file.endsWith(".xml")) {
-                final CycloneDxSchema.Version schemaVersion;
+                final Version schemaVersion;
                 if (file.endsWith("-1.0.xml")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_10;
+                    schemaVersion = Version.VERSION_10;
                 }
                 else if (file.endsWith("-1.1.xml")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_11;
+                    schemaVersion = Version.VERSION_11;
                 }
                 else if (file.endsWith("-1.2.xml")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_12;
+                    schemaVersion = Version.VERSION_12;
                 }
                 else if (file.endsWith("-1.3.xml")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_13;
+                    schemaVersion = Version.VERSION_13;
                 }
                 else if (file.endsWith("-1.4.xml")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_14;
+                    schemaVersion = Version.VERSION_14;
                 }
                 else if (file.endsWith("-1.5.xml")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_15;
+                    schemaVersion = Version.VERSION_15;
                 }
                 else if (file.endsWith("-1.6.xml")) {
-                    schemaVersion = CycloneDxSchema.Version.VERSION_16;
+                    schemaVersion = Version.VERSION_16;
                 }
                 else {
                     schemaVersion = null;
@@ -76,7 +76,7 @@ public class XmlSchemaVerificationTest extends BaseSchemaVerificationTest {
         return dynamicTests;
     }
 
-    private boolean isValid(CycloneDxSchema.Version version, String resource) throws Exception {
+    private boolean isValid(Version version, String resource) throws Exception {
         final File file = new File(this.getClass().getResource(resource).getFile());
         final XmlParser parser = new XmlParser();
         return parser.isValid(file, version);

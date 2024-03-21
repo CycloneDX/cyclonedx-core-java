@@ -21,6 +21,7 @@ package org.cyclonedx.generators.xml;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;

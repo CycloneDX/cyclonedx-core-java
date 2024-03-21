@@ -19,11 +19,10 @@
 package org.cyclonedx.generators.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 
 public interface BomJsonGenerator {
-
-    CycloneDxSchema.Version getSchemaVersion();
+  Version getSchemaVersion();
 
     JsonNode toJsonNode();
 

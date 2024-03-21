@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.component.evidence.Callstack;
 import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.evidence.Occurrence;
@@ -44,13 +45,13 @@ public class Evidence
 
     private List<Copyright> copyright;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private Identity identity;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private List<Occurrence> occurrences;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private Callstack callstack;
 
     @JacksonXmlProperty(localName = "licenses")

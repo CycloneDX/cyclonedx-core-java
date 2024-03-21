@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.formulation.Formula;
 import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.util.deserializer.DependencyDeserializer;
@@ -62,35 +63,35 @@ public class Bom extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
 
-    @VersionFilter(versions = { "1.0", "1.1" })
+    @VersionFilter(value = Version.VERSION_12)
     private Metadata metadata;
 
     private List<Component> components;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(value = Version.VERSION_12)
     private List<Service> services;
 
-    @VersionFilter(versions = {"1.0"})
+    @VersionFilter(value = Version.VERSION_11)
     private DependencyList dependencies;
 
-    @VersionFilter(versions = {"1.0"})
+    @VersionFilter(value = Version.VERSION_11)
     @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     private List<ExternalReference> externalReferences;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(value = Version.VERSION_13)
     private List<Composition> compositions;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(value = Version.VERSION_15)
     private List<Formula> formulation;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(value = Version.VERSION_14)
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
     private List<Vulnerability> vulnerabilities;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(value =  Version.VERSION_15)
     private List<Annotation> annotations;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(value = Version.VERSION_13)
     private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -106,7 +107,7 @@ public class Bom extends ExtensibleElement {
     private String bomFormat;
 
     @JsonOnly
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(value = Version.VERSION_14)
     private Signature signature;
 
     public Metadata getMetadata() {

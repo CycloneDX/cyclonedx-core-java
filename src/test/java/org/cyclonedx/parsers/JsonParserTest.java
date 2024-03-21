@@ -18,8 +18,7 @@
  */
 package org.cyclonedx.parsers;
 
-import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.CycloneDxSchema.Version;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
@@ -43,7 +42,7 @@ public class JsonParserTest
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2.json")).getFile());
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_12));
+        assertTrue(parser.isValid(file, Version.VERSION_12));
         System.out.println(bom.getSerialNumber());
     }
 
@@ -117,7 +116,7 @@ public class JsonParserTest
             new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.4-bomlink.json")).getFile());
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+        assertTrue(parser.isValid(file, Version.VERSION_14));
         ExternalReference ref = bom.getComponents().get(0).getExternalReferences().get(0);
         assertEquals("bom", ref.getType().getTypeName());
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", ref.getUrl());

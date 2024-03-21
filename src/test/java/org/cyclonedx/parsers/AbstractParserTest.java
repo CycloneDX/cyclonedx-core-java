@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.CycloneDxSchema.Version;
+import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Annotation;
 import org.cyclonedx.model.Annotator;

@@ -24,6 +24,7 @@ import com.networknt.schema.ValidationMessage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 
@@ -104,7 +105,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final File file, final Version schemaVersion) throws IOException {
         return validate(FileUtils.readFileToString(file, StandardCharsets.UTF_8), schemaVersion);
     }
 
@@ -118,7 +119,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final byte[] bomBytes, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final byte[] bomBytes, final Version schemaVersion) throws IOException {
         return validate(new String(bomBytes), schemaVersion);
     }
 
@@ -132,7 +133,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final Reader reader, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final Reader reader, final Version schemaVersion) throws IOException {
         return validate(IOUtils.toString(reader), schemaVersion);
     }
 
@@ -146,7 +147,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final InputStream inputStream, final Version schemaVersion) throws IOException {
         return validate(IOUtils.toString(inputStream, StandardCharsets.UTF_8), schemaVersion);
     }
 
@@ -158,7 +159,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    public List<ParseException> validate(final String bomString, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final String bomString, final Version schemaVersion) throws IOException {
         return validate(mapper.readTree(bomString), schemaVersion);
     }
 
@@ -170,7 +171,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
-    public List<ParseException> validate(final JsonNode bomJson, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final JsonNode bomJson, final Version schemaVersion) throws IOException {
         final List<ParseException> exceptions = new ArrayList<>();
         Set<ValidationMessage> errors = getJsonSchema(schemaVersion, mapper).validate(mapper.readTree(bomJson.toString()));
         for (ValidationMessage message: errors) {
@@ -189,7 +190,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final File file, final Version schemaVersion) throws IOException {
         return validate(file, schemaVersion).isEmpty();
     }
 
@@ -203,7 +204,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final byte[] bomBytes, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final byte[] bomBytes, final Version schemaVersion) throws IOException {
         return validate(bomBytes, schemaVersion).isEmpty();
     }
 
@@ -217,7 +218,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final Reader reader, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final Reader reader, final Version schemaVersion) throws IOException {
         return validate(reader, schemaVersion).isEmpty();
     }
 
@@ -231,7 +232,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final InputStream inputStream, final Version schemaVersion) throws IOException {
         return validate(inputStream, schemaVersion).isEmpty();
     }
 }
