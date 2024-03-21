@@ -112,6 +112,12 @@ public class ExternalReference {
         EVIDENCE("evidence"),
         @JsonProperty("formulation")
         FORMULATION("formulation"),
+        @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+        @JsonProperty("electronic-signature")
+        ELECTRONIC_SIGNATURE("electronic-signature"),
+        @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+        @JsonProperty("digital-signature")
+        DIGITAL_SIGNATURE("digital-signature"),
         @JsonProperty("other")
         OTHER("other");
 

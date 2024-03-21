@@ -28,6 +28,12 @@ public class StringListDeserializer
     else if (p.getCurrentName().equalsIgnoreCase("altIds")) {
       return deserializeList(node, "altId");
     }
+    else if (p.getCurrentName().equalsIgnoreCase("sensitiveData")) {
+      return deserializeList(node, "sensitiveData");
+    }
+    else if (p.getCurrentName().equalsIgnoreCase("openCre")) {
+      return deserializeList(node, "openCre");
+    }
     return null;
   }
 
