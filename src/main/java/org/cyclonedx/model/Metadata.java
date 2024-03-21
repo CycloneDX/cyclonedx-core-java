@@ -69,9 +69,14 @@ public class Metadata
     @VersionFilter(versions = {"1.0", "1.1"})
     private List<OrganizationalContact> authors;
 
+    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5"})
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
+
     @VersionFilter(versions = {"1.0", "1.1"})
     private Component component;
 
+    @Deprecated
     @VersionFilter(versions = {"1.0", "1.1"})
     private OrganizationalEntity manufacture;
 
@@ -194,6 +199,14 @@ public class Metadata
 
     public void setToolChoice(final ToolInformation toolInformation) {
         this.toolInformation = toolInformation;
+    }
+
+    public OrganizationalEntity getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(final OrganizationalEntity manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     @Override
