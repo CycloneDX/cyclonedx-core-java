@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -74,7 +75,7 @@ public class XmlSchemaVerificationTest extends BaseSchemaVerificationTest {
     }
 
     private boolean isValid(CycloneDxSchema.Version version, String resource) throws Exception {
-        final File file = new File(this.getClass().getResource(resource).getFile());
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource(resource)).getFile());
         final XmlParser parser = new XmlParser();
         return parser.isValid(file, version);
     }

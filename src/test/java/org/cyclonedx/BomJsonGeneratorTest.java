@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -86,7 +87,8 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void schema12MultipleDependenciesJsonTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.2.json"));
+        final byte[] bomBytes = IOUtils.toByteArray(
+            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.2.json")));
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -113,7 +115,8 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void schema13MultipleDependenciesJsonTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.3.json"));
+        final byte[] bomBytes = IOUtils.toByteArray(
+            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.3.json")));
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -153,7 +156,8 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void schema14MultipleDependenciesJsonTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/bom-1.4.json"));
+        final byte[] bomBytes = IOUtils.toByteArray(
+            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.4.json")));
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -198,7 +202,8 @@ public class BomJsonGeneratorTest {
     }
 
     private Bom createCommonBom(String resource) throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
+        final byte[] bomBytes = IOUtils.toByteArray(
+            Objects.requireNonNull(this.getClass().getResourceAsStream(resource)));
         XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
     }
