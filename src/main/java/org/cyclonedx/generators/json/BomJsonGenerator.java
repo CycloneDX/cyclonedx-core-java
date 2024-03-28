@@ -35,7 +35,6 @@ import org.cyclonedx.util.introspector.VersionJsonAnnotationIntrospector;
 import org.cyclonedx.util.mixin.MixInBomReference;
 import org.cyclonedx.util.serializer.ComponentWrapperSerializer;
 import org.cyclonedx.util.serializer.DependencySerializer;
-import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
 import org.cyclonedx.util.serializer.TrimStringSerializer;
 
 public class BomJsonGenerator extends AbstractBomGenerator
@@ -54,7 +53,7 @@ public class BomJsonGenerator extends AbstractBomGenerator
     }
     catch (GeneratorException e) {
     }
-    bom = modifiedBom != null ? modifiedBom : bom;
+    this.bom = modifiedBom != null ? modifiedBom : bom;
     this.prettyPrinter = new DefaultPrettyPrinter();
 
     setupPrettyPrinter(this.prettyPrinter);
@@ -68,16 +67,12 @@ public class BomJsonGenerator extends AbstractBomGenerator
 
     super.setupObjectMapper(false);
 
-    SimpleModule licenseModule = new SimpleModule();
     SimpleModule depModule = new SimpleModule();
     SimpleModule componentWrapperModule = new SimpleModule();
 
     SimpleModule stringModule = new SimpleModule();
     stringModule.addSerializer(new TrimStringSerializer());
     mapper.registerModule(stringModule);
-
-    licenseModule.addSerializer(new LicenseChoiceSerializer());
-    mapper.registerModule(licenseModule);
 
     depModule.addSerializer(new DependencySerializer(false, null));
     mapper.registerModule(depModule);

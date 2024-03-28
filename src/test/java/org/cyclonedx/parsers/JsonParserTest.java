@@ -64,7 +64,7 @@ public class JsonParserTest
         assertEquals("org.glassfish.hk2", c3.getGroup());
         assertEquals("osgi-resource-locator", c3.getName());
         assertEquals("1.0.1", c3.getVersion());
-        assertEquals("(CDDL-1.0 OR GPL-2.0-with-classpath-exception)", c3.getLicenseChoice().getExpression());
+        assertEquals("(CDDL-1.0 OR GPL-2.0-with-classpath-exception)", c3.getLicenseChoice().getExpression().getId());
 
         assertServices(bom);
 

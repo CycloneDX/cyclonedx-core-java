@@ -23,6 +23,8 @@ import org.apache.commons.io.IOUtils;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.AttachmentText;
+import org.cyclonedx.model.license.Expression;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -159,15 +161,16 @@ public final class LicenseResolver {
         final SpdxLicenseMapping[] mappings = mapper.readValue(is, SpdxLicenseMapping[].class);
 
         if (mappings != null) {
-            for(final SpdxLicenseMapping licenseMapping : mappings) {
+            for (final SpdxLicenseMapping licenseMapping : mappings) {
                 if (licenseMapping.names != null && !licenseMapping.names.isEmpty()) {
                     for (final String name : licenseMapping.names) {
                         if (licenseString.equalsIgnoreCase(name)) {
                             if (licenseMapping.exp.startsWith("(") && licenseMapping.exp.endsWith(")")) {
                                 final LicenseChoice lc = new LicenseChoice();
-                                lc.setExpression(licenseMapping.exp);
+                                lc.setExpression(new Expression(licenseMapping.exp));
                                 return lc;
-                            } else {
+                            }
+                            else {
                                 return createLicenseChoice(licenseMapping.exp, null, false, licenseTextSettings);
                             }
                         }
