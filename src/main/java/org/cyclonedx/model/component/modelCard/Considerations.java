@@ -6,7 +6,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.ExtensibleElement;
+import org.cyclonedx.model.VersionFilter;
+import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
 import org.cyclonedx.model.component.modelCard.consideration.FairnessAssessment;
 import org.cyclonedx.model.component.modelCard.consideration.Risk;
 
@@ -24,6 +27,8 @@ public class Considerations extends ExtensibleElement
 
   private List<Risk> ethicalConsiderations;
 
+  @VersionFilter(Version.VERSION_16)
+  private EnvironmentalConsideration environmentalConsiderations;
 
   private List<FairnessAssessment> fairnessAssessments;
 
@@ -85,5 +90,13 @@ public class Considerations extends ExtensibleElement
 
   public void setFairnessAssessments(final List<FairnessAssessment> fairnessAssessments) {
     this.fairnessAssessments = fairnessAssessments;
+  }
+
+  public EnvironmentalConsideration getEnvironmentalConsiderations() {
+    return environmentalConsiderations;
+  }
+
+  public void setEnvironmentalConsiderations(final EnvironmentalConsideration environmentalConsiderations) {
+    this.environmentalConsiderations = environmentalConsiderations;
   }
 }
