@@ -20,7 +20,7 @@ package org.cyclonedx.generators.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
@@ -53,7 +53,7 @@ public class BomJsonGenerator12 extends AbstractBomJsonGenerator implements BomJ
      * @return a CycloneDxSchemaVersion enum
      */
     public Version getSchemaVersion() {
-        return CycloneDxSchema.Version.VERSION_12;
+        return Version.VERSION_12;
     }
 
     /**

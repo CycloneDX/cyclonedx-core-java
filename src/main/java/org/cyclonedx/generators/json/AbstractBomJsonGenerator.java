@@ -31,7 +31,7 @@ import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
 import org.cyclonedx.util.serializer.TrimStringSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
-import org.cyclonedx.util.VersionJsonAnnotationIntrospector;
+import org.cyclonedx.util.introspector.VersionJsonAnnotationIntrospector;
 import org.cyclonedx.util.serializer.DependencySerializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
@@ -63,9 +63,7 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
     }
 	
     private void setupObjectMapper(final ObjectMapper mapper) {
-        mapper.setAnnotationIntrospector(
-                new VersionJsonAnnotationIntrospector(
-                        String.valueOf(this.getSchemaVersion().getVersion())));
+        mapper.setAnnotationIntrospector(new VersionJsonAnnotationIntrospector(this.getSchemaVersion()));
 
         SimpleModule licenseModule = new SimpleModule();
         SimpleModule depModule = new SimpleModule();
@@ -96,6 +94,10 @@ public abstract class AbstractBomJsonGenerator extends CycloneDxSchema implement
 
         depModule.addSerializer(new DependencySerializer(false, null));
         mapper.registerModule(depModule);
+
+        /*SimpleModule externalReferenceModule = new SimpleModule();
+        externalReferenceModule.addSerializer(new ExternalReferenceSerializer());
+        mapper.registerModule(externalReferenceModule);*/
 
         componentWrapperModule.addSerializer(new ComponentWrapperSerializer(mapper));
 

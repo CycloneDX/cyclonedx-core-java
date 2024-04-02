@@ -18,6 +18,7 @@
  */
 package org.cyclonedx;
 
+import org.cyclonedx.Version;
 import org.cyclonedx.generators.json.BomJsonGenerator12;
 import org.cyclonedx.generators.json.BomJsonGenerator13;
 import org.cyclonedx.generators.json.BomJsonGenerator14;
@@ -40,11 +41,11 @@ public class BomGeneratorFactory {
     }
 
     @Deprecated
-    public static BomXmlGenerator create(CycloneDxSchema.Version version, Bom bom) {
+    public static BomXmlGenerator create(Version version, Bom bom) {
         return createXml(version, bom);
     }
 
-    public static BomXmlGenerator createXml(CycloneDxSchema.Version version, Bom bom) {
+    public static BomXmlGenerator createXml(Version version, Bom bom) {
         switch (version) {
             case VERSION_10:
                 return new BomXmlGenerator10(bom);
@@ -63,7 +64,7 @@ public class BomGeneratorFactory {
         }
     }
 
-    public static BomJsonGenerator createJson(final CycloneDxSchema.Version version,  Bom bom) {
+    public static BomJsonGenerator createJson(final Version version, Bom bom) {
         switch (version) {
             case VERSION_12:
                 return new BomJsonGenerator12(bom);
