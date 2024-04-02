@@ -69,7 +69,9 @@ limitations under the License.
             ]]>
             </xs:documentation>
         </xs:annotation>
-        <xs:restriction base="xs:normalizedString"/>
+        <xs:restriction base="xs:normalizedString">
+            <xs:maxLength value="1024"/>
+        </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="versionRangeType">
         <xs:annotation>
@@ -77,17 +79,17 @@ limitations under the License.
                 A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/purl-spec/VERSION-RANGE-SPEC.rst
 
                 Example values:
-                - "9.0.14"
-                - "1.2.3|>=2.0.0|<5.0.0"
-                - "0.0.0|0.0.1|0.0.2|0.0.3|1.0|2.0pre1"
-                - ">=1.0.0-beta1|<=1.7.5|>=7.0.0-M1|<=7.0.7|>=7.1.0|<=7.1.2|>=8.0.0-M1|<=8.0.1"
-                - ">=2.2.0|!= 2.2.1|<2.3.0"
+                - "vers:cargo/9.0.14"
+                - "vers:npm/1.2.3|>=2.0.0|<5.0.0"
+                - "vers:pypi/0.0.0|0.0.1|0.0.2|0.0.3|1.0|2.0pre1"
+                - "vers:tomee/>=1.0.0-beta1|<=1.7.5|>=7.0.0-M1|<=7.0.7|>=7.1.0|<=7.1.2|>=8.0.0-M1|<=8.0.1"
+                - "vers:gem/>=2.2.0|!= 2.2.1|<2.3.0"
             ]]>
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:normalizedString">
             <xs:minLength value="1"/>
-            <xs:maxLength value="1024"/>
+            <xs:maxLength value="4096"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -129,7 +131,7 @@ limitations under the License.
             <xs:element name="lifecycles" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        The product lifecycle(s) that this BOM represents.
+                        Lifecycles communicate the stage(s) in which data in the BOM was captured. Different types of data may be available at various phases of a lifecycle, such as the Software Development Lifecycle (SDLC), IT Asset Management (ITAM), and Software Asset Management (SAM). Thus, a BOM may include data specific to or only obtainable in a given lifecycle.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -240,7 +242,7 @@ limitations under the License.
                 <xs:annotation>
                     <xs:documentation>
                         The license information for the BOM document.
-                        This may be different from the license(s) of the component that the BOM describes.
+                        This may be different from the license(s) of the component(s) that the BOM describes.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -344,6 +346,11 @@ limitations under the License.
             <xs:element name="name" type="xs:normalizedString" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>The name of the organization</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="address" type="bom:postalAddressType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The physical address (location) of the organization.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="url" type="xs:anyURI" minOccurs="0" maxOccurs="unbounded">
@@ -587,6 +594,23 @@ limitations under the License.
                     <xs:documentation>
                         Specifies the package-url (purl). The purl, if specified, MUST be valid and conform
                         to the specification defined at: https://github.com/package-url/purl-spec
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="omniborId" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform
+                        to the specification defined at: https://www.iana.org/assignments/uri-schemes/prov/gitoid
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="swhid" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST
+                        be valid and conform to the specification defined at:
+                        https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -905,6 +929,23 @@ limitations under the License.
                 <xs:documentation>
                     An optional identifier which can be used to reference the license elsewhere in the BOM.
                     Uniqueness is enforced within all elements and children of the root-level bom element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="acknowledgement" type="bom:licenseAcknowledgementEnumerationType">
+            <xs:annotation>
+                <xs:documentation>
+                    Declared licenses and concluded licenses represent two different stages in the
+                    licensing process within software development. Declared licenses refer to the
+                    initial intention of the software authors regarding the licensing terms under
+                    which their code is released. On the other hand, concluded licenses are the
+                    result of a comprehensive analysis of the project's codebase to identify and
+                    confirm the actual licenses of the components used, which may differ from the
+                    initially declared licenses. While declared licenses provide an upfront indication
+                    of the licensing intentions, concluded licenses offer a more thorough understanding
+                    of the actual licensing within a project, facilitating proper compliance and risk
+                    management. Observed licenses are defined in `evidence.licenses`. Observed licenses
+                    form the evidence necessary to substantiate a concluded license.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -2226,12 +2267,49 @@ limitations under the License.
                                     </xs:documentation>
                                 </xs:annotation>
                             </xs:attribute>
+                            <xs:attribute name="acknowledgement" type="bom:licenseAcknowledgementEnumerationType">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Declared licenses and concluded licenses represent two different stages in the
+                                        licensing process within software development. Declared licenses refer to the
+                                        initial intention of the software authors regarding the licensing terms under
+                                        which their code is released. On the other hand, concluded licenses are the
+                                        result of a comprehensive analysis of the project's codebase to identify and
+                                        confirm the actual licenses of the components used, which may differ from the
+                                        initially declared licenses. While declared licenses provide an upfront indication
+                                        of the licensing intentions, concluded licenses offer a more thorough understanding
+                                        of the actual licensing within a project, facilitating proper compliance and risk
+                                        management. Observed licenses are defined in `evidence.licenses`. Observed licenses
+                                        form the evidence necessary to substantiate a concluded license.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
                         </xs:extension>
                     </xs:simpleContent>
                 </xs:complexType>
             </xs:element>
         </xs:choice>
     </xs:complexType>
+
+    <xs:simpleType name="licenseAcknowledgementEnumerationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="declared">
+                <xs:annotation>
+                    <xs:documentation>
+                        Declared licenses represent the initial intentions of authors regarding
+                        the licensing terms of their code.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="concluded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Concluded licenses are verified and confirmed.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="copyrightsType">
         <xs:sequence>
@@ -2246,6 +2324,8 @@ limitations under the License.
             <xs:enumeration value="version"/>
             <xs:enumeration value="purl"/>
             <xs:enumeration value="cpe"/>
+            <xs:enumeration value="omniborId"/>
+            <xs:enumeration value="swhid"/>
             <xs:enumeration value="swid"/>
             <xs:enumeration value="hash"/>
         </xs:restriction>
@@ -2352,6 +2432,11 @@ limitations under the License.
                         <xs:element name="confidence" type="bom:decimalPercentType" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
                                 <xs:documentation>The overall confidence of the evidence from 0 - 1, where 1 is 100% confidence.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="concludedValue" type="xs:string" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>The value of the field (cpe, purl, etc) that has been concluded based on the aggregate of all methods (if available).</xs:documentation>
                             </xs:annotation>
                         </xs:element>
                         <xs:element name="methods" minOccurs="0" maxOccurs="1">
@@ -2723,9 +2808,9 @@ limitations under the License.
                         * minor = A minor release, also known as an update, may contain a smaller number of changes than major releases.
                         * patch = Patch releases are typically unplanned and may resolve defects or important security issues.
                         * pre-release = A pre-release may include alpha, beta, or release candidates and typically have
-                          limited support. They provide the ability to preview a release prior to its general availability.
+                        limited support. They provide the ability to preview a release prior to its general availability.
                         * internal = Internal releases are not for public consumption and are intended to be used exclusively
-                          by the project or manufacturer that produced it.
+                        by the project or manufacturer that produced it.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -2760,7 +2845,7 @@ limitations under the License.
                         <xs:element name="alias" type="xs:normalizedString">
                             <xs:annotation>
                                 <xs:documentation>One or more alternate names the release may be referred to. This may
-                                include unofficial terms used by development and marketing teams (e.g. code names).</xs:documentation>
+                                    include unofficial terms used by development and marketing teams (e.g. code names).</xs:documentation>
                             </xs:annotation>
                         </xs:element>
                     </xs:sequence>
@@ -2783,7 +2868,7 @@ limitations under the License.
                         <xs:element name="note">
                             <xs:annotation>
                                 <xs:documentation>Zero or more release notes containing the locale and content. Multiple
-                                note elements may be specified to support release notes in a wide variety of languages.</xs:documentation>
+                                    note elements may be specified to support release notes in a wide variety of languages.</xs:documentation>
                             </xs:annotation>
                             <xs:complexType>
                                 <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -2830,12 +2915,12 @@ limitations under the License.
         </xs:anyAttribute>
     </xs:complexType>
 
-   <!--
-   Model card support in CycloneDX is derived from TensorFlow Model Card Toolkit released under the Apache 2.0 license and
-   available from https://github.com/tensorflow/model-card-toolkit/blob/main/model_card_toolkit/schema/v0.0.2/model_card.schema.json.
-   In addition, CycloneDX model card support includes portions of VerifyML, also released under the Apache 2.0 license and
-   available from https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/schema/v0.0.4/model_card.schema.json.
-   -->
+    <!--
+    Model card support in CycloneDX is derived from TensorFlow Model Card Toolkit released under the Apache 2.0 license and
+    available from https://github.com/tensorflow/model-card-toolkit/blob/main/model_card_toolkit/schema/v0.0.2/model_card.schema.json.
+    In addition, CycloneDX model card support includes portions of VerifyML, also released under the Apache 2.0 license and
+    available from https://github.com/cylynx/verifyml/blob/main/verifyml/model_card_toolkit/schema/v0.0.4/model_card.schema.json.
+    -->
     <xs:complexType name="modelCardType">
         <xs:annotation>
             <xs:documentation>
@@ -3148,7 +3233,7 @@ limitations under the License.
                         <xs:element name="ethicalConsiderations" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
                                 <xs:documentation>
-                                    What are the ethical (or environmental) risks involved in the application of this model?
+                                    What are the ethical risks involved in the application of this model?
                                 </xs:documentation>
                             </xs:annotation>
                             <xs:complexType>
@@ -3175,6 +3260,13 @@ limitations under the License.
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
+                        </xs:element>
+                        <xs:element name="environmentalConsiderations" type="bom:environmentalConsiderationsType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    What are the various environmental impacts the corresponding machine learning model has exhibited across its lifecycle?
+                                </xs:documentation>
+                            </xs:annotation>
                         </xs:element>
                         <xs:element name="fairnessAssessments" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
@@ -3237,31 +3329,484 @@ limitations under the License.
         </xs:attribute>
     </xs:complexType>
 
+    <xs:complexType name="environmentalConsiderationsType">
+        <xs:annotation>
+            <xs:documentation>
+                Describes various environmental impact metrics.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="energyConsumptions" type="bom:energyConsumptionsType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Describes energy consumption information incurred for one or more component lifecycle activities.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="properties" type="bom:propertiesType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Provides the ability to document properties in a name/value store.
+                        This provides flexibility to include data not officially supported in the standard
+                        without having to use additional namespaces or create extensions. Property names
+                        of interest to the general public are encouraged to be registered in the
+                        CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                        Formal registration is OPTIONAL.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="energyConsumptionsType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="energyConsumption" type="bom:energyConsumptionType"/>
+            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Allows any undeclared elements as long as the elements are placed in a different namespace.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+        <xs:anyAttribute namespace="##any" processContents="lax">
+            <xs:annotation>
+                <xs:documentation>User-defined attributes may be used on this element as long as they
+                    do not have the same name as an existing attribute used by the schema.</xs:documentation>
+            </xs:annotation>
+        </xs:anyAttribute>
+    </xs:complexType>
+
+    <xs:complexType name="energyConsumptionType">
+        <xs:annotation>
+            <xs:documentation>
+                Describes energy consumption information incurred for the specified lifecycle activity.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="activity" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The type of activity that is part of a machine learning model development or operational lifecycle.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="design">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    model design including problem framing, goal definition and algorithm selection.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="data-collection">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    model data acquisition including search, selection and transfer.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="data-preparation">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    model data preparation including data cleaning, labeling and conversion.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="training">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    model building, training and generalized tuning.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="fine-tuning">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    refining a trained model to produce desired outputs for a given problem space.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="validation">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    model validation including model output evaluation and testing.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="deployment">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    explicit model deployment to a target hosting infrastructure.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="inference">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    generating an output response from a hosted model from a set of inputs.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="other">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    a lifecycle activity type whose description does not match currently defined values.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="energyProviders" type="bom:energyProviderType" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        The provider(s) of the energy consumed by the associated model development lifecycle activity.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="activityEnergyCost" type="bom:energyMeasureType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The total energy cost associated with the model lifecycle activity.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="co2CostEquivalent" type="bom:co2MeasureType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The CO2 cost (debit) equivalent to the total energy cost.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="co2CostOffset" type="bom:co2MeasureType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The CO2 offset (credit) for the CO2 equivalent cost.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="properties" type="bom:propertiesType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Provides the ability to document properties in a name/value store.
+                        This provides flexibility to include data not officially supported in the standard
+                        without having to use additional namespaces or create extensions. Property names
+                        of interest to the general public are encouraged to be registered in the
+                        CycloneDX Property Taxonomy - https://github.com/CycloneDX/cyclonedx-property-taxonomy.
+                        Formal registration is OPTIONAL.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="energyMeasureType">
+        <xs:annotation>
+            <xs:documentation>
+                A measure of energy.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="value" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Quantity of energy.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="unit" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Unit of energy.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="kWh">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    kilowatt-hour (kWh) is the energy delivered by one kilowatt (kW) of power for one hour (h).
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="co2MeasureType">
+        <xs:annotation>
+            <xs:documentation>
+                A measure of carbon dioxide (CO2).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="value" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Quantity of carbon dioxide (CO2).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="unit" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Unit of carbon dioxide (CO2).
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="tCO2eq">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Tonnes (t) of carbon dioxide (CO2) equivalent (eq).
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="energyProviderType">
+        <xs:annotation>
+            <xs:documentation>
+                Describes the physical provider of energy used for model development or operations.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        A description of the energy provider.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="organization" type="bom:organizationalEntity" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The organization of the energy provider.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="energySource" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The energy source for the energy provider.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="coal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Energy produced by types of coal.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="oil">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Petroleum products (primarily crude oil and its derivative fuel oils).
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="natural-gas">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Hydrocarbon gas liquids (HGL) that occur as gases at atmospheric pressure and as liquids under higher pressures including Natural gas (C5H12 and heavier), Ethane (C2H6), Propane (C3H8), etc.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="nuclear">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Energy produced from the cores of atoms (i.e., through nuclear fission or fusion).
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="wind">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Energy produced from moving air.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="solar">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Energy produced from the sun (i.e., solar radiation).
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="geothermal">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Energy produced from heat within the earth.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="hydropower">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Energy produced from flowing water.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="biofuel">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Liquid fuels produced from biomass feedstocks (i.e., organic materials such as plants or animals).
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="unknown">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The energy source is unknown.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="other">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    An energy source that is not listed.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="energyProvided" type="bom:energyMeasureType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The energy provided by the energy source for an associated activity.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="externalReferences" type="bom:externalReferences" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>External references provide a way to document systems, sites, and information that may be relevant but are not included with the BOM. They may also establish specific relationships within or external to the BOM.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="bom-ref" type="bom:refType">
+            <xs:annotation>
+                <xs:documentation>
+                    An optional identifier which can be used to reference the energy provider elsewhere in the BOM.
+                    Uniqueness is enforced within all elements and children of the root-level bom element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="postalAddressType">
+        <xs:annotation>
+            <xs:documentation>
+                An address used to identify a contactable location.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="country" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The country name or the two-letter ISO 3166-1 country code.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="region" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The region or state in the country. For example, Texas.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="locality" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The locality or city within the country. For example, Austin.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="postOfficeBoxNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The post office box number. For example, 901.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="postalCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The postal code. For example, 78758.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="streetAddress" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The street address. For example, 100 Main Street.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="bom-ref" type="bom:refType">
+            <xs:annotation>
+                <xs:documentation>
+                    An optional identifier which can be used to reference the address elsewhere in the BOM.
+                    Uniqueness is enforced within all elements and children of the root-level bom element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
     <xs:simpleType name="machineLearningApproachType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="supervised">
                 <xs:annotation>
-                    <xs:documentation>TODO</xs:documentation>
+                    <xs:documentation>
+                        Supervised machine learning involves training an algorithm on labeled
+                        data to predict or classify new data based on the patterns learned from
+                        the labeled examples.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="unsupervised">
                 <xs:annotation>
-                    <xs:documentation>TODO</xs:documentation>
+                    <xs:documentation>
+                        Unsupervised machine learning involves training algorithms on unlabeled
+                        data to discover patterns, structures, or relationships without explicit
+                        guidance, allowing the model to identify inherent structures or clusters
+                        within the data.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="reinforcement-learning">
                 <xs:annotation>
-                    <xs:documentation>TODO</xs:documentation>
+                    <xs:documentation>
+                        Reinforcement learning is a type of machine learning where an agent learns
+                        to make decisions by interacting with an environment to maximize cumulative
+                        rewards, through trial and error.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="semi-supervised">
                 <xs:annotation>
-                    <xs:documentation>TODO</xs:documentation>
+                    <xs:documentation>
+                        Semi-supervised machine learning utilizes a combination of labeled and
+                        unlabeled data during training to improve model performance, leveraging
+                        the benefits of both supervised and unsupervised learning techniques.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="self-supervised">
                 <xs:annotation>
-                    <xs:documentation>TODO</xs:documentation>
+                    <xs:documentation>
+                        Self-supervised machine learning involves training models to predict parts
+                        of the input data from other parts of the same data, without requiring
+                        external labels, enabling learning from large amounts of unlabeled data.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
         </xs:restriction>
@@ -3656,9 +4201,9 @@ limitations under the License.
                     </xs:annotation>
                     <xs:sequence>
                         <xs:element name="reproductionSteps" type="xs:string" minOccurs="0" maxOccurs="1">
-                                <xs:annotation>
-                                    <xs:documentation>Precise steps to reproduce the vulnerability.</xs:documentation>
-                                </xs:annotation>
+                            <xs:annotation>
+                                <xs:documentation>Precise steps to reproduce the vulnerability.</xs:documentation>
+                            </xs:annotation>
                         </xs:element>
                         <xs:element name="environment" type="xs:string" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
@@ -3918,7 +4463,7 @@ limitations under the License.
             <xs:element name="url" type="xs:anyURI" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>The url of the vulnerability documentation as provided by the source.
-                    For example: https://nvd.nist.gov/vuln/detail/CVE-2021-39182</xs:documentation>
+                        For example: https://nvd.nist.gov/vuln/detail/CVE-2021-39182</xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
