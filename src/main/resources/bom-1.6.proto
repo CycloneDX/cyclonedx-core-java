@@ -46,6 +46,7 @@ message Bom {
 }
 
 enum Classification {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   CLASSIFICATION_NULL = 0;
   // A software application. Refer to https://en.wikipedia.org/wiki/Application_software for information about applications.
   CLASSIFICATION_APPLICATION = 1;
@@ -89,19 +90,19 @@ message Commit {
 }
 
 message Component {
-  // Specifies the type of component. For software components, classify as application if no more specific appropriate classification is available or cannot be determined for the component.
+  // Specifies the type of component. For software components, classify as an application if no more specific appropriate classification is available or cannot be determined for the component.
   Classification type = 1;
-  // The optional mime-type of the component. When used on file components, the mime-type can provide additional context about the kind of file being represented such as an image, font, or executable. Some library or framework components may also have an associated mime-type.
+  // The optional mime-type of the component. When used on file components, the mime-type can provide additional context about the kind of file being represented, such as an image, font, or executable. Some library or framework components may also have an associated mime-type.
   optional string mime_type = 2;
   // An optional identifier which can be used to reference the component elsewhere in the BOM. Uniqueness is enforced within all elements and children of the root-level bom element.
   optional string bom_ref = 3;
-  // The organization that supplied the component. The supplier may often be the manufacture, but may also be a distributor or repackager.
+  // The organization that supplied the component. The supplier may often be the manufacturer but may also be a distributor or repackager.
   optional OrganizationalEntity supplier = 4;
   // DEPRECATED - DO NOT USE - This will be removed in a future version - Use `.authors` or `.manufacturer` instead. The person(s) or organization(s) that authored the component
   optional string author = 5 [deprecated = true];
   // The person(s) or organization(s) that published the component
   optional string publisher = 6;
-  // The grouping name or identifier. This will often be a shortened, single name of the company or project that produced the component, or the source package or domain name. Whitespace and special characters should be avoided. Examples include: apache, org.apache.commons, and apache.org.
+  // The grouping name or identifier. This will often be a shortened, single name of the company or project that produced the component or the source package or domain name. Whitespace and special characters should be avoided. Examples include: apache, org.apache.commons, and apache.org.
   optional string group = 7;
   // The name of the component. This will often be a shortened, single name of the component. Examples: commons-lang3 and jquery
   string name = 8;
@@ -109,7 +110,7 @@ message Component {
   string version = 9;
   // Specifies a description for the component
   optional string description = 10;
-  // Specifies the scope of the component. If scope is not specified, SCOPE_REQUIRED scope should be assumed by the consumer of the BOM
+  // Specifies the scope of the component. If a scope is not specified, SCOPE_REQUIRED scope should be assumed by the consumer of the BOM
   optional Scope scope = 11;
   repeated Hash hashes = 12;
   repeated LicenseChoice licenses = 13;
@@ -147,6 +148,10 @@ message Component {
   repeated OrganizationalContact authors = 29;
   // Textual strings that aid in discovery, search, and retrieval of the associated object. Tags often serve as a way to group or categorize similar or related objects by various attributes. Examples include "json-parser", "object-persistence", "text-to-image", "translation", and "object-detection".
   repeated string tags = 30;
+  // Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification defined at: https://www.iana.org/assignments/uri-schemes/prov/gitoid
+  repeated string omniborId = 31;
+  // Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and conform to the specification defined at: https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html
+  repeated string swhid = 32;
 }
 
 // Specifies the data flow.
@@ -168,7 +173,9 @@ message DataFlow {
 }
 
 // Specifies the flow direction of the data. Valid values are: inbound, outbound, bi-directional, and unknown. Direction is relative to the service. Inbound flow states that data enters the service. Outbound flow states that data leaves the service. Bi-directional states that data flows both ways, and unknown states that the direction is not known.
+// buf:lint:ignore ENUM_VALUE_PREFIX -- Enum value names should be prefixed with "DATA_FLOW_DIRECTION_"
 enum DataFlowDirection {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   DATA_FLOW_NULL = 0;
   DATA_FLOW_INBOUND = 1;
   DATA_FLOW_OUTBOUND = 2;
@@ -177,7 +184,7 @@ enum DataFlowDirection {
 }
 
 message Dependency {
-  // References a component or service by the its bom-ref attribute
+  // References a component or service by its bom-ref attribute
   string ref = 1;
   // The bom-ref identifiers of the components or services that are dependencies of this dependency object.
   repeated Dependency dependencies = 2;
@@ -205,10 +212,11 @@ message ExternalReference {
 
 enum ExternalReferenceType {
   // Use this if no other types accurately describe the purpose of the external reference
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `other` is our fallback, doubling `unspecified`
   EXTERNAL_REFERENCE_TYPE_OTHER = 0;
   // Version Control System
   EXTERNAL_REFERENCE_TYPE_VCS = 1;
-  // Issue or defect tracking system, or an Application Lifecycle Management (ALM) system
+  // Issue, defect tracking system, or an Application Lifecycle Management (ALM) system
   EXTERNAL_REFERENCE_TYPE_ISSUE_TRACKER = 2;
   // Website
   EXTERNAL_REFERENCE_TYPE_WEBSITE = 3;
@@ -244,11 +252,11 @@ enum ExternalReferenceType {
   EXTERNAL_REFERENCE_TYPE_ADVERSARY_MODEL = 18;
   // Identifies and analyzes the potential of future events that may negatively impact individuals, assets, and/or the environment. Risk assessments may also include judgments on the tolerability of each risk.
   EXTERNAL_REFERENCE_TYPE_RISK_ASSESSMENT = 19;
-  // The location where a component was published to. This is often the same as "distribution" but may also include specialized publishing processes that act as an intermediary
+  // The location where a component was published. This is often the same as "distribution" but may also include specialized publishing processes that act as an intermediary
   EXTERNAL_REFERENCE_TYPE_DISTRIBUTION_INTAKE = 20;
   // A Vulnerability Disclosure Report (VDR) which asserts the known and previously unknown vulnerabilities that affect a component, service, or product including the analysis and findings describing the impact (or lack of impact) that the reported vulnerability has on a component, service, or product
   EXTERNAL_REFERENCE_TYPE_VULNERABILITY_ASSERTION = 21;
-  // A Vulnerability Exploitability eXchange (VEX) which asserts the known vulnerabilities that do not affect a product, product family, or organization, and optionally the ones that do. The VEX should include the analysis and findings describing the impact (or lack of impact) that the reported vulnerability has on the product, product family, or organization
+  // A Vulnerability Exploitability eXchange (VEX) asserts the known vulnerabilities that do not affect a product, product family, or organization, and optionally, the ones that do. The VEX should include the analysis and findings describing the impact (or lack of impact) that the reported vulnerability has on the product, product family, or organization
   EXTERNAL_REFERENCE_TYPE_EXPLOITABILITY_STATEMENT = 22;
   // Results from an authorized simulated cyberattack on a component or service, otherwise known as a penetration test
   EXTERNAL_REFERENCE_TYPE_PENTEST_REPORT = 23;
@@ -270,7 +278,7 @@ enum ExternalReferenceType {
   EXTERNAL_REFERENCE_TYPE_CODIFIED_INFRASTRUCTURE = 31;
   // A model card describes the intended uses of a machine learning model, potential limitations, biases, ethical considerations, training parameters, datasets used to train the model, performance metrics, and other relevant data useful for ML transparency.
   EXTERNAL_REFERENCE_TYPE_MODEL_CARD = 32;
-    // Plans of Action and Milestones (POAM) complement an "attestation" external reference. POAM is defined by NIST as a "document that identifies tasks needing to be accomplished. It details resources required to accomplish the elements of the plan, any milestones in meeting the tasks and scheduled completion dates for the milestones".
+  // Plans of Action and Milestones (POAM) complement an "attestation" external reference. POAM is defined by NIST as a "document that identifies tasks needing to be accomplished. It details resources required to accomplish the elements of the plan, any milestones in meeting the tasks and scheduled completion dates for the milestones".
   EXTERNAL_REFERENCE_TYPE_POAM = 33;
   // A record of events that occurred in a computer system or application, such as problems, errors, or information on current operations.
   EXTERNAL_REFERENCE_TYPE_LOG = 34;
@@ -280,9 +288,9 @@ enum ExternalReferenceType {
   EXTERNAL_REFERENCE_TYPE_EVIDENCE = 36;
   // Describes how a component or service was manufactured or deployed.
   EXTERNAL_REFERENCE_TYPE_FORMULATION = 37;
-  // The location where the source code distributable can be obtained. This is often an archive format such as zip or tgz. The source-distribution type complements use of the version control (vcs) type.
+  // The location where the source code distributable can be obtained. This is often an archive format such as zip or tar.gz. The source-distribution type complements the use of the version control (vcs) type.
   EXTERNAL_REFERENCE_TYPE_SOURCE_DISTRIBUTION = 38;
-  // An e-signature is commonly a scanned representation of a written signature or a stylized script of the persons name.
+  // An e-signature is commonly a scanned representation of a written signature or a stylized script of the person's name.
   EXTERNAL_REFERENCE_TYPE_ELECTRONIC_SIGNATURE = 39;
   // A signature that leverages cryptography, typically public/private key pairs, which provides strong authenticity verification.
   EXTERNAL_REFERENCE_TYPE_DIGITAL_SIGNATURE = 40;
@@ -291,6 +299,7 @@ enum ExternalReferenceType {
 }
 
 enum HashAlg {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   HASH_ALG_NULL = 0;
   HASH_ALG_MD_5 = 1;
   HASH_ALG_SHA_1 = 2;
@@ -324,6 +333,7 @@ message IdentifiableAction {
 }
 
 enum IssueClassification {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   ISSUE_CLASSIFICATION_NULL = 0;
   // A fault, flaw, or bug in software
   ISSUE_CLASSIFICATION_DEFECT = 1;
@@ -348,7 +358,7 @@ message Issue {
 
 // The source of the issue where it is documented.
 message Source {
-  // The name of the source. For example "National Vulnerability Database", "NVD", and "Apache"
+  // The name of the source. For example, "National Vulnerability Database", "NVD", and "Apache"
   optional string name = 1;
   // The url of the issue documentation as provided by the source
   optional string url = 2;
@@ -360,6 +370,8 @@ message LicenseChoice {
     // A valid SPDX license expression. Refer to https://spdx.org/specifications for syntax requirements
     string expression = 2;
   }
+  // This field must only be used when "expression" is chosen as the License object has its own acknowledgement.
+  optional LicenseAcknowledgementEnumeration acknowledgement = 3;
 }
 
 message License {
@@ -379,6 +391,18 @@ message License {
   optional Licensing licensing = 6;
   // Specifies optional, custom, properties
   repeated Property properties = 7;
+  // Declared licenses and concluded licenses represent two different stages in the licensing process within software development. Declared licenses refer to the initial intention of the software authors regarding the licensing terms under which their code is released. On the other hand, concluded licenses are the result of a comprehensive analysis of the project's codebase to identify and confirm the actual licenses of the components used, which may differ from the initially declared licenses. While declared licenses provide an upfront indication of the licensing intentions, concluded licenses offer a more thorough understanding of the actual licensing within a project, facilitating proper compliance and risk management. Observed licenses are defined in `@.evidence.licenses`. Observed licenses form the evidence necessary to substantiate a concluded license.
+  optional LicenseAcknowledgementEnumeration acknowledgement = 8;
+}
+
+// Declared licenses and concluded licenses represent two different stages in the licensing process within software development. Declared licenses refer to the initial intention of the software authors regarding the licensing terms under which their code is released. On the other hand, concluded licenses are the result of a comprehensive analysis of the project's codebase to identify and confirm the actual licenses of the components used, which may differ from the initially declared licenses. While declared licenses provide an upfront indication of the licensing intentions, concluded licenses offer a more thorough understanding of the actual licensing within a project, facilitating proper compliance and risk management. Observed licenses are defined in `@.evidence.licenses`. Observed licenses form the evidence necessary to substantiate a concluded license.
+enum LicenseAcknowledgementEnumeration {
+  // The license acknowledgement is not specified.
+  LICENSE_ACKNOWLEDGEMENT_ENUMERATION_UNSPECIFIED = 0;
+  // Declared licenses represent the initial intentions of authors regarding the licensing terms of their code.
+  LICENSE_ACKNOWLEDGEMENT_ENUMERATION_DECLARED = 1;
+  // Concluded licenses are verified and confirmed.
+  LICENSE_ACKNOWLEDGEMENT_ENUMERATION_CONCLUDED = 2;
 }
 
 message Licensing {
@@ -407,7 +431,9 @@ message OrganizationalEntityOrContact {
   }
 }
 
+// buf:lint:ignore ENUM_VALUE_PREFIX -- Enum value names should be prefixed with "LICENSING_TYPE_ENUM_"
 enum LicensingTypeEnum {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   LICENSING_TYPE_NULL = 0;
   // A license that grants use of software solely for the purpose of education or research.
   LICENSING_TYPE_ACADEMIC = 1;
@@ -456,31 +482,32 @@ message Metadata {
   optional OrganizationalEntity manufacture = 5 [deprecated = true];
   // The organization that supplied the component that the BOM describes. The supplier may often be the manufacture, but may also be a distributor or repackager.
   optional OrganizationalEntity supplier = 6;
-  // The license information for the BOM document. This may be different from the license(s) of the component that the BOM describes.
-  optional LicenseChoice licenses = 7;
+  // The license information for the BOM document. This may be different from the license(s) of the component(s) that the BOM describes.
+  repeated LicenseChoice licenses = 7;
   // Specifies optional, custom, properties
   repeated Property properties = 8;
-  // The product lifecycle(s) that this BOM represents.
+  // Lifecycles communicate the stage(s) in which data in the BOM was captured. Different types of data may be available at various phases of a lifecycle, such as the Software Development Lifecycle (SDLC), IT Asset Management (ITAM), and Software Asset Management (SAM). Thus, a BOM may include data specific to or only obtainable in a given lifecycle.
   repeated Lifecycles lifecycles = 9;
   // The organization that created the BOM. Manufacturer is common in BOMs created through automated processes. BOMs created through manual means may have '.authors' instead.
   optional OrganizationalEntity manufacturer = 10;
 }
 
 message Lifecycles {
-   oneof choice {
-     // A pre-defined phase in the product lifecycle.
-     LifecyclePhase phase = 1;
-     // The name of the lifecycle phase
-     string name = 2;
-   }
-   // The description of the lifecycle phase
+  oneof choice {
+    // A pre-defined phase in the product lifecycle.
+    LifecyclePhase phase = 1;
+    // The name of the lifecycle phase
+    string name = 2;
+  }
+  // The description of the lifecycle phase
   optional string description = 3;
 }
 
 enum LifecyclePhase {
-  // BOM produced early in the development lifecycle containing inventory of components and services that are proposed or planned to be used. The inventory may need to be procured, retrieved, or resourced prior to use.
+  // BOM produced early in the development lifecycle containing an inventory of components and services that are proposed or planned to be used. The inventory may need to be procured, retrieved, or resourced prior to use.
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error; it shall be fixed with v2.0 of this very schema
   LIFECYCLE_PHASE_DESIGN = 0;
-  // BOM consisting of information obtained prior to a build process and may contain source files and development artifacts and manifests. The inventory may need to be resolved and retrieved prior to use.
+  // BOM consists of information obtained prior to a build process and may contain source files, development artifacts, and manifests. The inventory may need to be resolved and retrieved prior to use.
   LIFECYCLE_PHASE_PRE_BUILD = 1;
   // BOM consisting of information obtained during a build process where component inventory is available for use. The precise versions of resolved components are usually available at this time as well as the provenance of where the components were retrieved from.
   LIFECYCLE_PHASE_BUILD = 2;
@@ -514,9 +541,12 @@ message OrganizationalEntity {
   repeated OrganizationalContact contact = 3;
   // An optional identifier which can be used to reference the object elsewhere in the BOM. Uniqueness is enforced within all elements and children of the root-level bom element.
   optional string bom_ref = 4;
+  // The physical address (location) of the organization
+  optional PostalAddressType address = 5;
 }
 
 enum PatchClassification {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   PATCH_CLASSIFICATION_NULL = 0;
   // A patch which is not developed by the creators or maintainers of the software being patched. Refer to https://en.wikipedia.org/wiki/Unofficial_patch
   PATCH_CLASSIFICATION_UNOFFICIAL = 1;
@@ -529,7 +559,7 @@ enum PatchClassification {
 }
 
 message Patch {
-  // Specifies the purpose for the patch including the resolution of defects, security issues, or new behavior or functionality
+  // Specifies the purpose for the patch, including the resolution of defects, security issues, or new behavior or functionality
   PatchClassification type = 1;
   // The patch file (or diff) that show changes. Refer to https://en.wikipedia.org/wiki/Diff
   optional Diff diff = 2;
@@ -538,17 +568,17 @@ message Patch {
 
 // Component pedigree is a way to document complex supply chain scenarios where components are created, distributed, modified, redistributed, combined with other components, etc. Pedigree supports viewing this complex chain from the beginning, the end, or anywhere in the middle. It also provides a way to document variants where the exact relation may not be known.
 message Pedigree {
-  // Describes zero or more components in which a component is derived from. This is commonly used to describe forks from existing projects where the forked version contains a ancestor node containing the original component it was forked from. For example, Component A is the original component. Component B is the component being used and documented in the BOM. However, Component B contains a pedigree node with a single ancestor documenting Component A - the original component from which Component B is derived from.
+  // Describes zero or more components in which a component is derived from. This is commonly used to describe forks from existing projects where the forked version contains an ancestor node containing the original component it was forked from. For example, Component A is the original component. Component B is the component being used and documented in the BOM. However, Component B contains a pedigree node with a single ancestor documenting Component A - the original component from which Component B is derived from.
   repeated Component ancestors = 1;
   // Descendants are the exact opposite of ancestors. This provides a way to document all forks (and their forks) of an original or root component.
   repeated Component descendants = 2;
-  // Variants describe relations where the relationship between the components are not known. For example, if Component A contains nearly identical code to Component B. They are both related, but it is unclear if one is derived from the other, or if they share a common ancestor.
+  // Variants describe relations where the relationship between the components is not known. For example, if Component A contains nearly identical code to Component B. They are both related, but it is unclear if one is derived from the other or if they share a common ancestor.
   repeated Component variants = 3;
   // A list of zero or more commits which provide a trail describing how the component deviates from an ancestor, descendant, or variant.
   repeated Commit commits = 4;
   // A list of zero or more patches describing how the component deviates from an ancestor, descendant, or variant. Patches may be complementary to commits or may be used in place of commits.
   repeated Patch patches = 5;
-  // Notes, observations, and other non-structured commentary describing the components pedigree.
+  // Notes, observations, and other non-structured commentary describing the component's pedigree.
   optional string notes = 6;
 }
 
@@ -557,7 +587,7 @@ enum Scope {
   SCOPE_UNSPECIFIED = 0;
   // The component is required for runtime
   SCOPE_REQUIRED = 1;
-  // The component is optional at runtime. Optional components are components that are not capable of being called due to them not be installed or otherwise accessible by any means. Components that are installed but due to configuration or other restrictions are prohibited from being called must be scoped as 'required'.
+  // The component is optional at runtime. Optional components are components that are not capable of being called due to them not being installed or otherwise accessible by any means. Components that are installed but, due to configuration or other restrictions, are prohibited from being called must be scoped as 'required'.
   SCOPE_OPTIONAL = 2;
   // Components that are excluded provide the ability to document component usage for test and other non-runtime purposes. Excluded components are not reachable within a call graph at runtime.
   SCOPE_EXCLUDED = 3;
@@ -579,7 +609,7 @@ message Service {
   repeated string endpoints = 7;
   // A boolean value indicating if the service requires authentication. A value of true indicates the service requires authentication prior to use. A value of false indicates the service does not require authentication.
   optional bool authenticated = 8;
-  // A boolean value indicating if use of the service crosses a trust zone or boundary. A value of true indicates that by using the service, a trust boundary is crossed. A value of false indicates that by using the service, a trust boundary is not crossed.
+  // A boolean value indicating if the use of the service crosses a trust zone or boundary. A value of true indicates that by using the service, a trust boundary is crossed. A value of false indicates that by using the service, a trust boundary is not crossed.
   optional bool x_trust_boundary = 9;
   repeated DataFlow data = 10;
   repeated LicenseChoice licenses = 11;
@@ -593,7 +623,7 @@ message Service {
   optional ReleaseNotes releaseNotes = 15;
   // The name of the trust zone the service resides in.
   optional string trustZone = 16;
-  // Textual strings that aid in discovery, search, and retrieval of the associated object. Tags often serve as a way to group or categorize similar or related objects by various attributes. Examples include "json-parser", "object-persistence", "text-to-image", "translation", and "object-detection".
+  // Textual strings that aid in the discovery, search, and retrieval of the associated object. Tags often serve as a way to group or categorize similar or related objects by various attributes. Examples include "json-parser", "object-persistence", "text-to-image", "translation", and "object-detection".
   repeated string tags = 17;
 }
 
@@ -640,6 +670,7 @@ message Property {
 
 enum Aggregate {
   // The relationship completeness is not specified.
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `not specified` is our fallback, doubling `unspecified`
   AGGREGATE_NOT_SPECIFIED = 0;
   // The relationship is complete. No further relationships including constituent components, services, or dependencies are known to exist.
   AGGREGATE_COMPLETE = 1;
@@ -718,6 +749,8 @@ message EvidenceIdentity {
   repeated EvidenceMethods methods = 3;
   // The object in the BOM identified by its bom-ref. This is often a component or service, but may be any object type supporting bom-refs. Tools used for analysis should already be defined in the BOM, either in the metadata/tools, components, or formulation.
   repeated string tools = 4;
+  // The value of the field (cpe, purl, etc) that has been concluded based on the aggregate of all methods (if available).
+  optional string concludedValue = 5;
 }
 
 message EvidenceMethods {
@@ -744,7 +777,9 @@ message EvidenceOccurrences {
   optional string additionalContext = 6;
 }
 
+// buf:lint:ignore ENUM_VALUE_PREFIX -- Enum value names should be prefixed with "EVIDENCE_FIELD_TYPE_"
 enum EvidenceFieldType {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   EVIDENCE_FIELD_NULL = 0;
   EVIDENCE_FIELD_GROUP = 1;
   EVIDENCE_FIELD_NAME = 2;
@@ -753,9 +788,12 @@ enum EvidenceFieldType {
   EVIDENCE_FIELD_CPE = 5;
   EVIDENCE_FIELD_SWID = 6;
   EVIDENCE_FIELD_HASH = 7;
+  EVIDENCE_FIELD_OMNIBOR_ID = 8;
+  EVIDENCE_FIELD_SWHID = 9;
 }
 
 enum EvidenceTechnique {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error, it shall be fixed with v2.0 of this very schema
   EVIDENCE_TECHNIQUE_SOURCE_CODE_ANALYSIS = 0;
   EVIDENCE_TECHNIQUE_BINARY_ANALYSIS = 1;
   EVIDENCE_TECHNIQUE_MANIFEST_ANALYSIS = 2;
@@ -790,7 +828,7 @@ message ReleaseNotes {
   optional google.protobuf.Timestamp timestamp = 6;
   // Optional alternate names the release may be referred to. This may include unofficial terms used by development and marketing teams (e.g. code names).
   repeated string aliases = 7;
-  // Textual strings that aid in discovery, search, and retrieval of the associated object. Tags often serve as a way to group or categorize similar or related objects by various attributes. Examples include "json-parser", "object-persistence", "text-to-image", "translation", and "object-detection".
+  // Textual strings that aid in the discovery, search, and retrieval of the associated object. Tags often serve as a way to group or categorize similar or related objects by various attributes. Examples include "json-parser", "object-persistence", "text-to-image", "translation", and "object-detection".
   repeated string tags = 8;
   // A collection of issues that have been resolved.
   repeated Issue resolves = 9;
@@ -807,15 +845,15 @@ message Vulnerability {
   optional string id = 2;
   // The source that published the vulnerability.
   optional Source source = 3;
-  // Zero or more pointers to vulnerabilities that are the equivalent of the vulnerability specified. Often times, the same vulnerability may exist in multiple sources of vulnerability intelligence, but have different identifiers. References provide a way to correlate vulnerabilities across multiple sources of vulnerability intelligence.
+  // Zero or more pointers to vulnerabilities that are the equivalent of the vulnerability specified. Oftentimes, the same vulnerability may exist in multiple sources of vulnerability intelligence but have different identifiers. References provide a way to correlate vulnerabilities across multiple sources of vulnerability intelligence.
   repeated VulnerabilityReference references = 4;
   // List of vulnerability ratings
   repeated VulnerabilityRating ratings = 5;
-  // List of Common Weaknesses Enumerations (CWEs) codes that describes this vulnerability. For example 399 (of https://cwe.mitre.org/data/definitions/399.html)
+  // List of Common Weaknesses Enumerations (CWEs) codes that describe this vulnerability. For example, 399 (of https://cwe.mitre.org/data/definitions/399.html)
   repeated int32 cwes = 6;
   // A description of the vulnerability as provided by the source.
   optional string description = 7;
-  // If available, an in-depth description of the vulnerability as provided by the source organization. Details often include information useful in understanding root cause.
+  // If available, an in-depth description of the vulnerability as provided by the source organization. Details often include information useful in understanding the root cause.
   optional string detail = 8;
   // Recommendations of how the vulnerability can be remediated or mitigated.
   optional string recommendation = 9;
@@ -877,6 +915,7 @@ message VulnerabilityRating {
 }
 
 enum Severity {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `unknown` is our fallback, doubling `unspecified`
   SEVERITY_UNKNOWN = 0;
   SEVERITY_CRITICAL = 1;
   SEVERITY_HIGH = 2;
@@ -888,6 +927,7 @@ enum Severity {
 
 enum ScoreMethod {
   // An undefined score method
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   SCORE_METHOD_NULL = 0;
   // Common Vulnerability Scoring System v2 - https://www.first.org/cvss/v2/
   SCORE_METHOD_CVSSV2 = 1;
@@ -899,7 +939,7 @@ enum ScoreMethod {
   SCORE_METHOD_OWASP = 4;
   // Other scoring method
   SCORE_METHOD_OTHER = 5;
-  // Common Vulnerability Scoring System v3.1 - https://www.first.org/cvss/v4-0/
+  // Common Vulnerability Scoring System v4.0 - https://www.first.org/cvss/v4-0/
   SCORE_METHOD_CVSSV4 = 6;
   // Stakeholder Specific Vulnerability Categorization (all versions) - https://github.com/CERTCC/SSVC
   SCORE_METHOD_SSVC = 7;
@@ -915,18 +955,18 @@ message Advisory {
 message VulnerabilityCredits {
   // The organizations credited with vulnerability discovery.
   repeated OrganizationalEntity organizations = 1;
-  // The individuals, not associated with organizations, that are credited with vulnerability discovery.
+  // The individuals not associated with organizations that are credited with vulnerability discovery.
   repeated OrganizationalContact individuals = 2;
 }
 
 message VulnerabilityAnalysis {
-  // Declares the current state of an occurrence of a vulnerability, after automated or manual analysis.
+  // Declares the current state of an occurrence of a vulnerability after automated or manual analysis.
   optional ImpactAnalysisState state = 1;
   // The rationale of why the impact analysis state was asserted.
   optional ImpactAnalysisJustification justification = 2;
   // A response to the vulnerability by the manufacturer, supplier, or project responsible for the affected component or service. More than one response is allowed. Responses are strongly encouraged for vulnerabilities where the analysis state is exploitable.
   repeated VulnerabilityResponse response = 3;
-  // Detailed description of the impact including methods used during assessment. If a vulnerability is not exploitable, this field should include specific details on why the component or service is not impacted by this vulnerability.
+  // Detailed description of the impact, including methods used during the assessment. If a vulnerability is not exploitable, this field should include specific details on why the component or service is not impacted by this vulnerability.
   optional string detail = 4;
   // The date and time (timestamp) when the analysis was first issued.
   optional google.protobuf.Timestamp firstIssued = 5;
@@ -936,10 +976,11 @@ message VulnerabilityAnalysis {
 
 enum ImpactAnalysisState {
   // An undefined impact analysis state
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   IMPACT_ANALYSIS_STATE_NULL = 0;
   // The vulnerability has been remediated.
   IMPACT_ANALYSIS_STATE_RESOLVED = 1;
-  // The vulnerability has been remediated and evidence of the changes are provided in the affected components pedigree containing verifiable commit history and/or diff(s).
+  // The vulnerability has been remediated, and evidence of the changes is provided in the affected components pedigree containing verifiable commit history and/or diff(s).
   IMPACT_ANALYSIS_STATE_RESOLVED_WITH_PEDIGREE = 2;
   // The vulnerability may be directly or indirectly exploitable.
   IMPACT_ANALYSIS_STATE_EXPLOITABLE = 3;
@@ -953,6 +994,7 @@ enum ImpactAnalysisState {
 
 enum ImpactAnalysisJustification {
   // An undefined impact analysis justification
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   IMPACT_ANALYSIS_JUSTIFICATION_NULL = 0;
   // The code has been removed or tree-shaked.
   IMPACT_ANALYSIS_JUSTIFICATION_CODE_NOT_PRESENT = 1;
@@ -975,6 +1017,8 @@ enum ImpactAnalysisJustification {
 }
 
 enum VulnerabilityResponse {
+  // unspecified value
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `null` is our fallback, doubling `unspecified`
   VULNERABILITY_RESPONSE_NULL = 0;
   VULNERABILITY_RESPONSE_CAN_NOT_FIX = 1;
   VULNERABILITY_RESPONSE_WILL_NOT_FIX = 2;
@@ -994,15 +1038,17 @@ message VulnerabilityAffectedVersions {
   oneof choice {
     // A single version of a component or service.
     string version = 1;
-    // A version range specified in Package URL Version Range syntax (vers) which is defined at https://github.com/package-url/purl-spec/VERSION-RANGE-SPEC.rst
+    // A version range specified in Package URL Version Range syntax (vers), which is defined at https://github.com/package-url/purl-spec/VERSION-RANGE-SPEC.rst
     string range = 2;
   }
   // The vulnerability status for the version or range of versions. Defaults to VULNERABILITY_AFFECTED_STATUS_AFFECTED if not specified.
   optional VulnerabilityAffectedStatus status = 3;
 }
 
+// The vulnerability status of a given version or range of versions of a product. The statuses 'affected' and 'unaffected' indicate that the version is affected or unaffected by the vulnerability. The status 'unknown' indicates that it is unknown or unspecified whether the given version is affected. There can be many reasons for an 'unknown' status, including that an investigation has not been undertaken or that a vendor has not disclosed the status.
 enum VulnerabilityAffectedStatus {
-  // The vulnerability status of a given version or range of versions of a product. The statuses 'affected' and 'unaffected' indicate that the version is affected or unaffected by the vulnerability. The status 'unknown' indicates that it is unknown or unspecified whether the given version is affected. There can be many reasons for an 'unknown' status, including that an investigation has not been undertaken or that a vendor has not disclosed the status.
+  // It is unknown (or unspecified) whether the given version is affected.
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- `unknown` is our fallback, doubling `unspecified`
   VULNERABILITY_AFFECTED_STATUS_UNKNOWN = 0;
   VULNERABILITY_AFFECTED_STATUS_AFFECTED = 1;
   VULNERABILITY_AFFECTED_STATUS_NOT_AFFECTED = 2;
@@ -1024,7 +1070,7 @@ message AnnotatorChoice {
 message Annotation {
   // An optional identifier which can be used to reference the annotation elsewhere in the BOM. Every bom-ref MUST be unique within the BOM.
   optional string bom_ref = 1;
-  // The object in the BOM identified by its bom-ref. This is often a component or service, but may be any object type supporting bom-refs.
+  // The object in the BOM identified by its bom-ref. This is often a component or service but may be any object type supporting bom-refs.
   repeated string subjects = 2;
   // The organization, person, component, or service which created the textual content of the annotation.
   AnnotatorChoice annotator = 3;
@@ -1045,13 +1091,13 @@ message ModelCard {
   optional ModelCardConsiderations considerations = 4;
 
   message ModelParameters {
-    // The overall approach to learning used by the model for problem solving.
+    // The overall approach to learning used by the model for problem-solving.
     optional Approach approach = 1;
     // Directly influences the input and/or output. Examples include classification, regression, clustering, etc.
     optional string task = 2;
     // The model architecture family such as transformer network, convolutional neural network, residual neural network, LSTM neural network, etc.
     optional string architectureFamily = 3;
-    //The specific architecture of the model such as GPT-1, ResNet-50, YOLOv3, etc.
+    //The specific architecture of the model, such as GPT-1, ResNet-50, YOLOv3, etc.
     optional string modelArchitecture = 4;
     // The datasets used to train and evaluate the model.
     repeated Datasets datasets = 5;
@@ -1107,10 +1153,12 @@ message ModelCard {
     repeated string technicalLimitations = 3;
     // What are the known tradeoffs in accuracy/performance of the model?
     repeated string performanceTradeoffs = 4;
-    // What are the ethical (or environmental) risks involved in the application of this model?
+    // What are the ethical risks involved in the application of this model?
     repeated EthicalConsiderations ethicalConsiderations = 5;
     // How does the model affect groups at risk of being systematically disadvantaged? What are the harms and benefits to the various affected groups?
     repeated FairnessAssessments fairnessAssessments = 6;
+    // What are the various environmental impacts the corresponding machine learning model has exhibited across its lifecycle?
+    optional EnvironmentalConsiderations environmentalConsiderations = 7;
 
     message EthicalConsiderations {
       // The name of the risk.
@@ -1128,14 +1176,155 @@ message ModelCard {
       // With respect to the benefits and harms outlined, please describe any mitigation strategy implemented.
       optional string mitigationStrategy = 4;
     }
+    message EnvironmentalConsiderations {
+      // Describes energy consumption information incurred for one or more component lifecycle activities.
+      repeated EnergyConsumption energyConsumptions = 1;
+      // Specifies optional, custom properties for environment considerations
+      repeated Property properties = 2;
+    }
+    // Describes energy consumption information incurred for the specified lifecycle activity.
+    message EnergyConsumption {
+      // An activity that is part of a machine learning model development or operational lifecycle.
+      enum ActivityType {
+        ACTIVITY_TYPE_UNSPECIFIED = 0;
+        // a lifecycle activity type whose description does not match currently defined values (the default type).
+        ACTIVITY_TYPE_OTHER = 1;
+        // model design including problem framing, goal definition and algorithm selection.
+        ACTIVITY_TYPE_DESIGN = 2;
+        // model data acquisition including search, selection and transfer.
+        ACTIVITY_TYPE_DATA_COLLECTION = 3;
+        // model data preparation including data cleaning, labeling and conversion.
+        ACTIVITY_TYPE_DATA_PREPARATION = 4;
+        // model building, training and generalized tuning.
+        ACTIVITY_TYPE_TRAINING = 5;
+        // refining a trained model to produce desired outputs for a given problem space.
+        ACTIVITY_TYPE_FINE_TUNING = 6;
+        // model validation including model output evaluation and testing.
+        ACTIVITY_TYPE_VALIDATION = 7;
+        // explicit model deployment to a target hosting infrastructure.
+        ACTIVITY_TYPE_DEPLOYMENT = 8;
+        // generating an output response from a hosted model from a set of inputs.
+        ACTIVITY_TYPE_INFERENCE = 9;
+      }
+
+      // The type of activity that is part of a machine learning model development or operational lifecycle.
+      ActivityType activity = 1;
+      // The providers of the energy consumed by the associated model development lifecycle activity.
+      repeated EnergyProviderType energyProviders = 2;
+      // The total energy cost associated with the model lifecycle activity.
+      EnergyMeasureType activityEnergyCost = 3;
+      // The CO2 cost or debit equivalent to the total energy cost.
+      optional CO2MeasureType co2CostEquivalent = 4;
+      // The CO2 offset or credit for the CO2 equivalent cost.
+      optional CO2MeasureType co2CostOffset = 5;
+      // Specifies optional, custom properties for environment considerations
+      repeated Property properties = 6;
+    }
   }
 }
 
+
+// Describes the physical provider of energy used for model development or operations.
+message EnergyProviderType {
+  enum EnergySourceType {
+    ENERGY_SOURCE_TYPE_UNSPECIFIED = 0;
+    // energy source: unknown. The energy source is unknown.
+    ENERGY_SOURCE_TYPE_UNKNOWN = 1;
+    // energy source: other. An energy source that is not listed.
+    ENERGY_SOURCE_TYPE_OTHER = 2;
+    // energy source: coal. Energy produced by types of coal.
+    ENERGY_SOURCE_TYPE_COAL = 3;
+    // energy source: oil. Petroleum products (primarily crude oil and its derivative fuel oils).
+    ENERGY_SOURCE_TYPE_OIL = 4;
+    // energy source: natural-gas. Hydrocarbon gas liquids (HGL) that occur as gases at atmospheric pressure and as liquids under higher pressures including Natural gas (C5H12 and heavier), Ethane (C2H6), Propane (C3H8), etc.
+    ENERGY_SOURCE_TYPE_NATURAL_GAS = 5;
+    // energy source: nuclear. Energy produced from the cores of atoms (i.e., through nuclear fission or fusion).
+    ENERGY_SOURCE_TYPE_NUCLEAR = 6;
+    // energy source: wind. Energy produced from moving air.
+    ENERGY_SOURCE_TYPE_WIND = 7;
+    // energy source: solar. Energy produced from the sun (i.e., solar radiation).
+    ENERGY_SOURCE_TYPE_SOLAR = 8;
+    // energy source: geothermal. Energy produced from heat within the earth.
+    ENERGY_SOURCE_TYPE_GEOTHERMAL = 9;
+    // energy source: hydropower. Energy produced from flowing water.
+    ENERGY_SOURCE_TYPE_HYDROPOWER = 10;
+    // energy source: biofuel. Liquid fuels produced from biomass feedstocks (i.e., organic materials such as plants or animals).
+    ENERGY_SOURCE_TYPE_BIOFUEL = 11;
+  }
+
+  // BOM unique reference to the energy provider.
+  optional string bom_ref = 1;
+  // A description of the energy provider.
+  string description = 2;
+  // The organization of the energy provider.
+  OrganizationalEntity organization = 3;
+  // The energy source for the energy provider.
+  EnergySourceType energySource = 4;
+  // The energy provided by the energy source for an associated activity.
+  EnergyMeasureType energyProvided = 5;
+  // Provides the ability to document external references related to the BOM or to the project the BOM describes.
+  repeated ExternalReference external_references = 6;
+}
+
+// A measure of energy.
+message EnergyMeasureType {
+  enum EnergyMeasureUnitType {
+    ENERGY_MEASURE_UNIT_TYPE_UNSPECIFIED = 0;
+    // kilowatt-hour (kWh) is the energy delivered by one kilowatt (kW) of power for one hour (h) (the default unit).
+    ENERGY_MEASURE_UNIT_TYPE_KILOWATT_HOURS = 1;
+  }
+
+  // Quantity of energy.
+  float value = 1;
+  // Unit of energy.
+  EnergyMeasureUnitType unit = 2;
+}
+
+
+// A measure of carbon dioxide (CO2).
+message CO2MeasureType {
+  enum CO2MeasureUnitType {
+    CO2_MEASURE_UNIT_TYPE_UNSPECIFIED = 0;
+    // Tonnes (t) of carbon dioxide (CO2) equivalent (eq) (the default unit).
+    CO2_MEASURE_UNIT_TYPE_TONNES_CO2_EQUIVALENT = 1;
+  }
+
+  // Quantity of carbon dioxide (CO2).
+  float value = 1;
+  // Unit of carbon dioxide (CO2).
+  CO2MeasureUnitType unit = 2;
+}
+
+
+// An address used to identify a contactable location.
+message PostalAddressType {
+  // An optional identifier which can be used to reference the address elsewhere in the BOM. Every bom-ref MUST be unique within the BOM.
+  optional string bom_ref = 1;
+  // The country name or the two-letter ISO 3166-1 country code.
+  optional string country = 2;
+  // The region or state in the country. For example, Texas.
+  optional string region = 3;
+  // The locality or city within the country. For example, Austin.
+  optional string locality = 4;
+  // The post office box number. For example, 901.
+  optional string postOfficeBoxNumber = 5;
+  // The postal code. For example, 78758.
+  optional string postalCodeue = 6;
+  // The street address. For example, 100 Main Street.
+  optional string streetAddress = 7;
+}
+
 enum ModelParameterApproachType {
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error, it shall be fixed with v2.0 of this very schema
+  // Supervised machine learning involves training an algorithm on labeled data to predict or classify new data based on the patterns learned from the labeled examples.
   MODEL_PARAMETER_APPROACH_TYPE_SUPERVISED = 0;
+  // Unsupervised machine learning involves training algorithms on unlabeled data to discover patterns, structures, or relationships without explicit guidance, allowing the model to identify inherent structures or clusters within the data.
   MODEL_PARAMETER_APPROACH_TYPE_UNSUPERVISED = 1;
+  // Reinforcement learning is a type of machine learning where an agent learns to make decisions by interacting with an environment to maximize cumulative rewards, through trial and error.
   MODEL_PARAMETER_APPROACH_TYPE_REINFORCED_LEARNING = 2;
+  // Semi-supervised machine learning utilizes a combination of labeled and unlabeled data during training to improve model performance, leveraging the benefits of both supervised and unsupervised learning techniques.
   MODEL_PARAMETER_APPROACH_TYPE_SEMI_SUPERVISED = 3;
+  // Self-supervised machine learning involves training models to predict parts of the input data from other parts of the same data, without requiring external labels, enabling learning from large amounts of unlabeled data.
   MODEL_PARAMETER_APPROACH_TYPE_SELF_SUPERVISED = 4;
 }
 
@@ -1187,6 +1376,7 @@ message DataGovernance {
 
 enum ComponentDataType {
   // Any type of code, code snippet, or data-as-code
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error, it shall be fixed with v2.0 of this very schema
   COMPONENT_DATA_TYPE_SOURCE_CODE = 0;
   // Parameters or settings that may be used by other components.
   COMPONENT_DATA_TYPE_CONFIGURATION = 1;
@@ -1284,9 +1474,9 @@ message Task {
   optional Trigger trigger = 8;
   // "The sequence of steps for the task.
   repeated Step steps = 9;
-  // Represents resources and data brought into a task at runtime by executor or task commands
+  // Represents resources and data brought into a task at runtime by an executor or task commands
   repeated InputType inputs = 10;
-  // Represents resources and data output from a task at runtime by executor or task commands
+  // Represents resources and data output from a task at runtime by an executor or task commands
   repeated OutputType outputs = 11;
   // The date and time (timestamp) when the task started.
   optional google.protobuf.Timestamp timeStart = 14;
@@ -1335,7 +1525,7 @@ message Workspace {
   repeated ResourceReferenceChoice resourceReferences = 7;
   // Describes the read-write access control for the workspace relative to the owning resource instance.
   optional AccessMode accessMode = 8;
-  // A path to a location on disk where the workspace will be available to the associated task's steps.
+  // A path to a location on disk where the workspace will be available for the associated task's steps.
   optional string mountPath = 9;
   // The name of a domain-specific data type the workspace represents.
   optional string managedDataType = 10;
@@ -1345,6 +1535,7 @@ message Workspace {
   optional Volume volume = 12;
 
   enum AccessMode {
+    // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error; it shall be fixed with v2.0 of this very schema
     ACCESS_MODE_READ_ONLY = 0;
     ACCESS_MODE_READ_WRITE = 1;
     ACCESS_MODE_READ_WRITE_ONCE = 2;
@@ -1363,7 +1554,7 @@ message Volume {
   optional VolumeMode mode = 3;
   // The underlying path created from the actual volume.
   optional string path = 4;
-  // The allocated size of the volume accessible to the associated workspace. This should include the scalar size as well as IEC standard unit in either decimal or binary form.
+  // The allocated size of the volume accessible to the associated workspace. This should include the scalar size as well as the IEC standard unit in either decimal or binary form.
   optional string sizeAllocated = 5;
   // Indicates if the volume persists beyond the life of the resource it is associated with.
   optional bool persistent = 6;
@@ -1373,6 +1564,7 @@ message Volume {
   repeated Property properties = 8;
 
   enum VolumeMode {
+    // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error; it shall be fixed with v2.0 of this very schema
     VOLUME_MODE_FILESYSTEM = 0;
     VOLUME_MODE_BLOCK = 1;
   }
@@ -1400,12 +1592,13 @@ message Trigger {
   repeated Condition conditions = 9;
   // The date and time (timestamp) when the trigger was activated.
   optional google.protobuf.Timestamp timeActivated = 10;
-  // Represents resources and data brought into a task at runtime by executor or task commands
+  // Represents resources and data brought into a task at runtime by an executor or task commands
   repeated InputType inputs = 11;
-  // Represents resources and data output from a task at runtime by executor or task commands
+  // Represents resources and data output from a task at runtime by an executor or task commands
   repeated OutputType outputs = 12;
 
   enum TriggerType {
+    // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error; it shall be fixed with v2.0 of this very schema
     TRIGGER_TYPE_MANUAL = 0;
     TRIGGER_TYPE_API = 1;
     TRIGGER_TYPE_WEBHOOK = 2;
@@ -1433,7 +1626,7 @@ message Event {
 
 // Type that represents various input data types and formats.
 message InputType {
-  // A references to the component or service that provided the input to the task (e.g., reference to a service with data flow value of `inbound`)
+  // A references to the component or service that provided the input to the task (e.g., reference to a service with a data flow value of `inbound`)
   optional ResourceReferenceChoice source = 1;
   // A reference to the component or service that received or stored the input if not the task itself (e.g., a local, named storage workspace)
   optional ResourceReferenceChoice target = 2;
@@ -1449,6 +1642,7 @@ message InputType {
   repeated Property properties = 7;
 }
 
+// Type that represents various output data types and formats.
 message OutputType {
   // Describes the type of data output.
   optional OutputTypeType type = 1;
@@ -1465,7 +1659,9 @@ message OutputType {
   // Additional properties of the output data.
   repeated Property properties = 7;
 
+  // buf:lint:ignore ENUM_VALUE_PREFIX -- Enum value names should be prefixed with "OUTPUT_TYPE_TYPE_"
   enum OutputTypeType {
+    // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error; it shall be fixed with v2.0 of this very schema
     OUTPUT_TYPE_ARTIFACT = 0;
     OUTPUT_TYPE_ATTESTATION = 1;
     OUTPUT_TYPE_LOG = 2;
@@ -1475,6 +1671,7 @@ message OutputType {
   }
 }
 
+// Type that permits a choice to reference a resource using an iternal bom-ref identifier or an external reference.
 message ResourceReferenceChoice {
   oneof choice {
     string ref = 1;
@@ -1494,6 +1691,7 @@ message Condition {
 
 enum TaskType {
   // A task that copies software or data used to accomplish other tasks in the workflow.
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX -- value `0` is a fallback(meaning "unspecified") in protobuf3. this usage here is an error; it shall be fixed with v2.0 of this very schema
   TASK_TYPE_COPY = 0;
   // A task that clones a software repository into the workflow in order to retrieve its source code or data for use in a build step.
   TASK_TYPE_CLONE = 1;
@@ -1576,7 +1774,7 @@ message Declarations {
     optional string summary = 1;
     // The `bom-ref` to the assessor asserting the attestation.
     optional string assessor = 2;
-    // The grouping of requirements to claims and the attestors declared conformance and confidence thereof.
+    // The grouping of requirements to claims and the attestors' declared conformance and confidence thereof.
     repeated AttestationMap map = 3;
   }
   message Claim {
@@ -1594,7 +1792,7 @@ message Declarations {
     repeated string evidence = 6;
     // The list of `bom-ref` to counterEvidence that supports this claim.
     repeated string counterEvidence = 7;
-    // External references provide a way to document systems, sites, and information that may be relevant, but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
+    // External references provide a way to document systems, sites, and information that may be relevant but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
     repeated ExternalReference externalReferences = 8;
   }
   message Evidence {
@@ -1649,7 +1847,7 @@ message Declarations {
       optional string role = 2;
       // The signatory's organization.
       optional OrganizationalEntity organization = 3;
-      // An External reference provide a way to document systems, sites, and information that may be relevant, but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
+      // An External reference provides a way to document systems, sites, and information that may be relevant but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
       optional ExternalReference externalReference = 4;
     }
     // The brief statement affirmed by an individual regarding all declarations. Notes: This could be an affirmation of acceptance by a third-party auditor or receiving individual of a file.
@@ -1682,15 +1880,15 @@ message Definition {
       optional string title = 3;
       // The textual content of the requirement.
       optional string text = 4;
-      // The supplemental text that provides additional guidance or context to the requirement, but is not directly part of the requirement.
+      // The supplemental text that provides additional guidance or context to the requirement but is not directly part of the requirement.
       repeated string descriptions = 5;
-      // The Common Requirements Enumeration (CRE) identifier(s). CRE is a structured and standardized framework for uniting security standards and guidelines. CRE links each section of a resource to a shared topic identifier (a Common Requirement). Through this shared topic link, all resources map to each other. Use of CRE promotes clear and unambiguous communication among stakeholders.
+      // The Common Requirements Enumeration (CRE) identifier(s). CRE is a structured and standardized framework for uniting security standards and guidelines. CRE links each section of a resource to a shared topic identifier (a Common Requirement). Through this shared topic link, all resources map to each other. The use of CRE promotes clear and unambiguous communication among stakeholders.
       repeated string openCre = 6;
       // The optional `bom-ref` to a parent requirement. This establishes a hierarchy of requirements. Top-level requirements must not define a parent. Only child requirements should define parents.
       optional string parent = 7;
       // Specifies optional, custom, properties
       repeated Property properties = 8;
-      // External references provide a way to document systems, sites, and information that may be relevant, but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
+      // External references provide a way to document systems, sites, and information that may be relevant but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
       repeated ExternalReference externalReferences = 9;
     }
     message Level {
@@ -1719,7 +1917,7 @@ message Definition {
     repeated Requirement requirements = 6;
     // The list of levels associated with the standard. Some standards have different levels of compliance.
     repeated Level levels = 7;
-    // External references provide a way to document systems, sites, and information that may be relevant, but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
+    // External references provide a way to document systems, sites, and information that may be relevant but are not included with the BOM. They may also establish specific relationships within or external to the BOM.
     repeated ExternalReference externalReferences = 8;
   }
   repeated Standard standards = 1;
@@ -1727,87 +1925,113 @@ message Definition {
 
 message CryptoProperties {
   enum CryptoAssetType {
-    CRYPTO_ASSET_TYPE_ALGORITHM = 0;
-    CRYPTO_ASSET_TYPE_CERTIFICATE = 1;
-    CRYPTO_ASSET_TYPE_PROTOCOL = 2;
-    CRYPTO_ASSET_TYPE_RELATED_CRYPTO_MATERIAL = 3;
+    // ProtoBuff's default value
+    CRYPTO_ASSET_TYPE_UNSPECIFIED = 0;
+    CRYPTO_ASSET_TYPE_ALGORITHM = 1;
+    CRYPTO_ASSET_TYPE_CERTIFICATE = 2;
+    CRYPTO_ASSET_TYPE_PROTOCOL = 3;
+    CRYPTO_ASSET_TYPE_RELATED_CRYPTO_MATERIAL = 4;
   }
   message AlgorithmProperties {
     enum CryptoPrimitive {
-      CRYPTO_PRIMITIVE_DRBG = 0;
-      CRYPTO_PRIMITIVE_MAC = 1;
-      CRYPTO_PRIMITIVE_BLOCK_CIPHER = 2;
-      CRYPTO_PRIMITIVE_STREAM_CIPHER = 3;
-      CRYPTO_PRIMITIVE_SIGNATURE = 4;
-      CRYPTO_PRIMITIVE_HASH = 5;
-      CRYPTO_PRIMITIVE_PKE = 6;
-      CRYPTO_PRIMITIVE_XOF = 7;
-      CRYPTO_PRIMITIVE_KDF = 8;
-      CRYPTO_PRIMITIVE_KEY_AGREE = 9;
-      CRYPTO_PRIMITIVE_KEM = 10;
-      CRYPTO_PRIMITIVE_AE = 11;
-      CRYPTO_PRIMITIVE_COMBINER = 12;
-      CRYPTO_PRIMITIVE_OTHER = 13;
-      CRYPTO_PRIMITIVE_UNKNOWN = 14;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_PRIMITIVE_UNSPECIFIED = 0;
+      // The primitive is not known
+      CRYPTO_PRIMITIVE_UNKNOWN = 1;
+      // Another primitive type - none of the following
+      CRYPTO_PRIMITIVE_OTHER = 2;
+      CRYPTO_PRIMITIVE_DRBG = 3;
+      CRYPTO_PRIMITIVE_MAC = 4;
+      CRYPTO_PRIMITIVE_BLOCK_CIPHER = 5;
+      CRYPTO_PRIMITIVE_STREAM_CIPHER = 6;
+      CRYPTO_PRIMITIVE_SIGNATURE = 7;
+      CRYPTO_PRIMITIVE_HASH = 8;
+      CRYPTO_PRIMITIVE_PKE = 9;
+      CRYPTO_PRIMITIVE_XOF = 10;
+      CRYPTO_PRIMITIVE_KDF = 11;
+      CRYPTO_PRIMITIVE_KEY_AGREE = 12;
+      CRYPTO_PRIMITIVE_KEM = 13;
+      CRYPTO_PRIMITIVE_AE = 14;
+      CRYPTO_PRIMITIVE_COMBINER = 15;
     }
     enum CryptoExecutionEnvironment {
-      CRYPTO_EXECUTION_ENVIRONMENT_SOFTWARE_PLAIN_RAM = 0;
-      CRYPTO_EXECUTION_ENVIRONMENT_SOFTWARE_ENCRYPTED_RAM = 1;
-      CRYPTO_EXECUTION_ENVIRONMENT_SOFTWARE_TEE = 2;
-      CRYPTO_EXECUTION_ENVIRONMENT_HARDWARE = 3;
-      CRYPTO_EXECUTION_ENVIRONMENT_OTHER = 4;
-      CRYPTO_EXECUTION_ENVIRONMENT_UNKNOWN = 5;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_EXECUTION_ENVIRONMENT_UNSPECIFIED = 0;
+      // The execution environment is not known
+      CRYPTO_EXECUTION_ENVIRONMENT_UNKNOWN = 1;
+      // Another implementation environment - none of the following
+      CRYPTO_EXECUTION_ENVIRONMENT_OTHER = 2;
+      CRYPTO_EXECUTION_ENVIRONMENT_SOFTWARE_PLAIN_RAM = 3;
+      CRYPTO_EXECUTION_ENVIRONMENT_SOFTWARE_ENCRYPTED_RAM = 4;
+      CRYPTO_EXECUTION_ENVIRONMENT_SOFTWARE_TEE = 5;
+      CRYPTO_EXECUTION_ENVIRONMENT_HARDWARE = 6;
     }
     enum CryptoImplementationPlatform {
-      CRYPTO_IMPLEMENTATION_PLATFORM_GENERIC = 0;
-      CRYPTO_IMPLEMENTATION_PLATFORM_X86_32 = 1;
-      CRYPTO_IMPLEMENTATION_PLATFORM_X86_64 = 2;
-      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV7A = 3;
-      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV7M = 4;
-      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV8A = 5;
-      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV8M = 6;
-      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV9A = 7;
-      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV9M = 8;
-      CRYPTO_IMPLEMENTATION_PLATFORM_X390X = 9;
-      CRYPTO_IMPLEMENTATION_PLATFORM_PPC64 = 10;
-      CRYPTO_IMPLEMENTATION_PLATFORM_PPC64LE = 11;
-      CRYPTO_IMPLEMENTATION_PLATFORM_OTHER = 12;
-      CRYPTO_IMPLEMENTATION_PLATFORM_UNKNOWN = 13;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_IMPLEMENTATION_PLATFORM_UNSPECIFIED = 0;
+      // the platform is not known
+      CRYPTO_IMPLEMENTATION_PLATFORM_UNKNOWN = 1;
+      // none of the following
+      CRYPTO_IMPLEMENTATION_PLATFORM_OTHER = 2;
+      CRYPTO_IMPLEMENTATION_PLATFORM_GENERIC = 3;
+      CRYPTO_IMPLEMENTATION_PLATFORM_X86_32 = 4;
+      CRYPTO_IMPLEMENTATION_PLATFORM_X86_64 = 5;
+      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV7A = 6;
+      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV7M = 7;
+      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV8A = 8;
+      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV8M = 9;
+      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV9A = 10;
+      CRYPTO_IMPLEMENTATION_PLATFORM_ARMV9M = 11;
+      CRYPTO_IMPLEMENTATION_PLATFORM_X390X = 12;
+      CRYPTO_IMPLEMENTATION_PLATFORM_PPC64 = 13;
+      CRYPTO_IMPLEMENTATION_PLATFORM_PPC64LE = 14;
     }
     enum CryptoAlgorithmMode {
-      CRYPTO_ALGORITHM_MODE_CBC = 0;
-      CRYPTO_ALGORITHM_MODE_ECB = 1;
-      CRYPTO_ALGORITHM_MODE_CCM = 2;
-      CRYPTO_ALGORITHM_MODE_GCM = 3;
-      CRYPTO_ALGORITHM_MODE_CFB = 4;
-      CRYPTO_ALGORITHM_MODE_OFB = 5;
-      CRYPTO_ALGORITHM_MODE_CTR = 6;
-      CRYPTO_ALGORITHM_MODE_OTHER = 7;
-      CRYPTO_ALGORITHM_MODE_UNKNOWN = 8;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_ALGORITHM_MODE_UNSPECIFIED = 0;
+      // The mode of operation is not known
+      CRYPTO_ALGORITHM_MODE_UNKNOWN = 1;
+      // Another mode of operation - none of the following
+      CRYPTO_ALGORITHM_MODE_OTHER = 2;
+      CRYPTO_ALGORITHM_MODE_CBC = 3;
+      CRYPTO_ALGORITHM_MODE_ECB = 4;
+      CRYPTO_ALGORITHM_MODE_CCM = 5;
+      CRYPTO_ALGORITHM_MODE_GCM = 6;
+      CRYPTO_ALGORITHM_MODE_CFB = 7;
+      CRYPTO_ALGORITHM_MODE_OFB = 8;
+      CRYPTO_ALGORITHM_MODE_CTR = 9;
     }
     enum CryptoAlgorithmPadding {
-      CRYPTO_ALGORITHM_PADDING_PKCS5 = 0;
-      CRYPTO_ALGORITHM_PADDING_PKCS7 = 1;
-      CRYPTO_ALGORITHM_PADDING_PKCS1V15 = 2;
-      CRYPTO_ALGORITHM_PADDING_OAEP = 3;
-      CRYPTO_ALGORITHM_PADDING_RAW = 4;
-      CRYPTO_ALGORITHM_PADDING_OTHER = 5;
-      CRYPTO_ALGORITHM_PADDING_UNKNOWN = 6;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_ALGORITHM_PADDING_UNSPECIFIED = 0;
+      // The padding scheme is not known
+      CRYPTO_ALGORITHM_PADDING_UNKNOWN = 1;
+      // Another padding scheme - none of the following
+      CRYPTO_ALGORITHM_PADDING_OTHER = 2;
+      CRYPTO_ALGORITHM_PADDING_PKCS5 = 3;
+      CRYPTO_ALGORITHM_PADDING_PKCS7 = 4;
+      CRYPTO_ALGORITHM_PADDING_PKCS1V15 = 5;
+      CRYPTO_ALGORITHM_PADDING_OAEP = 6;
+      CRYPTO_ALGORITHM_PADDING_RAW = 7;
     }
     enum CryptoAlgorithmFunction {
-      CRYPTO_ALGORITHM_FUNCTION_GENERATE = 0;
-      CRYPTO_ALGORITHM_FUNCTION_KEYGEN = 1;
-      CRYPTO_ALGORITHM_FUNCTION_ENCRYPT = 2;
-      CRYPTO_ALGORITHM_FUNCTION_DECRYPT = 3;
-      CRYPTO_ALGORITHM_FUNCTION_DIGEST = 4;
-      CRYPTO_ALGORITHM_FUNCTION_TAG = 5;
-      CRYPTO_ALGORITHM_FUNCTION_KEYDERIVE = 6;
-      CRYPTO_ALGORITHM_FUNCTION_SIGN = 7;
-      CRYPTO_ALGORITHM_FUNCTION_VERIFY = 8;
-      CRYPTO_ALGORITHM_FUNCTION_ENCAPSULATE = 9;
-      CRYPTO_ALGORITHM_FUNCTION_DECAPSULATE = 10;
-      CRYPTO_ALGORITHM_FUNCTION_OTHER = 11;
-      CRYPTO_ALGORITHM_FUNCTION_UNKNOWN = 12;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_ALGORITHM_FUNCTION_UNSPECIFIED = 0;
+      // meaning "there is some, but it is unclear which one"
+      CRYPTO_ALGORITHM_FUNCTION_UNKNOWN = 1;
+      // none of the following
+      CRYPTO_ALGORITHM_FUNCTION_OTHER = 2;
+      CRYPTO_ALGORITHM_FUNCTION_GENERATE = 3;
+      CRYPTO_ALGORITHM_FUNCTION_KEYGEN = 4;
+      CRYPTO_ALGORITHM_FUNCTION_ENCRYPT = 5;
+      CRYPTO_ALGORITHM_FUNCTION_DECRYPT = 6;
+      CRYPTO_ALGORITHM_FUNCTION_DIGEST = 7;
+      CRYPTO_ALGORITHM_FUNCTION_TAG = 8;
+      CRYPTO_ALGORITHM_FUNCTION_KEYDERIVE = 9;
+      CRYPTO_ALGORITHM_FUNCTION_SIGN = 10;
+      CRYPTO_ALGORITHM_FUNCTION_VERIFY = 11;
+      CRYPTO_ALGORITHM_FUNCTION_ENCAPSULATE = 12;
+      CRYPTO_ALGORITHM_FUNCTION_DECAPSULATE = 13;
     }
     // Cryptographic building blocks used in higher-level cryptographic systems and protocols. Primitives represent different cryptographic routines: deterministic random bit generators (drbg, e.g. CTR_DRBG from NIST SP800-90A-r1), message authentication codes (mac, e.g. HMAC-SHA-256), blockciphers (e.g. AES), streamciphers (e.g. Salsa20), signatures (e.g. ECDSA), hash functions (e.g. SHA-256), public-key encryption schemes (pke, e.g. RSA), extended output functions (xof, e.g. SHAKE256), key derivation functions (e.g. pbkdf2), key agreement algorithms (e.g. ECDH), key encapsulation mechanisms (e.g. ML-KEM), authenticated encryption (ae, e.g. AES-GCM) and the combination of multiple algorithms (combiner, e.g. SP800-56Cr2).
     optional CryptoPrimitive primitive = 1;
@@ -1852,36 +2076,42 @@ message CryptoProperties {
   } // end of CertificateProperties
   message RelatedCryptoMaterialProperties {
     enum CryptoRelatedType {
-      CRYPTO_RELATED_TYPE_PRIVATE_KEY = 0;
-      CRYPTO_RELATED_TYPE_PUBLIC_KEY = 1;
-      CRYPTO_RELATED_TYPE_SECRET_KEY = 2;
-      CRYPTO_RELATED_TYPE_KEY = 3;
-      CRYPTO_RELATED_TYPE_CIPHERTEXT = 4;
-      CRYPTO_RELATED_TYPE_SIGNATURE = 5;
-      CRYPTO_RELATED_TYPE_DIGEST = 6;
-      CRYPTO_RELATED_TYPE_INITIALIZATION_VECTOR = 7;
-      CRYPTO_RELATED_TYPE_NONCE = 8;
-      CRYPTO_RELATED_TYPE_SEED = 9;
-      CRYPTO_RELATED_TYPE_SALT = 10;
-      CRYPTO_RELATED_TYPE_SHARED_SECRET = 11;
-      CRYPTO_RELATED_TYPE_TAG = 12;
-      CRYPTO_RELATED_TYPE_ADDITIONAL_DATA = 13;
-      CRYPTO_RELATED_TYPE_PASSWORD = 14;
-      CRYPTO_RELATED_TYPE_CREDENTIAL = 15;
-      CRYPTO_RELATED_TYPE_TOKEN = 16;
-      CRYPTO_RELATED_TYPE_OTHER = 17;
-      CRYPTO_RELATED_TYPE_UNKNOWN = 18;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_RELATED_TYPE_UNSPECIFIED = 0;
+      // The type of cryptographic asset is not known.
+      CRYPTO_RELATED_TYPE_UNKNOWN = 1;
+      // Another type of cryptographic asset - none of the following
+      CRYPTO_RELATED_TYPE_OTHER = 2;
+      CRYPTO_RELATED_TYPE_PRIVATE_KEY = 3;
+      CRYPTO_RELATED_TYPE_PUBLIC_KEY = 4;
+      CRYPTO_RELATED_TYPE_SECRET_KEY = 5;
+      CRYPTO_RELATED_TYPE_KEY = 6;
+      CRYPTO_RELATED_TYPE_CIPHERTEXT = 7;
+      CRYPTO_RELATED_TYPE_SIGNATURE = 8;
+      CRYPTO_RELATED_TYPE_DIGEST = 9;
+      CRYPTO_RELATED_TYPE_INITIALIZATION_VECTOR = 10;
+      CRYPTO_RELATED_TYPE_NONCE = 11;
+      CRYPTO_RELATED_TYPE_SEED = 12;
+      CRYPTO_RELATED_TYPE_SALT = 13;
+      CRYPTO_RELATED_TYPE_SHARED_SECRET = 14;
+      CRYPTO_RELATED_TYPE_TAG = 15;
+      CRYPTO_RELATED_TYPE_ADDITIONAL_DATA = 16;
+      CRYPTO_RELATED_TYPE_PASSWORD = 17;
+      CRYPTO_RELATED_TYPE_CREDENTIAL = 18;
+      CRYPTO_RELATED_TYPE_TOKEN = 19;
     }
     enum CryptoRelatedState {
-      CRYPTO_RELATED_STATE_PRE_ACTIVATION = 0;
-      CRYPTO_RELATED_STATE_ACTIVE = 1;
-      CRYPTO_RELATED_STATE_SUSPENDED = 2;
-      CRYPTO_RELATED_STATE_DEACTIVATED = 3;
-      CRYPTO_RELATED_STATE_COMPROMISED = 4;
-      CRYPTO_RELATED_STATE_DESTROYED = 5;
+      // Default
+      CRYPTO_RELATED_STATE_UNSPECIFIED = 0;
+      CRYPTO_RELATED_STATE_PRE_ACTIVATION = 1;
+      CRYPTO_RELATED_STATE_ACTIVE = 2;
+      CRYPTO_RELATED_STATE_SUSPENDED = 3;
+      CRYPTO_RELATED_STATE_DEACTIVATED = 4;
+      CRYPTO_RELATED_STATE_COMPROMISED = 5;
+      CRYPTO_RELATED_STATE_DESTROYED = 6;
     }
     message CryptoRelatedSecuredBy {
-      // Specifies the mechanism by which the cryptographic asset is secured by. Examples include HSM, TPM, SGX, Software, and None
+      // Specifies the mechanism by which the cryptographic asset is secured. Examples include HSM, TPM, SGX, Software, and None
       optional string mechanism = 1;
       // The bom-ref to the algorithm.
       optional string algorithmRef = 2;
@@ -1908,19 +2138,23 @@ message CryptoProperties {
     optional int64 size = 10;
     // The format of the related cryptographic material (e.g. P8, PEM, DER).
     optional string format = 11;
-    // The mechanism by which the cryptographic asset is secured by.
+    // The mechanism by which the cryptographic asset is secured.
     optional CryptoRelatedSecuredBy securedBy = 12;
   } // end of RelatedCryptoMaterialProperties
   message ProtocolProperties {
     enum CryptoProtocolType {
-      CRYPTO_PROTOCOL_TYPE_TLS = 0;
-      CRYPTO_PROTOCOL_TYPE_SSH = 1;
-      CRYPTO_PROTOCOL_TYPE_IPSEC = 2;
-      CRYPTO_PROTOCOL_TYPE_IKE = 3;
-      CRYPTO_PROTOCOL_TYPE_SSTP = 4;
-      CRYPTO_PROTOCOL_TYPE_WPA = 5;
-      CRYPTO_PROTOCOL_TYPE_OTHER = 6;
-      CRYPTO_PROTOCOL_TYPE_UNKNOWN = 7;
+      // ProtoBuff's default value -- it differs from "unknown"
+      CRYPTO_PROTOCOL_TYPE_UNSPECIFIED = 0;
+      // The protocol type is not known
+      CRYPTO_PROTOCOL_TYPE_UNKNOWN = 1;
+      // Another protocol type - none of the following
+      CRYPTO_PROTOCOL_TYPE_OTHER = 2;
+      CRYPTO_PROTOCOL_TYPE_TLS = 3;
+      CRYPTO_PROTOCOL_TYPE_SSH = 4;
+      CRYPTO_PROTOCOL_TYPE_IPSEC = 5;
+      CRYPTO_PROTOCOL_TYPE_IKE = 6;
+      CRYPTO_PROTOCOL_TYPE_SSTP = 7;
+      CRYPTO_PROTOCOL_TYPE_WPA = 8;
     }
     message CryptoProtocolCipherSuite {
       // A common name for the cipher suite. For example: TLS_DHE_RSA_WITH_AES_128_CCM
@@ -1953,7 +2187,7 @@ message CryptoProperties {
     // The IKEv2 transform types supported (types 1-4), defined in RFC7296 section 3.3.2, and additional properties.
     optional Ikev2TransformTypes ikev2TransformTypes = 4;
   } // end of ProtocolProperties
-  // Cryptographic assets occur in several forms. Algorithms and protocols are most commonly implemented in specialized cryptographic libraries. They may however also be 'hardcoded' in software components. Certificates and related cryptographic material like keys, tokens, secrets or passwords are other cryptographic assets to be modelled.
+  // Cryptographic assets occur in several forms. Algorithms and protocols are most commonly implemented in specialized cryptographic libraries. They may, however, also be 'hardcoded' in software components. Certificates and related cryptographic material like keys, tokens, secrets or passwords are other cryptographic assets to be modelled.
   optional CryptoAssetType assetType = 1;
   // Additional properties specific to a cryptographic algorithm.
   optional AlgorithmProperties algorithmProperties = 2;
