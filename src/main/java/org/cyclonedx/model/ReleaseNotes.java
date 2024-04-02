@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.deserializer.NotesDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 import org.cyclonedx.util.deserializer.ResolvesDeserializer;
@@ -63,7 +64,7 @@ public class ReleaseNotes
   private String socialImage;
   private String description;
   @JsonSerialize(using = CustomDateSerializer.class)
-  @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+  @VersionFilter(Version.VERSION_14)
   private Date timestamp;
   private List<String> aliases;
   private List<String> tags;
