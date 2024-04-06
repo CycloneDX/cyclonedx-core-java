@@ -18,15 +18,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.generators.json.AbstractBomJsonGenerator;
+import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
-import org.cyclonedx.generators.json.BomJsonGenerator13;
-import org.cyclonedx.generators.json.BomJsonGenerator14;
-import org.cyclonedx.generators.xml.AbstractBomXmlGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
-import org.cyclonedx.generators.xml.BomXmlGenerator13;
-import org.cyclonedx.generators.xml.BomXmlGenerator14;
-import org.cyclonedx.generators.xml.BomXmlGenerator15;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExternalReference;
@@ -45,46 +39,45 @@ public class Issue214RegressionTest
     public void schema13JsonObjectGenerationTest()
         throws IOException, ReflectiveOperationException
     {
-        performJsonTest(Version.VERSION_13, BomJsonGenerator13.class);
+        performJsonTest(Version.VERSION_13);
     }
 
     @Test
     public void schema14JsonObjectGenerationTest()
         throws IOException, ReflectiveOperationException
     {
-        performJsonTest(Version.VERSION_14, BomJsonGenerator14.class);
+        performJsonTest(Version.VERSION_14);
     }
 
     @Test
     public void schema13XmlObjectGenerationTest()
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
-        performXmlTest(Version.VERSION_13, BomXmlGenerator13.class);
+        performXmlTest(Version.VERSION_13);
     }
 
     @Test
     public void schema14XmlObjectGenerationTest()
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
-        performXmlTest(Version.VERSION_14, BomXmlGenerator14.class);
+        performXmlTest(Version.VERSION_14);
     }
 
     @Test
     public void schema15XmlObjectGenerationTest()
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
-        performXmlTest(Version.VERSION_15, BomXmlGenerator15.class);
+        performXmlTest(Version.VERSION_15);
     }
 
-    private <G extends AbstractBomXmlGenerator> void performXmlTest(final Version pSpecVersion,
-        final Class<G> pExpectedGeneratorClass)
+    private void performXmlTest(final Version pSpecVersion)
         throws ParserConfigurationException, IOException, ReflectiveOperationException
     {
         final Bom inputBom = createIssue214Bom();
         BomXmlGenerator generator = BomGeneratorFactory.createXml(pSpecVersion, inputBom);
         Document doc = generator.generate();
 
-        Assertions.assertTrue(pExpectedGeneratorClass.isAssignableFrom(generator.getClass()));
+        Assertions.assertTrue(BomXmlGenerator.class.isAssignableFrom(generator.getClass()));
         Assertions.assertEquals(pSpecVersion, generator.getSchemaVersion());
 
         final String actual = xmlDocumentToString(doc);
@@ -93,14 +86,13 @@ public class Issue214RegressionTest
         validate(actual, XmlParser.class, pSpecVersion);
     }
 
-    private <G extends AbstractBomJsonGenerator> void performJsonTest(final Version pSpecVersion,
-        final Class<G> pExpectedGeneratorClass)
+    private void performJsonTest(final Version pSpecVersion)
         throws IOException, ReflectiveOperationException
     {
         final Bom inputBom = createIssue214Bom();
         BomJsonGenerator generator = BomGeneratorFactory.createJson(pSpecVersion, inputBom);
 
-        Assertions.assertTrue(pExpectedGeneratorClass.isAssignableFrom(generator.getClass()));
+        Assertions.assertTrue(BomJsonGenerator.class.isAssignableFrom(generator.getClass()));
         Assertions.assertEquals(pSpecVersion, generator.getSchemaVersion());
 
         final String actual = generator.toJsonString().trim();

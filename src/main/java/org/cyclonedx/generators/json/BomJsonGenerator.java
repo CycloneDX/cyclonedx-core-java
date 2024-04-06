@@ -18,16 +18,133 @@
  */
 package org.cyclonedx.generators.json;
 
+import java.lang.reflect.Field;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.Version;
+import org.cyclonedx.exception.GeneratorException;
+import org.cyclonedx.generators.AbstractBomGenerator;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.BomReference;
+import org.cyclonedx.util.introspector.VersionJsonAnnotationIntrospector;
+import org.cyclonedx.util.mixin.MixInBomReference;
+import org.cyclonedx.util.serializer.ComponentWrapperSerializer;
+import org.cyclonedx.util.serializer.DependencySerializer;
+import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
+import org.cyclonedx.util.serializer.TrimStringSerializer;
 
-public interface BomJsonGenerator {
-  Version getSchemaVersion();
+public class BomJsonGenerator extends AbstractBomGenerator
+{
+  private final DefaultPrettyPrinter prettyPrinter;
 
-    JsonNode toJsonNode();
+  /**
+   * Constructs a new BomGenerator object.
+   * @param bom the BOM to generate
+   */
+  public BomJsonGenerator(Bom bom, final Version version) {
+    super(version, bom);
+    Bom modifiedBom = null;
+    try {
+      modifiedBom = injectBomFormatAndSpecVersion(bom);
+    }
+    catch (GeneratorException e) {
+    }
+    bom = modifiedBom != null ? modifiedBom : bom;
+    this.prettyPrinter = new DefaultPrettyPrinter();
 
-    String toJsonString();
+    setupPrettyPrinter(this.prettyPrinter);
 
-    String toString();
+    this.mapper = new ObjectMapper();
+    setupObjectMapper();
+  }
 
+  private void setupObjectMapper() {
+    mapper.setAnnotationIntrospector(new VersionJsonAnnotationIntrospector(version));
+
+    super.setupObjectMapper(false);
+
+    SimpleModule licenseModule = new SimpleModule();
+    SimpleModule depModule = new SimpleModule();
+    SimpleModule componentWrapperModule = new SimpleModule();
+
+    SimpleModule stringModule = new SimpleModule();
+    stringModule.addSerializer(new TrimStringSerializer());
+    mapper.registerModule(stringModule);
+
+    licenseModule.addSerializer(new LicenseChoiceSerializer());
+    mapper.registerModule(licenseModule);
+
+    depModule.addSerializer(new DependencySerializer(false, null));
+    mapper.registerModule(depModule);
+
+    componentWrapperModule.addSerializer(new ComponentWrapperSerializer(mapper));
+    mapper.registerModule(componentWrapperModule);
+  }
+
+  private void setupPrettyPrinter(final DefaultPrettyPrinter prettyPrinter) {
+    prettyPrinter.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+  }
+
+  private  Bom injectBomFormatAndSpecVersion(Bom bom) throws GeneratorException {
+    try {
+      Field field;
+      field = Bom.class.getDeclaredField("bomFormat");
+      field.setAccessible(true);
+      field.set(bom, "CycloneDX");
+      field = Bom.class.getDeclaredField("specVersion");
+      field.setAccessible(true);
+      field.set(bom, getSchemaVersion().getVersionString());
+      return bom;
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      throw new GeneratorException(e);
+    }
+  }
+
+  /**
+   * Creates a CycloneDX BOM from a set of Components.
+   * @return an JSON Document representing a CycloneDX BoM
+   * @since 7.0.0
+   */
+  public JsonNode toJsonNode() {
+    try {
+      return mapper.readTree(toJson(bom, false));
+    } catch (GeneratorException | JsonProcessingException e) {
+      return null;
+    }
+  }
+
+  public String toJsonString() {
+    try {
+      return toJson(bom, true);
+    } catch (GeneratorException e) {
+      return "";
+    }
+  }
+
+  @Override
+  public String toString() {
+    try {
+      return toJson(bom, true);
+    } catch (GeneratorException e) {
+      return "";
+    }
+  }
+
+  String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
+    try {
+      mapper.addMixIn(BomReference.class, MixInBomReference.class);
+      if (prettyPrint) {
+        return mapper.writer(prettyPrinter).writeValueAsString(bom);
+      }
+      return mapper.writeValueAsString(bom);
+    }
+    catch (JsonProcessingException e) {
+      throw new GeneratorException(e);
+    }
+  }
 }

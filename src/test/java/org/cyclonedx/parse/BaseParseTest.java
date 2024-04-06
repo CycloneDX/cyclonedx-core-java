@@ -18,7 +18,7 @@
  */
 package org.cyclonedx.parse;
 
-import org.cyclonedx.BomGeneratorFactory;
+import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.BomParserFactory;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Version;

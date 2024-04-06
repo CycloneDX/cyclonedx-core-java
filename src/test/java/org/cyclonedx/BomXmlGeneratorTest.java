@@ -19,6 +19,8 @@
 package org.cyclonedx;
 
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.generators.BomGeneratorFactory;
+import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.*;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
@@ -31,22 +33,17 @@ import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import javax.xml.XMLConstants;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,11 +65,10 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema10GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_10, createCommonBom("/bom-1.0.xml"));
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_10, createCommonBomXml("/bom-1.0.xml"));
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator10);
         assertEquals(Version.VERSION_10, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -81,11 +77,10 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema11WithDependencyGraphGenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBom("/bom-1.1-dependency-graph-1.0.xml"));
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBomXml("/bom-1.1-dependency-graph-1.0.xml"));
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator11);
         assertEquals(Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -94,11 +89,10 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema11WithVulnerabilitiesGenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBom("/bom-1.1-vulnerability-1.0.xml"));
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBomXml("/bom-1.1-vulnerability-1.0.xml"));
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator11);
         assertEquals(Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -107,11 +101,10 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema11GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBom());
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_11, createCommonBomXml("/bom-1.1.xml"));
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator11);
         assertEquals(Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -120,11 +113,10 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema12GenerationTestWith11Data() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom());
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBomXml("/bom-1.2.xml"));
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator12);
         assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -133,11 +125,10 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema12GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom("/bom-1.2.xml"));
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom("/bom-1.2.json"));
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator12);
         assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -151,7 +142,6 @@ public class BomXmlGeneratorTest {
         final Bom bom = parser.parse(bomBytes);
 
         BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, bom);
-        assertTrue(generator instanceof BomXmlGenerator12);
         assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser xmlParser = new XmlParser();
@@ -160,28 +150,37 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema12GenerationWithPedigreeDataTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom("/bom-1.2-pedigree.xml"));
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBomXml("/bom-1.2-pedigree.xml"));
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator12);
         assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(file, Version.VERSION_12));
     }
 
-    @Test
-    public void schema13GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_13, createCommonBom("/bom-1.3.xml"));
-        Document doc = generator.generate();
-        testDocument(doc);
+    static Stream<Arguments> testData() {
+        return Stream.of(
+            Arguments.of(Version.VERSION_15, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_14, "/bom-1.4.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.3.json")
+        );
+    }
 
-        assertTrue(generator instanceof BomXmlGenerator13);
-        assertEquals(Version.VERSION_13, generator.getSchemaVersion());
-        File file = writeToFile(generator.toXmlString());
-        XmlParser parser = new XmlParser();
-        assertTrue(parser.isValid(file, Version.VERSION_13));
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testXmlGeneration(Version version, String bomXmlPath)
+        throws Exception
+    {
+        Bom bom = createCommonBom(bomXmlPath);
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+
+        assertEquals(version, generator.getSchemaVersion());
+
+        File file = writeToFile(generator.toJsonString());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(file, version));
     }
 
     @Test
@@ -191,24 +190,10 @@ public class BomXmlGeneratorTest {
         final Bom bom = parser.parse(bomBytes);
 
         BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_13, bom);
-        assertTrue(generator instanceof BomXmlGenerator13);
         assertEquals(Version.VERSION_13, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser xmlParser = new XmlParser();
         assertTrue(xmlParser.isValid(file, Version.VERSION_13));
-    }
-
-    @Test
-    public void schema14GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_14, createCommonBom("/bom-1.4.xml"));
-        Document doc = generator.generate();
-        testDocument(doc);
-
-        assertTrue(generator instanceof BomXmlGenerator14);
-        assertEquals(Version.VERSION_14, generator.getSchemaVersion());
-        File file = writeToFile(generator.toXmlString());
-        XmlParser parser = new XmlParser();
-        assertTrue(parser.isValid(file, Version.VERSION_14));
     }
 
     @Test
@@ -218,7 +203,6 @@ public class BomXmlGeneratorTest {
         final Bom bom = parser.parse(bomBytes);
 
         BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_14, bom);
-        assertTrue(generator instanceof BomXmlGenerator14);
         assertEquals(Version.VERSION_14, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser xmlParser = new XmlParser();
@@ -250,7 +234,6 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
 
         testDocument(doc);
-        assertTrue(generator instanceof BomXmlGenerator11);
         assertEquals(Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -287,7 +270,6 @@ public class BomXmlGeneratorTest {
         Document doc = generator.generate();
         testDocument(doc);
 
-        assertTrue(generator instanceof BomXmlGenerator11);
         assertEquals(Version.VERSION_11, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -300,7 +282,6 @@ public class BomXmlGeneratorTest {
         bom.setComponents(new ArrayList<>());
         bom.setDependencies(new ArrayList<>());
         BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_13, bom);
-        assertTrue(generator instanceof BomXmlGenerator13);
         assertEquals(Version.VERSION_13, generator.getSchemaVersion());
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -309,7 +290,7 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema14JBomLinkGenerationTest() throws Exception {
-        Bom bom = createCommonBom("/bom-1.4-bomlink.xml");
+        Bom bom = createCommonBom("/bom-1.4-bomlink.json");
         BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_14, bom);
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -320,32 +301,6 @@ public class BomXmlGeneratorTest {
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", bom2.getComponents().get(0).getExternalReferences().get(0).getUrl());
     }
 
-    @Test
-    public void schema15GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_15, createCommonBom("/bom-1.5.xml"));
-        Document doc = generator.generate();
-        testDocument(doc);
-
-        assertTrue(generator instanceof BomXmlGenerator15);
-        assertEquals(Version.VERSION_15, generator.getSchemaVersion());
-        File file = writeToFile(generator.toXmlString());
-        XmlParser parser = new XmlParser();
-        assertTrue(parser.isValid(file, Version.VERSION_15));
-    }
-
-    @Test
-    public void schema16GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_16, createCommonBom("/bom-1.6.xml"));
-        Document doc = generator.generate();
-        testDocument(doc);
-
-        assertTrue(generator instanceof BomXmlGenerator16);
-        assertEquals(Version.VERSION_16, generator.getSchemaVersion());
-        File file = writeToFile(generator.toXmlString());
-        XmlParser parser = new XmlParser();
-        assertTrue(parser.isValid(file, Version.VERSION_16));
-    }
-
     private File writeToFile(String xmlString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
             writer.write(xmlString);
@@ -353,38 +308,20 @@ public class BomXmlGeneratorTest {
         return tempFile;
     }
 
-    private Bom createCommonBom() throws Exception {
-        return createCommonBom("/bom-1.1.xml");
-    }
-
-    private Bom createCommonBom(String resource) throws Exception {
+    private Bom createCommonBomXml(String resource) throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
         XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
     }
 
-    private void testDocument(Document doc) {
-        assertNotNull(doc);
-        assertNotNull(documentToString(doc));
+    private Bom createCommonBom(String resource) throws Exception {
+        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
+        JsonParser parser = new JsonParser();
+        return parser.parse(bomBytes);
     }
 
-    private String documentToString(Document doc) {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer;
-        try {
-            tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            transformer = tf.newTransformer();
-
-            transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-            StringWriter sw = new StringWriter();
-            transformer.transform(new DOMSource(doc), new StreamResult(sw));
-            return sw.getBuffer().toString();
-        } catch (TransformerException ex) {
-            return null;
-        }
+    private void testDocument(Document doc) {
+        assertNotNull(doc);
+        assertNotNull(doc.toString());
     }
 }

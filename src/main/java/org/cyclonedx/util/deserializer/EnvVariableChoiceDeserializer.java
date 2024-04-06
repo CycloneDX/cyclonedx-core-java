@@ -35,25 +35,36 @@ public class EnvVariableChoiceDeserializer
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
     EnvVariableChoice envReferenceChoice = new EnvVariableChoice();
 
-    if (node.has("value")) {
-      String value = node.get("value").asText();
-      envReferenceChoice.setValue(value);
-    } else if (node.has("environmentVar")) {
-      JsonNode envVarNode = node.get("environmentVar");
-      Property prop = new Property();
-
-      if (envVarNode.has("name")) {
-        String name = envVarNode.get("name").asText();
-        prop.setName(name);
+    if(node.isObject()) {
+      if (node.has("value") && node.has("name")) {
+        Property prop = createProperty(node);
+        envReferenceChoice.setEnvironmentVar(prop);
       }
-      if (envVarNode.has("")) {
-        String value = envVarNode.get("").asText();
-        prop.setValue(value);
+      else if (node.has("environmentVar")) {
+        JsonNode envVarNode = node.get("environmentVar");
+        Property prop = createProperty(envVarNode);
+        envReferenceChoice.setEnvironmentVar(prop);
       }
-
-      envReferenceChoice.setEnvironmentVar(prop);
+    } else {
+      envReferenceChoice.setValue(node.asText());
     }
-
     return envReferenceChoice;
+  }
+
+  private Property createProperty(JsonNode envVarNode){
+    Property prop = new Property();
+
+    if (envVarNode.has("name")) {
+      String name = envVarNode.get("name").asText();
+      prop.setName(name);
+    }
+    if (envVarNode.has("")) {
+      String value = envVarNode.get("").asText();
+      prop.setValue(value);
+    } else  if (envVarNode.has("value")) {
+      String value = envVarNode.get("value").asText();
+      prop.setValue(value);
+    }
+    return prop;
   }
 }
