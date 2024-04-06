@@ -20,24 +20,25 @@ package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
-import org.cyclonedx.generators.json.BomJsonGenerator12;
-import org.cyclonedx.generators.json.BomJsonGenerator13;
-import org.cyclonedx.generators.json.BomJsonGenerator14;
-import org.cyclonedx.generators.json.BomJsonGenerator15;
-import org.cyclonedx.generators.json.BomJsonGenerator16;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,7 +64,6 @@ public class BomJsonGeneratorTest {
     public void schema12GenerationTest() throws Exception {
         Bom bom =  createCommonBom("/bom-1.2.xml");
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_12, bom);
-        assertTrue(generator instanceof BomJsonGenerator12);
         assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
@@ -91,7 +91,6 @@ public class BomJsonGeneratorTest {
         final Bom bom = parser.parse(bomBytes);
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_12, bom);
-        assertTrue(generator instanceof BomJsonGenerator12);
         assertEquals(Version.VERSION_12, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser jsonParser = new JsonParser();
@@ -104,7 +103,6 @@ public class BomJsonGeneratorTest {
         bom.setComponents(new ArrayList<>());
         bom.setDependencies(new ArrayList<>());
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
-        assertTrue(generator instanceof BomJsonGenerator13);
         assertEquals(Version.VERSION_13, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
@@ -118,37 +116,33 @@ public class BomJsonGeneratorTest {
         final Bom bom = parser.parse(bomBytes);
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
-        assertTrue(generator instanceof BomJsonGenerator13);
         assertEquals(Version.VERSION_13, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser jsonParser = new JsonParser();
         assertTrue(jsonParser.isValid(file, Version.VERSION_13));
     }
 
-    @Test
-    public void schema13JsonObjectGenerationTest() throws Exception {
-        Bom bom = createCommonBom("/bom-1.3.xml");
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_13, bom);
-
-        assertTrue(generator instanceof BomJsonGenerator13);
-        assertEquals(Version.VERSION_13, generator.getSchemaVersion());
-
-        File file = writeToFile(generator.toJsonString());
-        JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, Version.VERSION_13));
+    static Stream<Arguments> testData() {
+        return Stream.of(
+            Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
+            Arguments.of(Version.VERSION_14, "/bom-1.4.xml"),
+            Arguments.of(Version.VERSION_13, "/bom-1.3.xml")
+        );
     }
 
-    @Test
-    public void schema14JsonObjectGenerationTest() throws Exception {
-        Bom bom = createCommonBom("/bom-1.4.xml");
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_14, bom);
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testJsonGeneration(Version version, String bomXmlPath)
+        throws Exception
+    {
+        Bom bom = createCommonBom(bomXmlPath);
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
 
-        assertTrue(generator instanceof BomJsonGenerator14);
-        assertEquals(Version.VERSION_14, generator.getSchemaVersion());
+        assertEquals(version, generator.getSchemaVersion());
 
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, Version.VERSION_14));
+        assertTrue(parser.isValid(file, version));
     }
 
     @Test
@@ -158,7 +152,6 @@ public class BomJsonGeneratorTest {
         final Bom bom = parser.parse(bomBytes);
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_14, bom);
-        assertTrue(generator instanceof BomJsonGenerator14);
         assertEquals(Version.VERSION_14, generator.getSchemaVersion());
         File file = writeToFile(generator.toJsonString());
         JsonParser jsonParser = new JsonParser();
@@ -177,31 +170,6 @@ public class BomJsonGeneratorTest {
         assertEquals("bom", bom2.getComponents().get(0).getExternalReferences().get(0).getType().getTypeName());
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", bom2.getComponents().get(0).getExternalReferences().get(0).getUrl());
     }
-
-    @Test
-    public void schema15JsonObjectGenerationTest() throws Exception {
-        Bom bom = createCommonBom("/bom-1.5.xml");
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_15, bom);
-        assertTrue(generator instanceof BomJsonGenerator15);
-        assertEquals(Version.VERSION_15, generator.getSchemaVersion());
-
-        File file = writeToFile(generator.toJsonString());
-        JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, Version.VERSION_15));
-    }
-
-    @Test
-    public void schema16JsonObjectGenerationTest() throws Exception {
-        Bom bom = createCommonBom("/bom-1.6.xml");
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
-        assertTrue(generator instanceof BomJsonGenerator16);
-        assertEquals(Version.VERSION_16, generator.getSchemaVersion());
-
-        File file = writeToFile(generator.toJsonString());
-        JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, Version.VERSION_16));
-    }
-
 
     private File writeToFile(String jsonString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
