@@ -56,6 +56,8 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "copyright",
      "cpe",
      "purl",
+     "omniborId",
+     "swhid",
      "swid",
      "modified",
      "pedigree",
@@ -148,6 +150,10 @@ public class Component extends ExtensibleElement {
     private String copyright;
     private String cpe;
     private String purl;
+    @VersionFilter(Version.VERSION_16)
+    private List<String> omniborId;
+    @VersionFilter(Version.VERSION_16)
+    private List<String> swhid;
     @VersionFilter(Version.VERSION_12)
     private Swid swid;
     private Boolean modified;
@@ -439,10 +445,28 @@ public class Component extends ExtensibleElement {
         this.data = data;
     }
 
+    @JacksonXmlElementWrapper(useWrapping = false)
+    public List<String> getOmniborId() {
+        return omniborId;
+    }
+
+    public void setOmniborId(final List<String> omniborId) {
+        this.omniborId = omniborId;
+    }
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    public List<String> getSwhid() {
+        return swhid;
+    }
+
+    public void setSwhid(final List<String> swhid) {
+        this.swhid = swhid;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright,
-            cpe, purl, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
+            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
     }
 
     @Override
@@ -465,6 +489,8 @@ public class Component extends ExtensibleElement {
                 Objects.equals(cpe, component.cpe) &&
                 Objects.equals(purl, component.purl) &&
                 Objects.equals(swid, component.swid) &&
+                Objects.equals(swhid, component.swhid) &&
+                Objects.equals(omniborId, component.omniborId) &&
                 Objects.equals(components, component.components) &&
                 Objects.equals(evidence, component.evidence) &&
                 Objects.equals(mimeType, component.mimeType) &&
