@@ -75,7 +75,7 @@ public class Service extends ExtensibleElement {
     private List<ExternalReference> externalReferences;
     @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
-    @VersionFilter(value = Version.VERSION_16)
+    @VersionFilter(Version.VERSION_16)
     @JsonUnwrapped
     private Tags tags;
     private List<Service> services;
