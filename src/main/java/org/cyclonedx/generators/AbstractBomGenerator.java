@@ -7,6 +7,7 @@ import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.serializer.EvidenceSerializer;
 import org.cyclonedx.util.serializer.InputTypeSerializer;
+import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
@@ -17,7 +18,7 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
 
   protected final Version version;
 
-  protected final Bom bom;
+  protected Bom bom;
 
   public AbstractBomGenerator(final Version version, final Bom bom) {
     this.mapper = new ObjectMapper();
@@ -34,6 +35,10 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
   }
 
   protected void setupObjectMapper(boolean isXml) {
+    SimpleModule licenseModule = new SimpleModule();
+    licenseModule.addSerializer(new LicenseChoiceSerializer());
+    mapper.registerModule(licenseModule);
+
     SimpleModule lifecycleModule = new SimpleModule();
     lifecycleModule.addSerializer(new LifecycleSerializer(isXml));
     mapper.registerModule(lifecycleModule);

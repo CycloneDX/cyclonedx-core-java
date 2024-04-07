@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.license.Expression;
 
 public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
 {
@@ -44,7 +45,8 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
           processLicenseNode(p, node.get("license"), licenseChoice);
         }
         else if (node.has("expression")) {
-          licenseChoice.setExpression(node.get("expression").asText());
+          Expression expressionNode = p.getCodec().treeToValue(node.get("expression"), Expression.class);
+          licenseChoice.setExpression(expressionNode);
           return licenseChoice;
         }
       }
