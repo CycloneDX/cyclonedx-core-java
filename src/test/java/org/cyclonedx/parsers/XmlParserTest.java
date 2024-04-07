@@ -37,6 +37,7 @@ import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.
 import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -458,5 +459,21 @@ public class XmlParserTest
         assertNull(ep.getOrganization().getAddress().getPostOfficeBoxNumber());
         assertEquals("New Jersey", ep.getOrganization().getAddress().getRegion());
         assertNull(eec.getProperties());
+    }
+
+    @Test
+    public void schema16_component_identifiers() throws Exception {
+        final Bom bom  = getXmlBom("1.6/valid-component-identifiers-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        List<String> omnis = bom.getComponents().get(0).getOmniborId();
+        assertEquals(2, omnis.size());
+        assertTrue(omnis.containsAll(Arrays.asList("gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+            "gitoid:blob:sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")));
+
+        List<String> swhid = bom.getComponents().get(0).getSwhid();
+        assertEquals(2, swhid.size());
+        assertTrue(swhid.containsAll(Arrays.asList("swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2",
+            "swh:1:dir:d198bc9d7a6bcf6db04f476d29314f157507d505")));
     }
 }
