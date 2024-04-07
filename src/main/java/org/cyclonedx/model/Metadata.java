@@ -141,10 +141,12 @@ public class Metadata
         this.component = component;
     }
 
+    @Deprecated
     public OrganizationalEntity getManufacture() {
         return manufacture;
     }
 
+    @Deprecated
     public void setManufacture(OrganizationalEntity manufacture) {
         this.manufacture = manufacture;
     }

@@ -25,6 +25,7 @@ import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.Tags;
@@ -493,5 +494,15 @@ public class XmlParserTest
         assertNotNull(tags);
         assertEquals(4, tags.getTags().size());
         assertTrue(tags.getTags().containsAll(Arrays.asList("microservice", "golang", "aws", "us-east-1")));
+    }
+
+    @Test
+    public void schema16_manufacture() throws Exception {
+        final Bom bom  = getXmlBom("1.6/valid-metadata-manufacture-1.6.xml");
+
+        assertNotNull(bom.getMetadata());
+        OrganizationalEntity manufacture = bom.getMetadata().getManufacture();
+        assertNotNull(manufacture);
+        assertManufacturerMetadata(manufacture, Version.VERSION_16);
     }
 }

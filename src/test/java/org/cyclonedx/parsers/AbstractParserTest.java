@@ -95,23 +95,19 @@ public class AbstractParserTest
     assertBomProperties(bom, version.getVersionString());
 
     // Assertions for bom.metadata.tools
-    assertToolsMetadata(bom.getMetadata().getTools().get(0)
-    );
+    assertToolsMetadata(bom.getMetadata().getTools().get(0));
 
     // Assertions for bom.metadata.authors
-    assertAuthorMetadata(bom.getMetadata().getAuthors().get(0)
-    );
+    assertAuthorMetadata(bom.getMetadata().getAuthors().get(0));
 
     // Assertions for bom.metadata.component
     assertComponentMetadata(bom.getMetadata().getComponent());
 
     // Assertions for bom.metadata.manufacture
-    assertManufacturerMetadata(bom.getMetadata().getManufacture()
-    );
+    assertManufacturerMetadata(bom.getMetadata().getManufacture(), version);
 
     // Assertions for bom.metadata.supplier
-    assertSupplierMetadata(bom.getMetadata().getSupplier()
-    );
+    assertSupplierMetadata(bom.getMetadata().getSupplier());
   }
 
   void assertToolsMetadata(Tool tool)
@@ -141,10 +137,14 @@ public class AbstractParserTest
     assertFalse(component.getSwid().isPatch());
   }
 
-  void assertManufacturerMetadata(
-      OrganizationalEntity manufacturer)
+  void assertManufacturerMetadata(OrganizationalEntity manufacturer, Version version)
   {
-    assertEquals("Acme, Inc.", manufacturer.getName());
+    if(version.getVersion() >= Version.VERSION_16.getVersion()) {
+      assertEquals("Acme, Inc. // deprecated", manufacturer.getName());
+    } else {
+      assertEquals("Acme, Inc.", manufacturer.getName());
+    }
+    assertEquals("manufacturer-1", manufacturer.getBomRef());
     assertEquals("https://example.com", manufacturer.getUrls().get(0));
     assertEquals("Acme Professional Services", manufacturer.getContacts().get(0).getName());
     assertEquals("professional.services@example.com", manufacturer.getContacts().get(0).getEmail());
