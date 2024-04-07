@@ -24,12 +24,14 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.Version;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.util.deserializer.NotesDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 import org.cyclonedx.util.deserializer.ResolvesDeserializer;
@@ -67,7 +69,8 @@ public class ReleaseNotes
   @VersionFilter(Version.VERSION_14)
   private Date timestamp;
   private List<String> aliases;
-  private List<String> tags;
+  @JsonUnwrapped
+  private Tags tags;
   private List<Resolves> resolves;
   private List<Notes> notes;
   private List<Property> properties;
@@ -131,14 +134,11 @@ public class ReleaseNotes
     this.aliases = aliases;
   }
 
-  @JacksonXmlElementWrapper(localName = "tags")
-  @JacksonXmlProperty(localName = "tag")
-  @JsonDeserialize(using = StringListDeserializer.class)
-  public List<String> getTags() {
+  public Tags getTags() {
     return tags;
   }
 
-  public void setTags(final List<String> tags) {
+  public void setTags(final Tags tags) {
     this.tags = tags;
   }
 

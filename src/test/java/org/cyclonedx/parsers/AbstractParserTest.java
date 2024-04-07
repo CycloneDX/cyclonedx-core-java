@@ -837,7 +837,7 @@ public class AbstractParserTest
     assertNotNull(releaseNotes.getSocialImage());
     assertNotNull(releaseNotes.getTimestamp());
     assertEquals(1, releaseNotes.getAliases().size());
-    assertEquals(1, releaseNotes.getTags().size());
+    assertEquals(1, releaseNotes.getTags().getTags().size());
 
     //Resolves
     assertEquals(1, releaseNotes.getResolves().size());

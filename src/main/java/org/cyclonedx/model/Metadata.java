@@ -73,6 +73,11 @@ public class Metadata
     @VersionFilter(Version.VERSION_12)
     private Component component;
 
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
+
+    @Deprecated
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity manufacture;
 
@@ -195,6 +200,14 @@ public class Metadata
 
     public void setToolChoice(final ToolInformation toolInformation) {
         this.toolInformation = toolInformation;
+    }
+
+    public OrganizationalEntity getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(final OrganizationalEntity manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     @Override
