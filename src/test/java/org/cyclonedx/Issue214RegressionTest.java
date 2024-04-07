@@ -4,21 +4,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.generators.BomGeneratorFactory;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Bom;
@@ -29,58 +22,39 @@ import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.Parser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 
 public class Issue214RegressionTest
 {
-    @Test
-    public void schema13JsonObjectGenerationTest()
-        throws IOException, ReflectiveOperationException
-    {
-        performJsonTest(Version.VERSION_13);
+    static Stream<Arguments> testData() {
+        return Stream.of(
+            Arguments.of(Version.VERSION_16),
+            Arguments.of(Version.VERSION_15),
+            Arguments.of(Version.VERSION_14),
+            Arguments.of(Version.VERSION_13)
+        );
     }
 
-    @Test
-    public void schema14JsonObjectGenerationTest()
-        throws IOException, ReflectiveOperationException
-    {
-        performJsonTest(Version.VERSION_14);
-    }
-
-    @Test
-    public void schema13XmlObjectGenerationTest()
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
-    {
-        performXmlTest(Version.VERSION_13);
-    }
-
-    @Test
-    public void schema14XmlObjectGenerationTest()
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
-    {
-        performXmlTest(Version.VERSION_14);
-    }
-
-    @Test
-    public void schema15XmlObjectGenerationTest()
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
-    {
-        performXmlTest(Version.VERSION_15);
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testObjectGeneration(Version version) throws IOException, ReflectiveOperationException, GeneratorException {
+        performJsonTest(version);
+        performXmlTest(version);
     }
 
     private void performXmlTest(final Version pSpecVersion)
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
+        throws GeneratorException, ReflectiveOperationException, IOException
     {
         final Bom inputBom = createIssue214Bom();
         BomXmlGenerator generator = BomGeneratorFactory.createXml(pSpecVersion, inputBom);
-        Document doc = generator.generate();
 
         Assertions.assertTrue(BomXmlGenerator.class.isAssignableFrom(generator.getClass()));
         Assertions.assertEquals(pSpecVersion, generator.getSchemaVersion());
 
-        final String actual = xmlDocumentToString(doc);
+        final String actual = generator.toXmlString();
         final String expected = readFixture("/regression/issue214-expected-output.xml", pSpecVersion);
         Assertions.assertEquals(expected, actual);
         validate(actual, XmlParser.class, pSpecVersion);
@@ -101,37 +75,13 @@ public class Issue214RegressionTest
         validate(actual, JsonParser.class, pSpecVersion);
     }
 
-    private String xmlDocumentToString(final Document doc)
-    {
-        Assertions.assertNotNull(doc);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer;
-        try {
-            tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            transformer = tf.newTransformer();
-
-            transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-            StringWriter sw = new StringWriter();
-            transformer.transform(new DOMSource(doc), new StreamResult(sw));
-            return sw.getBuffer().toString().trim();
-        }
-        catch (TransformerException ex) {
-            Assertions.fail("Failed to serialize XML document", ex);
-        }
-        return null;
-    }
-
     private String readFixture(final String pPath, final Version pSpecVersion)
     {
         try (InputStream is = getClass().getResourceAsStream(pPath)) {
             if (is != null) {
                 String result = IOUtils.toString(is, StandardCharsets.UTF_8);
                 result = result.replaceAll(Pattern.quote("${specVersion}"), pSpecVersion.getVersionString());
-                return result.trim();
+                return result;
             }
             else {
                 Assertions.fail("failed to read expected data file: " + pPath);

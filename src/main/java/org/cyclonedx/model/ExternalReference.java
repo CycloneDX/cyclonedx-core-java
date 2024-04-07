@@ -35,7 +35,7 @@ import org.cyclonedx.util.serializer.ExternalReferenceSerializer;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize(using = ExternalReferenceSerializer.class)
-@JsonPropertyOrder({"url", "comment", "hashes"})
+@JsonPropertyOrder({"bom", "url", "comment", "hashes"})
 public class ExternalReference {
 
     public enum Type {
@@ -59,6 +59,8 @@ public class ExternalReference {
         DOCUMENTATION("documentation"),
         @JsonProperty("support")
         SUPPORT("support"),
+        @JsonProperty("source-distribution")
+        SOURCE_DISTRIBUTION("source-distribution"),
         @JsonProperty("distribution")
         DISTRIBUTION("distribution"),
         @JsonProperty("distribution-intake")
@@ -113,6 +115,8 @@ public class ExternalReference {
         EVIDENCE("evidence"),
         @JsonProperty("formulation")
         FORMULATION("formulation"),
+        @JsonProperty("rfc-9116")
+        RFC_9116("rfc-9116"),
         @JsonProperty("other")
         OTHER("other");
 
