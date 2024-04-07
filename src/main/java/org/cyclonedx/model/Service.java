@@ -245,4 +245,12 @@ public class Service extends ExtensibleElement {
     public Signature getSignature() { return signature; }
 
     public void setSignature(Signature signature) { this.signature = signature; }
+
+    public Tags getTags() {
+        return tags;
+    }
+
+    public void setTags(final Tags tags) {
+        this.tags = tags;
+    }
 }

@@ -26,6 +26,7 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.modelCard.Considerations;
 import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
 import org.cyclonedx.model.component.modelCard.consideration.consumption.Activity;
@@ -36,7 +37,6 @@ import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.
 import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -323,5 +323,22 @@ public class JsonParserTest
         assertEquals(2, swhid.size());
         assertTrue(swhid.containsAll(Arrays.asList("swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2",
             "swh:1:dir:d198bc9d7a6bcf6db04f476d29314f157507d505")));
+    }
+
+    @Test
+    public void schema16_tags() throws Exception {
+        final Bom bom  = getJsonBom("1.6/valid-tags-1.6.json");
+
+        assertNotNull(bom.getComponents());
+        Tags tags = bom.getComponents().get(0).getTags();
+        assertNotNull(tags);
+        assertEquals(3, tags.getTags().size());
+        assertTrue(tags.getTags().containsAll(Arrays.asList("json-parser", "javascript", "node.js")));
+
+        assertNotNull(bom.getServices());
+        tags = bom.getServices().get(0).getTags();
+        assertNotNull(tags);
+        assertEquals(4, tags.getTags().size());
+        assertTrue(tags.getTags().containsAll(Arrays.asList("microservice", "golang", "aws", "us-east-1")));
     }
 }
