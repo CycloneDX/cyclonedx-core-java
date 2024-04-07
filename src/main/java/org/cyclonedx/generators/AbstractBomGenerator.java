@@ -11,6 +11,7 @@ import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
+import org.cyclonedx.util.serializer.SignatorySerializer;
 
 public abstract class AbstractBomGenerator extends CycloneDxSchema
 {
@@ -58,5 +59,9 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     SimpleModule evidenceModule = new SimpleModule();
     evidenceModule.addSerializer(new EvidenceSerializer(isXml, getSchemaVersion()));
     mapper.registerModule(evidenceModule);
+
+    SimpleModule signatoryModule = new SimpleModule();
+    signatoryModule.addSerializer(new SignatorySerializer(isXml));
+    mapper.registerModule(signatoryModule);
   }
 }
