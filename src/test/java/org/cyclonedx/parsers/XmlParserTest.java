@@ -23,7 +23,10 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.License;
+import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.List;
@@ -365,5 +368,34 @@ public class XmlParserTest
     public void testIssue343Regression() throws Exception {
         final Bom bom = getXmlBom("regression/issue343-empty-hashes.xml");
         assertEquals(0, bom.getComponents().get(0).getHashes().size());
+    }
+
+    @Test
+    public void schema16_license_id_acknowledgement() throws Exception {
+        final Bom bom  = getXmlBom("1.6/valid-license-id-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        assertNotNull(lc.getLicenses());
+        assertEquals(1, lc.getLicenses().size());
+
+        License license = lc.getLicenses().get(0);
+        assertEquals("Apache-2.0", license.getId());
+        assertEquals("my-license", license.getBomRef());
+        assertEquals("declared", license.getAcknowledgement());
+    }
+
+    @Test
+    public void schema16_license_expression_acknowledgement() throws Exception {
+        final Bom bom  = getXmlBom("1.6/valid-license-expression-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        assertNotNull(lc.getExpression());
+
+        Expression expression = lc.getExpression();
+        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", expression.getId());
+        assertEquals("my-license", expression.getBomRef());
+        assertEquals("declared", expression.getAcknowledgement());
     }
 }

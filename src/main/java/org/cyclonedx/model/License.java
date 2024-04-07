@@ -34,7 +34,7 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "licensing", "text", "url", "properties"})
+@JsonPropertyOrder({"id", "name", "acknowledgement", "licensing", "text", "url", "properties"})
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
@@ -46,6 +46,10 @@ public class License extends ExtensibleElement {
     @JsonProperty("id")
     private String id;
     private String name;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "acknowledgement")
+    @JsonProperty("acknowledgement")
+    private String acknowledgement;
 
     @VersionFilter(Version.VERSION_15)
     private Licensing licensing;
@@ -117,6 +121,14 @@ public class License extends ExtensibleElement {
         this.attachmentText = attachmentText;
     }
 
+    public String getAcknowledgement() {
+        return acknowledgement;
+    }
+
+    public void setAcknowledgement(final String acknowledgement) {
+        this.acknowledgement = acknowledgement;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -127,11 +139,12 @@ public class License extends ExtensibleElement {
                 Objects.equals(url, license.url) &&
                 Objects.equals(attachmentText, license.attachmentText) &&
                 Objects.equals(licensing, license.licensing) &&
+                Objects.equals(acknowledgement, license.acknowledgement) &&
                 Objects.equals(properties, license.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText, properties, licensing);
+        return Objects.hash(id, name, url, attachmentText, properties, licensing, acknowledgement);
     }
 }
