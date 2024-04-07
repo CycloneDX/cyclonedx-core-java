@@ -190,7 +190,7 @@ public class XmlParserTest
         assertNotNull(c1.getPedigree().getCommits().get(0).getCommitter().getTimestamp());
         assertEquals("Initial commit", c1.getPedigree().getCommits().get(0).getMessage());
         assertEquals("Commentary here", c1.getPedigree().getNotes());
-        assertEquals("EPL-2.0 OR GPL-2.0-with-classpath-exception", c2.getLicenseChoice().getExpression());
+        assertEquals("EPL-2.0 OR GPL-2.0-with-classpath-exception", c2.getLicenseChoice().getExpression().getId());
     }
 
     @Test
