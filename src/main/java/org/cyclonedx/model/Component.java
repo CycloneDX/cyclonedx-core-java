@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import org.cyclonedx.Version;
 import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.modelCard.ComponentData;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
@@ -68,7 +69,9 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "releaseNotes",
      "modelCard",
      "data",
-     "signature"
+     "cryptoProperties",
+     "signature",
+     "provides"
     })
 public class Component extends ExtensibleElement {
 
@@ -96,7 +99,10 @@ public class Component extends ExtensibleElement {
         @JsonProperty("machine-learning-model")
         MACHINE_LEARNING_MODEL("machine-learning-model"),
         @JsonProperty("data")
-        DATA("data");
+        DATA("data"),
+        @VersionFilter(value = Version.VERSION_16)
+        @JsonProperty("cryptographic-asset")
+        CRYPTOGRAPHIC_ASSET("cryptographic-asset");
 
         private final String name;
 
@@ -178,6 +184,14 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_15)
     @JsonProperty("data")
     private ComponentData data;
+
+    @VersionFilter(value = Version.VERSION_16)
+    @JsonProperty("cryptoProperties")
+    private CryptoProperties cryptoProperties;
+
+    @VersionFilter(value = Version.VERSION_16)
+    @JsonProperty("provides")
+    private List<String> provides;
 
     @JsonOnly
     @VersionFilter(Version.VERSION_14)
@@ -461,6 +475,22 @@ public class Component extends ExtensibleElement {
 
     public void setSwhid(final List<String> swhid) {
         this.swhid = swhid;
+    }
+
+    public CryptoProperties getCryptoProperties() {
+        return cryptoProperties;
+    }
+
+    public void setCryptoProperties(final CryptoProperties cryptoProperties) {
+        this.cryptoProperties = cryptoProperties;
+    }
+
+    public List<String> getProvides() {
+        return provides;
+    }
+
+    public void setProvides(final List<String> provides) {
+        this.provides = provides;
     }
 
     @Override
