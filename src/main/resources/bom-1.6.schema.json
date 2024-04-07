@@ -3795,7 +3795,7 @@
           "description": "The locality or city within the country.",
           "examples": [ "Austin" ]
         },
-        "postOfficeBoxNumber ": {
+        "postOfficeBoxNumber": {
           "type": "string",
           "title": "Post Office Box Number",
           "description": "The post office box number.",
