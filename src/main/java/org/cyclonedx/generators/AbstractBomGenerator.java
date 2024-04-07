@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.util.serializer.EvidenceSerializer;
 import org.cyclonedx.util.serializer.InputTypeSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.serializer.MetadataSerializer;
@@ -48,5 +49,9 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     SimpleModule outputTypeModule = new SimpleModule();
     outputTypeModule.addSerializer(new OutputTypeSerializer(isXml));
     mapper.registerModule(outputTypeModule);
+
+    SimpleModule evidenceModule = new SimpleModule();
+    evidenceModule.addSerializer(new EvidenceSerializer(isXml, getSchemaVersion()));
+    mapper.registerModule(evidenceModule);
   }
 }

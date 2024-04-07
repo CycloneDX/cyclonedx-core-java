@@ -63,35 +63,35 @@ public class Bom extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private String xmlns;
 
-    @VersionFilter(value = Version.VERSION_12)
+    @VersionFilter(Version.VERSION_12)
     private Metadata metadata;
 
     private List<Component> components;
 
-    @VersionFilter(value = Version.VERSION_12)
+    @VersionFilter(Version.VERSION_12)
     private List<Service> services;
 
-    @VersionFilter(value = Version.VERSION_11)
+    @VersionFilter(Version.VERSION_11)
     private DependencyList dependencies;
 
-    @VersionFilter(value = Version.VERSION_11)
+    @VersionFilter(Version.VERSION_11)
     @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     private List<ExternalReference> externalReferences;
 
-    @VersionFilter(value = Version.VERSION_13)
+    @VersionFilter(Version.VERSION_13)
     private List<Composition> compositions;
 
-    @VersionFilter(value = Version.VERSION_15)
+    @VersionFilter(Version.VERSION_15)
     private List<Formula> formulation;
 
-    @VersionFilter(value = Version.VERSION_14)
+    @VersionFilter(Version.VERSION_14)
     @JsonDeserialize(using = VulnerabilityDeserializer.class)
     private List<Vulnerability> vulnerabilities;
 
-    @VersionFilter(value =  Version.VERSION_15)
+    @VersionFilter(Version.VERSION_15)
     private List<Annotation> annotations;
 
-    @VersionFilter(value = Version.VERSION_13)
+    @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -107,7 +107,7 @@ public class Bom extends ExtensibleElement {
     private String bomFormat;
 
     @JsonOnly
-    @VersionFilter(value = Version.VERSION_14)
+    @VersionFilter(Version.VERSION_14)
     private Signature signature;
 
     public Metadata getMetadata() {
