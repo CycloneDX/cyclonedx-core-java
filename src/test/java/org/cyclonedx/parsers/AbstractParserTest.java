@@ -666,10 +666,10 @@ public class AbstractParserTest
     if(version== Version.VERSION_15) {
       assertCallStack(evidence.getCallstack());
       assertOccurrences(evidence.getOccurrences());
-      assertIdentity(evidence.getIdentity());
+      assertIdentity(evidence.getIdentities().get(0));
     } else {
       assertNull(evidence.getCallstack());
-      assertNull(evidence.getIdentity());
+      assertNull(evidence.getIdentities());
       assertNull(evidence.getOccurrences());
     }
   }

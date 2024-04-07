@@ -18,16 +18,16 @@ import org.cyclonedx.model.VersionFilter;
 @JsonPropertyOrder({"field", "confidence", "concludedValue", "methods", "tools"})
 public class Identity extends ExtensibleElement
 {
-  public Field field;
+  private Field field;
 
-  public Double confidence;
+  private Double confidence;
 
   @VersionFilter(Version.VERSION_16)
-  public String concludedValue;
+  private String concludedValue;
 
-  public List<Method> methods;
+  private List<Method> methods;
 
-  public List<BomReference> tools;
+  private List<BomReference> tools;
 
   public enum Field {
     @JsonProperty("group")

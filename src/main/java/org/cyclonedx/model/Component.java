@@ -100,7 +100,7 @@ public class Component extends ExtensibleElement {
         MACHINE_LEARNING_MODEL("machine-learning-model"),
         @JsonProperty("data")
         DATA("data"),
-        @VersionFilter(value = Version.VERSION_16)
+        @VersionFilter(Version.VERSION_16)
         @JsonProperty("cryptographic-asset")
         CRYPTOGRAPHIC_ASSET("cryptographic-asset");
 
@@ -185,11 +185,11 @@ public class Component extends ExtensibleElement {
     @JsonProperty("data")
     private ComponentData data;
 
-    @VersionFilter(value = Version.VERSION_16)
+    @VersionFilter(Version.VERSION_16)
     @JsonProperty("cryptoProperties")
     private CryptoProperties cryptoProperties;
 
-    @VersionFilter(value = Version.VERSION_16)
+    @VersionFilter(Version.VERSION_16)
     @JsonProperty("provides")
     private List<String> provides;
 

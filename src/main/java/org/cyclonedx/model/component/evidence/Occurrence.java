@@ -18,16 +18,16 @@ public class Occurrence extends ExtensibleElement
 
   private String location;
 
-  @VersionFilter(value = Version.VERSION_16)
+  @VersionFilter(Version.VERSION_16)
   private Integer line;
 
-  @VersionFilter(value = Version.VERSION_16)
+  @VersionFilter(Version.VERSION_16)
   private Integer offset;
 
-  @VersionFilter(value = Version.VERSION_16)
+  @VersionFilter(Version.VERSION_16)
   private Integer symbol;
 
-  @VersionFilter(value = Version.VERSION_16)
+  @VersionFilter(Version.VERSION_16)
   private String additionalContext;
 
   public String getBomRef() {
