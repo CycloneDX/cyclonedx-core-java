@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.modelCard.ComponentData;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
@@ -142,6 +144,7 @@ public class Component extends ExtensibleElement {
     private String mimeType;
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
+    @Deprecated
     @VersionFilter(Version.VERSION_12)
     private String author;
     @VersionFilter(Version.VERSION_11)
@@ -192,6 +195,18 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_16)
     @JsonProperty("provides")
     private List<String> provides;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonUnwrapped
+    private Tags tags;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("authors")
+    private List<OrganizationalContact> authors;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
 
     @JsonOnly
     @VersionFilter(Version.VERSION_14)
@@ -491,6 +506,30 @@ public class Component extends ExtensibleElement {
 
     public void setProvides(final List<String> provides) {
         this.provides = provides;
+    }
+
+    public Tags getTags() {
+        return tags;
+    }
+
+    public void setTags(final Tags tags) {
+        this.tags = tags;
+    }
+
+    public List<OrganizationalContact> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(final List<OrganizationalContact> authors) {
+        this.authors = authors;
+    }
+
+    public OrganizationalEntity getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(final OrganizationalEntity manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     @Override
