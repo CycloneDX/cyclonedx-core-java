@@ -26,6 +26,14 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.modelCard.Considerations;
+import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.Activity;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.EnergyConsumption;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.EnergyProvider;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.EnergySource;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.Unit;
 import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -397,5 +405,58 @@ public class XmlParserTest
         assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", expression.getId());
         assertEquals("my-license", expression.getBomRef());
         assertEquals("declared", expression.getAcknowledgement());
+    }
+
+    @Test
+    public void schema16_ml_considerations() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-machine-learning-considerations-env-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        ModelCard mc = bom.getComponents().get(0).getModelCard();
+        assertNotNull(mc);
+
+        Considerations considerations = mc.getConsiderations();
+        assertNotNull(considerations);
+
+        EnvironmentalConsideration ec = considerations.getEnvironmentalConsiderations();
+        assertNotNull(ec);
+
+        assertEquals(1, ec.getEnergyConsumptions().size());
+
+        EnergyConsumption eec = ec.getEnergyConsumptions().get(0);
+
+        assertEquals(Activity.TRAINING, eec.getActivity());
+        assertEquals(Unit.KWH, eec.getActivityEnergyCost().getUnit());
+        assertEquals(0.4, eec.getActivityEnergyCost().getValue());
+        assertEquals(org.cyclonedx.model.component.modelCard.consideration.consumption.co2.Unit.TCO2EQ,
+            eec.getCo2CostEquivalent().getUnit());
+        assertEquals(31.22, eec.getCo2CostEquivalent().getValue());
+        assertEquals(org.cyclonedx.model.component.modelCard.consideration.consumption.co2.Unit.TCO2EQ,
+            eec.getCo2CostOffset().getUnit());
+        assertEquals(31.22, eec.getCo2CostOffset().getValue());
+
+        assertNull(eec.getProperties());
+        assertEquals(1, eec.getEnergyProviders().size());
+
+        EnergyProvider ep = eec.getEnergyProviders().get(0);
+
+        assertEquals("Meta data-center, US-East", ep.getDescription());
+        assertNull(ep.getExternalReferences());
+        assertNull(ep.getBomRef());
+        assertNotNull(ep.getOrganization());
+
+        assertEquals(EnergySource.NATURAL_GAS, ep.getEnergySource());
+
+        assertEquals(0.4, ep.getEnergyProvided().getValue());
+        assertEquals(Unit.KWH, ep.getEnergyProvided().getUnit());
+
+        assertNull(ep.getOrganization().getAddress().getBomRef());
+        assertEquals("United States", ep.getOrganization().getAddress().getCountry());
+        assertEquals("Newark", ep.getOrganization().getAddress().getLocality());
+        assertNull(ep.getOrganization().getAddress().getStreetAddress());
+        assertNull(ep.getOrganization().getAddress().getPostalCode());
+        assertNull(ep.getOrganization().getAddress().getPostOfficeBoxNumber());
+        assertEquals("New Jersey", ep.getOrganization().getAddress().getRegion());
+        assertNull(eec.getProperties());
     }
 }
