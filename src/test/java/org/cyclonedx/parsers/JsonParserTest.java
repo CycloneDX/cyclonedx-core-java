@@ -350,6 +350,16 @@ public class JsonParserTest
         assertNotNull(bom.getMetadata());
         OrganizationalEntity manufacture = bom.getMetadata().getManufacture();
         assertNotNull(manufacture);
-        assertManufacturerMetadata(manufacture, Version.VERSION_16);
+        assertManufacturerMetadata(manufacture, Version.VERSION_16, true);
+    }
+
+    @Test
+    public void schema16_manufacturer() throws Exception {
+        final Bom bom  = getJsonBom("1.6/valid-metadata-manufacturer-1.6.json");
+
+        assertNotNull(bom.getMetadata());
+        OrganizationalEntity manufacturer = bom.getMetadata().getManufacturer();
+        assertNotNull(manufacturer);
+        assertManufacturerMetadata(manufacturer, Version.VERSION_16, false);
     }
 }

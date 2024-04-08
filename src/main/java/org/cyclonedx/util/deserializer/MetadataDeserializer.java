@@ -59,6 +59,11 @@ public class MetadataDeserializer
       metadata.setManufacture(manufacture);
     }
 
+    if (node.has("manufacturer")) {
+      OrganizationalEntity manufacturer = mapper.convertValue(node.get("manufacturer"), OrganizationalEntity.class);
+      metadata.setManufacturer(manufacturer);
+    }
+
     if (node.has("lifecycles")) {
       JsonParser lifecycleParser = node.get("lifecycles").traverse(jsonParser.getCodec());
       lifecycleParser.nextToken();

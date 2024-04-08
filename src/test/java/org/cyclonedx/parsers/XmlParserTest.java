@@ -503,6 +503,16 @@ public class XmlParserTest
         assertNotNull(bom.getMetadata());
         OrganizationalEntity manufacture = bom.getMetadata().getManufacture();
         assertNotNull(manufacture);
-        assertManufacturerMetadata(manufacture, Version.VERSION_16);
+        assertManufacturerMetadata(manufacture, Version.VERSION_16, true);
+    }
+
+    @Test
+    public void schema16_manufacturer() throws Exception {
+        final Bom bom  = getXmlBom("1.6/valid-metadata-manufacturer-1.6.xml");
+
+        assertNotNull(bom.getMetadata());
+        OrganizationalEntity manufacturer = bom.getMetadata().getManufacturer();
+        assertNotNull(manufacturer);
+        assertManufacturerMetadata(manufacturer, Version.VERSION_16, false);
     }
 }

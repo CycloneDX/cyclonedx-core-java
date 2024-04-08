@@ -104,7 +104,7 @@ public class AbstractParserTest
     assertComponentMetadata(bom.getMetadata().getComponent());
 
     // Assertions for bom.metadata.manufacture
-    assertManufacturerMetadata(bom.getMetadata().getManufacture(), version);
+    assertManufacturerMetadata(bom.getMetadata().getManufacture(), version, false);
 
     // Assertions for bom.metadata.supplier
     assertSupplierMetadata(bom.getMetadata().getSupplier());
@@ -137,15 +137,22 @@ public class AbstractParserTest
     assertFalse(component.getSwid().isPatch());
   }
 
-  void assertManufacturerMetadata(OrganizationalEntity manufacturer, Version version)
+  void assertManufacturerMetadata(OrganizationalEntity manufacturer, Version version, boolean deprecated)
   {
-    if(version.getVersion() >= Version.VERSION_16.getVersion()) {
+    if (version.getVersion() >= Version.VERSION_16.getVersion() && deprecated) {
       assertEquals("Acme, Inc. // deprecated", manufacturer.getName());
     } else {
       assertEquals("Acme, Inc.", manufacturer.getName());
     }
-    assertEquals("manufacturer-1", manufacturer.getBomRef());
+    if(version.getVersion() >= Version.VERSION_14.getVersion()) {
+      assertEquals("manufacturer-1", manufacturer.getBomRef());
+      assertEquals("contact-1", manufacturer.getContacts().get(0).getBomRef());
+    } else {
+      assertNull(manufacturer.getBomRef());
+      assertNull(manufacturer.getContacts().get(0).getBomRef());
+    }
     assertEquals("https://example.com", manufacturer.getUrls().get(0));
+
     assertEquals("Acme Professional Services", manufacturer.getContacts().get(0).getName());
     assertEquals("professional.services@example.com", manufacturer.getContacts().get(0).getEmail());
   }

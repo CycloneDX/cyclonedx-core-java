@@ -76,6 +76,10 @@ public class MetadataSerializer
       jsonGenerator.writeObjectField("manufacture", metadata.getManufacture());
     }
 
+    if(metadata.getManufacturer() != null) {
+      jsonGenerator.writeObjectField("manufacturer", metadata.getManufacturer());
+    }
+
     if(metadata.getSupplier() != null) {
       jsonGenerator.writeObjectField("supplier", metadata.getSupplier());
     }
