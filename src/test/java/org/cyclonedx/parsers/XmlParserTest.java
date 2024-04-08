@@ -29,6 +29,7 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.Tags;
+import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.modelCard.Considerations;
 import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
 import org.cyclonedx.model.component.modelCard.consideration.consumption.Activity;
@@ -42,6 +43,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -514,5 +516,16 @@ public class XmlParserTest
         OrganizationalEntity manufacturer = bom.getMetadata().getManufacturer();
         assertNotNull(manufacturer);
         assertManufacturerMetadata(manufacturer, Version.VERSION_16, false);
+    }
+
+    @Test
+    public void schema16_evidence() throws Exception {
+        final Bom bom  = getXmlBom("1.6/valid-evidence-1.6.xml");
+
+        List<String> list =
+            bom.getComponents().get(1).getEvidence().getIdentities().stream().map(i -> i.getConcludedValue())
+                .collect(Collectors.toList());
+
+        assertTrue(list.containsAll(Arrays.asList("com.example", "example-project", "1.0.0")));
     }
 }

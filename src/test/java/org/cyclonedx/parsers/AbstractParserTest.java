@@ -670,11 +670,12 @@ public class AbstractParserTest
     assertEquals("http://www.apache.org/licenses/LICENSE-2.0",
         evidence.getLicenseChoice().getLicenses().get(0).getUrl());
 
-    if(version== Version.VERSION_15) {
+    if (version == Version.VERSION_15) {
       assertCallStack(evidence.getCallstack());
       assertOccurrences(evidence.getOccurrences());
-      assertIdentity(evidence.getIdentities().get(0));
-    } else {
+      assertIdentity(evidence.getIdentities().get(0), version);
+    }
+    else {
       assertNull(evidence.getCallstack());
       assertNull(evidence.getIdentities());
       assertNull(evidence.getOccurrences());
@@ -704,7 +705,7 @@ public class AbstractParserTest
     assertNotNull(frame.getModule());
   }
 
-  private void assertIdentity(final Identity identity){
+  private void assertIdentity(final Identity identity, Version version){
     assertNotNull(identity);
 
     assertNotNull(identity.getField());
@@ -713,6 +714,12 @@ public class AbstractParserTest
     assertNotNull(identity.getTools());
 
     assertNotNull(identity.getTools().get(0).getRef());
+
+    if(version == Version.VERSION_16) {
+      assertNotNull(identity.getConcludedValue());
+    } else {
+      assertNull(identity.getConcludedValue());
+    }
   }
 
   private void assertSecurityContact(ExternalReference externalReference) {
