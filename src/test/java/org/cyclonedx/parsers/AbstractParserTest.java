@@ -673,6 +673,7 @@ public class AbstractParserTest
     if (version == Version.VERSION_15) {
       assertCallStack(evidence.getCallstack());
       assertOccurrences(evidence.getOccurrences());
+      assertEquals(1, evidence.getIdentities().size());
       assertIdentity(evidence.getIdentities().get(0), version);
     }
     else {

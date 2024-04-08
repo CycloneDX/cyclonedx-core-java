@@ -2,6 +2,7 @@ package org.cyclonedx.model.license;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import org.cyclonedx.util.deserializer.ExpressionDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder({"id", "acknowledgement", "bom-ref"})
 @JsonDeserialize(using = ExpressionDeserializer.class)
 public class Expression

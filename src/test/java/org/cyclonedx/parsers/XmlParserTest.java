@@ -522,9 +522,9 @@ public class XmlParserTest
     public void schema16_evidence() throws Exception {
         final Bom bom  = getXmlBom("1.6/valid-evidence-1.6.xml");
 
-        List<String> list =
-            bom.getComponents().get(1).getEvidence().getIdentities().stream().map(i -> i.getConcludedValue())
-                .collect(Collectors.toList());
+        List<Identity> identities = bom.getComponents().get(1).getEvidence().getIdentities();
+
+        List<String> list = identities.stream().map(i -> i.getConcludedValue()).collect(Collectors.toList());
 
         assertTrue(list.containsAll(Arrays.asList("com.example", "example-project", "1.0.0")));
     }
