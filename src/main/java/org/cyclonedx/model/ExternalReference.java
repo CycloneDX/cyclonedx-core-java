@@ -35,7 +35,7 @@ import org.cyclonedx.util.serializer.ExternalReferenceSerializer;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize(using = ExternalReferenceSerializer.class)
-@JsonPropertyOrder({"bom", "url", "comment", "hashes"})
+@JsonPropertyOrder({"url", "comment", "hashes"})
 public class ExternalReference {
 
     public enum Type {

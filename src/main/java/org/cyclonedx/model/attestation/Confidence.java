@@ -13,16 +13,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class Confidence
 {
-  private Integer score;
+  private Double score;
 
   private String rationale;
 
 
-  public Integer getScore() {
+  public Double getScore() {
     return score;
   }
 
-  public void setScore(final Integer score) {
+  public void setScore(final Double score) {
     this.score = score;
   }
 

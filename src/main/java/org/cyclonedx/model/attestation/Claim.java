@@ -87,8 +87,9 @@ public class Claim
     this.reasoning = reasoning;
   }
 
-  @JacksonXmlElementWrapper(localName = "evidences")
+  @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "evidence")
+  @JsonProperty("evidence")
   public List<String> getEvidence() {
     return evidence;
   }
@@ -97,8 +98,9 @@ public class Claim
     this.evidence = evidence;
   }
 
-  @JacksonXmlElementWrapper(localName = "counterEvidences")
+  @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "counterEvidence")
+  @JsonProperty("counterEvidence")
   public List<String> getCounterEvidence() {
     return counterEvidence;
   }

@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-package org.cyclonedx;
+package org.cyclonedx.parsers;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.exception.ParseException;

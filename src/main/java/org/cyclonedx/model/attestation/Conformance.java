@@ -17,17 +17,17 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 })
 public class Conformance
 {
-  private Integer score;
+  private Double score;
 
   private String rationale;
 
   private List<String> mitigationStrategies;
 
-  public Integer getScore() {
+  public Double getScore() {
     return score;
   }
 
-  public void setScore(final Integer score) {
+  public void setScore(final Double score) {
     this.score = score;
   }
 
