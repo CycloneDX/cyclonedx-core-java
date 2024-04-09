@@ -1,5 +1,7 @@
 package org.cyclonedx.model.attestation.affirmation;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,12 +10,9 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Signature;
 import org.cyclonedx.util.deserializer.SignatoryDeserializer;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonTypeName("signatory")
-@JsonSubTypes({
-    @JsonSubTypes.Type(value = Signature.class, name = "signature"),
-    @JsonSubTypes.Type(value = OrganizationalEntity.class, name = "organization"),
-    @JsonSubTypes.Type(value = ExternalReference.class, name = "externalReference")
-})
 @JsonDeserialize(using = SignatoryDeserializer.class)
 public class Signatory
 {

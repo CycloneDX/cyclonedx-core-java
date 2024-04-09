@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.Signature;
 
@@ -14,18 +14,16 @@ import org.cyclonedx.model.Signature;
 @JsonPropertyOrder({
     "summary",
     "assessor",
-    "mapList",
+    "map",
     "signature"
 })
 public class Attestation
 {
   private String summary;
 
-  @JacksonXmlProperty(isAttribute = true, localName = "assessor")
-  @JsonProperty("assessor")
   private String assessor;
 
-  private List<AttestationMap> mapList;
+  private List<AttestationMap> map;
 
   private Signature signature;
 
@@ -45,12 +43,14 @@ public class Attestation
     this.assessor = assessor;
   }
 
-  public List<AttestationMap> getMapList() {
-    return mapList;
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "map")
+  public List<AttestationMap> getMap() {
+    return map;
   }
 
-  public void setMapList(final List<AttestationMap> mapList) {
-    this.mapList = mapList;
+  public void setMap(final List<AttestationMap> map) {
+    this.map = map;
   }
 
   public Signature getSignature() {

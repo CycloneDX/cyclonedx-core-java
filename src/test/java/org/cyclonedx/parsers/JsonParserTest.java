@@ -26,8 +26,20 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.attestation.Assessor;
+import org.cyclonedx.model.attestation.Attestation;
+import org.cyclonedx.model.attestation.AttestationMap;
+import org.cyclonedx.model.attestation.Claim;
+import org.cyclonedx.model.attestation.Confidence;
+import org.cyclonedx.model.attestation.Conformance;
+import org.cyclonedx.model.attestation.Targets;
+import org.cyclonedx.model.attestation.affirmation.Affirmation;
+import org.cyclonedx.model.attestation.affirmation.Signatory;
+import org.cyclonedx.model.attestation.evidence.Data;
+import org.cyclonedx.model.attestation.evidence.Evidence;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.Tags;
+import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.modelCard.Considerations;
 import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
 import org.cyclonedx.model.component.modelCard.consideration.consumption.Activity;
@@ -35,6 +47,9 @@ import org.cyclonedx.model.component.modelCard.consideration.consumption.EnergyC
 import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.EnergyProvider;
 import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.EnergySource;
 import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.Unit;
+import org.cyclonedx.model.definition.Level;
+import org.cyclonedx.model.definition.Requirement;
+import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -368,10 +383,153 @@ public class JsonParserTest
     public void schema16_evidence() throws Exception {
         final Bom bom  = getJsonBom("1.6/valid-evidence-1.6.json");
 
-        List<String> list =
-            bom.getComponents().get(1).getEvidence().getIdentities().stream().map(i -> i.getConcludedValue()).
-                collect(Collectors.toList());
-
+        List<Identity> identities = bom.getComponents().get(1).getEvidence().getIdentities();
+        assertEquals(3, identities.size());
+        List<String> list = identities.stream().map(Identity::getConcludedValue).collect(Collectors.toList());
         assertTrue(list.containsAll(Arrays.asList("com.example", "example-project", "1.0.0")));
+    }
+
+    @Test
+    public void schema16_attestation_standard() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-standard-1.6.xml");
+
+        assertNotNull(bom.getDefinitions());
+        List<Standard> standards = bom.getDefinitions().getStandards();
+        assertEquals(1, standards.size());
+
+        Standard standard = standards.get(0);
+        assertEquals("standard-1", standard.getBomRef());
+        assertEquals("Description here", standard.getDescription());
+        assertEquals("Sample Standard", standard.getName());
+        assertEquals("Acme Inc", standard.getOwner());
+        assertEquals("1.0.0", standard.getVersion());
+
+        //Requirements
+        assertEquals(3, standard.getRequirements().size());
+        Requirement requirement = standard.getRequirements().get(2);
+        assertEquals("requirement-1.1.1", requirement.getBomRef());
+        assertEquals("Text of the requirement here", requirement.getText());
+        assertEquals("v1.1.1", requirement.getIdentifier());
+        assertEquals("requirement-1.1", requirement.getParent());
+        assertEquals("Supplemental text here", requirement.getDescriptions().get(0));
+        assertEquals(1, requirement.getOpenCre().size());
+        assertNull(requirement.getExternalReferences());
+        assertNull(requirement.getProperties());
+        assertNull(requirement.getTitle());
+
+        //Levels
+        assertEquals(3, standard.getLevels().size());
+        Level level = standard.getLevels().get(0);
+        assertEquals("Level 1", level.getIdentifier());
+        assertEquals("Description here", level.getDescription());
+        assertEquals("level-1", level.getBomRef());
+        assertNull(level.getTitle());
+        assertEquals(1, level.getRequirements().size());
+        assertEquals("requirement-1.1.1", level.getRequirements().get(0));
+
+        assertNull(standard.getSignature());
+    }
+
+    @Test
+    public void schema16_attestation() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-attestation-1.6.xml");
+
+        assertNotNull(bom.getDeclarations());
+
+        //Assessors
+        List<Assessor> assessors = bom.getDeclarations().getAssessors();
+        assertEquals(1, assessors.size());
+
+        Assessor assessor = assessors.get(0);
+        assertEquals(false, assessor.getThirdParty());
+        assertEquals("Acme Inc", assessor.getOrganization().getName());
+        assertEquals("assessor-1", assessor.getBomRef());
+
+        //Attestations
+        List<Attestation> attestations = bom.getDeclarations().getAttestations();
+        assertEquals(1, attestations.size());
+
+        Attestation attestation = attestations.get(0);
+        assertEquals("Attestation summary here", attestation.getSummary());
+        assertEquals("assessor-1", attestation.getAssessor());
+        assertEquals(1, attestation.getMap().size());
+
+        AttestationMap map = attestation.getMap().get(0);
+        assertEquals("requirement-1", map.getRequirement());
+        assertEquals("claim-1", map.getClaims().get(0));
+        assertEquals("counterClaim-1", map.getCounterClaims().get(0));
+
+        Conformance conformance = map.getConformance();
+        assertEquals(0.8, conformance.getScore());
+        assertEquals("Conformance rationale here", conformance.getRationale());
+        assertEquals("mitigations-1", conformance.getMitigationStrategies().get(0));
+
+        Confidence confidence = map.getConfidence();
+        assertEquals(1.0, confidence.getScore());
+        assertEquals("Confidence rationale here", confidence.getRationale());
+
+        //Claims
+        List<Claim> claims = bom.getDeclarations().getClaims();
+        assertEquals(1, claims.size());
+
+        Claim claim = claims.get(0);
+        assertEquals("claim-1", claim.getBomRef());
+        assertEquals("Confidence rationale here", confidence.getRationale());
+        assertEquals("acme-inc", claim.getTarget());
+        assertEquals("Predicate here", claim.getPredicate());
+        assertEquals("Reasoning here", claim.getReasoning());
+        assertEquals("evidence-1", claim.getEvidence().get(0));
+        assertEquals("counterEvidence-1", claim.getCounterEvidence().get(0));
+        assertEquals("mitigationStrategy-1", claim.getMitigationStrategies().get(0));
+
+        ExternalReference er = claim.getExternalReferences().get(0);
+        assertEquals("https://alm.example.com", er.getUrl());
+        assertEquals(ExternalReference.Type.ISSUE_TRACKER, er.getType());
+
+        //Evidence
+        List<Evidence> evidences = bom.getDeclarations().getEvidence();
+        assertEquals(3, evidences.size());
+
+        Evidence evidence = evidences.get(0);
+        assertEquals("evidence-1", evidence.getBomRef());
+        assertEquals("internal.com.acme.someProperty", evidence.getPropertyName());
+        assertEquals("Description here", evidence.getDescription());
+        assertEquals("Description here", evidence.getCreated());
+        assertEquals("Description here", evidence.getExpires());
+        assertEquals("Mary", evidence.getAuthor().getName());
+        assertEquals("Jane", evidence.getReviewer().getName());
+
+        Data data = evidence.getData().get(0);
+        assertEquals("Name of the data", data.getName());
+        assertEquals("PII", data.getClassification());
+        assertEquals("Describe sensitive data here", data.getSensitiveData().get(0));
+        assertEquals("Evidence here", data.getContents().getAttachment().getText());
+
+        //Targets
+        Targets targets = bom.getDeclarations().getTargets();
+        assertNotNull(targets);
+        assertEquals(1, targets.getOrganizations().size());
+
+        //Affirmation
+        Affirmation affirmation = bom.getDeclarations().getAffirmation();
+        assertNotNull(affirmation);
+
+        assertEquals("I certify, to the best of my knowledge, that all information is correct...",
+            affirmation.getStatement());
+        assertEquals(2, affirmation.getSignatories().size());
+
+        Signatory s1 = affirmation.getSignatories().get(0);
+        assertEquals("Tom", s1.getName());
+        assertEquals("CEO", s1.getRole());
+        assertEquals(null, s1.getSignature());
+        assertNull(s1.getOrganization());
+        assertNull(s1.getExternalReference());
+
+        Signatory s2 = affirmation.getSignatories().get(1);
+        assertEquals("Jerry", s2.getName());
+        assertEquals("COO", s2.getRole());
+        assertEquals("Acme Inc", s2.getOrganization().getName());
+        assertEquals("https://example.com/coo-sig.png", s2.getExternalReference().getUrl());
+        assertNull(s2.getSignature());
     }
 }

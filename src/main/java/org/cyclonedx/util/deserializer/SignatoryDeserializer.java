@@ -50,7 +50,7 @@ public class SignatoryDeserializer
       signatory.setRole(node.get("role").asText());
     }
 
-    JsonNode signatureNode = node.get("signature");
+    JsonNode signatureNode = node.get("Signature");
     if (signatureNode != null) {
       Signature signature = mapper.convertValue(node.get("signature"), Signature.class);
       signatory.setSignature(signature);
