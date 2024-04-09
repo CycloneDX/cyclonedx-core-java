@@ -17,7 +17,7 @@ import org.cyclonedx.util.serializer.CustomDateSerializer;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
-    "type",
+    "propertyName",
     "description",
     "data",
     "created",
@@ -32,7 +32,7 @@ public class Evidence
   @JsonProperty("bom-ref")
   private String bomRef;
 
-  private String type;
+  private String propertyName;
 
   private String description;
 
@@ -58,12 +58,12 @@ public class Evidence
     this.bomRef = bomRef;
   }
 
-  public String getType() {
-    return type;
+  public String getPropertyName() {
+    return propertyName;
   }
 
-  public void setType(final String type) {
-    this.type = type;
+  public void setPropertyName(final String propertyName) {
+    this.propertyName = propertyName;
   }
 
   public String getDescription() {

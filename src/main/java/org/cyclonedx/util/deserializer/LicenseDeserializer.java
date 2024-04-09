@@ -31,6 +31,9 @@ import org.cyclonedx.model.license.Expression;
 
 public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
 {
+
+  ExpressionDeserializer expressionDeserializer = new ExpressionDeserializer();
+
   @Override
   public LicenseChoice deserialize(
       final JsonParser p, final DeserializationContext ctxt) throws IOException
@@ -44,9 +47,11 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
         if (node.has("license")) {
           processLicenseNode(p, node.get("license"), licenseChoice);
         }
-        else if (node.has("expression")) {
-          Expression expressionNode = p.getCodec().treeToValue(node.get("expression"), Expression.class);
-          licenseChoice.setExpression(expressionNode);
+        else {
+          JsonParser expressionParser = node.traverse(p.getCodec());
+          expressionParser.nextToken();
+          Expression expression = expressionDeserializer.deserialize(expressionParser, ctxt);
+          licenseChoice.setExpression(expression);
           return licenseChoice;
         }
       }

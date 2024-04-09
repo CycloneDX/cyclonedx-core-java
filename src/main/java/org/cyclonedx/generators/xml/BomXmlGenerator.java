@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.util.DefaultXmlPrettyPrinter;
-import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.generators.AbstractBomGenerator;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
@@ -55,30 +54,7 @@ public class BomXmlGenerator extends AbstractBomGenerator
         mapper = new XmlMapper();
         prettyPrinter = new DefaultXmlPrettyPrinter();
         setupObjectMapper();
-
-        switch (version) {
-            case VERSION_10:
-                bom.setXmlns(CycloneDxSchema.NS_BOM_10);
-                break;
-            case VERSION_11:
-                bom.setXmlns(CycloneDxSchema.NS_BOM_11);
-                break;
-            case VERSION_12:
-                bom.setXmlns(CycloneDxSchema.NS_BOM_12);
-                break;
-            case VERSION_13:
-                bom.setXmlns(CycloneDxSchema.NS_BOM_13);
-                break;
-            case VERSION_14:
-                bom.setXmlns(CycloneDxSchema.NS_BOM_14);
-                break;
-            case VERSION_15:
-                bom.setXmlns(CycloneDxSchema.NS_BOM_15);
-                break;
-            case VERSION_16:
-                bom.setXmlns(CycloneDxSchema.NS_BOM_16);
-                break;
-        }
+        bom.setXmlns(version.getNamespace());
     }
 
     protected static final String PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";

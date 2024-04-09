@@ -33,7 +33,7 @@ public class Affirmation
   }
 
   @JacksonXmlProperty(localName = "signatory")
-  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlElementWrapper(localName = "signatories")
   public List<Signatory> getSignatories() {
     return signatories;
   }

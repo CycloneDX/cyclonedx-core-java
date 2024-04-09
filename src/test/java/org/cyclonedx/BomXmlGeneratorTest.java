@@ -162,6 +162,7 @@ public class BomXmlGeneratorTest {
 
     static Stream<Arguments> testData() {
         return Stream.of(
+            Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.json"),
             Arguments.of(Version.VERSION_15, "/bom-1.5.json"),
             Arguments.of(Version.VERSION_14, "/bom-1.4.json"),
             Arguments.of(Version.VERSION_13, "/bom-1.3.json")

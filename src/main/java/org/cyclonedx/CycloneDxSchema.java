@@ -249,7 +249,7 @@ public abstract class CycloneDxSchema
    *
    * @return a Schema
    * @throws SAXException a SAXException
-   * @since 9.0.1
+   * @since 8.1.0
    */
   private Schema getXmlSchema16() throws SAXException {
     // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
