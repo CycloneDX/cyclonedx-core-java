@@ -21,6 +21,7 @@ package org.cyclonedx.parsers;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
@@ -39,6 +40,15 @@ import org.cyclonedx.model.attestation.evidence.Data;
 import org.cyclonedx.model.attestation.evidence.Evidence;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.Tags;
+import org.cyclonedx.model.component.crypto.AlgorithmProperties;
+import org.cyclonedx.model.component.crypto.CryptoProperties;
+import org.cyclonedx.model.component.crypto.enums.AssetType;
+import org.cyclonedx.model.component.crypto.enums.CertificationLevel;
+import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
+import org.cyclonedx.model.component.crypto.enums.ExecutionEnvironment;
+import org.cyclonedx.model.component.crypto.enums.ImplementationPlatform;
+import org.cyclonedx.model.component.crypto.enums.Mode;
+import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.modelCard.Considerations;
 import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
@@ -53,6 +63,7 @@ import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -246,7 +257,7 @@ public class JsonParserTest
 
     @Test
     public void schema16_license_id_acknowledgement() throws Exception {
-        final Bom bom  = getJsonBom("1.6/valid-license-id-1.6.json");
+        final Bom bom = getJsonBom("1.6/valid-license-id-1.6.json");
 
         assertNotNull(bom.getComponents());
         LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
@@ -261,7 +272,7 @@ public class JsonParserTest
 
     @Test
     public void schema16_license_expression_acknowledgement() throws Exception {
-        final Bom bom  = getJsonBom("1.6/valid-license-expression-1.6.json");
+        final Bom bom = getJsonBom("1.6/valid-license-expression-1.6.json");
 
         assertNotNull(bom.getComponents());
         LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
@@ -328,7 +339,7 @@ public class JsonParserTest
 
     @Test
     public void schema16_component_identifiers() throws Exception {
-        final Bom bom  = getJsonBom("1.6/valid-component-identifiers-1.6.json");
+        final Bom bom = getJsonBom("1.6/valid-component-identifiers-1.6.json");
 
         assertNotNull(bom.getComponents());
         List<String> omnis = bom.getComponents().get(0).getOmniborId();
@@ -344,7 +355,7 @@ public class JsonParserTest
 
     @Test
     public void schema16_tags() throws Exception {
-        final Bom bom  = getJsonBom("1.6/valid-tags-1.6.json");
+        final Bom bom = getJsonBom("1.6/valid-tags-1.6.json");
 
         assertNotNull(bom.getComponents());
         Tags tags = bom.getComponents().get(0).getTags();
@@ -361,7 +372,7 @@ public class JsonParserTest
 
     @Test
     public void schema16_manufacture() throws Exception {
-        final Bom bom  = getJsonBom("1.6/valid-metadata-manufacture-1.6.json");
+        final Bom bom = getJsonBom("1.6/valid-metadata-manufacture-1.6.json");
 
         assertNotNull(bom.getMetadata());
         OrganizationalEntity manufacture = bom.getMetadata().getManufacture();
@@ -371,7 +382,7 @@ public class JsonParserTest
 
     @Test
     public void schema16_manufacturer() throws Exception {
-        final Bom bom  = getJsonBom("1.6/valid-metadata-manufacturer-1.6.json");
+        final Bom bom = getJsonBom("1.6/valid-metadata-manufacturer-1.6.json");
 
         assertNotNull(bom.getMetadata());
         OrganizationalEntity manufacturer = bom.getMetadata().getManufacturer();
@@ -381,7 +392,7 @@ public class JsonParserTest
 
     @Test
     public void schema16_evidence() throws Exception {
-        final Bom bom  = getJsonBom("1.6/valid-evidence-1.6.json");
+        final Bom bom = getJsonBom("1.6/valid-evidence-1.6.json");
 
         List<Identity> identities = bom.getComponents().get(1).getEvidence().getIdentities();
         assertEquals(3, identities.size());
@@ -494,8 +505,8 @@ public class JsonParserTest
         assertEquals("evidence-1", evidence.getBomRef());
         assertEquals("internal.com.acme.someProperty", evidence.getPropertyName());
         assertEquals("Description here", evidence.getDescription());
-        assertEquals("Description here", evidence.getCreated());
-        assertEquals("Description here", evidence.getExpires());
+        assertNotNull(evidence.getCreated());
+        assertNotNull(evidence.getExpires());
         assertEquals("Mary", evidence.getAuthor().getName());
         assertEquals("Jane", evidence.getReviewer().getName());
 
@@ -531,5 +542,36 @@ public class JsonParserTest
         assertEquals("Acme Inc", s2.getOrganization().getName());
         assertEquals("https://example.com/coo-sig.png", s2.getExternalReference().getUrl());
         assertNull(s2.getSignature());
+    }
+
+    @Test
+    public void schema16_cbom() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-cryptography-implementation-1.6.xml");
+
+        assertEquals(3, bom.getComponents().size());
+        assertEquals(2, bom.getDependencies().size());
+
+        Component component = bom.getComponents().get(0);
+        assertEquals("AES", component.getName());
+        assertEquals("aes128gcm", component.getBomRef());
+        assertEquals(Type.CRYPTOGRAPHIC_ASSET, component.getType());
+
+        CryptoProperties cp = component.getCryptoProperties();
+        assertEquals(AssetType.ALGORITHM, cp.getAssetType());
+        assertEquals("oid:2.16.840.1.101.3.4.1.6", cp.getOid());
+
+        AlgorithmProperties ap = cp.getAlgorithmProperties();
+        assertEquals(Primitive.AE, ap.getPrimitive());
+        assertEquals("128", ap.getParameterSetIdentifier());
+        assertEquals(ExecutionEnvironment.SOFTWARE_PLAIN_RAM, ap.getExecutionEnvironment());
+        assertEquals(ImplementationPlatform.X86_64, ap.getImplementationPlatform());
+        assertEquals(CertificationLevel.NONE, ap.getCertificationLevel());
+        assertEquals(Mode.GCM, ap.getMode());
+        assertEquals(128, ap.getClassicalSecurityLevel());
+        assertEquals(1, ap.getNistQuantumSecurityLevel());
+
+        assertTrue(new ArrayList<>(ap.getCryptoFunctions())
+            .containsAll(Arrays.asList(CryptoFunction.KEYGEN, CryptoFunction.ENCRYPT, CryptoFunction.DECRYPT,
+                CryptoFunction.TAG)));
     }
 }
