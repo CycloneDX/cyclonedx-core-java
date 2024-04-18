@@ -3,10 +3,9 @@ package org.cyclonedx.model.metadata;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Service;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ToolInformation
@@ -15,7 +14,6 @@ public class ToolInformation
 
   private List<Service> services;
 
-  
   public List<Component> getComponents() {
     return components;
   }
@@ -24,7 +22,6 @@ public class ToolInformation
     this.components = components;
   }
 
-  
   public List<Service> getServices() {
     return services;
   }
@@ -32,7 +29,7 @@ public class ToolInformation
   public void setServices(final List<Service> services) {
     this.services = services;
   }
-  
+
   @Override
   public int hashCode() {
       return Objects.hash(components, services);
