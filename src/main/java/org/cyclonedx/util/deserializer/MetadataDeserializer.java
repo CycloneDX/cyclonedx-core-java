@@ -140,6 +140,13 @@ public class MetadataDeserializer
         List<Component> components = mapper.convertValue(componentsNode, new TypeReference<List<Component>>() {});
         toolInformation.setComponents(components);
       } else if (componentsNode.isObject()) {
+        if (componentsNode.has("component")) {
+          JsonNode componentNode = componentsNode.get("component");
+          if (componentNode.isArray()) {
+            parseComponents(componentNode, toolInformation);
+            return;
+          }
+        }
         Component component = mapper.convertValue(componentsNode, Component.class);
         toolInformation.setComponents(Collections.singletonList(component));
       }
@@ -152,6 +159,13 @@ public class MetadataDeserializer
         List<Service> services = mapper.convertValue(servicesNode, new TypeReference<List<Service>>() {});
         toolInformation.setServices(services);
       } else if (servicesNode.isObject()) {
+        if (servicesNode.has("service")) {
+          JsonNode serviceNode = servicesNode.get("service");
+          if (serviceNode.isArray()) {
+            parseServices(serviceNode, toolInformation);
+            return;
+          }
+        }
         Service service = mapper.convertValue(servicesNode, Service.class);
         toolInformation.setServices(Collections.singletonList(service));
       }
