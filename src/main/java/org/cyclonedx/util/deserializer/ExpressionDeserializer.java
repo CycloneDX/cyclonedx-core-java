@@ -58,10 +58,10 @@ public class ExpressionDeserializer
 
       JsonNode textNode = node.get("expression");
       if (textNode != null) {
-        expression.setId(textNode.textValue());
+        expression.setValue(textNode.textValue());
       }
       else if (node.has("")) {
-        expression.setId(node.get("").asText());
+        expression.setValue(node.get("").asText());
       }
 
       return expression;
