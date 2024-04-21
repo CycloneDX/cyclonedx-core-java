@@ -64,7 +64,9 @@ public class LicenseChoiceSerializer
   {
       if (CollectionUtils.isNotEmpty(licenseChoice.getLicenses())) {
         serializeLicensesToJsonArray(licenseChoice, gen, provider);
-      } else if (licenseChoice.getExpression() != null && StringUtils.isNotBlank(licenseChoice.getExpression().getId())) {
+      }
+      else if (licenseChoice.getExpression() != null &&
+          StringUtils.isNotBlank(licenseChoice.getExpression().getValue())) {
         final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
         serializeExpressionToXml(licenseChoice, toXmlGenerator);
       }
@@ -76,7 +78,9 @@ public class LicenseChoiceSerializer
   {
     if (CollectionUtils.isNotEmpty(licenseChoice.getLicenses())) {
       serializeLicensesToJsonArray(licenseChoice, gen, provider);
-    } else if (licenseChoice.getExpression() != null && StringUtils.isNotBlank(licenseChoice.getExpression().getId())) {
+    }
+    else if (licenseChoice.getExpression() != null &&
+        StringUtils.isNotBlank(licenseChoice.getExpression().getValue())) {
       serializeExpressionToJson(licenseChoice, gen);
     }
   }
@@ -116,7 +120,7 @@ public class LicenseChoiceSerializer
     }
 
     toXmlGenerator.setNextIsUnwrapped(true);
-    toXmlGenerator.writeStringField("", expression.getId());
+    toXmlGenerator.writeStringField("", expression.getValue());
     toXmlGenerator.writeEndObject();
     toXmlGenerator.writeEndObject();
   }
@@ -126,7 +130,7 @@ public class LicenseChoiceSerializer
     Expression expression = licenseChoice.getExpression();
     gen.writeStartArray();
     gen.writeStartObject();
-    gen.writeStringField("expression", expression.getId());
+    gen.writeStringField("expression", expression.getValue());
     if (StringUtils.isNotBlank(expression.getAcknowledgement())) {
       gen.writeStringField("acknowledgement", expression.getAcknowledgement());
     }

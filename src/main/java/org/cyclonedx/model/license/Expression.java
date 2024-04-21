@@ -12,7 +12,7 @@ import org.cyclonedx.util.deserializer.ExpressionDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-@JsonPropertyOrder({"id", "acknowledgement", "bom-ref"})
+@JsonPropertyOrder({"value", "acknowledgement", "bom-ref"})
 @JsonDeserialize(using = ExpressionDeserializer.class)
 public class Expression
 {
@@ -25,14 +25,14 @@ public class Expression
 
   @JacksonXmlText
   @JsonProperty("expression")
-  private String id;
+  private String value;
 
   public Expression() {
 
   }
 
-  public Expression(String id) {
-    this.id = id;
+  public Expression(String value) {
+    this.value = value;
   }
 
   public String getBomRef() {
@@ -51,11 +51,11 @@ public class Expression
     this.acknowledgement = acknowledgement;
   }
 
-  public String getId() {
-    return id;
+  public String getValue() {
+    return value;
   }
 
-  public void setId(final String id) {
-    this.id = id;
+  public void setValue(final String value) {
+    this.value = value;
   }
 }

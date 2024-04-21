@@ -105,7 +105,8 @@ public class JsonParserTest
         assertEquals("org.glassfish.hk2", c3.getGroup());
         assertEquals("osgi-resource-locator", c3.getName());
         assertEquals("1.0.1", c3.getVersion());
-        assertEquals("(CDDL-1.0 OR GPL-2.0-with-classpath-exception)", c3.getLicenseChoice().getExpression().getId());
+        assertEquals("(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+            c3.getLicenseChoice().getExpression().getValue());
 
         assertServices(bom);
 
@@ -279,7 +280,7 @@ public class JsonParserTest
         assertNotNull(lc.getExpression());
 
         Expression expression = lc.getExpression();
-        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", expression.getId());
+        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", expression.getValue());
         assertEquals("my-license", expression.getBomRef());
         assertEquals("declared", expression.getAcknowledgement());
     }
