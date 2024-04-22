@@ -118,6 +118,8 @@ public abstract class CycloneDxSchema
   {
     final InputStream spdxInstream = getJsonSchemaAsStream(schemaVersion);
     final SchemaValidatorsConfig config = new SchemaValidatorsConfig();
+    config.setPreloadJsonSchema(false);
+
     final Map<String, String> offlineMappings = new HashMap<>();
     offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json",
         getClass().getClassLoader().getResource("spdx.schema.json").toExternalForm());
