@@ -150,14 +150,13 @@ public class MetadataSerializer
 
   private <T> void writeArrayFieldXML(List<T> items, ToXmlGenerator xmlGenerator, String fieldName) throws IOException {
     if (items != null) {
-      xmlGenerator.writeFieldName(fieldName + "s");
-      xmlGenerator.writeStartArray();
+      xmlGenerator.writeObjectFieldStart(fieldName + "s");
+      xmlGenerator.writeArrayFieldStart(fieldName);
       for (T item : items) {
-        xmlGenerator.writeStartObject();
-        xmlGenerator.writeObjectField(fieldName, item);
-        xmlGenerator.writeEndObject();
+        xmlGenerator.writeObject(item);
       }
       xmlGenerator.writeEndArray();
+      xmlGenerator.writeEndObject();
     }
   }
 

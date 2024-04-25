@@ -27,6 +27,8 @@ import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
@@ -41,6 +43,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -374,5 +379,30 @@ public class BomXmlGeneratorTest {
         } catch (TransformerException ex) {
             return null;
         }
+    }
+    
+    @Test
+    public void toolInformationSerialization() throws Exception {
+        final Component toolA = new Component();
+        toolA.setName("Tool-A");
+        toolA.setType(Component.Type.APPLICATION);
+        toolA.setVersion("1.0.0");
+        final Component toolB = new Component();
+        toolB.setName("Tool-B");
+        toolB.setVersion("2.0.0");
+
+        final Bom bom = new Bom();
+        final Metadata metadata = new Metadata();
+        final ToolInformation toolInformation = new ToolInformation();
+        toolInformation.setComponents(Arrays.asList(toolA, toolB));
+        metadata.setToolChoice(toolInformation);
+        bom.setMetadata(metadata);
+        bom.addComponent(toolA);
+
+        final BomXmlGenerator generator = BomGeneratorFactory.createXml(CycloneDxSchema.Version.VERSION_15, bom);
+        testDocument(generator.generate());
+
+        final Bom actual = new XmlParser().parse(writeToFile(generator.toXmlString()));
+        assertEquals(toolInformation, actual.getMetadata().getToolChoice());
     }
 }
