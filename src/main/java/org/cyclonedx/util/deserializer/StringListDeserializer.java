@@ -19,9 +19,6 @@ public class StringListDeserializer
     if (p.getCurrentName().equalsIgnoreCase("aliases")) {
       return deserializeList(node, "alias");
     }
-    else if (p.getCurrentName().equalsIgnoreCase("tags")) {
-      return deserializeList(node, "tag");
-    }
     else if (p.getCurrentName().equalsIgnoreCase("endpoints")) {
       return deserializeList(node, "endpoint");
     }

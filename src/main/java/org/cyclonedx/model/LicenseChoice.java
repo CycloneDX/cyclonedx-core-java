@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,7 +35,7 @@ import org.cyclonedx.util.deserializer.LicenseDeserializer;
 public class LicenseChoice {
 
     private List<License> license;
-    private String expression;
+    private Expression expression;
 
     @JacksonXmlProperty(localName = "license")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -55,11 +56,12 @@ public class LicenseChoice {
         this.expression = null;
     }
 
-    public String getExpression() {
+    @JacksonXmlProperty(localName = "expression")
+    public Expression getExpression() {
         return expression;
     }
 
-    public void setExpression(String expression) {
+    public void setExpression(Expression expression) {
         this.expression = expression;
         this.license = null;
     }

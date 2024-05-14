@@ -22,22 +22,24 @@ import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "name", "licensing", "text", "url", "properties"})
+@JsonInclude(Include.NON_EMPTY)
+@JsonPropertyOrder({"id", "name", "acknowledgement", "licensing", "text", "url", "properties"})
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
     private String bomRef;
@@ -46,7 +48,11 @@ public class License extends ExtensibleElement {
     private String id;
     private String name;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @JacksonXmlProperty(isAttribute = true, localName = "acknowledgement")
+    @JsonProperty("acknowledgement")
+    private String acknowledgement;
+
+    @VersionFilter(Version.VERSION_15)
     private Licensing licensing;
 
     @JacksonXmlProperty(localName = "text")
@@ -54,7 +60,7 @@ public class License extends ExtensibleElement {
     private AttachmentText attachmentText;
     private String url;
 
-    @VersionFilter(versions = {"1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private List<Property> properties;
 
     public String getBomRef() {
@@ -116,6 +122,14 @@ public class License extends ExtensibleElement {
         this.attachmentText = attachmentText;
     }
 
+    public String getAcknowledgement() {
+        return acknowledgement;
+    }
+
+    public void setAcknowledgement(final String acknowledgement) {
+        this.acknowledgement = acknowledgement;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -126,11 +140,12 @@ public class License extends ExtensibleElement {
                 Objects.equals(url, license.url) &&
                 Objects.equals(attachmentText, license.attachmentText) &&
                 Objects.equals(licensing, license.licensing) &&
+                Objects.equals(acknowledgement, license.acknowledgement) &&
                 Objects.equals(properties, license.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, url, attachmentText, properties, licensing);
+        return Objects.hash(id, name, url, attachmentText, properties, licensing, acknowledgement);
     }
 }

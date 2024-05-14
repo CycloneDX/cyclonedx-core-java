@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,14 +70,14 @@ public class Composition {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private String bomRef;
 
     private Aggregate aggregate;
     private List<BomReference> assemblies;
     private List<BomReference> dependencies;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private List<BomReference> vulnerabilities;
 
     public String getBomRef() {

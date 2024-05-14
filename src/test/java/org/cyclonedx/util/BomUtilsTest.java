@@ -20,7 +20,7 @@ package org.cyclonedx.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.Hash;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -46,7 +46,7 @@ public class BomUtilsTest {
     public void calculateHashesTest() throws Exception {
         final File file = new File(this.getClass().getResource("/hashtest.txt").toURI());
 
-        final List<Hash> hashes = BomUtils.calculateHashes(file, CycloneDxSchema.Version.VERSION_12);
+        final List<Hash> hashes = BomUtils.calculateHashes(file, Version.VERSION_12);
 
         assertThatHashIsComputed(hashes, MD5, "5dd39cab1c53c2c77cd352983f9641e1");
         assertThatHashIsComputed(hashes, SHA1, "b56df8ed5365fca1419818aa384ba3b5e7756047");
@@ -64,7 +64,7 @@ public class BomUtilsTest {
     public void calculateHashesForBigFileTest() throws Exception {
         final File file = generateBigFileWithReproductiveContent();
 
-        final List<Hash> hashes = BomUtils.calculateHashes(file, CycloneDxSchema.Version.VERSION_12);
+        final List<Hash> hashes = BomUtils.calculateHashes(file, Version.VERSION_12);
 
         assertThatHashIsComputed(hashes, MD5, "10be767d4f5874017ca03f3a9fe6627b");
         assertThatHashIsComputed(hashes, SHA1, "ae3c58e2a2d5e897b141c6552232976b99d91c9b");

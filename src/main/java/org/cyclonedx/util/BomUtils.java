@@ -20,7 +20,7 @@ package org.cyclonedx.util;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.Hash;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -52,7 +52,7 @@ public final class BomUtils {
      * @throws IOException an IOException
      * @since 1.0.0
      */
-    public static List<Hash> calculateHashes(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public static List<Hash> calculateHashes(final File file, final Version schemaVersion) throws IOException {
         if (file == null || !file.exists() || !file.canRead() || !file.isFile()) {
             return null;
         }

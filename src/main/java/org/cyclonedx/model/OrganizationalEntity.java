@@ -30,20 +30,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.cyclonedx.Version;
+import org.cyclonedx.model.organization.PostalAddress;
 import org.cyclonedx.util.deserializer.OrganizationalEntityDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "url", "contact"})
+@JsonPropertyOrder({"name", "address", "url", "contact"})
 @JsonDeserialize(using = OrganizationalEntityDeserializer.class)
 public class OrganizationalEntity {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     private String bomRef;
 
     private String name;
+
+    @VersionFilter(Version.VERSION_16)
+    private PostalAddress address;
 
     private List<String> url;
     @JsonProperty("contact")
@@ -94,6 +99,14 @@ public class OrganizationalEntity {
         this.bomRef = bomRef;
     }
 
+    public PostalAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(final PostalAddress address) {
+        this.address = address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,11 +115,12 @@ public class OrganizationalEntity {
         return Objects.equals(name, that.name) &&
                 Objects.equals(url, that.url) &&
                 Objects.equals(contact, that.contact) &&
+                Objects.equals(address, that.address) &&
                 Objects.equals(bomRef, that.bomRef);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, url, contact, bomRef);
+        return Objects.hash(name, url, contact, bomRef, address);
     }
 }

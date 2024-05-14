@@ -23,9 +23,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.cyclonedx.Version;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface VersionFilter {
-  //Versions that are excluded by the filter
-  String[] versions();
+  //Version where the attribute was introduced
+  Version value();
 }
