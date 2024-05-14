@@ -64,6 +64,7 @@ public abstract class CycloneDxSchema
 
   public static final String NS_BOM_16 = "http://cyclonedx.org/schema/bom/1.6";
 
+  @Deprecated
   public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
 
   public static final String NS_BOM_LATEST = NS_BOM_16;
