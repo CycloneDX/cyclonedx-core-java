@@ -101,7 +101,6 @@ public abstract class CycloneDxSchema
         getClass().getClassLoader().getResource("bom-1.5.schema.json").toExternalForm());
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json",
         getClass().getClassLoader().getResource("bom-1.6.schema.json").toExternalForm());
-    config.setUriMappings(offlineMappings);
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
     final MapSchemaMapper offlineSchemaMapper = new MapSchemaMapper(offlineMappings);
