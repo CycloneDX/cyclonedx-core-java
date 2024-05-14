@@ -19,7 +19,6 @@
 package org.cyclonedx.parsers;
 
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.CycloneDxSchema.Version;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
@@ -76,7 +75,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
 
 public class XmlParserTest
     extends AbstractParserTest
@@ -172,7 +170,7 @@ public class XmlParserTest
     public void testValid12BomWithMetadataPedigree() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-metadata-pedigree.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        final boolean valid = parser.isValid(file, Version.VERSION_12);
         assertTrue(valid);
 
         final Bom bom = parser.parse(file);
