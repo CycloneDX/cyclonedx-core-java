@@ -24,6 +24,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SchemaValidatorsConfig;
 import com.networknt.schema.SpecVersionDetector;
+import com.networknt.schema.resource.MapSchemaMapper;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.xml.sax.SAXException;
@@ -85,6 +86,8 @@ public abstract class CycloneDxSchema
   {
     final InputStream spdxInstream = getJsonSchemaAsStream(schemaVersion);
     final SchemaValidatorsConfig config = new SchemaValidatorsConfig();
+    config.setPreloadJsonSchema(false);
+
     final Map<String, String> offlineMappings = new HashMap<>();
     offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json",
         getClass().getClassLoader().getResource("spdx.schema.json").toExternalForm());
@@ -99,8 +102,13 @@ public abstract class CycloneDxSchema
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json",
         getClass().getClassLoader().getResource("bom-1.6.schema.json").toExternalForm());
     config.setUriMappings(offlineMappings);
+
     JsonNode schemaNode = mapper.readTree(spdxInstream);
-    JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersionDetector.detect(schemaNode));
+    final MapSchemaMapper offlineSchemaMapper = new MapSchemaMapper(offlineMappings);
+    JsonSchemaFactory factory = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersionDetector.detect(schemaNode)))
+      .jsonMapper(mapper)
+      .schemaMappers(s -> s.add(offlineSchemaMapper))
+      .build();
     return factory.getSchema(schemaNode, config);
   }
 
