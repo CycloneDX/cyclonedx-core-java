@@ -68,7 +68,7 @@ public class ExtensibleType extends ExtensibleElement {
     }
 
     public String getValue() {
-        if (super.getExtensibleTypes() != null && super.getExtensibleTypes().size() > 0) {
+        if (super.getExtensibleTypes() != null && !super.getExtensibleTypes().isEmpty()) {
             return null;
         } else {
             return value;

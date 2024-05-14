@@ -534,7 +534,7 @@ public class JsonParserTest
         Signatory s1 = affirmation.getSignatories().get(0);
         assertEquals("Tom", s1.getName());
         assertEquals("CEO", s1.getRole());
-        assertEquals(null, s1.getSignature());
+        assertNull(s1.getSignature());
         assertNull(s1.getOrganization());
         assertNull(s1.getExternalReference());
 

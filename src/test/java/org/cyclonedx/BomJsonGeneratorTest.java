@@ -408,13 +408,15 @@ public class BomJsonGeneratorTest {
     }
 
     private Bom createCommonXmlBom(String resource) throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
+        final byte[] bomBytes =
+            IOUtils.toByteArray(Objects.requireNonNull(this.getClass().getResourceAsStream(resource)));
         XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
     }
 
     private Bom createCommonJsonBom(String resource) throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
+        final byte[] bomBytes =
+            IOUtils.toByteArray(Objects.requireNonNull(this.getClass().getResourceAsStream(resource)));
         JsonParser parser = new JsonParser();
         return parser.parse(bomBytes);
     }

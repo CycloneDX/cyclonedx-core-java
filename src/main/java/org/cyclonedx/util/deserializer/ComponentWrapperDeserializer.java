@@ -86,11 +86,13 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
       ObjectNode node = parser.readValueAs(ObjectNode.class);
       if (node.has("component")) {
         JsonNode component = node.get("component");
-        JsonParser componentsParser = component.traverse(parser.getCodec());
-        if (component.isArray()) {
-          components = Arrays.asList(componentsParser.readValueAs(Component[].class));
-        } else {
-          components = Collections.singletonList(componentsParser.readValueAs(Component.class));
+        try (JsonParser componentsParser = component.traverse(parser.getCodec())) {
+          if (component.isArray()) {
+            components = Arrays.asList(componentsParser.readValueAs(Component[].class));
+          }
+          else {
+            components = Collections.singletonList(componentsParser.readValueAs(Component.class));
+          }
         }
       }
     }

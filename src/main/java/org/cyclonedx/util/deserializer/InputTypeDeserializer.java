@@ -33,8 +33,6 @@ import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputType> {
 
-  private final EnvVariableChoiceDeserializer envVariableDeserializer = new EnvVariableChoiceDeserializer();
-
   @Override
   public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
       throws IOException
@@ -45,7 +43,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
     setReference(node, "source", inputType);
     setReference(node, "target", inputType);
 
-    createInputDataInfo(node, inputType, deserializationContext, jsonParser);
+    createInputDataInfo(node, inputType);
 
     if(node.has("properties")) {
       JsonNode propertiesNode = node.get("properties");
@@ -56,7 +54,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
     return inputType;
   }
 
-  private void createInputDataInfo(JsonNode node, InputType inputType, DeserializationContext ctxt, JsonParser jsonParser)
+  private void createInputDataInfo(JsonNode node, InputType inputType)
       throws IOException
   {
     if (node.has("resource")) {

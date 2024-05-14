@@ -155,7 +155,6 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * Verifies a CycloneDX BOM conforms to the specification through JSON validation.
      * @param bomString the CycloneDX BOM to validate
      * @param schemaVersion the schema version to validate against
-     * @return true is the file is a valid BOM, false if not
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
@@ -167,7 +166,6 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * Verifies a CycloneDX BOM conforms to the specification through JSON validation.
      * @param bomJson the CycloneDX BOM to validate
      * @param schemaVersion the schema version to validate against
-     * @return true is the file is a valid BOM, false if not
      * @throws IOException when errors are encountered
      * @since 3.0.0
      */
