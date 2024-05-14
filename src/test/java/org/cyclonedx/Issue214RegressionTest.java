@@ -4,29 +4,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.generators.json.AbstractBomJsonGenerator;
+import org.cyclonedx.generators.BomGeneratorFactory;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.json.BomJsonGenerator;
-import org.cyclonedx.generators.json.BomJsonGenerator13;
-import org.cyclonedx.generators.json.BomJsonGenerator14;
-import org.cyclonedx.generators.xml.AbstractBomXmlGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
-import org.cyclonedx.generators.xml.BomXmlGenerator13;
-import org.cyclonedx.generators.xml.BomXmlGenerator14;
-import org.cyclonedx.generators.xml.BomXmlGenerator15;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExternalReference;
@@ -35,72 +22,51 @@ import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.Parser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 
 public class Issue214RegressionTest
 {
-    @Test
-    public void schema13JsonObjectGenerationTest()
-        throws IOException, ReflectiveOperationException
-    {
-        performJsonTest(CycloneDxSchema.Version.VERSION_13, BomJsonGenerator13.class);
+    static Stream<Arguments> testData() {
+        return Stream.of(
+            Arguments.of(Version.VERSION_16),
+            Arguments.of(Version.VERSION_15),
+            Arguments.of(Version.VERSION_14),
+            Arguments.of(Version.VERSION_13)
+        );
     }
 
-    @Test
-    public void schema14JsonObjectGenerationTest()
-        throws IOException, ReflectiveOperationException
-    {
-        performJsonTest(CycloneDxSchema.Version.VERSION_14, BomJsonGenerator14.class);
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testObjectGeneration(Version version) throws IOException, ReflectiveOperationException, GeneratorException {
+        performJsonTest(version);
+        performXmlTest(version);
     }
 
-    @Test
-    public void schema13XmlObjectGenerationTest()
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
-    {
-        performXmlTest(CycloneDxSchema.Version.VERSION_13, BomXmlGenerator13.class);
-    }
-
-    @Test
-    public void schema14XmlObjectGenerationTest()
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
-    {
-        performXmlTest(CycloneDxSchema.Version.VERSION_14, BomXmlGenerator14.class);
-    }
-
-    @Test
-    public void schema15XmlObjectGenerationTest()
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
-    {
-        performXmlTest(CycloneDxSchema.Version.VERSION_15, BomXmlGenerator15.class);
-    }
-
-    private <G extends AbstractBomXmlGenerator> void performXmlTest(final CycloneDxSchema.Version pSpecVersion,
-        final Class<G> pExpectedGeneratorClass)
-        throws ParserConfigurationException, IOException, ReflectiveOperationException
+    private void performXmlTest(final Version pSpecVersion)
+        throws GeneratorException, ReflectiveOperationException, IOException
     {
         final Bom inputBom = createIssue214Bom();
         BomXmlGenerator generator = BomGeneratorFactory.createXml(pSpecVersion, inputBom);
-        Document doc = generator.generate();
 
-        Assertions.assertTrue(pExpectedGeneratorClass.isAssignableFrom(generator.getClass()));
+        Assertions.assertTrue(BomXmlGenerator.class.isAssignableFrom(generator.getClass()));
         Assertions.assertEquals(pSpecVersion, generator.getSchemaVersion());
 
-        final String actual = xmlDocumentToString(doc);
+        final String actual = generator.toXmlString();
         final String expected = readFixture("/regression/issue214-expected-output.xml", pSpecVersion);
         Assertions.assertEquals(expected, actual);
         validate(actual, XmlParser.class, pSpecVersion);
     }
 
-    private <G extends AbstractBomJsonGenerator> void performJsonTest(final CycloneDxSchema.Version pSpecVersion,
-        final Class<G> pExpectedGeneratorClass)
+    private void performJsonTest(final Version pSpecVersion)
         throws IOException, ReflectiveOperationException
     {
         final Bom inputBom = createIssue214Bom();
         BomJsonGenerator generator = BomGeneratorFactory.createJson(pSpecVersion, inputBom);
 
-        Assertions.assertTrue(pExpectedGeneratorClass.isAssignableFrom(generator.getClass()));
+        Assertions.assertTrue(BomJsonGenerator.class.isAssignableFrom(generator.getClass()));
         Assertions.assertEquals(pSpecVersion, generator.getSchemaVersion());
 
         final String actual = generator.toJsonString().trim();
@@ -109,37 +75,13 @@ public class Issue214RegressionTest
         validate(actual, JsonParser.class, pSpecVersion);
     }
 
-    private String xmlDocumentToString(final Document doc)
-    {
-        Assertions.assertNotNull(doc);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer;
-        try {
-            tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            transformer = tf.newTransformer();
-
-            transformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-            StringWriter sw = new StringWriter();
-            transformer.transform(new DOMSource(doc), new StreamResult(sw));
-            return sw.getBuffer().toString().trim();
-        }
-        catch (TransformerException ex) {
-            Assertions.fail("Failed to serialize XML document", ex);
-        }
-        return null;
-    }
-
-    private String readFixture(final String pPath, final CycloneDxSchema.Version pSpecVersion)
+    private String readFixture(final String pPath, final Version pSpecVersion)
     {
         try (InputStream is = getClass().getResourceAsStream(pPath)) {
             if (is != null) {
                 String result = IOUtils.toString(is, StandardCharsets.UTF_8);
                 result = result.replaceAll(Pattern.quote("${specVersion}"), pSpecVersion.getVersionString());
-                return result.trim();
+                return result;
             }
             else {
                 Assertions.fail("failed to read expected data file: " + pPath);
@@ -177,7 +119,7 @@ public class Issue214RegressionTest
     }
 
     private <P extends Parser> void validate(final String pDocument, final Class<P> pParserType,
-        final CycloneDxSchema.Version pSpecVersion)
+        final Version pSpecVersion)
         throws IOException, ReflectiveOperationException
     {
         File tempFile = null;

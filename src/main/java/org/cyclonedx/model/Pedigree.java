@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.deserializer.ComponentWrapperDeserializer;
 
 @SuppressWarnings("unused")
@@ -45,7 +46,7 @@ public class Pedigree extends ExtensibleElement {
 
     private List<Commit> commits;
 
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     private List<Patch> patches;
 
     private String notes;

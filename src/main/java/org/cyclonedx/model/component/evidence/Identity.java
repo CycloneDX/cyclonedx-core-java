@@ -8,21 +8,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.ExtensibleElement;
+import org.cyclonedx.model.VersionFilter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"field", "confidence", "methods", "tools"})
+@JsonPropertyOrder({"field", "confidence", "concludedValue", "methods", "tools"})
 public class Identity extends ExtensibleElement
 {
-  public Field field;
+  private Field field;
 
-  public Double confidence;
+  private Double confidence;
 
-  public List<Method> methods;
+  @VersionFilter(Version.VERSION_16)
+  private String concludedValue;
 
-  public List<BomReference> tools;
+  private List<Method> methods;
+
+  private List<BomReference> tools;
 
   public enum Field {
     @JsonProperty("group")
@@ -87,5 +92,13 @@ public class Identity extends ExtensibleElement
 
   public void setTools(final List<BomReference> tools) {
     this.tools = tools;
+  }
+
+  public String getConcludedValue() {
+    return concludedValue;
+  }
+
+  public void setConcludedValue(final String concludedValue) {
+    this.concludedValue = concludedValue;
   }
 }

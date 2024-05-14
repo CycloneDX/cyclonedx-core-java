@@ -62,6 +62,8 @@ public abstract class CycloneDxSchema
 
   public static final String NS_BOM_15 = "http://cyclonedx.org/schema/bom/1.5";
 
+  public static final String NS_BOM_16 = "http://cyclonedx.org/schema/bom/1.6";
+
   public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
 
   public static final String NS_BOM_LATEST = NS_BOM_15;
@@ -69,40 +71,6 @@ public abstract class CycloneDxSchema
   public static final Version VERSION_LATEST = Version.VERSION_15;
 
   public static final List<Version> ALL_VERSIONS = Arrays.asList(Version.values());
-
-  public enum Version
-  {
-    VERSION_10(CycloneDxSchema.NS_BOM_10, "1.0", 1.0),
-    VERSION_11(CycloneDxSchema.NS_BOM_11, "1.1", 1.1),
-    VERSION_12(CycloneDxSchema.NS_BOM_12, "1.2", 1.2),
-    VERSION_13(CycloneDxSchema.NS_BOM_13, "1.3", 1.3),
-    VERSION_14(CycloneDxSchema.NS_BOM_14, "1.4", 1.4),
-    VERSION_15(CycloneDxSchema.NS_BOM_15, "1.5", 1.5);
-
-    private final String namespace;
-
-    private final String versionString;
-
-    private final double version;
-
-    public String getNamespace() {
-      return this.namespace;
-    }
-
-    public String getVersionString() {
-      return versionString;
-    }
-
-    public double getVersion() {
-      return version;
-    }
-
-    Version(String namespace, String versionString, double version) {
-      this.namespace = namespace;
-      this.versionString = versionString;
-      this.version = version;
-    }
-  }
 
   /**
    * Returns the CycloneDX JsonSchema for the specified schema version.
@@ -113,7 +81,7 @@ public abstract class CycloneDxSchema
    * @throws IOException when errors are encountered
    * @since 6.0.0
    */
-  public JsonSchema getJsonSchema(CycloneDxSchema.Version schemaVersion, final ObjectMapper mapper)
+  public JsonSchema getJsonSchema(Version schemaVersion, final ObjectMapper mapper)
       throws IOException
   {
     final InputStream spdxInstream = getJsonSchemaAsStream(schemaVersion);
@@ -131,6 +99,8 @@ public abstract class CycloneDxSchema
         getClass().getClassLoader().getResource("bom-1.4.schema.json").toExternalForm());
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json",
         getClass().getClassLoader().getResource("bom-1.5.schema.json").toExternalForm());
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json",
+        getClass().getClassLoader().getResource("bom-1.6.schema.json").toExternalForm());
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
     final MapSchemaMapper offlineSchemaMapper = new MapSchemaMapper(offlineMappings);
@@ -141,18 +111,21 @@ public abstract class CycloneDxSchema
     return factory.getSchema(schemaNode, config);
   }
 
-  private InputStream getJsonSchemaAsStream(final CycloneDxSchema.Version schemaVersion) {
-    if (CycloneDxSchema.Version.VERSION_12 == schemaVersion) {
+  private InputStream getJsonSchemaAsStream(final Version schemaVersion) {
+    if (Version.VERSION_12 == schemaVersion) {
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.2-strict.schema.json");
     }
-    else if (CycloneDxSchema.Version.VERSION_13 == schemaVersion) {
+    else if (Version.VERSION_13 == schemaVersion) {
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.3-strict.schema.json");
     }
-    else if (CycloneDxSchema.Version.VERSION_14 == schemaVersion) {
+    else if (Version.VERSION_14 == schemaVersion) {
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.4.schema.json");
     }
-    else {
+    else if(Version.VERSION_15 == schemaVersion){
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.5.schema.json");
+    }
+    else {
+      return this.getClass().getClassLoader().getResourceAsStream("bom-1.6.schema.json");
     }
   }
 
@@ -164,24 +137,27 @@ public abstract class CycloneDxSchema
    * @throws SAXException a SAXException
    * @since 2.0.0
    */
-  public Schema getXmlSchema(CycloneDxSchema.Version schemaVersion) throws SAXException {
-    if (CycloneDxSchema.Version.VERSION_10 == schemaVersion) {
+  public Schema getXmlSchema(Version schemaVersion) throws SAXException {
+    if (Version.VERSION_10 == schemaVersion) {
       return getXmlSchema10();
     }
-    else if (CycloneDxSchema.Version.VERSION_11 == schemaVersion) {
+    else if (Version.VERSION_11 == schemaVersion) {
       return getXmlSchema11();
     }
-    else if (CycloneDxSchema.Version.VERSION_12 == schemaVersion) {
+    else if (Version.VERSION_12 == schemaVersion) {
       return getXmlSchema12();
     }
-    else if (CycloneDxSchema.Version.VERSION_13 == schemaVersion) {
+    else if (Version.VERSION_13 == schemaVersion) {
       return getXmlSchema13();
     }
-    else if (CycloneDxSchema.Version.VERSION_14 == schemaVersion) {
+    else if (Version.VERSION_14 == schemaVersion) {
       return getXmlSchema14();
     }
-    else {
+    else if (Version.VERSION_15 == schemaVersion) {
       return getXmlSchema15();
+    }
+    else {
+      return getXmlSchema16();
     }
   }
 
@@ -265,13 +241,28 @@ public abstract class CycloneDxSchema
    *
    * @return a Schema
    * @throws SAXException a SAXException
-   * @since TBD
+   * @since 8.0.1
    */
   private Schema getXmlSchema15() throws SAXException {
     // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
     return getXmlSchema(
         this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
         this.getClass().getClassLoader().getResourceAsStream("bom-1.5.xsd")
+    );
+  }
+
+  /**
+   * Returns the CycloneDX XML Schema from the specifications XSD.
+   *
+   * @return a Schema
+   * @throws SAXException a SAXException
+   * @since 8.1.0
+   */
+  private Schema getXmlSchema16() throws SAXException {
+    // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
+    return getXmlSchema(
+        this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+        this.getClass().getClassLoader().getResourceAsStream("bom-1.6.xsd")
     );
   }
 

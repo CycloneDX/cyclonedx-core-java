@@ -22,9 +22,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
 
@@ -47,6 +50,7 @@ import java.util.List;
         "licenses",
         "externalReferences",
         "properties",
+        "tags",
         "services",
         "releaseNotes",
         "signature"
@@ -69,12 +73,15 @@ public class Service extends ExtensibleElement {
     private List<ServiceData> data;
     private LicenseChoice license;
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
+    @VersionFilter(Version.VERSION_16)
+    @JsonUnwrapped
+    private Tags tags;
     private List<Service> services;
     private ReleaseNotes releaseNotes;
     @JsonOnly
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(Version.VERSION_14)
     private Signature signature;
 
     public String getBomRef() {
@@ -238,4 +245,12 @@ public class Service extends ExtensibleElement {
     public Signature getSignature() { return signature; }
 
     public void setSignature(Signature signature) { this.signature = signature; }
+
+    public Tags getTags() {
+        return tags;
+    }
+
+    public void setTags(final Tags tags) {
+        this.tags = tags;
+    }
 }
