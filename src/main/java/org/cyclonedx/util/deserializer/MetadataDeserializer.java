@@ -3,10 +3,10 @@ package org.cyclonedx.util.deserializer;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,8 +28,6 @@ import org.cyclonedx.model.metadata.ToolInformation;
 public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
 
-  private final ObjectMapper mapper = new ObjectMapper();
-
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 
   private final LifecycleDeserializer lifecycleDeserializer = new LifecycleDeserializer();
@@ -41,6 +39,13 @@ public class MetadataDeserializer
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
     Metadata metadata = new Metadata();
+
+    ObjectMapper mapper;
+    if (jsonParser.getCodec() instanceof ObjectMapper) {
+      mapper = (ObjectMapper) jsonParser.getCodec();
+    } else {
+      mapper = new ObjectMapper();
+    }
 
     // Parsing other fields in the Metadata object
     if (node.has("authors")) {
@@ -127,10 +132,10 @@ public class MetadataDeserializer
       else {
         ToolInformation toolInformation = new ToolInformation();
         if (toolsNode.has("components")) {
-          parseComponents(toolsNode.get("components"), toolInformation);
+          parseComponents(toolsNode.get("components"), toolInformation, mapper);
         }
         if (toolsNode.has("services")) {
-          parseServices(toolsNode.get("services"), toolInformation);
+          parseServices(toolsNode.get("services"), toolInformation, mapper);
         }
         metadata.setToolChoice(toolInformation);
       }
@@ -139,7 +144,7 @@ public class MetadataDeserializer
     return metadata;
   }
 
-  private void parseComponents(JsonNode componentsNode, ToolInformation toolInformation) {
+  private void parseComponents(JsonNode componentsNode, ToolInformation toolInformation, ObjectMapper mapper) {
     if (componentsNode != null) {
       if (componentsNode.isArray()) {
         List<Component> components = mapper.convertValue(componentsNode, new TypeReference<List<Component>>() {});
@@ -151,7 +156,7 @@ public class MetadataDeserializer
     }
   }
 
-  private void parseServices(JsonNode servicesNode, ToolInformation toolInformation) {
+  private void parseServices(JsonNode servicesNode, ToolInformation toolInformation, ObjectMapper mapper) {
     if (servicesNode != null) {
       if (servicesNode.isArray()) {
         List<Service> services = mapper.convertValue(servicesNode, new TypeReference<List<Service>>() {});
