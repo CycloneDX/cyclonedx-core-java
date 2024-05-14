@@ -66,9 +66,9 @@ public abstract class CycloneDxSchema
 
   public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
 
-  public static final String NS_BOM_LATEST = NS_BOM_15;
+  public static final String NS_BOM_LATEST = NS_BOM_16;
 
-  public static final Version VERSION_LATEST = Version.VERSION_15;
+  public static final Version VERSION_LATEST = Version.VERSION_16;
 
   public static final List<Version> ALL_VERSIONS = Arrays.asList(Version.values());
 
