@@ -19,6 +19,7 @@
 package org.cyclonedx;
 
 import org.cyclonedx.exception.ParseException;
+import org.cyclonedx.parsers.BomParserFactory;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.Parser;
 import org.cyclonedx.parsers.XmlParser;

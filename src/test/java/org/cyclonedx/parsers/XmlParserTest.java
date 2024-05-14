@@ -18,17 +18,57 @@
  */
 package org.cyclonedx.parsers;
 
-import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.CycloneDxSchema.Version;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.License;
+import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.attestation.Assessor;
+import org.cyclonedx.model.attestation.Attestation;
+import org.cyclonedx.model.attestation.AttestationMap;
+import org.cyclonedx.model.attestation.Claim;
+import org.cyclonedx.model.attestation.Confidence;
+import org.cyclonedx.model.attestation.Conformance;
+import org.cyclonedx.model.attestation.Targets;
+import org.cyclonedx.model.attestation.affirmation.Affirmation;
+import org.cyclonedx.model.attestation.affirmation.Signatory;
+import org.cyclonedx.model.attestation.evidence.Data;
+import org.cyclonedx.model.attestation.evidence.Evidence;
+import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.Tags;
+import org.cyclonedx.model.component.crypto.AlgorithmProperties;
+import org.cyclonedx.model.component.crypto.CryptoProperties;
+import org.cyclonedx.model.component.crypto.enums.AssetType;
+import org.cyclonedx.model.component.crypto.enums.CertificationLevel;
+import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
+import org.cyclonedx.model.component.crypto.enums.ExecutionEnvironment;
+import org.cyclonedx.model.component.crypto.enums.ImplementationPlatform;
+import org.cyclonedx.model.component.crypto.enums.Mode;
+import org.cyclonedx.model.component.crypto.enums.Primitive;
+import org.cyclonedx.model.component.evidence.Identity;
+import org.cyclonedx.model.component.modelCard.Considerations;
+import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.Activity;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.EnergyConsumption;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.EnergyProvider;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.EnergySource;
+import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.Unit;
+import org.cyclonedx.model.definition.Level;
+import org.cyclonedx.model.definition.Requirement;
+import org.cyclonedx.model.definition.Standard;
+import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,7 +83,7 @@ public class XmlParserTest
     public void testValid10Bom() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.0.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_10);
+        final boolean valid = parser.isValid(file, Version.VERSION_10);
         assertTrue(valid);
     }
 
@@ -51,7 +91,7 @@ public class XmlParserTest
     public void testValid11Bom() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.1.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
+        final boolean valid = parser.isValid(file, Version.VERSION_11);
         assertTrue(valid);
     }
 
@@ -60,7 +100,7 @@ public class XmlParserTest
         final File file = new File(
             Objects.requireNonNull(this.getClass().getResource("/bom-1.1-dependency-graph-1.0.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
+        final boolean valid = parser.isValid(file, Version.VERSION_11);
         assertTrue(valid);
     }
 
@@ -69,7 +109,7 @@ public class XmlParserTest
         final File file = new File(
             Objects.requireNonNull(this.getClass().getResource("/bom-1.1-vulnerability-1.0.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_11);
+        final boolean valid = parser.isValid(file, Version.VERSION_11);
         assertTrue(valid);
     }
 
@@ -77,7 +117,7 @@ public class XmlParserTest
     public void testValid12Bom() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        final boolean valid = parser.isValid(file, Version.VERSION_12);
         assertTrue(valid);
     }
 
@@ -86,7 +126,7 @@ public class XmlParserTest
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.4-bomlink.xml")).getFile());
         final XmlParser parser = new XmlParser();
         Bom bom = parser.parse(file);
-        assertTrue(parser.isValid(file, CycloneDxSchema.Version.VERSION_14));
+        assertTrue(parser.isValid(file, Version.VERSION_14));
         ExternalReference ref = bom.getComponents().get(0).getExternalReferences().get(0);
         assertEquals("bom", ref.getType().getTypeName());
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", ref.getUrl());
@@ -96,7 +136,7 @@ public class XmlParserTest
     public void testValid12BomWithPedigree() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-pedigree.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        final boolean valid = parser.isValid(file, Version.VERSION_12);
         assertTrue(valid);
 
         final Bom bom = parser.parse(file);
@@ -113,7 +153,7 @@ public class XmlParserTest
     public void testValid12BomWithPedigreeWithPatches() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-pedigree-example.xml")).getFile());
         final XmlParser parser = new XmlParser();
-        final boolean valid = parser.isValid(file, CycloneDxSchema.Version.VERSION_12);
+        final boolean valid = parser.isValid(file, Version.VERSION_12);
         assertTrue(valid);
 
         final Bom bom = parser.parse(file);
@@ -191,7 +231,7 @@ public class XmlParserTest
         assertNotNull(c1.getPedigree().getCommits().get(0).getCommitter().getTimestamp());
         assertEquals("Initial commit", c1.getPedigree().getCommits().get(0).getMessage());
         assertEquals("Commentary here", c1.getPedigree().getNotes());
-        assertEquals("EPL-2.0 OR GPL-2.0-with-classpath-exception", c2.getLicenseChoice().getExpression());
+        assertEquals("EPL-2.0 OR GPL-2.0-with-classpath-exception", c2.getLicenseChoice().getExpression().getValue());
     }
 
     @Test
@@ -366,5 +406,325 @@ public class XmlParserTest
     public void testIssue343Regression() throws Exception {
         final Bom bom = getXmlBom("regression/issue343-empty-hashes.xml");
         assertEquals(0, bom.getComponents().get(0).getHashes().size());
+    }
+
+    @Test
+    public void schema16_license_id_acknowledgement() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-license-id-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        assertNotNull(lc.getLicenses());
+        assertEquals(1, lc.getLicenses().size());
+
+        License license = lc.getLicenses().get(0);
+        assertEquals("Apache-2.0", license.getId());
+        assertEquals("my-license", license.getBomRef());
+        assertEquals("declared", license.getAcknowledgement());
+    }
+
+    @Test
+    public void schema16_license_expression_acknowledgement() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-license-expression-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        assertNotNull(lc.getExpression());
+
+        Expression expression = lc.getExpression();
+        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", expression.getValue());
+        assertEquals("my-license", expression.getBomRef());
+        assertEquals("declared", expression.getAcknowledgement());
+    }
+
+    @Test
+    public void schema16_ml_considerations() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-machine-learning-considerations-env-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        ModelCard mc = bom.getComponents().get(0).getModelCard();
+        assertNotNull(mc);
+
+        Considerations considerations = mc.getConsiderations();
+        assertNotNull(considerations);
+
+        EnvironmentalConsideration ec = considerations.getEnvironmentalConsiderations();
+        assertNotNull(ec);
+
+        assertEquals(1, ec.getEnergyConsumptions().size());
+
+        EnergyConsumption eec = ec.getEnergyConsumptions().get(0);
+
+        assertEquals(Activity.TRAINING, eec.getActivity());
+        assertEquals(Unit.KWH, eec.getActivityEnergyCost().getUnit());
+        assertEquals(0.4, eec.getActivityEnergyCost().getValue());
+        assertEquals(org.cyclonedx.model.component.modelCard.consideration.consumption.co2.Unit.TCO2EQ,
+            eec.getCo2CostEquivalent().getUnit());
+        assertEquals(31.22, eec.getCo2CostEquivalent().getValue());
+        assertEquals(org.cyclonedx.model.component.modelCard.consideration.consumption.co2.Unit.TCO2EQ,
+            eec.getCo2CostOffset().getUnit());
+        assertEquals(31.22, eec.getCo2CostOffset().getValue());
+
+        assertNull(eec.getProperties());
+        assertEquals(1, eec.getEnergyProviders().size());
+
+        EnergyProvider ep = eec.getEnergyProviders().get(0);
+
+        assertEquals("Meta data-center, US-East", ep.getDescription());
+        assertNull(ep.getExternalReferences());
+        assertNull(ep.getBomRef());
+        assertNotNull(ep.getOrganization());
+
+        assertEquals(EnergySource.NATURAL_GAS, ep.getEnergySource());
+
+        assertEquals(0.4, ep.getEnergyProvided().getValue());
+        assertEquals(Unit.KWH, ep.getEnergyProvided().getUnit());
+
+        assertNull(ep.getOrganization().getAddress().getBomRef());
+        assertEquals("United States", ep.getOrganization().getAddress().getCountry());
+        assertEquals("Newark", ep.getOrganization().getAddress().getLocality());
+        assertNull(ep.getOrganization().getAddress().getStreetAddress());
+        assertNull(ep.getOrganization().getAddress().getPostalCode());
+        assertNull(ep.getOrganization().getAddress().getPostOfficeBoxNumber());
+        assertEquals("New Jersey", ep.getOrganization().getAddress().getRegion());
+        assertNull(eec.getProperties());
+    }
+
+    @Test
+    public void schema16_component_identifiers() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-component-identifiers-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        List<String> omnis = bom.getComponents().get(0).getOmniborId();
+        assertEquals(2, omnis.size());
+        assertTrue(omnis.containsAll(Arrays.asList("gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+            "gitoid:blob:sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")));
+
+        List<String> swhid = bom.getComponents().get(0).getSwhid();
+        assertEquals(2, swhid.size());
+        assertTrue(swhid.containsAll(Arrays.asList("swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2",
+            "swh:1:dir:d198bc9d7a6bcf6db04f476d29314f157507d505")));
+    }
+
+    @Test
+    public void schema16_tags() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-tags-1.6.xml");
+
+        assertNotNull(bom.getComponents());
+        Tags tags = bom.getComponents().get(0).getTags();
+        assertNotNull(tags);
+        assertEquals(3, tags.getTags().size());
+        assertTrue(tags.getTags().containsAll(Arrays.asList("json-parser", "javascript", "node.js")));
+
+        assertNotNull(bom.getServices());
+        tags = bom.getServices().get(0).getTags();
+        assertNotNull(tags);
+        assertEquals(4, tags.getTags().size());
+        assertTrue(tags.getTags().containsAll(Arrays.asList("microservice", "golang", "aws", "us-east-1")));
+    }
+
+    @Test
+    public void schema16_manufacture() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-metadata-manufacture-1.6.xml");
+
+        assertNotNull(bom.getMetadata());
+        OrganizationalEntity manufacture = bom.getMetadata().getManufacture();
+        assertNotNull(manufacture);
+        assertManufacturerMetadata(manufacture, Version.VERSION_16, true);
+    }
+
+    @Test
+    public void schema16_manufacturer() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-metadata-manufacturer-1.6.xml");
+
+        assertNotNull(bom.getMetadata());
+        OrganizationalEntity manufacturer = bom.getMetadata().getManufacturer();
+        assertNotNull(manufacturer);
+        assertManufacturerMetadata(manufacturer, Version.VERSION_16, false);
+    }
+
+    @Test
+    public void schema16_evidence() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-evidence-1.6.xml");
+
+        List<Identity> identities = bom.getComponents().get(1).getEvidence().getIdentities();
+        assertEquals(3, identities.size());
+        List<String> list = identities.stream().map(Identity::getConcludedValue).collect(Collectors.toList());
+        assertTrue(list.containsAll(Arrays.asList("com.example", "example-project", "1.0.0")));
+    }
+
+    @Test
+    public void schema16_attestation_standard() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-standard-1.6.xml");
+
+        assertNotNull(bom.getDefinitions());
+        List<Standard> standards = bom.getDefinitions().getStandards();
+        assertEquals(1, standards.size());
+
+        Standard standard = standards.get(0);
+        assertEquals("standard-1", standard.getBomRef());
+        assertEquals("Description here", standard.getDescription());
+        assertEquals("Sample Standard", standard.getName());
+        assertEquals("Acme Inc", standard.getOwner());
+        assertEquals("1.0.0", standard.getVersion());
+
+        //Requirements
+        assertEquals(3, standard.getRequirements().size());
+        Requirement requirement = standard.getRequirements().get(2);
+        assertEquals("requirement-1.1.1", requirement.getBomRef());
+        assertEquals("Text of the requirement here", requirement.getText());
+        assertEquals("v1.1.1", requirement.getIdentifier());
+        assertEquals("requirement-1.1", requirement.getParent());
+        assertEquals("Supplemental text here", requirement.getDescriptions().get(0));
+        assertEquals(1, requirement.getOpenCre().size());
+        assertNull(requirement.getExternalReferences());
+        assertNull(requirement.getProperties());
+        assertNull(requirement.getTitle());
+
+        //Levels
+        assertEquals(3, standard.getLevels().size());
+        Level level = standard.getLevels().get(0);
+        assertEquals("Level 1", level.getIdentifier());
+        assertEquals("Description here", level.getDescription());
+        assertEquals("level-1", level.getBomRef());
+        assertNull(level.getTitle());
+        assertEquals(1, level.getRequirements().size());
+        assertEquals("requirement-1.1.1", level.getRequirements().get(0));
+
+        assertNull(standard.getSignature());
+    }
+
+    @Test
+    public void schema16_attestation() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-attestation-1.6.xml");
+
+        assertNotNull(bom.getDeclarations());
+
+        //Assessors
+        List<Assessor> assessors = bom.getDeclarations().getAssessors();
+        assertEquals(1, assessors.size());
+
+        Assessor assessor = assessors.get(0);
+        assertEquals(false, assessor.getThirdParty());
+        assertEquals("Acme Inc", assessor.getOrganization().getName());
+        assertEquals("assessor-1", assessor.getBomRef());
+
+        //Attestations
+        List<Attestation> attestations = bom.getDeclarations().getAttestations();
+        assertEquals(1, attestations.size());
+
+        Attestation attestation = attestations.get(0);
+        assertEquals("Attestation summary here", attestation.getSummary());
+        assertEquals("assessor-1", attestation.getAssessor());
+        assertEquals(1, attestation.getMap().size());
+
+        AttestationMap map = attestation.getMap().get(0);
+        assertEquals("requirement-1", map.getRequirement());
+        assertEquals("claim-1", map.getClaims().get(0));
+        assertEquals("counterClaim-1", map.getCounterClaims().get(0));
+
+        Conformance conformance = map.getConformance();
+        assertEquals(0.8, conformance.getScore());
+        assertEquals("Conformance rationale here", conformance.getRationale());
+        assertEquals("mitigations-1", conformance.getMitigationStrategies().get(0));
+
+        Confidence confidence = map.getConfidence();
+        assertEquals(1.0, confidence.getScore());
+        assertEquals("Confidence rationale here", confidence.getRationale());
+
+        //Claims
+        List<Claim> claims = bom.getDeclarations().getClaims();
+        assertEquals(1, claims.size());
+
+        Claim claim = claims.get(0);
+        assertEquals("claim-1", claim.getBomRef());
+        assertEquals("Confidence rationale here", confidence.getRationale());
+        assertEquals("acme-inc", claim.getTarget());
+        assertEquals("Predicate here", claim.getPredicate());
+        assertEquals("Reasoning here", claim.getReasoning());
+        assertEquals("evidence-1", claim.getEvidence().get(0));
+        assertEquals("counterEvidence-1", claim.getCounterEvidence().get(0));
+        assertEquals("mitigationStrategy-1", claim.getMitigationStrategies().get(0));
+
+        ExternalReference er = claim.getExternalReferences().get(0);
+        assertEquals("https://alm.example.com", er.getUrl());
+        assertEquals(ExternalReference.Type.ISSUE_TRACKER, er.getType());
+
+        //Evidence
+        List<Evidence> evidences = bom.getDeclarations().getEvidence();
+        assertEquals(3, evidences.size());
+
+        Evidence evidence = evidences.get(0);
+        assertEquals("evidence-1", evidence.getBomRef());
+        assertEquals("internal.com.acme.someProperty", evidence.getPropertyName());
+        assertEquals("Description here", evidence.getDescription());
+        assertNotNull(evidence.getCreated());
+        assertNotNull(evidence.getExpires());
+        assertEquals("Mary", evidence.getAuthor().getName());
+        assertEquals("Jane", evidence.getReviewer().getName());
+
+        Data data = evidence.getData().get(0);
+        assertEquals("Name of the data", data.getName());
+        assertEquals("PII", data.getClassification());
+        assertEquals("Describe sensitive data here", data.getSensitiveData().get(0));
+        assertEquals("Evidence here", data.getContents().getAttachment().getText());
+
+        //Targets
+        Targets targets = bom.getDeclarations().getTargets();
+        assertNotNull(targets);
+        assertEquals(1, targets.getOrganizations().size());
+
+        //Affirmation
+        Affirmation affirmation = bom.getDeclarations().getAffirmation();
+        assertNotNull(affirmation);
+
+        assertEquals("I certify, to the best of my knowledge, that all information is correct...",
+            affirmation.getStatement());
+        assertEquals(2, affirmation.getSignatories().size());
+
+        Signatory s1 = affirmation.getSignatories().get(0);
+        assertEquals("Tom", s1.getName());
+        assertEquals("CEO", s1.getRole());
+        assertEquals(null, s1.getSignature());
+        assertNull(s1.getOrganization());
+        assertNull(s1.getExternalReference());
+
+        Signatory s2 = affirmation.getSignatories().get(1);
+        assertEquals("Jerry", s2.getName());
+        assertEquals("COO", s2.getRole());
+        assertEquals("Acme Inc", s2.getOrganization().getName());
+        assertEquals("https://example.com/coo-sig.png", s2.getExternalReference().getUrl());
+        assertNull(s2.getSignature());
+    }
+
+    @Test
+    public void schema16_cbom() throws Exception {
+        final Bom bom = getXmlBom("1.6/valid-cryptography-implementation-1.6.xml");
+
+        assertEquals(3, bom.getComponents().size());
+        assertEquals(2, bom.getDependencies().size());
+
+        Component component = bom.getComponents().get(0);
+        assertEquals("AES", component.getName());
+        assertEquals("aes128gcm", component.getBomRef());
+        assertEquals(Type.CRYPTOGRAPHIC_ASSET, component.getType());
+
+        CryptoProperties cp = component.getCryptoProperties();
+        assertEquals(AssetType.ALGORITHM, cp.getAssetType());
+        assertEquals("oid:2.16.840.1.101.3.4.1.6", cp.getOid());
+
+        AlgorithmProperties ap = cp.getAlgorithmProperties();
+        assertEquals(Primitive.AE, ap.getPrimitive());
+        assertEquals("128", ap.getParameterSetIdentifier());
+        assertEquals(ExecutionEnvironment.SOFTWARE_PLAIN_RAM, ap.getExecutionEnvironment());
+        assertEquals(ImplementationPlatform.X86_64, ap.getImplementationPlatform());
+        assertEquals(CertificationLevel.NONE, ap.getCertificationLevel());
+        assertEquals(Mode.GCM, ap.getMode());
+        assertEquals(128, ap.getClassicalSecurityLevel());
+        assertEquals(1, ap.getNistQuantumSecurityLevel());
+
+        assertTrue(new ArrayList<>(ap.getCryptoFunctions())
+            .containsAll(Arrays.asList(CryptoFunction.KEYGEN, CryptoFunction.ENCRYPT, CryptoFunction.DECRYPT,
+                CryptoFunction.TAG)));
     }
 }

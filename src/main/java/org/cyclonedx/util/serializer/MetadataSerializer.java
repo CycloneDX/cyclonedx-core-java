@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.cyclonedx.CycloneDxSchema.Version;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.metadata.ToolInformation;
@@ -74,6 +74,10 @@ public class MetadataSerializer
 
     if(metadata.getManufacture() != null) {
       jsonGenerator.writeObjectField("manufacture", metadata.getManufacture());
+    }
+
+    if(metadata.getManufacturer() != null) {
+      jsonGenerator.writeObjectField("manufacturer", metadata.getManufacturer());
     }
 
     if(metadata.getSupplier() != null) {

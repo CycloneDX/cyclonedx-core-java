@@ -21,6 +21,7 @@ package org.cyclonedx.parsers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.w3c.dom.Node;
@@ -143,7 +144,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final File file, final Version schemaVersion) throws IOException {
         final Source source = new StreamSource(file);
         return validate(source, schemaVersion);
     }
@@ -158,7 +159,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final byte[] bomBytes, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final byte[] bomBytes, final Version schemaVersion) throws IOException {
         final Source source = new StreamSource(new ByteArrayInputStream(bomBytes));
         return validate(source, schemaVersion);
     }
@@ -173,7 +174,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final Reader reader, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final Reader reader, final Version schemaVersion) throws IOException {
         final Source source = new StreamSource(reader);
         return validate(source, schemaVersion);
     }
@@ -188,12 +189,12 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public List<ParseException> validate(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final InputStream inputStream, final Version schemaVersion) throws IOException {
         final Source source = new StreamSource(inputStream);
         return validate(source, schemaVersion);
     }
 
-    public List<ParseException> validate(final Source source, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public List<ParseException> validate(final Source source, final Version schemaVersion) throws IOException {
         final List<ParseException> exceptions = new LinkedList<>();
         try {
             final Schema schema = getXmlSchema(schemaVersion);
@@ -231,7 +232,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final File file, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final File file, final Version schemaVersion) throws IOException {
         return validate(file, schemaVersion).isEmpty();
     }
 
@@ -245,7 +246,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final byte[] bomBytes, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final byte[] bomBytes, final Version schemaVersion) throws IOException {
         return validate(bomBytes, schemaVersion).isEmpty();
     }
 
@@ -259,7 +260,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final Reader reader, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final Reader reader, final Version schemaVersion) throws IOException {
         return validate(reader, schemaVersion).isEmpty();
     }
 
@@ -273,7 +274,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     /**
      * {@inheritDoc}
      */
-    public boolean isValid(final InputStream inputStream, final CycloneDxSchema.Version schemaVersion) throws IOException {
+    public boolean isValid(final InputStream inputStream, final Version schemaVersion) throws IOException {
         return validate(inputStream, schemaVersion).isEmpty();
     }
 

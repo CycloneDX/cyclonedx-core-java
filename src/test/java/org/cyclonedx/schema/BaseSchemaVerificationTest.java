@@ -20,7 +20,7 @@ package org.cyclonedx.schema;
 
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
-import org.cyclonedx.CycloneDxSchema.Version;
+import org.cyclonedx.Version;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;

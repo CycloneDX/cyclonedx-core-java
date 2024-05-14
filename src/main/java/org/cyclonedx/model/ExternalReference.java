@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.serializer.ExternalReferenceSerializer;
 
 @SuppressWarnings("unused")
@@ -58,6 +59,8 @@ public class ExternalReference {
         DOCUMENTATION("documentation"),
         @JsonProperty("support")
         SUPPORT("support"),
+        @JsonProperty("source-distribution")
+        SOURCE_DISTRIBUTION("source-distribution"),
         @JsonProperty("distribution")
         DISTRIBUTION("distribution"),
         @JsonProperty("distribution-intake")
@@ -112,6 +115,14 @@ public class ExternalReference {
         EVIDENCE("evidence"),
         @JsonProperty("formulation")
         FORMULATION("formulation"),
+        @JsonProperty("rfc-9116")
+        RFC_9116("rfc-9116"),
+        @VersionFilter(Version.VERSION_16)
+        @JsonProperty("electronic-signature")
+        ELECTRONIC_SIGNATURE("electronic-signature"),
+        @VersionFilter(Version.VERSION_16)
+        @JsonProperty("digital-signature")
+        DIGITAL_SIGNATURE("digital-signature"),
         @JsonProperty("other")
         OTHER("other");
 
@@ -140,7 +151,7 @@ public class ExternalReference {
     private Type type;
     private String comment;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(Version.VERSION_13)
     private List<Hash> hashes;
 
     public String getUrl() {

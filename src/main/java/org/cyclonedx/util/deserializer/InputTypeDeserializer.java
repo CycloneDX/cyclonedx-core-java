@@ -24,7 +24,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -39,6 +38,8 @@ import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public class InputTypeDeserializer extends JsonDeserializer<InputType> {
   private final ObjectMapper objectMapper = new ObjectMapper();
+
+  private final EnvVariableChoiceDeserializer envVariableDeserializer = new EnvVariableChoiceDeserializer();
 
   @Override
   public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
@@ -59,7 +60,7 @@ public class InputTypeDeserializer extends JsonDeserializer<InputType> {
       inputType.setTarget(target);
     }
 
-    createInputDataInfo(node, inputType);
+    createInputDataInfo(node, inputType, deserializationContext, jsonParser);
 
     if(node.has("properties")) {
       JsonNode propertiesNode = node.get("properties");
@@ -70,7 +71,9 @@ public class InputTypeDeserializer extends JsonDeserializer<InputType> {
     return inputType;
   }
 
-  private void createInputDataInfo(JsonNode node, InputType inputType ) throws JsonProcessingException {
+  private void createInputDataInfo(JsonNode node, InputType inputType, DeserializationContext ctxt, JsonParser jsonParser)
+      throws IOException
+  {
     if (node.has("resource")) {
       JsonNode resourceNode = node.get("resource");
       ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
@@ -86,7 +89,8 @@ public class InputTypeDeserializer extends JsonDeserializer<InputType> {
       ArrayNode environmentVarsNode = (nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(null).add(nodes));
 
       for (JsonNode envVarNode : environmentVarsNode) {
-        EnvVariableChoice envVar = objectMapper.treeToValue(envVarNode, EnvVariableChoice.class);
+        JsonParser nodeParser = envVarNode.traverse(jsonParser.getCodec());
+        EnvVariableChoice envVar =  envVariableDeserializer.deserialize(nodeParser, ctxt);
         environmentVars.add(envVar);
       }
       inputType.setEnvironmentVars(environmentVars);

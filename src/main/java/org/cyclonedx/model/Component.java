@@ -22,7 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.component.ModelCard;
+import org.cyclonedx.model.component.crypto.CryptoProperties;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.modelCard.ComponentData;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
@@ -55,6 +59,8 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "copyright",
      "cpe",
      "purl",
+     "omniborId",
+     "swhid",
      "swid",
      "modified",
      "pedigree",
@@ -65,7 +71,9 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "releaseNotes",
      "modelCard",
      "data",
-     "signature"
+     "cryptoProperties",
+     "signature",
+     "provides"
     })
 public class Component extends ExtensibleElement {
 
@@ -93,7 +101,10 @@ public class Component extends ExtensibleElement {
         @JsonProperty("machine-learning-model")
         MACHINE_LEARNING_MODEL("machine-learning-model"),
         @JsonProperty("data")
-        DATA("data");
+        DATA("data"),
+        @VersionFilter(Version.VERSION_16)
+        @JsonProperty("cryptographic-asset")
+        CRYPTOGRAPHIC_ASSET("cryptographic-asset");
 
         private final String name;
 
@@ -131,11 +142,12 @@ public class Component extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true, localName = "mime-type")
     @JsonProperty("mime-type")
     private String mimeType;
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @Deprecated
+    @VersionFilter(Version.VERSION_12)
     private String author;
-    @VersionFilter(versions = {"1.0"})
+    @VersionFilter(Version.VERSION_11)
     private String publisher;
     private String group;
     private String name;
@@ -147,33 +159,57 @@ public class Component extends ExtensibleElement {
     private String copyright;
     private String cpe;
     private String purl;
-    @VersionFilter(versions = {"1.0", "1.1"})
+    @VersionFilter(Version.VERSION_16)
+    private List<String> omniborId;
+    @VersionFilter(Version.VERSION_16)
+    private List<String> swhid;
+    @VersionFilter(Version.VERSION_12)
     private Swid swid;
     private Boolean modified;
-    @VersionFilter(versions = {"1.0"})
+    @VersionFilter(Version.VERSION_11)
     private Pedigree pedigree;
-    @VersionFilter(versions = {"1.0"})
+    @VersionFilter(Version.VERSION_11)
     private List<ExternalReference> externalReferences;
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
     private List<Component> components;
-    @VersionFilter(versions = {"1.0", "1.1", "1.2"})
+    @VersionFilter(Version.VERSION_13)
     private Evidence evidence;
     @JacksonXmlProperty(isAttribute = true)
     private Type type;
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(Version.VERSION_14)
     private ReleaseNotes releaseNotes;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     @JsonProperty("modelCard")
     private ModelCard modelCard;
 
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3", "1.4"})
+    @VersionFilter(Version.VERSION_15)
     @JsonProperty("data")
     private ComponentData data;
 
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("cryptoProperties")
+    private CryptoProperties cryptoProperties;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("provides")
+    private List<String> provides;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonUnwrapped
+    private Tags tags;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("authors")
+    private List<OrganizationalContact> authors;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
+
     @JsonOnly
-    @VersionFilter(versions = {"1.0", "1.1", "1.2", "1.3"})
+    @VersionFilter(Version.VERSION_14)
     private Signature signature;
 
     public String getBomRef() {
@@ -438,10 +474,68 @@ public class Component extends ExtensibleElement {
         this.data = data;
     }
 
+    @JacksonXmlElementWrapper(useWrapping = false)
+    public List<String> getOmniborId() {
+        return omniborId;
+    }
+
+    public void setOmniborId(final List<String> omniborId) {
+        this.omniborId = omniborId;
+    }
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    public List<String> getSwhid() {
+        return swhid;
+    }
+
+    public void setSwhid(final List<String> swhid) {
+        this.swhid = swhid;
+    }
+
+    public CryptoProperties getCryptoProperties() {
+        return cryptoProperties;
+    }
+
+    public void setCryptoProperties(final CryptoProperties cryptoProperties) {
+        this.cryptoProperties = cryptoProperties;
+    }
+
+    public List<String> getProvides() {
+        return provides;
+    }
+
+    public void setProvides(final List<String> provides) {
+        this.provides = provides;
+    }
+
+    public Tags getTags() {
+        return tags;
+    }
+
+    public void setTags(final Tags tags) {
+        this.tags = tags;
+    }
+
+    public List<OrganizationalContact> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(final List<OrganizationalContact> authors) {
+        this.authors = authors;
+    }
+
+    public OrganizationalEntity getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(final OrganizationalEntity manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright,
-            cpe, purl, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
+            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
     }
 
     @Override
@@ -464,6 +558,8 @@ public class Component extends ExtensibleElement {
                 Objects.equals(cpe, component.cpe) &&
                 Objects.equals(purl, component.purl) &&
                 Objects.equals(swid, component.swid) &&
+                Objects.equals(swhid, component.swhid) &&
+                Objects.equals(omniborId, component.omniborId) &&
                 Objects.equals(components, component.components) &&
                 Objects.equals(evidence, component.evidence) &&
                 Objects.equals(mimeType, component.mimeType) &&
