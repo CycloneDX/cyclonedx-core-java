@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
+import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
 
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class Service extends ExtensibleElement {
     @JsonProperty("x-trust-boundary")
     private Boolean xTrustBoundary;
     private List<ServiceData> data;
-    private LicenseChoice license;
+    private LicenseChoice licenses;
     private List<ExternalReference> externalReferences;
     @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
@@ -183,14 +185,25 @@ public class Service extends ExtensibleElement {
         this.data = data;
     }
 
-    @JacksonXmlProperty(localName = "licenses")
-    @JsonProperty("licenses")
+    @Deprecated
     public LicenseChoice getLicense() {
-        return license;
+        return getLicenses();
     }
 
-    public void setLicense(LicenseChoice license) {
-        this.license = license;
+    @Deprecated
+    @JsonIgnore
+    public void setLicense(LicenseChoice licenseChoice) {
+        setLicenses(licenseChoice);
+    }
+
+    @JsonDeserialize(using = LicenseDeserializer.class)
+    public LicenseChoice getLicenses() {
+        return licenses;
+    }
+
+    @JacksonXmlElementWrapper (useWrapping = false)
+    public void setLicenses(LicenseChoice licenses) {
+        this.licenses = licenses;
     }
 
     @JacksonXmlElementWrapper(localName = "externalReferences")

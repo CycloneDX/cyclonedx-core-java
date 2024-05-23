@@ -28,17 +28,22 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Property;
 import org.cyclonedx.model.license.Expression;
 
 public class LicenseChoiceSerializer
     extends StdSerializer<LicenseChoice>
 {
-  public LicenseChoiceSerializer() {
-    this(LicenseChoice.class);
+  private boolean isXml;
+
+  public LicenseChoiceSerializer(final boolean isXml) {
+    this(LicenseChoice.class, isXml);
+    this.isXml = isXml;
   }
 
-  public LicenseChoiceSerializer(final Class<LicenseChoice> t) {
+  public LicenseChoiceSerializer(final Class<LicenseChoice> t, boolean isXml) {
     super(t);
+    this.isXml = isXml;
   }
 
   @Override
@@ -50,26 +55,81 @@ public class LicenseChoiceSerializer
       return;
     }
 
-    if (gen instanceof ToXmlGenerator) {
-      serializeXml(licenseChoice, gen, provider);
+    if (isXml && gen instanceof ToXmlGenerator) {
+      ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
+      serializeXml(toXmlGenerator, licenseChoice);
     }
     else {
       serializeJson(licenseChoice, gen, provider);
     }
   }
 
-  private void serializeXml(
-      final LicenseChoice licenseChoice, final JsonGenerator gen, final SerializerProvider provider)
-      throws IOException
+    private void serializeXml(ToXmlGenerator toXmlGenerator, LicenseChoice lc) throws IOException {
+    if (CollectionUtils.isNotEmpty(lc.getLicenses())) {
+      toXmlGenerator.writeStartObject();
+      toXmlGenerator.writeFieldName("license");
+      toXmlGenerator.writeStartArray();
+      for (License l : lc.getLicenses()) {
+        serializeXmlAttributes(toXmlGenerator, l.getBomRef(), l.getAcknowledgement());
+
+        if (StringUtils.isNotBlank(l.getId())) {
+          toXmlGenerator.writeStringField("id", l.getId());
+        }
+        else if (StringUtils.isNotBlank(l.getName())) {
+          toXmlGenerator.writeStringField("name", l.getName());
+        }
+
+        if (l.getLicensing() != null) {
+          toXmlGenerator.writeObjectField("licensing", l.getLicensing());
+        }
+
+        if (l.getAttachmentText() != null) {
+          toXmlGenerator.writeObjectField("text", l.getAttachmentText());
+        }
+
+        if (StringUtils.isNotBlank(l.getUrl())) {
+          toXmlGenerator.writeStringField("url", l.getUrl());
+        }
+
+        if (CollectionUtils.isNotEmpty(l.getProperties())) {
+          toXmlGenerator.writeFieldName("properties");
+          toXmlGenerator.writeStartObject();
+
+          for (Property property : l.getProperties()) {
+            toXmlGenerator.writeObjectField("property", property);
+          }
+          toXmlGenerator.writeEndObject();
+        }
+
+        toXmlGenerator.writeEndObject();
+      }
+      toXmlGenerator.writeEndArray();
+      toXmlGenerator.writeEndObject();
+    }
+    else if (lc.getExpression() != null) {
+      serializeExpressionToXml(lc, toXmlGenerator);
+    }
+  }
+
+  private void serializeXmlAttributes(
+      final ToXmlGenerator toXmlGenerator,
+      final String bomRef,
+      final String acknowledgement) throws IOException
   {
-      if (CollectionUtils.isNotEmpty(licenseChoice.getLicenses())) {
-        serializeLicensesToJsonArray(licenseChoice, gen, provider);
-      }
-      else if (licenseChoice.getExpression() != null &&
-          StringUtils.isNotBlank(licenseChoice.getExpression().getValue())) {
-        final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
-        serializeExpressionToXml(licenseChoice, toXmlGenerator);
-      }
+    toXmlGenerator.writeStartObject();
+
+    if (StringUtils.isNotBlank(bomRef)) {
+      toXmlGenerator.setNextIsAttribute(true);
+      toXmlGenerator.writeFieldName("bom-ref");
+      toXmlGenerator.writeString(bomRef);
+      toXmlGenerator.setNextIsAttribute(false);
+    }
+    if (StringUtils.isNotBlank(acknowledgement)) {
+      toXmlGenerator.setNextIsAttribute(true);
+      toXmlGenerator.writeFieldName("acknowledgement");
+      toXmlGenerator.writeString(acknowledgement);
+      toXmlGenerator.setNextIsAttribute(false);
+    }
   }
 
   private void serializeJson(
@@ -85,9 +145,24 @@ public class LicenseChoiceSerializer
     }
   }
 
+  private void serializeExpressionToXml(
+      final LicenseChoice licenseChoice, final ToXmlGenerator toXmlGenerator)
+      throws IOException
+  {
+    toXmlGenerator.writeStartObject();
+    Expression expression = licenseChoice.getExpression();
+    toXmlGenerator.writeFieldName("expression");
+    serializeXmlAttributes(toXmlGenerator, expression.getBomRef(), expression.getAcknowledgement());
+    toXmlGenerator.setNextIsUnwrapped(true);
+    toXmlGenerator.writeStringField("", expression.getValue());
+    toXmlGenerator.writeEndObject();
+    toXmlGenerator.writeEndObject();
+  }
+
   private void serializeLicensesToJsonArray(
       final LicenseChoice licenseChoice, final JsonGenerator gen, final SerializerProvider provider)
-      throws IOException {
+      throws IOException
+  {
     gen.writeStartArray();
     for (License license : licenseChoice.getLicenses()) {
       gen.writeStartObject();
@@ -95,34 +170,6 @@ public class LicenseChoiceSerializer
       gen.writeEndObject();
     }
     gen.writeEndArray();
-  }
-
-  private void serializeExpressionToXml(
-      final LicenseChoice licenseChoice, final ToXmlGenerator toXmlGenerator)
-      throws IOException {
-    toXmlGenerator.writeStartObject();
-    Expression expression = licenseChoice.getExpression();
-    toXmlGenerator.writeFieldName("expression");
-
-    toXmlGenerator.writeStartObject();
-
-    if (StringUtils.isNotBlank(expression.getBomRef())) {
-      toXmlGenerator.setNextIsAttribute(true);
-      toXmlGenerator.writeFieldName("bom-ref");
-      toXmlGenerator.writeString(expression.getBomRef());
-      toXmlGenerator.setNextIsAttribute(false);
-    }
-    if (StringUtils.isNotBlank(expression.getAcknowledgement())) {
-      toXmlGenerator.setNextIsAttribute(true);
-      toXmlGenerator.writeFieldName("acknowledgement");
-      toXmlGenerator.writeString(expression.getAcknowledgement());
-      toXmlGenerator.setNextIsAttribute(false);
-    }
-
-    toXmlGenerator.setNextIsUnwrapped(true);
-    toXmlGenerator.writeStringField("", expression.getValue());
-    toXmlGenerator.writeEndObject();
-    toXmlGenerator.writeEndObject();
   }
 
   private void serializeExpressionToJson(final LicenseChoice licenseChoice, final JsonGenerator gen)

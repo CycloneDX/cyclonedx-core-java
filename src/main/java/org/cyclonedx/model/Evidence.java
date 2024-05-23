@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -42,7 +43,7 @@ import java.util.List;
 public class Evidence
     extends ExtensibleElement
 {
-    private LicenseChoice license;
+    private LicenseChoice licenses;
 
     private List<Copyright> copyright;
 
@@ -55,15 +56,25 @@ public class Evidence
     @VersionFilter(Version.VERSION_15)
     private Callstack callstack;
 
-    @JacksonXmlProperty(localName = "licenses")
-    @JsonProperty("licenses")
-    @JsonDeserialize(using = LicenseDeserializer.class)
+    @Deprecated
     public LicenseChoice getLicenseChoice() {
-        return license;
+        return getLicenses();
     }
 
+    @Deprecated
+    @JsonIgnore
     public void setLicenseChoice(LicenseChoice licenseChoice) {
-        this.license = licenseChoice;
+        setLicenses(licenseChoice);
+    }
+
+    @JsonDeserialize(using = LicenseDeserializer.class)
+    public LicenseChoice getLicenses() {
+        return licenses;
+    }
+
+    @JacksonXmlElementWrapper (useWrapping = false)
+    public void setLicenses(LicenseChoice licenses) {
+        this.licenses = licenses;
     }
 
     @JacksonXmlElementWrapper(useWrapping = false)

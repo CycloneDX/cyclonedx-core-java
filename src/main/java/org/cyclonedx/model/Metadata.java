@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.Version;
+import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.util.deserializer.LifecycleDeserializer;
 import org.cyclonedx.util.deserializer.MetadataDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
@@ -85,7 +86,7 @@ public class Metadata
     private OrganizationalEntity supplier;
 
     @VersionFilter(Version.VERSION_13)
-    private LicenseChoice license;
+    private LicenseChoice licenses;
 
     @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
@@ -159,14 +160,25 @@ public class Metadata
         this.supplier = supplier;
     }
 
-    @JacksonXmlProperty(localName = "licenses")
-    @JsonProperty("licenses")
+    @Deprecated
     public LicenseChoice getLicenseChoice() {
-        return license;
+        return getLicenses();
     }
 
+    @Deprecated
+    @JsonIgnore
     public void setLicenseChoice(LicenseChoice licenseChoice) {
-        this.license = licenseChoice;
+        setLicenses(licenseChoice);
+    }
+
+    @JsonDeserialize(using = LicenseDeserializer.class)
+    public LicenseChoice getLicenses() {
+        return licenses;
+    }
+
+    @JacksonXmlElementWrapper (useWrapping = false)
+    public void setLicenses(LicenseChoice licenses) {
+        this.licenses = licenses;
     }
 
     @JacksonXmlElementWrapper(localName = "properties")
@@ -222,7 +234,7 @@ public class Metadata
                 Objects.equals(component, metadata.component) &&
                 Objects.equals(manufacture, metadata.manufacture) &&
                 Objects.equals(supplier, metadata.supplier) &&
-                Objects.equals(license, metadata.license) &&
+                Objects.equals(licenses, metadata.licenses) &&
                 Objects.equals(lifecycles, metadata.lifecycles) &&
                 Objects.equals(toolInformation, metadata.toolInformation) &&
                 Objects.equals(properties, metadata.properties);
@@ -230,7 +242,7 @@ public class Metadata
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, toolInformation, authors, component, manufacture, supplier, license, properties,
+        return Objects.hash(timestamp, toolInformation, authors, component, manufacture, supplier, licenses, properties,
             lifecycles);
     }
 }

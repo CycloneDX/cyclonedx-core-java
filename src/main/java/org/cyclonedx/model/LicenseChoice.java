@@ -23,22 +23,26 @@ import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
+import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(using = LicenseDeserializer.class)
 public class LicenseChoice {
 
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<License> license;
     private Expression expression;
 
     @JacksonXmlProperty(localName = "license")
-    @JacksonXmlElementWrapper(useWrapping = false)
     public List<License> getLicenses() {
         return license;
     }
