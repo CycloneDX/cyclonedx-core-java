@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom serialNumber="urn:uuid:7fec5e81-b204-4eec-a0d6-383dc39c4867" version="1" xmlns="http://cyclonedx.org/schema/bom/1.5">
+    <metadata>
+        <licenses>
+            <license>
+                <id>MIT</id>
+            </license>
+            <license>
+                <name>MIT</name>
+            </license>
+        </licenses>
+    </metadata>
+    <components>
+        <component type="library">
+            <name>test</name>
+            <licenses>
+                <license bom-ref="test-1">
+                    <id>MIT</id>
+                </license>
+                <license>
+                    <name>MIT WITH Libtool-exception</name>
+                </license>
+            </licenses>
+        </component>
+        <component type="library">
+            <name>test</name>
+            <licenses>
+                <expression bom-ref="test">CC0-1.0</expression>
+            </licenses>
+        </component>
+        <component type="library">
+            <name>test-1</name>
+            <evidence>
+                <licenses>
+                    <license>
+                        <id>Apache-2.0</id>
+                        <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                    </license>
+                    <license>
+                        <id>LGPL-2.1-only</id>
+                        <url>https://opensource.org/licenses/LGPL-2.1</url>
+                    </license>
+                </licenses>
+            </evidence>
+        </component>
+    </components>
+    <services>
+        <service bom-ref="b2a46a4b-8367-4bae-9820-95557cfe03a8">
+            <name>Stock ticker service</name>
+            <licenses>
+                <license>
+                    <name>Partner license</name>
+                </license>
+                <license>
+                    <name>test</name>
+                </license>
+            </licenses>
+        </service>
+    </services>
+</bom>

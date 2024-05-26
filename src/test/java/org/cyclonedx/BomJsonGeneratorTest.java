@@ -182,30 +182,45 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
-    public void testIssue408Regression() throws Exception {
-        Bom bom = createCommonJsonBom("/regression/issue408.json");
-        assertLicenseInformation(bom);
+    public void testIssue408Regression_1_5() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonJsonBom("/regression/issue408-1.5.json");
+        assertLicenseInformation(bom, version);
 
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/regression/issue408.json");
+        assertLicenseInformation(bom, version);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
         File loadedFile = writeToFile(generator.toJsonString());
 
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(loadedFile, Version.VERSION_16));
+        assertTrue(parser.isValid(loadedFile, version));
     }
 
     @Test
     public void testIssue408Regression_xmlToJson() throws Exception {
+        Version version = Version.VERSION_16;
         Bom bom = createCommonXmlBom("/regression/issue408.xml");
-        assertLicenseInformation(bom);
+        assertLicenseInformation(bom, version);
 
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
         File loadedFile = writeToFile(generator.toJsonString());
 
         JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(loadedFile, Version.VERSION_16));
+        assertTrue(parser.isValid(loadedFile, version));
     }
 
-    private void assertLicenseInformation(Bom bom) {
+    private void assertLicenseInformation(Bom bom, Version version) {
 
         //First Component
         Component component = bom.getComponents().get(0);
@@ -220,7 +235,11 @@ public class BomJsonGeneratorTest {
         assertNotNull(license1);
         assertNotNull(license1.getId());
         assertNull(license1.getName());
-        assertNotNull(license1.getAcknowledgement());
+        if(version.getVersion() >= Version.VERSION_16.getVersion()) {
+            assertNotNull(license1.getAcknowledgement());
+        } else {
+            assertNull(license1.getAcknowledgement());
+        }
         assertNotNull(license1.getBomRef());
 
         License license2 = component.getLicenses().getLicenses().get(1);
@@ -240,7 +259,11 @@ public class BomJsonGeneratorTest {
 
         Expression expression = component2.getLicenses().getExpression();
         assertNotNull(expression.getValue());
-        assertNotNull(expression.getAcknowledgement());
+        if(version.getVersion() >= Version.VERSION_16.getVersion()) {
+            assertNotNull(expression.getAcknowledgement());
+        } else {
+            assertNull(expression.getAcknowledgement());
+        }
         assertNotNull(expression.getBomRef());
 
         //Third Component Evidence
