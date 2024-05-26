@@ -60,7 +60,7 @@ public class EvidenceSerializer
 
     if (evidence.getLicenses() != null) {
       gen.writeFieldName("licenses");
-      new LicenseChoiceSerializer(isXml).serialize(evidence.getLicenses(), gen, serializerProvider);
+      new LicenseChoiceSerializer(isXml, version).serialize(evidence.getLicenses(), gen, serializerProvider);
     }
 
     if (CollectionUtils.isNotEmpty(evidence.getCopyright())) {

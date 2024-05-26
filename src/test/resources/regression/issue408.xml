@@ -6,7 +6,10 @@
                 <id>MIT</id>
             </license>
             <license>
-                <name>MIT</name>
+                <name>MIT-test</name>
+                <properties>
+                    <property name="name">value1</property>
+                </properties>
             </license>
         </licenses>
     </metadata>

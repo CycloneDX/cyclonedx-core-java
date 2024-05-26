@@ -9,7 +9,11 @@
         "id": "MIT"
       },
       {
-        "name": "MIT"
+        "name": "MIT-test",
+        "properties": {
+          "name": "name",
+          "value": "value1"
+        }
       }
     ]
   },

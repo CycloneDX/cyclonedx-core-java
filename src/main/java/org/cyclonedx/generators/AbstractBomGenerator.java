@@ -37,7 +37,7 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
 
   protected void setupObjectMapper(boolean isXml) {
     SimpleModule licenseModule = new SimpleModule();
-    licenseModule.addSerializer(new LicenseChoiceSerializer(isXml));
+    licenseModule.addSerializer(new LicenseChoiceSerializer(isXml, version));
     mapper.registerModule(licenseModule);
 
     SimpleModule lifecycleModule = new SimpleModule();

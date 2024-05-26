@@ -34,6 +34,8 @@ public class MetadataDeserializer
 
   private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
 
+  private final LicenseDeserializer licenseDeserializer = new LicenseDeserializer();
+
   @Override
   public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
@@ -82,8 +84,10 @@ public class MetadataDeserializer
     }
 
     if(node.has("licenses")) {
-      LicenseChoice license = mapper.convertValue(node.get("licenses"), LicenseChoice.class);
-      metadata.setLicenseChoice(license);
+      JsonParser licensesParser = node.get("licenses").traverse(jsonParser.getCodec());
+      licensesParser.nextToken();
+      LicenseChoice licenses = licenseDeserializer.deserialize(licensesParser, ctxt);
+      metadata.setLicenses(licenses);
     }
 
     if (node.has("timestamp")) {

@@ -86,7 +86,7 @@ public class MetadataSerializer
 
     if(metadata.getLicenses() != null) {
       jsonGenerator.writeFieldName("licenses");
-      new LicenseChoiceSerializer(isXml).serialize(metadata.getLicenses(), jsonGenerator, serializerProvider);
+      new LicenseChoiceSerializer(isXml, version).serialize(metadata.getLicenses(), jsonGenerator, serializerProvider);
     }
 
     if(metadata.getProperties()!=null) {

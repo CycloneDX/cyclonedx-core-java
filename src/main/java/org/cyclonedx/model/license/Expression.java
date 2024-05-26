@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import org.cyclonedx.Version;
+import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.util.deserializer.ExpressionDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,9 +20,11 @@ public class Expression
 {
   @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
   @JsonProperty("bom-ref")
+  @VersionFilter(Version.VERSION_16)
   private String bomRef;
   @JacksonXmlProperty(isAttribute = true, localName = "acknowledgement")
   @JsonProperty("acknowledgement")
+  @VersionFilter(Version.VERSION_16)
   private String acknowledgement;
 
   @JacksonXmlText

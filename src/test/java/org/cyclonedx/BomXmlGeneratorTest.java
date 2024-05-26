@@ -319,6 +319,30 @@ public class BomXmlGeneratorTest {
     }
 
     @Test
+    public void testIssue408Regression_16To15() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonBomXml("/regression/issue408.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression_16To14() throws Exception {
+        Version version = Version.VERSION_14;
+        Bom bom = createCommonBomXml("/regression/issue408.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
     public void testIssue408Regression() throws Exception {
         Version version = Version.VERSION_16;
         Bom bom = createCommonBomXml("/regression/issue408.xml");
