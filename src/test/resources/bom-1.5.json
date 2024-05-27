@@ -507,8 +507,12 @@
   ],
   "properties" :  [
     {
-      "name" :  "Foo",
-      "value" :  "Bar"
+      "name" : "Foo",
+      "value" : "Bar"
+    },
+    {
+      "name" : "Foo1",
+      "value" : "Bar"
     }
   ],
   "vulnerabilities" :  [

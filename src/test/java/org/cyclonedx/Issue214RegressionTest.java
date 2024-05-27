@@ -61,7 +61,8 @@ public class Issue214RegressionTest
     }
 
     private void performJsonTest(final Version pSpecVersion)
-            throws IOException, ReflectiveOperationException, GeneratorException {
+        throws IOException, ReflectiveOperationException, GeneratorException
+    {
         final Bom inputBom = createIssue214Bom();
         BomJsonGenerator generator = BomGeneratorFactory.createJson(pSpecVersion, inputBom);
 

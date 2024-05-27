@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -39,7 +38,6 @@ import org.cyclonedx.util.deserializer.DependencyDeserializer;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
 import org.cyclonedx.util.serializer.CustomPropertyListSerializer;
-import org.cyclonedx.util.serializer.PropertiesSerializer;
 
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")
