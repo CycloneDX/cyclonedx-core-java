@@ -91,11 +91,11 @@ public class LicenseChoiceSerializer
           toXmlGenerator.writeObjectField("licensing", l.getLicensing());
         }
 
-        if (l.getAttachmentText() != null) {
+        if (l.getAttachmentText() != null && shouldSerializeField(l, "attachmentText")) {
           toXmlGenerator.writeObjectField("text", l.getAttachmentText());
         }
 
-        if (StringUtils.isNotBlank(l.getUrl())) {
+        if (StringUtils.isNotBlank(l.getUrl()) && shouldSerializeField(l, "url")) {
           toXmlGenerator.writeStringField("url", l.getUrl());
         }
 
@@ -119,7 +119,7 @@ public class LicenseChoiceSerializer
       toXmlGenerator.writeEndArray();
       toXmlGenerator.writeEndObject();
     }
-    else if (lc.getExpression() != null) {
+    else if (lc.getExpression() != null && shouldSerializeField(lc, "expression")) {
       serializeExpressionToXml(lc, toXmlGenerator);
     } else {
       toXmlGenerator.writeStartArray();

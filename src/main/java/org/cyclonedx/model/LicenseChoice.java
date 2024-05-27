@@ -21,11 +21,13 @@ package org.cyclonedx.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 
@@ -36,6 +38,7 @@ public class LicenseChoice {
 
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<License> license;
+    @VersionFilter(Version.VERSION_11)
     private Expression expression;
 
     @JacksonXmlProperty(localName = "license")
