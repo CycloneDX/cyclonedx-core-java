@@ -81,6 +81,10 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     evidenceModule.addSerializer(new EvidenceSerializer(isXml, getSchemaVersion()));
     mapper.registerModule(evidenceModule);
 
+    SimpleModule externalSerializer = new SimpleModule();
+    externalSerializer.addSerializer(new ExternalReferenceSerializer(getSchemaVersion()));
+    mapper.registerModule(externalSerializer);
+
     SimpleModule signatoryModule = new SimpleModule();
     signatoryModule.addSerializer(new SignatorySerializer(isXml));
     mapper.registerModule(signatoryModule);
