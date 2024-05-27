@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.util.serializer.CustomSerializerModifier;
+import org.cyclonedx.util.serializer.EnvironmentVarsSerializer;
 import org.cyclonedx.util.serializer.EvidenceSerializer;
 import org.cyclonedx.util.serializer.InputTypeSerializer;
 import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
+import org.cyclonedx.util.serializer.PropertiesSerializer;
 import org.cyclonedx.util.serializer.SignatorySerializer;
 
 public abstract class AbstractBomGenerator extends CycloneDxSchema
@@ -55,6 +58,14 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     SimpleModule outputTypeModule = new SimpleModule();
     outputTypeModule.addSerializer(new OutputTypeSerializer(isXml));
     mapper.registerModule(outputTypeModule);
+
+    SimpleModule envTypeModule = new SimpleModule();
+    envTypeModule.addSerializer(new EnvironmentVarsSerializer(isXml));
+    mapper.registerModule(envTypeModule);
+
+    SimpleModule propertiesModule = new SimpleModule();
+    propertiesModule.setSerializerModifier(new CustomSerializerModifier(isXml, version));
+    mapper.registerModule(propertiesModule);
 
     SimpleModule evidenceModule = new SimpleModule();
     evidenceModule.addSerializer(new EvidenceSerializer(isXml, getSchemaVersion()));
