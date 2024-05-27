@@ -22,18 +22,21 @@ import java.io.IOException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public class OutputTypeDeserializer
     extends AbstractDataTypeDeserializer<OutputType> {
+
+  private final EnvironmentVarsDeserializer environmentVarsDeserializer = new EnvironmentVarsDeserializer();
 
   @Override
   public OutputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
@@ -44,6 +47,10 @@ public class OutputTypeDeserializer
 
     setSourceAndTarget(node, outputType);
     createOutputDataInfo(node, outputType);
+    setReference(node, "source", outputType);
+    setReference(node, "target", outputType);
+
+    createOutputDataInfo(node, outputType, deserializationContext, jsonParser);
 
     if(node.has("properties")) {
       JsonNode propertiesNode = node.get("properties");
@@ -60,16 +67,23 @@ public class OutputTypeDeserializer
     return outputType;
   }
 
-  private void createOutputDataInfo(JsonNode node, OutputType outputType) throws JsonProcessingException {
+  private void createOutputDataInfo(JsonNode node, OutputType outputType, DeserializationContext ctxt, JsonParser jsonParser)
+      throws IOException
+  {
     if (node.has("resource")) {
       JsonNode resourceNode = node.get("resource");
       ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
       outputType.setResource(resource);
-    }
-    else if (node.has("environmentVars")) {
-      setEnvironmentVars(node, outputType);
-    }
-    else if (node.has("data")) {
+    } else if (node.has("environmentVars")) {
+      JsonNode nodes = node.get("environmentVars");
+      ArrayNode environmentVarsNode = (nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(null).add(nodes));
+
+      for (JsonNode envVarNode : environmentVarsNode) {
+        JsonParser nodeParser = envVarNode.traverse(jsonParser.getCodec());
+        EnvironmentVars envVar =  environmentVarsDeserializer.deserialize(nodeParser, ctxt);
+        outputType.setEnvironmentVars(envVar);
+      }
+    } else if (node.has("data")) {
       JsonNode dataNode = node.get("data");
       AttachmentText data = objectMapper.treeToValue(dataNode, AttachmentText.class);
       outputType.setData(data);

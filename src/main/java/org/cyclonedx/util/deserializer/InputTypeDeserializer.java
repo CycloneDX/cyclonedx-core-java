@@ -25,13 +25,19 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.InputType.Parameter;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputType> {
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
+  private final EnvironmentVarsDeserializer environmentVarsDeserializer = new EnvironmentVarsDeserializer();
 
   @Override
   public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
@@ -43,6 +49,11 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
     setSourceAndTarget(node, inputType);
     createInputDataInfo(node, inputType);
 
+    setReference(node, "source", inputType);
+    setReference(node, "target", inputType);
+
+    createInputDataInfo(node, inputType, jsonParser, deserializationContext);
+
     if(node.has("properties")) {
       JsonNode propertiesNode = node.get("properties");
       List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
@@ -52,7 +63,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
     return inputType;
   }
 
-  private void createInputDataInfo(JsonNode node, InputType inputType)
+  private void createInputDataInfo(JsonNode node, InputType inputType, JsonParser jsonParser, DeserializationContext ctxt)
       throws IOException
   {
     if (node.has("resource")) {
@@ -64,7 +75,15 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
       List<Parameter> parameters = objectMapper.convertValue(parametersNode, new TypeReference<List<Parameter>>() {});
       inputType.setParameters(parameters);
     } else if (node.has("environmentVars")) {
-      setEnvironmentVars(node, inputType);
+      JsonNode nodes = node.get("environmentVars");
+      ArrayNode environmentVarsNode = (nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(null).add(nodes));
+
+      for (JsonNode envVarNode : environmentVarsNode) {
+        JsonParser nodeParser = envVarNode.traverse(jsonParser.getCodec());
+        EnvironmentVars envVar =  environmentVarsDeserializer.deserialize(nodeParser, ctxt);
+        inputType.setEnvironmentVars(envVar);
+      }
+      //inputType.setEnvironmentVars(environmentVars);
     } else if (node.has("data")) {
       JsonNode dataNode = node.get("data");
       AttachmentText data = objectMapper.treeToValue(dataNode, AttachmentText.class);

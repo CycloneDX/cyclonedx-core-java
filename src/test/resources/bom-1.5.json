@@ -865,12 +865,12 @@
           "timeEnd" :  "2023-01-01T00:00:00+10:00",
           "workspaces" :  [
             {
-              "bom-ref" :  "workspace-1",
-              "uid" :  "workspace-1",
-              "name" :  "My workspace",
-              "aliases" :  [ "default-workspace" ],
-              "description" :  "Description here",
-              "resourceReferences" :  [
+              "bom-ref" : "workspace-2",
+              "uid" : "workspace-1",
+              "name" : "My workspace",
+              "aliases" : [ "default-workspace" ],
+              "description" : "Description here",
+              "resourceReferences" : [
                 {
                   "ref" :  "component-t"
                 }

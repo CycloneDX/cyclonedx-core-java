@@ -22,33 +22,52 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.Property;
-import org.cyclonedx.model.formulation.common.EnvVariableChoice;
 
-public class EnvVariableChoiceDeserializer
-    extends JsonDeserializer<EnvVariableChoice>
-{
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.cyclonedx.model.formulation.common.EnvironmentVars;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EnvironmentVarsDeserializer extends StdDeserializer<EnvironmentVars> {
+
+  public EnvironmentVarsDeserializer() {
+    this(null);
+  }
+
+  public EnvironmentVarsDeserializer(Class<?> vc) {
+    super(vc);
+  }
+
   @Override
-  public EnvVariableChoice deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    EnvVariableChoice envReferenceChoice = new EnvVariableChoice();
+  public EnvironmentVars deserialize(JsonParser jp, DeserializationContext ctxt)
+      throws IOException{
+    JsonNode node = jp.getCodec().readTree(jp);
+    EnvironmentVars environmentVars = new EnvironmentVars();
+    List<Object> choices = new ArrayList<>();
 
-    if(node.isObject()) {
-      if (node.has("value") && node.has("name")) {
-        Property prop = createProperty(node);
-        envReferenceChoice.setEnvironmentVar(prop);
+      if(node.isObject()) {
+        if (node.has("value")) {
+          if(node.has("name")){
+            Property environmentVar = createProperty(node);
+            choices.add(environmentVar);
+          } else {
+            choices.add(node.get("value").asText());
+          }
+        }
+        else if (node.has("environmentVar")) {
+          JsonNode envVarNode = node.get("environmentVar");
+          Property environmentVar = createProperty(envVarNode);
+          choices.add(environmentVar);
+        }
+      } else {
+        choices.add(node.asText());
       }
-      else if (node.has("environmentVar")) {
-        JsonNode envVarNode = node.get("environmentVar");
-        Property prop = createProperty(envVarNode);
-        envReferenceChoice.setEnvironmentVar(prop);
-      }
-    } else {
-      envReferenceChoice.setValue(node.asText());
-    }
-    return envReferenceChoice;
+
+    environmentVars.setChoices(choices);
+    return environmentVars;
   }
 
   private Property createProperty(JsonNode envVarNode){
