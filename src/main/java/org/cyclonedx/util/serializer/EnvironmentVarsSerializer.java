@@ -39,30 +39,37 @@ public class EnvironmentVarsSerializer
   }
 
   private void serializeXml(List<Object> choices, ToXmlGenerator xmlGenerator) throws IOException {
+    xmlGenerator.writeFieldName("environmentVars");
     if (choices.size() == 1 && choices.get(0) instanceof String) {
       xmlGenerator.writeStartObject();
       xmlGenerator.writeStringField("value", (String) choices.get(0));
       xmlGenerator.writeEndObject();
     } else {
-      xmlGenerator.writeStartArray();
+      xmlGenerator.writeStartObject();
       for (Object choice : choices) {
         if (choice instanceof Property) {
+          xmlGenerator.writeFieldName("environmentVar");
           xmlGenerator.writeStartObject();
           Property prop = (Property) choice;
-          xmlGenerator.writeObjectField("environmentVar", prop);
+          xmlGenerator.setNextIsAttribute(true);
+          xmlGenerator.writeFieldName("name");
+          xmlGenerator.writeString(prop.getName());
+          xmlGenerator.setNextIsAttribute(false);
+
+          xmlGenerator.setNextIsUnwrapped(true);
+          xmlGenerator.writeStringField("", prop.getValue());
           xmlGenerator.writeEndObject();
         } else if (choice instanceof String) {
-          xmlGenerator.writeStartObject();
           xmlGenerator.writeFieldName("value");
           xmlGenerator.writeString((String) choice);
-          xmlGenerator.writeEndObject();
         }
       }
-      xmlGenerator.writeEndArray();
+      xmlGenerator.writeEndObject();
     }
   }
 
   private void serializeJson(List<Object> choices, JsonGenerator jsonGenerator) throws IOException {
+    jsonGenerator.writeFieldName("environmentVars");
     jsonGenerator.writeStartArray();
     if (choices.size() == 1 && choices.get(0) instanceof String) {
       jsonGenerator.writeString((String) choices.get(0));

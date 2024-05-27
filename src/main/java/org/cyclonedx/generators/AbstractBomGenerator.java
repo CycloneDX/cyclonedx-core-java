@@ -6,6 +6,9 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Format;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.component.Component12Mixin;
+import org.cyclonedx.model.component.Component16Mixin;
 import org.cyclonedx.util.serializer.CustomSerializerModifier;
 import org.cyclonedx.util.serializer.EnvironmentVarsSerializer;
 import org.cyclonedx.util.serializer.EvidenceSerializer;
@@ -16,7 +19,6 @@ import org.cyclonedx.util.serializer.LicenseChoiceSerializer;
 import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
-import org.cyclonedx.util.serializer.PropertiesSerializer;
 import org.cyclonedx.util.serializer.SignatorySerializer;
 
 public abstract class AbstractBomGenerator extends CycloneDxSchema
@@ -67,6 +69,10 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     lifecycleModule.addSerializer(new LifecycleSerializer(isXml));
     mapper.registerModule(lifecycleModule);
 
+    SimpleModule hash1Module = new SimpleModule();
+    hash1Module.addSerializer(new HashSerializer(version));
+    mapper.registerModule(hash1Module);
+
     SimpleModule metadataModule = new SimpleModule();
     metadataModule.addSerializer(new MetadataSerializer(isXml, getSchemaVersion()));
     mapper.registerModule(metadataModule);
@@ -110,5 +116,9 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     SimpleModule propertiesModule = new SimpleModule();
     propertiesModule.setSerializerModifier(new CustomSerializerModifier(isXml, version));
     mapper.registerModule(propertiesModule);
+
+    mapper.addMixIn(Component.class, Component12Mixin.class);
+    mapper.addMixIn(Component.class, Component16Mixin.class);
+
   }
 }

@@ -21,7 +21,6 @@ package org.cyclonedx.util.introspector;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import org.cyclonedx.Version;
-import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.model.XmlOnly;
 

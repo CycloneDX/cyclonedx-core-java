@@ -71,11 +71,6 @@ public class ExternalReferenceSerializer
   }
 
   private void serializeXml(final ToXmlGenerator toXmlGenerator, final ExternalReference extRef) throws IOException {
-
-    if(!shouldSerializeField(extRef.getType())) {
-      return;
-    }
-
     toXmlGenerator.writeStartObject();
 
     toXmlGenerator.setNextIsAttribute(true);
@@ -111,10 +106,6 @@ public class ExternalReferenceSerializer
   private void serializeJson(final JsonGenerator gen, final ExternalReference extRef)
       throws IOException
   {
-    if(!shouldSerializeField(extRef.getType())) {
-      return;
-    }
-
     gen.writeStartObject();
     gen.writeStringField("type", extRef.getType().getTypeName());
     gen.writeStringField("url", extRef.getUrl());

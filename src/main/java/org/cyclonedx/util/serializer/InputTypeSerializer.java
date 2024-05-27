@@ -45,8 +45,7 @@ public class InputTypeSerializer
       jsonGenerator.writeFieldName("parameters");
       jsonGenerator.writeObject( input.getParameters());
     }
-   else if (input.getEnvironmentVars() != null) {
-      jsonGenerator.writeFieldName("environmentVars");
+    else if (input.getEnvironmentVars() != null) {
       new EnvironmentVarsSerializer(isXml).serialize(input.getEnvironmentVars(), jsonGenerator, serializerProvider);
     }
     else if (input.getData() != null) {

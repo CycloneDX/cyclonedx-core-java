@@ -158,9 +158,20 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
+
     @Deprecated
     @VersionFilter(Version.VERSION_12)
-    private String author;
+    @JsonProperty("author")
+    private String deprecatedAuthor;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("authors")
+    @JacksonXmlElementWrapper(localName = "authors")
+    @JacksonXmlProperty(localName = "author")
+    private List<OrganizationalContact> authors;
 
     @VersionFilter(Version.VERSION_11)
     private String publisher;
@@ -180,6 +191,7 @@ public class Component extends ExtensibleElement {
 
     @VersionFilter(Version.VERSION_16)
     private List<String> swhid;
+
     @VersionFilter(Version.VERSION_12)
     private Swid swid;
 
@@ -222,14 +234,6 @@ public class Component extends ExtensibleElement {
     @JsonUnwrapped
     private Tags tags;
 
-    @VersionFilter(Version.VERSION_16)
-    @JsonProperty("authors")
-    private List<OrganizationalContact> authors;
-
-    @VersionFilter(Version.VERSION_16)
-    @JsonProperty("manufacturer")
-    private OrganizationalEntity manufacturer;
-
     @JsonOnly
     @VersionFilter(Version.VERSION_14)
     private Signature signature;
@@ -258,12 +262,20 @@ public class Component extends ExtensibleElement {
         this.supplier = supplier;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getDeprecatedAuthor() {
+        return deprecatedAuthor;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setDeprecatedAuthorAuthor(String author) {
+        this.deprecatedAuthor = author;
+    }
+
+    public List<OrganizationalContact> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<OrganizationalContact> authors) {
+        this.authors = authors;
     }
 
     public String getPublisher() {
@@ -552,14 +564,6 @@ public class Component extends ExtensibleElement {
         this.tags = tags;
     }
 
-    public List<OrganizationalContact> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(final List<OrganizationalContact> authors) {
-        this.authors = authors;
-    }
-
     public OrganizationalEntity getManufacturer() {
         return manufacturer;
     }
@@ -570,7 +574,7 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenses, copyright,
+        return Objects.hash(deprecatedAuthor, publisher, group, name, version, description, scope, hashes, licenses, copyright,
             cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
     }
 
@@ -581,7 +585,7 @@ public class Component extends ExtensibleElement {
         Component component = (Component) o;
         return modified == component.modified &&
                 Objects.equals(supplier, component.supplier) &&
-                Objects.equals(author, component.author) &&
+                Objects.equals(getDeprecatedAuthor(), component.getDeprecatedAuthor()) &&
                 Objects.equals(publisher, component.publisher) &&
                 Objects.equals(group, component.group) &&
                 Objects.equals(name, component.name) &&

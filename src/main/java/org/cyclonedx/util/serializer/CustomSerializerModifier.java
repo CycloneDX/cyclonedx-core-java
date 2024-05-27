@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 
+
 import java.util.Iterator;
 import java.util.List;
 
