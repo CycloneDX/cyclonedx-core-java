@@ -26,13 +26,13 @@ public class InputTypeSerializer
       throws IOException {
     if (isXml && jsonGenerator instanceof ToXmlGenerator) {
       ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
-      createInputChoice(value, xmlGenerator);
+      createInputChoice(value, xmlGenerator, serializerProvider);
     } else {
-      createInputChoice(value, jsonGenerator);
+      createInputChoice(value, jsonGenerator, serializerProvider);
     }
   }
 
-  private void createInputChoice(final InputType input, final JsonGenerator jsonGenerator)
+  private void createInputChoice(final InputType input, final JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
       throws IOException
   {
     jsonGenerator.writeStartObject();
@@ -45,8 +45,9 @@ public class InputTypeSerializer
       jsonGenerator.writeFieldName("parameters");
       jsonGenerator.writeObject( input.getParameters());
     }
-    else if (input.getEnvironmentVars() != null && !input.getEnvironmentVars().isEmpty()) {
-      parseEnvironmentVars(jsonGenerator, input.getEnvironmentVars());
+   else if (input.getEnvironmentVars() != null) {
+      jsonGenerator.writeFieldName("environmentVars");
+      new EnvironmentVarsSerializer(isXml).serialize(input.getEnvironmentVars(), jsonGenerator, serializerProvider);
     }
     else if (input.getData() != null) {
       jsonGenerator.writeFieldName("data");
