@@ -141,30 +141,6 @@ public class BomJsonGeneratorTest {
         assertTrue(jsonParser.isValid(file, Version.VERSION_13));
     }
 
-    static Stream<Arguments> testData() {
-        return Stream.of(
-            Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.xml"),
-            Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
-            Arguments.of(Version.VERSION_14, "/bom-1.4.xml"),
-            Arguments.of(Version.VERSION_13, "/bom-1.3.xml")
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("testData")
-    public void testJsonGeneration(Version version, String bomXmlPath)
-        throws Exception
-    {
-        Bom bom = createCommonXmlBom(bomXmlPath);
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
-
-        assertEquals(version, generator.getSchemaVersion());
-
-        File file = writeToFile(generator.toJsonString());
-        JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, version));
-    }
-
     @Test
     public void schema14MultipleDependenciesJsonTest() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(
@@ -190,6 +166,59 @@ public class BomJsonGeneratorTest {
         assertNotNull(bom2.getComponents().get(0).getExternalReferences());
         assertEquals("bom", bom2.getComponents().get(0).getExternalReferences().get(0).getType().getTypeName());
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", bom2.getComponents().get(0).getExternalReferences().get(0).getUrl());
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBomProvider")
+    public void testGeneration_backwardCompatibility(Version version, String bomFilePath) throws Exception {
+        Bom bom = createCommonJsonBom(bomFilePath);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+        //System.out.println(generator.toJsonString());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBomProvider")
+    public void testGeneration_backwardCompatibility_jsonToXml(Version version, String bomFilePath) throws Exception {
+        Bom bom = createCommonJsonBom(bomFilePath);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+        //System.out.println(generator.toXmlString());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private static Stream<Arguments> versionAndBomProvider() {
+        return Stream.of(
+            // Backward compatibility tests from BOM 1.2
+            Arguments.of(Version.VERSION_12, "/bom-1.2.json"),
+
+            // Backward compatibility tests from BOM 1.3
+            Arguments.of(Version.VERSION_13, "/bom-1.3.json"),
+            Arguments.of(Version.VERSION_12, "/bom-1.3.json"),
+
+            // Backward compatibility tests from BOM 1.4
+            Arguments.of(Version.VERSION_14, "/bom-1.4.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.4.json"),
+            Arguments.of(Version.VERSION_12, "/bom-1.4.json"),
+
+            // Backward compatibility tests from BOM 1.5
+            Arguments.of(Version.VERSION_15, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_14, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_12, "/bom-1.5.json"),
+
+            // Backward compatibility tests from BOM 1.6
+            Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.json"),
+            Arguments.of(Version.VERSION_15, "/1.6/valid-bom-1.6.json"),
+            Arguments.of(Version.VERSION_14, "/1.6/valid-bom-1.6.json"),
+            Arguments.of(Version.VERSION_13, "/1.6/valid-bom-1.6.json"),
+            Arguments.of(Version.VERSION_12, "/1.6/valid-bom-1.6.json")
+        );
     }
 
     @Test

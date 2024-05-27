@@ -28,6 +28,9 @@ import org.cyclonedx.Format;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.component.Component12Mixin;
+import org.cyclonedx.model.component.Component16Mixin;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +53,8 @@ public class JsonParser extends CycloneDxSchema implements Parser {
 
     public JsonParser() {
         mapper = new ObjectMapper();
+        mapper.addMixIn(Component.class, Component12Mixin.class);
+        mapper.addMixIn(Component.class, Component16Mixin.class);
     }
 
     /**
