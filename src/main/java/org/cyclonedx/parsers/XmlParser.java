@@ -26,6 +26,9 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.component.Component12Mixin;
+import org.cyclonedx.model.component.Component16Mixin;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
@@ -66,6 +69,8 @@ public class XmlParser extends CycloneDxSchema implements Parser {
 
     public XmlParser() {
         mapper = new XmlMapper();
+        mapper.addMixIn(Component.class, Component12Mixin.class);
+        mapper.addMixIn(Component.class, Component16Mixin.class);
     }
 
     private static final Map<String, String> NAMESPACE_TO_VERSION_MAP = new HashMap<>();
