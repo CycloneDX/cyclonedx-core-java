@@ -9,9 +9,10 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.util.deserializer.EnvironmentVarsDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -20,10 +21,7 @@ import org.cyclonedx.model.Property;
     "choices"
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@JsonSubTypes({
-    @JsonSubTypes.Type(value = Property.class, name = "environmentVar"),
-    @JsonSubTypes.Type(value = String.class, name = "value")
-})
+@JsonDeserialize(using = EnvironmentVarsDeserializer.class)
 public class EnvironmentVars
 {
   @XmlElements({

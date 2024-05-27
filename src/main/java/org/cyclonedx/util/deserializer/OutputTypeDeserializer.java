@@ -25,7 +25,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.EnvironmentVars;
@@ -74,16 +73,15 @@ public class OutputTypeDeserializer
       JsonNode resourceNode = node.get("resource");
       ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
       outputType.setResource(resource);
-    } else if (node.has("environmentVars")) {
+    }
+    else if (node.has("environmentVars")) {
       JsonNode nodes = node.get("environmentVars");
-      ArrayNode environmentVarsNode = (nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(null).add(nodes));
 
-      for (JsonNode envVarNode : environmentVarsNode) {
-        JsonParser nodeParser = envVarNode.traverse(jsonParser.getCodec());
-        EnvironmentVars envVar =  environmentVarsDeserializer.deserialize(nodeParser, ctxt);
-        outputType.setEnvironmentVars(envVar);
-      }
-    } else if (node.has("data")) {
+      JsonParser nodeParser = nodes.traverse(jsonParser.getCodec());
+      EnvironmentVars envVar = environmentVarsDeserializer.deserialize(nodeParser, ctxt);
+      outputType.setEnvironmentVars(envVar);
+    }
+    else if (node.has("data")) {
       JsonNode dataNode = node.get("data");
       AttachmentText data = objectMapper.treeToValue(dataNode, AttachmentText.class);
       outputType.setData(data);

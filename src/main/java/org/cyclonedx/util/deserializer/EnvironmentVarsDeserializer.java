@@ -48,26 +48,45 @@ public class EnvironmentVarsDeserializer extends StdDeserializer<EnvironmentVars
     EnvironmentVars environmentVars = new EnvironmentVars();
     List<Object> choices = new ArrayList<>();
 
-      if(node.isObject()) {
-        if (node.has("value")) {
-          if(node.has("name")){
-            Property environmentVar = createProperty(node);
-            choices.add(environmentVar);
-          } else {
-            choices.add(node.get("value").asText());
-          }
-        }
-        else if (node.has("environmentVar")) {
-          JsonNode envVarNode = node.get("environmentVar");
-          Property environmentVar = createProperty(envVarNode);
-          choices.add(environmentVar);
-        }
-      } else {
-        choices.add(node.asText());
+    if (node.isObject()) {
+      processObject(node, choices);
+    }
+    else if (node.isArray()) {
+      for (JsonNode n : node) {
+        processObject(n, choices);
       }
+    }
+    else {
+      choices.add(node.asText());
+    }
 
     environmentVars.setChoices(choices);
     return environmentVars;
+  }
+
+  private void processObject(JsonNode node,  List<Object> choices ){
+    if (node.has("environmentVar") && node.has("value")) {
+      JsonNode envVarNode = node.get("environmentVar");
+      Property environmentVar = createProperty(envVarNode);
+      choices.add(environmentVar);
+      choices.add(node.get("value").asText());
+    }
+    else if (node.has("value")) {
+      if (node.has("name")) {
+        Property environmentVar = createProperty(node);
+        choices.add(environmentVar);
+      }
+      else {
+        choices.add(node.get("value").asText());
+      }
+    }
+    else if (node.has("environmentVar")) {
+      JsonNode envVarNode = node.get("environmentVar");
+      Property environmentVar = createProperty(envVarNode);
+      choices.add(environmentVar);
+    } else if(node.isTextual()) {
+      choices.add(node.asText());
+    }
   }
 
   private Property createProperty(JsonNode envVarNode){
