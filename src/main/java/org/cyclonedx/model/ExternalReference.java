@@ -72,6 +72,7 @@ public class ExternalReference {
         RELEASE_NOTES("release-notes"),
         @VersionFilter(Version.VERSION_15)
         @JsonProperty("security-contact")
+        @VersionFilter(Version.VERSION_15)
         SECURITY_CONTACT("security-contact"),
         @JsonProperty("model_card")
         MODEL_CARD("model_card"),
