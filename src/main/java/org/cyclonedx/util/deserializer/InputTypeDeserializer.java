@@ -25,11 +25,18 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.AttachmentText;
+import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.InputType.Parameter;
 
 public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputType> {
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
+  private final EnvironmentVarsDeserializer environmentVarsDeserializer = new EnvironmentVarsDeserializer();
 
   @Override
   public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
