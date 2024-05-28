@@ -37,7 +37,6 @@ import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.util.deserializer.DependencyDeserializer;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
-import org.cyclonedx.util.serializer.CustomPropertyListSerializer;
 
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "bom")
