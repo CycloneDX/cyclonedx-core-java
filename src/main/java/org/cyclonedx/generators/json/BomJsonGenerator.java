@@ -44,7 +44,9 @@ public class BomJsonGenerator extends AbstractBomGenerator
 
   /**
    * Constructs a new BomGenerator object.
-   * @param bom the BOM to generate
+   * @param bom the BOM to generate.
+   * @param version the version of the CycloneDX schema to use.
+   *
    */
   public BomJsonGenerator(Bom bom, final Version version) {
     super(version, bom, Format.JSON);

@@ -175,7 +175,7 @@ public class BomJsonGeneratorTest {
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
         File loadedFile = writeToFile(generator.toJsonString());
-        //System.out.println(generator.toJsonString());
+
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(loadedFile, version));
     }
@@ -187,7 +187,7 @@ public class BomJsonGeneratorTest {
 
         BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
         File loadedFile = writeToFile(generator.toXmlString());
-        //System.out.println(generator.toXmlString());
+
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
     }

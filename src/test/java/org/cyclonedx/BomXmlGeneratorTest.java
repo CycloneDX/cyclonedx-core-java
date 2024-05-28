@@ -331,7 +331,7 @@ public class BomXmlGeneratorTest {
 
         BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
         File loadedFile = writeToFile(generator.toXmlString());
-        System.out.println(generator.toXmlString());
+
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
     }
