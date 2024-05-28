@@ -46,7 +46,8 @@ public class BomXmlGenerator extends AbstractBomGenerator
 
     /**
      * Constructs a new BomXmlGenerator object.
-     * @param bom the BOM to generate
+     * @param bom the BOM to generate.
+     * @param version the version of the CycloneDX schema to use.
      */
     public BomXmlGenerator(final Bom bom, final Version version) {
         super(version, bom);
@@ -133,6 +134,8 @@ public class BomXmlGenerator extends AbstractBomGenerator
      *
      * @return a String of the BoM
      * @since 1.1.0
+     *
+     * @throws GeneratorException if an error occurs
      */
     public String toXmlString() throws GeneratorException {
         return toXML(bom, true);

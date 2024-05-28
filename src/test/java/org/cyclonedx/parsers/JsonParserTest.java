@@ -214,7 +214,7 @@ public class JsonParserTest
         assertEquals("pkg:npm/acme/component@1.0.0", d1.getRef());
 
         //Assert Bom Properties
-        assertEquals(bom.getProperties().size(), 1);
+        assertEquals(bom.getProperties().size(), 2);
 
         //Assert Annotations
         assertAnnotations(bom, Version.VERSION_15);
