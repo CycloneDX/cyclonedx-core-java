@@ -206,6 +206,7 @@ public class JsonParserTest
 
         //Assert Metadata License Choice
         assertEquals(2, bom.getMetadata().getLicenseChoice().getLicenses().size());
+        assertEquals(2, bom.getMetadata().getLicenses().getLicenses().size());
 
         // Dependencies
         assertEquals(2, bom.getDependencies().size());
@@ -261,7 +262,7 @@ public class JsonParserTest
         final Bom bom = getJsonBom("1.6/valid-license-id-1.6.json");
 
         assertNotNull(bom.getComponents());
-        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        LicenseChoice lc = bom.getComponents().get(0).getLicenses();
         assertNotNull(lc.getLicenses());
         assertEquals(1, lc.getLicenses().size());
 
@@ -276,7 +277,7 @@ public class JsonParserTest
         final Bom bom = getJsonBom("1.6/valid-license-expression-1.6.json");
 
         assertNotNull(bom.getComponents());
-        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        LicenseChoice lc = bom.getComponents().get(0).getLicenses();
         assertNotNull(lc.getExpression());
 
         Expression expression = lc.getExpression();

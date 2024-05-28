@@ -24,7 +24,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.license.Expression;
@@ -38,21 +40,29 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
   public LicenseChoice deserialize(
       final JsonParser p, final DeserializationContext ctxt) throws IOException
   {
+    ObjectMapper codec = (ObjectMapper) p.getCodec();
+    boolean isXml = codec instanceof XmlMapper;
     JsonNode rootNode = p.getCodec().readTree(p);
+
     if (!rootNode.isEmpty()) {
       ArrayNode nodes = (rootNode.isArray() ? (ArrayNode) rootNode : new ArrayNode(null).add(rootNode));
       LicenseChoice licenseChoice = new LicenseChoice();
 
       for (JsonNode node : nodes) {
-        if (node.has("license")) {
-          processLicenseNode(p, node.get("license"), licenseChoice);
-        }
-        else {
-          JsonParser expressionParser = node.traverse(p.getCodec());
-          expressionParser.nextToken();
-          Expression expression = expressionDeserializer.deserialize(expressionParser, ctxt);
-          licenseChoice.setExpression(expression);
-          return licenseChoice;
+        if(isXml) {
+          if (node.has("license")) {
+            processLicenseNode(p, node.get("license"), licenseChoice);
+          }
+          else {
+            processExpression(p, node, licenseChoice, ctxt);
+          }
+        } else {
+          if (node.has("expression")) {
+            processExpression(p, node, licenseChoice, ctxt);
+          }
+          else {
+            processLicenseNode(p, node, licenseChoice);
+          }
         }
       }
       return licenseChoice;
@@ -67,5 +77,17 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
       License licenseObj = p.getCodec().treeToValue(license, License.class);
       licenseChoice.addLicense(licenseObj);
     }
+  }
+
+  private void processExpression(
+      final JsonParser p,
+      JsonNode node,
+      LicenseChoice licenseChoice,
+      DeserializationContext ctxt) throws IOException
+  {
+    JsonParser expressionParser = node.traverse(p.getCodec());
+    expressionParser.nextToken();
+    Expression expression = expressionDeserializer.deserialize(expressionParser, ctxt);
+    licenseChoice.setExpression(expression);
   }
 }

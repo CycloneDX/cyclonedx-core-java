@@ -1,0 +1,76 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1624fa6f-aebe-4dba-8ead-f2c876c9b832",
+  "version": 1,
+  "metadata": {
+    "licenses": [
+      {
+        "id": "MIT"
+      },
+      {
+        "name": "MIT-test",
+        "properties": {
+          "name": "name",
+          "value": "value1"
+        }
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "test",
+      "licenses": [
+        {
+          "id": "MIT",
+          "acknowledgement": "concluded",
+          "bom-ref": "test-1"
+        },
+        {
+          "name": "MIT WITH Libtool-exception"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "test",
+      "licenses": [
+        {
+          "expression": "CC0-1.0",
+          "acknowledgement": "concluded",
+          "bom-ref": "test"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "test-1",
+      "evidence": {
+        "licenses": [
+          {
+            "id": "Apache-2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0"
+          },
+          {
+            "id": "LGPL-2.1-only",
+            "url": "https://opensource.org/licenses/LGPL-2.1"
+          }
+        ]
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "Stock ticker service",
+      "licenses": [
+        {
+          "name": "Partner license"
+        },
+        {
+          "name": "test"
+        }
+      ]
+    }
+  ]
+}

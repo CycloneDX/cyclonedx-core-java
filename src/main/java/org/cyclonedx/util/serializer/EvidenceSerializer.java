@@ -58,9 +58,9 @@ public class EvidenceSerializer
       gen.writeObjectField("callstack", evidence.getCallstack());
     }
 
-    if (evidence.getLicenseChoice() != null) {
+    if (evidence.getLicenses() != null) {
       gen.writeFieldName("licenses");
-      new LicenseChoiceSerializer().serialize(evidence.getLicenseChoice(), gen, serializerProvider);
+      new LicenseChoiceSerializer(isXml, version).serialize(evidence.getLicenses(), gen, serializerProvider);
     }
 
     if (CollectionUtils.isNotEmpty(evidence.getCopyright())) {

@@ -28,6 +28,9 @@ import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.Service;
+import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
@@ -125,7 +128,7 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema12GenerationTest() throws Exception {
-        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonBom("/bom-1.2.json"));
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_12, createCommonJsonBom("/bom-1.2.json"));
         Document doc = generator.generate();
         testDocument(doc);
 
@@ -174,7 +177,7 @@ public class BomXmlGeneratorTest {
     public void testXmlGeneration(Version version, String bomXmlPath)
         throws Exception
     {
-        Bom bom = createCommonBom(bomXmlPath);
+        Bom bom = createCommonJsonBom(bomXmlPath);
         BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
 
         assertEquals(version, generator.getSchemaVersion());
@@ -291,7 +294,7 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema14JBomLinkGenerationTest() throws Exception {
-        Bom bom = createCommonBom("/bom-1.4-bomlink.json");
+        Bom bom = createCommonJsonBom("/bom-1.4-bomlink.json");
         BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_14, bom);
         File file = writeToFile(generator.toXmlString());
         XmlParser parser = new XmlParser();
@@ -300,6 +303,191 @@ public class BomXmlGeneratorTest {
         assertNotNull(bom2.getComponents().get(0).getExternalReferences());
         assertEquals("bom", bom2.getComponents().get(0).getExternalReferences().get(0).getType().getTypeName());
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", bom2.getComponents().get(0).getExternalReferences().get(0).getUrl());
+    }
+
+    @Test
+    public void testIssue408Regression_1_5() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonBomXml("/regression/issue408-1.5.xml");
+        assertLicenseInformation(bom, version);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression_16To15() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonBomXml("/regression/issue408.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression_16To14() throws Exception {
+        Version version = Version.VERSION_14;
+        Bom bom = createCommonBomXml("/regression/issue408.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonBomXml("/regression/issue408.xml");
+        assertLicenseInformation(bom, version);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression_jsonToXml() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/regression/issue408.json");
+        assertLicenseInformation(bom, version);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private void assertLicenseInformation(Bom bom, Version version) {
+
+        //First Component
+        Component component = bom.getComponents().get(0);
+        assertNotNull(component);
+        assertNotNull(component.getLicenseChoice());
+        assertNotNull(component.getLicenses());
+        assertNotNull(component.getLicenses().getLicenses());
+        assertFalse(component.getLicenses().getLicenses().isEmpty());
+        assertNull(component.getLicenses().getExpression());
+
+        License license1 = component.getLicenses().getLicenses().get(0);
+        assertNotNull(license1);
+        assertNotNull(license1.getId());
+        assertNull(license1.getName());
+
+        if(version.getVersion() >= Version.VERSION_16.getVersion()) {
+            assertNotNull(license1.getAcknowledgement());
+        } else {
+            assertNull(license1.getAcknowledgement());
+        }
+        assertNotNull(license1.getBomRef());
+
+        License license2 = component.getLicenses().getLicenses().get(1);
+        assertNotNull(license2);
+        assertNotNull(license2.getName());
+        assertNull(license2.getId());
+        assertNull(license2.getAcknowledgement());
+        assertNull(license2.getBomRef());
+
+        //Second Component
+        Component component2 = bom.getComponents().get(1);
+        assertNotNull(component2);
+        assertNotNull(component2.getLicenseChoice());
+        assertNotNull(component2.getLicenses());
+        assertNull(component2.getLicenses().getLicenses());
+        assertNotNull(component2.getLicenses().getExpression());
+
+        Expression expression = component2.getLicenses().getExpression();
+        assertNotNull(expression.getValue());
+        if(version.getVersion() >= Version.VERSION_16.getVersion()) {
+            assertNotNull(expression.getAcknowledgement());
+        } else {
+            assertNull(expression.getAcknowledgement());
+        }
+        assertNotNull(expression.getBomRef());
+
+        //Third Component Evidence
+        Component component3 = bom.getComponents().get(2);
+        assertNotNull(component3);
+        LicenseChoice lcEvidence = component3.getEvidence().getLicenses();
+        assertNotNull(lcEvidence);
+        assertNotNull(lcEvidence.getLicenses());
+        assertFalse(lcEvidence.getLicenses().isEmpty());
+        assertNull(lcEvidence.getExpression());
+
+        License license4 = lcEvidence.getLicenses().get(0);
+        assertNotNull(license4);
+        assertNotNull(license4.getId());
+        assertNull(license4.getName());
+        assertNull(license4.getAcknowledgement());
+        assertNull(license4.getBomRef());
+        assertNotNull(license4.getUrl());
+
+        License license5 = lcEvidence.getLicenses().get(1);
+        assertNotNull(license5);
+        assertNotNull(license5.getId());
+        assertNull(license5.getName());
+        assertNull(license5.getAcknowledgement());
+        assertNull(license5.getBomRef());
+        assertNotNull(license5.getUrl());
+
+        //Services
+        Service service = bom.getServices().get(0);
+        assertNotNull(service);
+        LicenseChoice lcService = service.getLicenses();
+        assertNotNull(lcService);
+        assertNotNull(lcService.getLicenses());
+        assertFalse(lcService.getLicenses().isEmpty());
+        assertNull(lcService.getExpression());
+
+        License license6 = lcService.getLicenses().get(0);
+        assertNotNull(license6);
+        assertNull(license6.getId());
+        assertNotNull(license6.getName());
+        assertNull(license6.getAcknowledgement());
+        assertNull(license6.getBomRef());
+        assertNull(license6.getUrl());
+
+        License license7 = lcService.getLicenses().get(1);
+        assertNotNull(license7);
+        assertNull(license7.getId());
+        assertNotNull(license7.getName());
+        assertNull(license7.getAcknowledgement());
+        assertNull(license7.getBomRef());
+        assertNull(license7.getUrl());
+
+
+        //Metadata
+        Metadata metadata = bom.getMetadata();
+        assertNotNull(metadata);
+        assertNotNull(metadata.getLicenseChoice());
+        assertNotNull(metadata.getLicenses());
+        assertNotNull(metadata.getLicenses().getLicenses());
+        assertFalse(metadata.getLicenses().getLicenses().isEmpty());
+        assertNull(metadata.getLicenses().getExpression());
+
+        License license8 = metadata.getLicenses().getLicenses().get(0);
+        assertNotNull(license8);
+        assertNotNull(license8.getId());
+        assertNull(license8.getName());
+        assertNull(license8.getAcknowledgement());
+        assertNull(license8.getBomRef());
+
+        License license9 = metadata.getLicenses().getLicenses().get(1);
+        assertNotNull(license9);
+        assertNotNull(license9.getName());
+        assertNull(license9.getId());
+        assertNull(license9.getAcknowledgement());
+        assertNull(license9.getBomRef());
     }
 
     private File writeToFile(String xmlString) throws Exception {
@@ -315,7 +503,7 @@ public class BomXmlGeneratorTest {
         return parser.parse(bomBytes);
     }
 
-    private Bom createCommonBom(String resource) throws Exception {
+    private Bom createCommonJsonBom(String resource) throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(this.getClass().getResourceAsStream(resource));
         JsonParser parser = new JsonParser();
         return parser.parse(bomBytes);

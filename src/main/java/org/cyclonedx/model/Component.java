@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.component.ModelCard;
@@ -39,6 +40,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.github.packageurl.PackageURL;
+import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
 @SuppressWarnings("unused")
@@ -155,7 +157,7 @@ public class Component extends ExtensibleElement {
     private String description;
     private Scope scope;
     private List<Hash> hashes;
-    private LicenseChoice license;
+    private LicenseChoice licenses;
     private String copyright;
     private String cpe;
     private String purl;
@@ -310,14 +312,25 @@ public class Component extends ExtensibleElement {
         this.hashes.add(hash);
     }
 
-    @JacksonXmlProperty(localName = "licenses")
-    @JsonProperty("licenses")
-    public LicenseChoice getLicenseChoice() {
-        return license;
+    @JsonDeserialize(using = LicenseDeserializer.class)
+    public LicenseChoice getLicenses() {
+        return licenses;
     }
 
+    @JacksonXmlElementWrapper (useWrapping = false)
+    public void setLicenses(LicenseChoice licenses) {
+        this.licenses = licenses;
+    }
+
+    @Deprecated
+    public LicenseChoice getLicenseChoice() {
+        return getLicenses();
+    }
+
+    @Deprecated
+    @JsonIgnore
     public void setLicenseChoice(LicenseChoice licenseChoice) {
-        this.license = licenseChoice;
+        setLicenses(licenseChoice);
     }
 
     public String getCopyright() {
@@ -534,7 +547,7 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, license, copyright,
+        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenses, copyright,
             cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
     }
 
@@ -553,7 +566,7 @@ public class Component extends ExtensibleElement {
                 Objects.equals(description, component.description) &&
                 Objects.equals(scope, component.scope) &&
                 Objects.equals(hashes, component.hashes) &&
-                Objects.equals(license, component.license) &&
+                Objects.equals(licenses, component.licenses) &&
                 Objects.equals(copyright, component.copyright) &&
                 Objects.equals(cpe, component.cpe) &&
                 Objects.equals(purl, component.purl) &&

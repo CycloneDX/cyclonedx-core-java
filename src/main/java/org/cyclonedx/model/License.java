@@ -50,6 +50,7 @@ public class License extends ExtensibleElement {
 
     @JacksonXmlProperty(isAttribute = true, localName = "acknowledgement")
     @JsonProperty("acknowledgement")
+    @VersionFilter(Version.VERSION_16)
     private String acknowledgement;
 
     @VersionFilter(Version.VERSION_15)

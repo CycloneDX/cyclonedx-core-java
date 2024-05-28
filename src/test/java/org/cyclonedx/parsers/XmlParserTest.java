@@ -201,6 +201,7 @@ public class XmlParserTest
         assertEquals("An example application", c1.getDescription());
         assertEquals("Copyright Example Inc. All rights reserved.", c1.getCopyright());
         assertEquals("Apache-2.0", c1.getLicenseChoice().getLicenses().get(0).getId());
+        assertEquals("Apache-2.0", c1.getLicenses().getLicenses().get(0).getId());
         assertEquals(2, c1.getComponents().size());
     }
 
@@ -428,7 +429,7 @@ public class XmlParserTest
         final Bom bom = getXmlBom("1.6/valid-license-id-1.6.xml");
 
         assertNotNull(bom.getComponents());
-        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        LicenseChoice lc = bom.getComponents().get(0).getLicenses();
         assertNotNull(lc.getLicenses());
         assertEquals(1, lc.getLicenses().size());
 
@@ -443,7 +444,7 @@ public class XmlParserTest
         final Bom bom = getXmlBom("1.6/valid-license-expression-1.6.xml");
 
         assertNotNull(bom.getComponents());
-        LicenseChoice lc = bom.getComponents().get(0).getLicenseChoice();
+        LicenseChoice lc = bom.getComponents().get(0).getLicenses();
         assertNotNull(lc.getExpression());
 
         Expression expression = lc.getExpression();

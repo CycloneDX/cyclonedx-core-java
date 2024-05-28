@@ -622,6 +622,7 @@ public class AbstractParserTest
     assertEquals(ServiceData.Flow.BI_DIRECTIONAL, data.get(2).getFlow());
     assertEquals("public", data.get(2).getClassification());
     assertNotNull(s.getLicense());
+    assertNotNull(s.getLicenses());
     assertEquals(1, s.getLicense().getLicenses().size());
     assertEquals("Partner license", s.getLicense().getLicenses().get(0).getName());
     assertEquals(2, s.getExternalReferences().size());
@@ -811,9 +812,11 @@ public class AbstractParserTest
     //License
     if (version.getVersion() > Version.VERSION_12.getVersion()) {
       assertNotNull(metadata.getLicenseChoice());
+      assertNotNull(metadata.getLicenses());
     }
     else {
       assertNull(metadata.getLicenseChoice());
+      assertNull(metadata.getLicenses());
     }
 
     //Tool
@@ -892,6 +895,7 @@ public class AbstractParserTest
 
     assertNull(metadata.getLifecycles());
     assertNull(metadata.getLicenseChoice());
+    assertNull(metadata.getLicenses());
     assertNull(metadata.getAuthors());
     assertNull(metadata.getComponent());
     assertNull(metadata.getManufacture());
