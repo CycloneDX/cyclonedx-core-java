@@ -79,7 +79,6 @@ public class Bom extends ExtensibleElement {
     private DependencyList dependencies;
 
     @VersionFilter(Version.VERSION_11)
-    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     private List<ExternalReference> externalReferences;
 
     @VersionFilter(Version.VERSION_13)
@@ -179,6 +178,9 @@ public class Bom extends ExtensibleElement {
         dependencies.add(dependency);
     }
 
+    @JacksonXmlElementWrapper(localName = "externalReferences")
+    @JacksonXmlProperty(localName = "reference")
+    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     public List<ExternalReference> getExternalReferences() {
         return externalReferences;
     }

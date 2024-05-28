@@ -365,6 +365,37 @@ public class BomJsonGeneratorTest {
         assertNull(license9.getBomRef());
     }
 
+    @Test
+    public void testIssue408Regression_externalReferenceBom() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/regression/issue408-external-reference.json");
+        assertExternalReferenceInfo(bom);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression_xmlToJson_externalReferenceBom() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/regression/issue408-external-reference.xml");
+        assertExternalReferenceInfo(bom);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private void assertExternalReferenceInfo(Bom bom) {
+        assertEquals(3, bom.getExternalReferences().size());
+        assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());
+    }
+
     private File writeToFile(String jsonString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
             writer.write(jsonString);
