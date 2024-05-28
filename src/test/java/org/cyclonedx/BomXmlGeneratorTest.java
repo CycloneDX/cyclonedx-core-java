@@ -490,6 +490,37 @@ public class BomXmlGeneratorTest {
         assertNull(license9.getBomRef());
     }
 
+    @Test
+    public void testIssue408Regression_externalReferenceBom() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonBomXml("/regression/issue408-external-reference.xml");
+        assertExternalReferenceInfo(bom);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression_jsonToXml_externalReferenceBom() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/regression/issue408-external-reference.json");
+        assertExternalReferenceInfo(bom);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private void assertExternalReferenceInfo(Bom bom) {
+        assertEquals(3, bom.getExternalReferences().size());
+        assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());
+    }
+
     private File writeToFile(String xmlString) throws Exception {
         try (FileWriter writer = new FileWriter(tempFile.getAbsolutePath())) {
             writer.write(xmlString);
