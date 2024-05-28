@@ -122,6 +122,7 @@ public class BomXmlGenerator extends AbstractBomGenerator
      * Creates a CycloneDX BoM from a set of Components.
      * @return an XML Document representing a CycloneDX BoM
      * @since 1.1.0
+     * @throws ParserConfigurationException if an error occurs
      */
     public Document generate() throws ParserConfigurationException {
         return generateDocument(bom);
