@@ -47,7 +47,7 @@ public class Evidence
 
     private List<Copyright> copyright;
 
-    @VersionFilter(Version.VERSION_16)
+    @VersionFilter(Version.VERSION_15)
     private List<Identity> identities;
 
     @VersionFilter(Version.VERSION_15)
@@ -98,6 +98,7 @@ public class Evidence
     @JsonProperty("occurrences")
     @JacksonXmlElementWrapper(localName = "occurrences")
     @JacksonXmlProperty(localName = "occurrence")
+    @VersionFilter(Version.VERSION_15)
     public List<Occurrence> getOccurrences() {
         return occurrences;
     }
@@ -118,6 +119,7 @@ public class Evidence
     @JacksonXmlProperty(localName = "identity")
     @JsonProperty("identity")
     @JsonDeserialize(using = IdentityDeserializer.class)
+    @VersionFilter(Version.VERSION_15)
     public List<Identity> getIdentities() {
         return identities;
     }
