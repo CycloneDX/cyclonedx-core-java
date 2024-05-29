@@ -146,6 +146,7 @@ public class Bom extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "services")
     @JacksonXmlProperty(localName = "service")
+    @VersionFilter(Version.VERSION_12)
     public List<Service> getServices() {
         return services;
     }
@@ -163,6 +164,7 @@ public class Bom extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(useWrapping = false)
     @JsonDeserialize(using = DependencyDeserializer.class)
+    @VersionFilter(Version.VERSION_11)
     public List<Dependency> getDependencies() {
         return dependencies;
     }
@@ -198,6 +200,7 @@ public class Bom extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "compositions")
     @JacksonXmlProperty(localName = "composition")
+    @VersionFilter(Version.VERSION_13)
     public List<Composition> getCompositions() {
         return compositions;
     }
@@ -208,6 +211,7 @@ public class Bom extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "formulation")
     @JacksonXmlProperty(localName = "formula")
+    @VersionFilter(Version.VERSION_15)
     public List<Formula> getFormulation() {
         return formulation;
     }
@@ -218,12 +222,14 @@ public class Bom extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "vulnerabilities")
     @JacksonXmlProperty(localName = "vulnerability")
+    @VersionFilter(Version.VERSION_14)
     public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
 
     public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }
 
     @JacksonXmlElementWrapper(localName = "annotations")
     @JacksonXmlProperty(localName = "annotation")
+    @VersionFilter(Version.VERSION_15)
     public List<Annotation> getAnnotations() {
         return annotations;
     }
@@ -234,6 +240,7 @@ public class Bom extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<Property> getProperties() {
         return properties;
     }

@@ -73,6 +73,7 @@ public class ExternalReference {
         BUILD_SYSTEM("build-system"),
         @JsonProperty("release-notes")
         RELEASE_NOTES("release-notes"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("security-contact")
         SECURITY_CONTACT("security-contact"),
         @JsonProperty("model_card")
@@ -180,6 +181,7 @@ public class ExternalReference {
 
     @JacksonXmlElementWrapper(localName = "hashes")
     @JacksonXmlProperty(localName = "hash")
+    @VersionFilter(Version.VERSION_13)
     public List<Hash> getHashes() {
         return hashes;
     }

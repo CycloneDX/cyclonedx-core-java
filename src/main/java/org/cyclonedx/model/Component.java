@@ -49,6 +49,7 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
     {"supplier",
+     "manufacturer",
      "author",
      "publisher",
      "group",
@@ -140,15 +141,20 @@ public class Component extends ExtensibleElement {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
     @JsonProperty("bom-ref")
+    @VersionFilter(Version.VERSION_11)
     private String bomRef;
+
     @JacksonXmlProperty(isAttribute = true, localName = "mime-type")
     @JsonProperty("mime-type")
     private String mimeType;
+
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
+
     @Deprecated
     @VersionFilter(Version.VERSION_12)
     private String author;
+
     @VersionFilter(Version.VERSION_11)
     private String publisher;
     private String group;
@@ -161,24 +167,33 @@ public class Component extends ExtensibleElement {
     private String copyright;
     private String cpe;
     private String purl;
+
     @VersionFilter(Version.VERSION_16)
     private List<String> omniborId;
+
     @VersionFilter(Version.VERSION_16)
     private List<String> swhid;
     @VersionFilter(Version.VERSION_12)
     private Swid swid;
+
     private Boolean modified;
+
     @VersionFilter(Version.VERSION_11)
     private Pedigree pedigree;
+
     @VersionFilter(Version.VERSION_11)
     private List<ExternalReference> externalReferences;
     @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
+
     private List<Component> components;
+
     @VersionFilter(Version.VERSION_13)
     private Evidence evidence;
+
     @JacksonXmlProperty(isAttribute = true)
     private Type type;
+
     @VersionFilter(Version.VERSION_14)
     private ReleaseNotes releaseNotes;
 
