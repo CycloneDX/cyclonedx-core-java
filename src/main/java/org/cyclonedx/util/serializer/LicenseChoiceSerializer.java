@@ -62,14 +62,16 @@ public class LicenseChoiceSerializer
 
     if (isXml && gen instanceof ToXmlGenerator) {
       ToXmlGenerator toXmlGenerator = (ToXmlGenerator) gen;
-      serializeXml(toXmlGenerator, licenseChoice);
+      serializeXml(toXmlGenerator, licenseChoice, provider);
     }
     else {
       serializeJson(licenseChoice, gen, provider);
     }
   }
 
-    private void serializeXml(ToXmlGenerator toXmlGenerator, LicenseChoice lc) throws IOException {
+  private void serializeXml(ToXmlGenerator toXmlGenerator, LicenseChoice lc, final SerializerProvider provider)
+      throws IOException
+  {
     if (CollectionUtils.isNotEmpty(lc.getLicenses())) {
       toXmlGenerator.writeStartObject();
       toXmlGenerator.writeFieldName("license");
@@ -104,6 +106,11 @@ public class LicenseChoiceSerializer
             toXmlGenerator.writeObjectField("property", property);
           }
           toXmlGenerator.writeEndObject();
+        }
+
+        //It might have extensible types
+        if(CollectionUtils.isNotEmpty(l.getExtensibleTypes())) {
+          new ExtensibleTypesSerializer().serialize(l.getExtensibleTypes(), toXmlGenerator, provider);
         }
 
         toXmlGenerator.writeEndObject();

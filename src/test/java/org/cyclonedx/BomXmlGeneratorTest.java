@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -501,6 +503,30 @@ public class BomXmlGeneratorTest {
 
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue408Regression_extensibleTypes() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonBomXml("/regression/issue408-extensible-type.xml");
+        addExtensibleTypes(bom);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private void addExtensibleTypes(Bom bom) {
+        ExtensibleType t1 = new ExtensibleType("abc", "test", "test");
+        ExtensibleType t2 = new ExtensibleType("abc", "test", "test1");
+
+        bom.getComponents().get(0).getLicenses().getLicenses().get(0).addExtensibleType(t1);
+        bom.getComponents().get(0).getLicenses().getLicenses().get(1).addExtensibleType(t2);
+
+        ExtensibleType t3 = new ExtensibleType("abc", "info", "test");
+        bom.getComponents().get(0).addExtensibleType(t3);
     }
 
     @Test
