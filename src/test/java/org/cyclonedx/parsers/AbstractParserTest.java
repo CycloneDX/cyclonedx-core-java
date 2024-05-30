@@ -528,7 +528,11 @@ public class AbstractParserTest
         vuln.getRatings().get(0).getSource().getUrl());
     assertEquals(9.8, vuln.getRatings().get(0).getScore());
     assertEquals(Severity.CRITICAL, vuln.getRatings().get(0).getSeverity());
-    assertEquals(Method.CVSSV3, vuln.getRatings().get(0).getMethod());
+    if(version == Version.VERSION_15) {
+      assertEquals(Method.CVSSV4, vuln.getRatings().get(0).getMethod());
+    } else {
+      assertEquals(Method.CVSSV3, vuln.getRatings().get(0).getMethod());
+    }
     assertEquals("AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", vuln.getRatings().get(0).getVector());
     assertEquals("An optional reason for rating the vulnerability as it was",
         vuln.getRatings().get(0).getJustification());
