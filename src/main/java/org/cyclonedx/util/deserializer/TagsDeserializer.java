@@ -15,30 +15,20 @@ import org.cyclonedx.model.component.Tags;
 public class TagsDeserializer
     extends JsonDeserializer<Tags>
 {
-
-  private final ObjectMapper mapper = new ObjectMapper();
   @Override
   public Tags deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     JsonNode node = parser.getCodec().readTree(parser);
-
-    if(node.has("tag")) {
-      return parseNode(node.get("tag"));
-    } else {
-      return parseNode(node);
-    }
+    return parseNode(node.has("tag") ? node.get("tag") : node);
   }
 
   private Tags parseNode(JsonNode node) {
     List<String> list = new ArrayList<>();
 
-    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+    ArrayNode nodes = DeserializerUtils.getArrayNode(node, null);
     for (JsonNode tagNode : nodes) {
       list.add(tagNode.asText());
     }
 
-    if(!list.isEmpty()) {
-      return new Tags(list);
-    }
-    return null;
+    return list.isEmpty() ? null : new Tags(list);
   }
 }

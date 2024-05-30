@@ -2,6 +2,7 @@ package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -19,24 +20,23 @@ public class NotesDeserializer
 {
 
   private final ObjectMapper mapper = new ObjectMapper();
+
   @Override
   public List<Notes> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     JsonNode node = parser.getCodec().readTree(parser);
-
-    if(node.has("note")) {
-      return parseNode(node.get("note"));
-    } else {
-      return parseNode(node);
-    }
+    return parseNode(node.has("note") ? node.get("note") : node);
   }
 
   private List<Notes> parseNode(JsonNode node) throws JsonProcessingException {
-    List<Notes> list = new ArrayList<>();
+    if (node.isEmpty()) {
+      return Collections.emptyList();
+    }
 
-    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+    List<Notes> list = new ArrayList<>();
+    ArrayNode nodes = DeserializerUtils.getArrayNode(node, mapper);
+
     for (JsonNode noteNode : nodes) {
-      Notes notes = parseNotes(noteNode);
-      list.add(notes);
+      list.add(parseNotes(noteNode));
     }
     return list;
   }

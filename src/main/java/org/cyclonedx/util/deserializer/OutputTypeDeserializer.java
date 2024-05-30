@@ -42,9 +42,7 @@ public class OutputTypeDeserializer
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
     OutputType outputType = new OutputType();
 
-    setReference(node, "source", outputType);
-    setReference(node, "target", outputType);
-
+    setSourceAndTarget(node, outputType);
     createOutputDataInfo(node, outputType);
 
     if(node.has("properties")) {

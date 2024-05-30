@@ -59,12 +59,7 @@ public class OutputTypeSerializer
     jsonGenerator.writeEndObject();
   }
 
-  private void writeField(JsonGenerator jsonGenerator, String fieldName, Object fieldValue) throws IOException {
-    if (fieldValue != null) {
-      jsonGenerator.writeFieldName(fieldName);
-      jsonGenerator.writeObject(fieldValue);
-    }
-  }
+
 
   @Override
   public Class<OutputType> handledType() {

@@ -45,7 +45,7 @@ public class ExternalReferencesDeserializer extends JsonDeserializer<List<Extern
 
     private List<ExternalReference> parseExternalReferences(JsonNode node, JsonParser p, DeserializationContext ctxt) throws IOException {
         List<ExternalReference> references = new ArrayList<>();
-        ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+        ArrayNode nodes = DeserializerUtils.getArrayNode(node, null);
         for (JsonNode resolvesNode : nodes) {
             ExternalReference type = parseExternalReference(resolvesNode, p, ctxt);
             references.add(type);

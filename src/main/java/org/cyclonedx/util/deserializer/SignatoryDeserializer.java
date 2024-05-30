@@ -34,12 +34,16 @@ public class SignatoryDeserializer
     extends JsonDeserializer<Signatory>
 {
   private final ObjectMapper mapper = new ObjectMapper();
+
   @Override
   public Signatory deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
       throws IOException
   {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+    return parseSignatory(node);
+  }
 
+  private Signatory parseSignatory(JsonNode node) throws IOException {
     Signatory signatory = new Signatory();
 
     if (node.has("name")) {
@@ -54,20 +58,22 @@ public class SignatoryDeserializer
     if (signatureNode != null) {
       Signature signature = mapper.convertValue(node.get("signature"), Signature.class);
       signatory.setSignature(signature);
-      return signatory;
     }
     else {
-      // Both Organization and external references are mandatory
-      JsonNode organizationNode = node.get("organization");
-      JsonNode externalReferenceNode = node.get("externalReference");
-
-      if (organizationNode != null && externalReferenceNode != null) {
-        OrganizationalEntity organization = mapper.convertValue(organizationNode, OrganizationalEntity.class);
-        ExternalReference externalReference = mapper.convertValue(externalReferenceNode, ExternalReference.class);
-        signatory.setExternalReferenceAndOrganization(externalReference, organization);
-        return signatory;
-      }
+      parseOrganizationAndReference(node, signatory);
     }
-    return null;
+
+    return signatory;
+  }
+
+  private void parseOrganizationAndReference(JsonNode node, Signatory signatory) throws IOException {
+    JsonNode organizationNode = node.get("organization");
+    JsonNode externalReferenceNode = node.get("externalReference");
+
+    if (organizationNode != null && externalReferenceNode != null) {
+      OrganizationalEntity organization = mapper.convertValue(organizationNode, OrganizationalEntity.class);
+      ExternalReference externalReference = mapper.convertValue(externalReferenceNode, ExternalReference.class);
+      signatory.setExternalReferenceAndOrganization(externalReference, organization);
+    }
   }
 }

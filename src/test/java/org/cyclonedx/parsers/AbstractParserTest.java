@@ -20,6 +20,7 @@ package org.cyclonedx.parsers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,6 +52,7 @@ import org.cyclonedx.model.ReleaseNotes.Resolves;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.ServiceData;
 import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.evidence.Callstack;
 import org.cyclonedx.model.component.evidence.Frame;
 import org.cyclonedx.model.component.evidence.Identity;
@@ -675,7 +677,7 @@ public class AbstractParserTest
       assertCallStack(evidence.getCallstack());
       assertOccurrences(evidence.getOccurrences());
       assertEquals(1, evidence.getIdentities().size());
-      assertIdentity(evidence.getIdentities().get(0), version);
+      assertIdentifiers(evidence.getIdentities().get(0), version);
     }
     else {
       assertNull(evidence.getCallstack());
@@ -707,7 +709,7 @@ public class AbstractParserTest
     assertNotNull(frame.getModule());
   }
 
-  private void assertIdentity(final Identity identity, Version version){
+  private void assertIdentifiers(final Identity identity, Version version){
     assertNotNull(identity);
 
     assertNotNull(identity.getField());
@@ -912,6 +914,44 @@ public class AbstractParserTest
   void assertCommonBomProperties(Bom bom, Version version) {
     assertEquals(version.getVersionString(), bom.getSpecVersion());
     assertEquals(1, bom.getVersion());
+  }
+
+  void assertTags(Bom bom) {
+    assertNotNull(bom.getComponents());
+    Tags tags = bom.getComponents().get(0).getTags();
+    assertNotNull(tags);
+    assertEquals(3, tags.getTags().size());
+    assertTrue(tags.getTags().containsAll(Arrays.asList("json-parser", "javascript", "node.js")));
+
+    assertNotNull(bom.getServices());
+    tags = bom.getServices().get(0).getTags();
+    assertNotNull(tags);
+    assertEquals(4, tags.getTags().size());
+    assertTrue(tags.getTags().containsAll(Arrays.asList("microservice", "golang", "aws", "us-east-1")));
+  }
+
+  void assertIdentifiers(Bom bom) {
+    assertNotNull(bom.getComponents());
+    List<String> omnis = bom.getComponents().get(0).getOmniborId();
+    assertEquals(2, omnis.size());
+    assertTrue(omnis.containsAll(Arrays.asList("gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+        "gitoid:blob:sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")));
+
+    List<String> swhid = bom.getComponents().get(0).getSwhid();
+    assertEquals(2, swhid.size());
+    assertTrue(swhid.containsAll(Arrays.asList("swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2",
+        "swh:1:dir:d198bc9d7a6bcf6db04f476d29314f157507d505")));
+  }
+
+  void assertAck(Bom bom) {
+    LicenseChoice lc = bom.getComponents().get(0).getLicenses();
+    assertNotNull(lc.getLicenses());
+    assertEquals(1, lc.getLicenses().size());
+
+    License license = lc.getLicenses().get(0);
+    assertEquals("Apache-2.0", license.getId());
+    assertEquals("my-license", license.getBomRef());
+    assertEquals("declared", license.getAcknowledgement());
   }
 
   Bom getXmlBom(String filename) throws ParseException, IOException {

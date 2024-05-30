@@ -30,14 +30,10 @@ public class ExpressionDeserializer
     extends JsonDeserializer<Expression>
 {
   @Override
-  public Expression deserialize(
-      final JsonParser p, final DeserializationContext ctxt) throws IOException
-  {
+  public Expression deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
     JsonNode node = p.getCodec().readTree(p);
 
-    boolean hasParent = node.has("expression") && node.get("expression").isObject();
-
-    if (hasParent) {
+    if (node.has("expression") && node.get("expression").isObject()) {
       node = node.get("expression");
     }
 
@@ -45,26 +41,29 @@ public class ExpressionDeserializer
       return new Expression(node.asText());
     }
     else {
-
-      Expression expression = new Expression();
-
-      if (node.get("bom-ref") != null) {
-        expression.setBomRef(node.get("bom-ref").asText());
-      }
-
-      if (node.get("acknowledgement") != null) {
-        expression.setAcknowledgement(node.get("acknowledgement").asText());
-      }
-
-      JsonNode textNode = node.get("expression");
-      if (textNode != null) {
-        expression.setValue(textNode.textValue());
-      }
-      else if (node.has("")) {
-        expression.setValue(node.get("").asText());
-      }
-
-      return expression;
+      return parseExpressionNode(node);
     }
+  }
+
+  private Expression parseExpressionNode(JsonNode node) {
+    Expression expression = new Expression();
+
+    if (node.has("bom-ref")) {
+      expression.setBomRef(node.get("bom-ref").asText());
+    }
+
+    if (node.has("acknowledgement")) {
+      expression.setAcknowledgement(node.get("acknowledgement").asText());
+    }
+
+    JsonNode textNode = node.get("expression");
+    if (textNode != null) {
+      expression.setValue(textNode.asText());
+    }
+    else if (node.has("")) {
+      expression.setValue(node.get("").asText());
+    }
+
+    return expression;
   }
 }

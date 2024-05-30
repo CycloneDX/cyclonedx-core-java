@@ -20,6 +20,7 @@ public class OrganizationalEntityDeserializer
 {
 
   private final ObjectMapper mapper = new ObjectMapper();
+
   @Override
   public OrganizationalEntity deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
     ObjectCodec codec = jsonParser.getCodec();
@@ -28,31 +29,16 @@ public class OrganizationalEntityDeserializer
     String bomRef = node.has("bom-ref") ? node.get("bom-ref").asText() : null;
     String name = node.has("name") ? node.get("name").asText() : null;
 
-    List<String> url = new ArrayList<>();
-    if (node.has("url")) {
-      JsonNode urlNode = node.get("url");
-      if (urlNode.isArray()) {
-        for (JsonNode urlElement : urlNode) {
-          url.add(urlElement.asText());
-        }
-      }
-      else if (urlNode.isTextual()) {
-        url.add(urlNode.asText());
-      }
-    }
+    List<String> urls = parseUrls(node.get("url"));
 
     OrganizationalEntity entity = new OrganizationalEntity();
     entity.setBomRef(bomRef);
     entity.setName(name);
-
-    if (!url.isEmpty()) {
-      entity.setUrls(url);
-    }
+    entity.setUrls(urls);
 
     JsonNode contactNode = node.get("contact");
     if (contactNode != null) {
-      List<OrganizationalContact> contacts =
-          MetadataDeserializer.deserializerOrganizationalContact(contactNode, mapper);
+      List<OrganizationalContact> contacts = MetadataDeserializer.deserializeOrganizationalContact(contactNode, mapper);
       entity.setContacts(contacts);
     }
 
@@ -63,5 +49,19 @@ public class OrganizationalEntityDeserializer
     }
 
     return entity;
+  }
+
+  private List<String> parseUrls(JsonNode urlNode) {
+    List<String> urls = new ArrayList<>();
+    if (urlNode != null) {
+      if (urlNode.isArray()) {
+        for (JsonNode urlElement : urlNode) {
+          urls.add(urlElement.asText());
+        }
+      } else if (urlNode.isTextual()) {
+        urls.add(urlNode.asText());
+      }
+    }
+    return urls;
   }
 }

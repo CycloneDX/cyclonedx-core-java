@@ -34,85 +34,86 @@ import org.cyclonedx.model.component.evidence.Identity.Field;
 import org.cyclonedx.model.component.evidence.Method;
 
 public class IdentityDeserializer
-    extends JsonDeserializer<List<Identity>> {
+    extends JsonDeserializer<List<Identity>>
+{
+  private final ObjectMapper mapper = new ObjectMapper();
 
+  @Override
+  public List<Identity> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+      throws IOException
+  {
+    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+    return parseIdentities(node);
+  }
 
-    private final ObjectMapper mapper = new ObjectMapper();
-    @Override
-    public List<Identity> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+  private List<Identity> parseIdentities(JsonNode node) {
+    List<Identity> identities = new ArrayList<>();
 
-        List<Identity> identities = new ArrayList<>();
-
-        if(node.has("identity")) {
-            node = node.get("identity");
-        }
-
-        if (node.isArray()) {
-            // If the node is an array, deserialize each element individually
-            for (JsonNode identityNode : node) {
-                Identity singleIdentity = deserializeSingleIdentity(identityNode);
-                identities.add(singleIdentity);
-            }
-        } else {
-            // If the node is a single object, deserialize it as a single Identity
-            identities.add(deserializeSingleIdentity(node));
-        }
-        return identities;
+    if (node.has("identity")) {
+      node = node.get("identity");
     }
 
-    private Identity deserializeSingleIdentity(JsonNode node) {
-        Identity identity = new Identity();
+    if (node.isArray()) {
+      for (JsonNode identityNode : node) {
+        identities.add(parseSingleIdentity(identityNode));
+      }
+    }
+    else {
+      identities.add(parseSingleIdentity(node));
+    }
 
-        if (node.has("field")) {
-            Field field  = mapper.convertValue(node.get("field"), Field.class);
-            identity.setField(field);
+    return identities;
+  }
+
+  private Identity parseSingleIdentity(JsonNode node) {
+    Identity identity = new Identity();
+
+    if (node.has("field")) {
+      Field field = mapper.convertValue(node.get("field"), Field.class);
+      identity.setField(field);
+    }
+
+    if (node.has("confidence")) {
+      identity.setConfidence(node.get("confidence").asDouble());
+    }
+
+    if (node.has("concludedValue")) {
+      identity.setConcludedValue(node.get("concludedValue").asText());
+    }
+
+    if (node.has("methods")) {
+      identity.setMethods(parseMethods(node.get("methods")));
+    }
+
+    if (node.has("tools")) {
+      identity.setTools(parseTools(node.get("tools")));
+    }
+
+    return identity;
+  }
+
+  private List<Method> parseMethods(JsonNode methodsNode) {
+    if (methodsNode.has("method")) {
+      methodsNode = methodsNode.get("method");
+    }
+
+    List<Method> methods = new ArrayList<>();
+    ArrayNode nodes =  DeserializerUtils.getArrayNode(methodsNode, mapper);
+    for (JsonNode methodNode : nodes) {
+      methods.add(mapper.convertValue(methodNode, Method.class));
+    }
+    return methods;
+  }
+
+    private List<BomReference> parseTools(JsonNode toolsNode) {
+        if (toolsNode.has("tool")) {
+            toolsNode = toolsNode.get("tool");
         }
-
-        if (node.has("confidence")) {
-            Double confidence = node.get("confidence").asDouble();
-            identity.setConfidence(confidence);
+        ArrayNode nodes = DeserializerUtils.getArrayNode(toolsNode, mapper);
+        List<BomReference> tools = new ArrayList<>();
+        for (JsonNode toolNode : nodes) {
+            tools.add(mapper.convertValue(toolNode, BomReference.class));
         }
-
-        if (node.has("concludedValue")) {
-            String concludedValue = node.get("concludedValue").asText();
-            identity.setConcludedValue(concludedValue);
-        }
-
-        if (node.has("methods")) {
-            JsonNode methodsNode = node.get("methods");
-
-            if(methodsNode.has("method")) {
-                methodsNode = methodsNode.get("method");
-            }
-
-            ArrayNode nodes = (methodsNode.isArray() ? (ArrayNode) methodsNode : new ArrayNode(null).add(methodsNode));
-
-            List<Method> methods = new ArrayList<>();
-            for (JsonNode resolvesNode : nodes) {
-                Method method = mapper.convertValue(resolvesNode, Method.class);
-                methods.add(method);
-            }
-            identity.setMethods(methods);
-        }
-
-        if (node.has("tools")) {
-            JsonNode toolsNode = node.get("tools");
-
-            if(toolsNode.has("tool")) {
-                toolsNode = toolsNode.get("tool");
-            }
-
-            ArrayNode nodes = (toolsNode.isArray() ? (ArrayNode) toolsNode : new ArrayNode(null).add(toolsNode));
-
-            List<BomReference> tools = new ArrayList<>();
-            for (JsonNode resolvesNode : nodes) {
-                BomReference tool = mapper.convertValue(resolvesNode, BomReference.class);
-                tools.add(tool);
-            }
-
-            identity.setTools(tools);
-        }
-        return identity;
+        return tools;
     }
 }

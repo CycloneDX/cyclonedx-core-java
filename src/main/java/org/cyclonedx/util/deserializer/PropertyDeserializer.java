@@ -19,18 +19,18 @@ public class PropertyDeserializer
 
     Property property = new Property();
 
-    JsonNode textNode = node.get("value");
-    if (textNode != null) {
-      property.setValue(textNode.textValue());
-    }
-    else if (node.has("")) {
+    JsonNode valueNode = node.get("value");
+    if (valueNode != null) {
+      property.setValue(valueNode.asText());
+    } else if (node.has("")) {
       property.setValue(node.get("").asText());
     }
 
-    JsonNode contentTypeNode = node.get("name");
-    if (contentTypeNode != null && contentTypeNode.isTextual()) {
-      property.setName(contentTypeNode.textValue());
+    JsonNode nameNode = node.get("name");
+    if (nameNode != null && nameNode.isTextual()) {
+      property.setName(nameNode.asText());
     }
+
     return property;
   }
 }

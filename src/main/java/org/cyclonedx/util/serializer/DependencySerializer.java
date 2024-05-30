@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Dependency;
@@ -90,7 +91,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
           generator.writeStartObject();
           generator.writeStringField(REF, dependency.getRef());
           generator.writeArrayFieldStart("dependsOn");
-          if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+          if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
             for (Dependency subDependency : dependency.getDependencies()) {
               generator.writeString(subDependency.getRef());
             }
@@ -124,7 +125,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
   {
     processNamespace(generator, "dependency");
 
-    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
       generator.writeStartArray();
     }
 
@@ -133,16 +134,16 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
     generator.writeString(dependency.getRef());
     generator.setNextIsAttribute(false);
 
-    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
       for (Dependency subDependency : dependency.getDependencies()) {
         // You got Shay'd
         writeXMLDependency(subDependency, generator);
       }
     }
 
-    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
-      generator.writeEndArray();
-    }
+    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
+    generator.writeEndArray();
+  }
 
     generator.writeEndObject();
   }

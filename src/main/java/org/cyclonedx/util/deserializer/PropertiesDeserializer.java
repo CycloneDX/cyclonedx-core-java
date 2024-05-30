@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.Property;
 
@@ -15,26 +16,22 @@ public class PropertiesDeserializer
     extends JsonDeserializer<List<Property>>
 {
   private final PropertyDeserializer propertyDeserializer = new PropertyDeserializer();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
   public List<Property> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
     JsonNode node = p.getCodec().readTree(p);
-
-    if (node.has("property")) {
-      return parseProperties(node.get("property"), p, ctxt);
-    }
-    else {
-      return parseProperties(node, p, ctxt);
-    }
+    return parseProperties(node.has("property") ? node.get("property") : node, p, ctxt);
   }
 
   private List<Property> parseProperties(JsonNode node, JsonParser p, DeserializationContext ctxt) throws IOException {
     List<Property> properties = new ArrayList<>();
-    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
-    for (JsonNode resolvesNode : nodes) {
-      Property type = parseProperty(resolvesNode, p, ctxt);
-      properties.add(type);
+    ArrayNode nodes = DeserializerUtils.getArrayNode(node, objectMapper);
+
+    for (JsonNode propertyNode : nodes) {
+      properties.add(parseProperty(propertyNode, p, ctxt));
     }
+
     return properties;
   }
 
