@@ -25,22 +25,25 @@ import org.cyclonedx.parsers.Parser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BomParserFactoryTest {
 
     @Test
     public void testXMLFactory() throws Exception {
-        Parser parser = BomParserFactory.createParser(new File(BomParserFactory.class.getResource("/bom-1.2.xml").getFile()));
-        assertTrue(parser instanceof XmlParser);
+        Parser parser = BomParserFactory.createParser(
+            new File(Objects.requireNonNull(BomParserFactory.class.getResource("/bom-1.2.xml")).getFile()));
+        assertInstanceOf(XmlParser.class, parser);
     }
 
     @Test
     public void testJSONFactory() throws Exception {
-        Parser parser = BomParserFactory.createParser(new File(BomParserFactory.class.getResource("/bom-1.2.json").getFile()));
-        assertTrue(parser instanceof JsonParser);
+        Parser parser = BomParserFactory.createParser(new File(
+            Objects.requireNonNull(BomParserFactory.class.getResource("/bom-1.2.json")).getFile()));
+        assertInstanceOf(JsonParser.class, parser);
     }
 
     @Test()

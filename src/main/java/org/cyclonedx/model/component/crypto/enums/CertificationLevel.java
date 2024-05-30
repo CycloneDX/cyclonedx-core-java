@@ -2,7 +2,6 @@ package org.cyclonedx.model.component.crypto.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.cyclonedx.model.LifecycleChoice.Phase;
 
 public enum CertificationLevel
 {

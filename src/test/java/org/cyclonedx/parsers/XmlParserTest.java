@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.parsers;
 
-import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
@@ -701,7 +700,7 @@ public class XmlParserTest
         Signatory s1 = affirmation.getSignatories().get(0);
         assertEquals("Tom", s1.getName());
         assertEquals("CEO", s1.getRole());
-        assertEquals(null, s1.getSignature());
+        assertNull(s1.getSignature());
         assertNull(s1.getOrganization());
         assertNull(s1.getExternalReference());
 

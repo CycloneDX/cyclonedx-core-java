@@ -3,7 +3,6 @@ package org.cyclonedx.model.attestation.evidence;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.model.AttachmentText;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

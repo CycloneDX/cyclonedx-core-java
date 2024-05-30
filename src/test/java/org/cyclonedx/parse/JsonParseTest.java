@@ -43,9 +43,9 @@ public class JsonParseTest extends BaseParseTest {
                         super.generateBomJson(file.getName(), bom);
                     }));
                 }
-                else if (file.getName().startsWith("invalid")) {
+                /*else if (file.getName().startsWith("invalid")) {
 
-                }
+                }*/
             }
         }
         return dynamicTests;
