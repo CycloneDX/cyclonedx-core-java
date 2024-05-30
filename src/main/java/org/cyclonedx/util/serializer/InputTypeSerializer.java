@@ -4,11 +4,12 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.model.formulation.common.InputType;
 
 public class InputTypeSerializer
-    extends AbstractDataTypeSerializer<InputType>
+    extends StdSerializer<InputType>
 {
   private final boolean isXml;
 
@@ -39,18 +40,18 @@ public class InputTypeSerializer
 
     if (input.getResource() != null) {
       jsonGenerator.writeFieldName("resource");
-      jsonGenerator.writeObject( input.getResource());
+      jsonGenerator.writeObject(input.getResource());
     }
     else if (input.getParameters() != null && !input.getParameters().isEmpty()) {
       jsonGenerator.writeFieldName("parameters");
-      jsonGenerator.writeObject( input.getParameters());
+      jsonGenerator.writeObject(input.getParameters());
     }
     else if (input.getEnvironmentVars() != null) {
       new EnvironmentVarsSerializer(isXml).serialize(input.getEnvironmentVars(), jsonGenerator, serializerProvider);
     }
     else if (input.getData() != null) {
       jsonGenerator.writeFieldName("data");
-      jsonGenerator.writeObject( input.getData());
+      jsonGenerator.writeObject(input.getData());
     }
 
     writeField(jsonGenerator, "source", input.getSource());
