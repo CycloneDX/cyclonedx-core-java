@@ -4,11 +4,12 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.model.formulation.common.OutputType;
 
 public class OutputTypeSerializer
-    extends AbstractDataTypeSerializer<OutputType>
+    extends StdSerializer<OutputType>
 {
   private final boolean isXml;
 

@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.AbstractType;
-import org.cyclonedx.model.formulation.common.EnvVariableChoice;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
@@ -50,7 +50,9 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
     data.setEnvironmentVars(environmentVars);
   }
 
-  protected void setReference(JsonNode node, String fieldName, AbstractType type) throws JsonProcessingException {
+  protected void setReference(JsonNode node, String fieldName, AbstractType type)
+      throws JsonProcessingException
+  {
     if (node.has(fieldName)) {
       JsonNode fieldNode = node.get(fieldName);
       ResourceReferenceChoice reference = objectMapper.treeToValue(fieldNode, ResourceReferenceChoice.class);
@@ -64,7 +66,17 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
   }
 
   protected void setSourceAndTarget(JsonNode node, AbstractType type) throws JsonProcessingException {
-    setReference(node, "source", type);
-    setReference(node, "target", type);
+      setReference(node, "source", type);
+      setReference(node, "target", type);
+    }
+
+  protected void setProperties(JsonNode node, T type)
+      throws JsonProcessingException
+  {
+    if(node.has("properties")) {
+      JsonNode propertiesNode = node.get("properties");
+      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
+      type.setProperties(properties);
+    }
   }
 }

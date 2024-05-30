@@ -53,11 +53,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
 
     createInputDataInfo(node, inputType, jsonParser, deserializationContext);
 
-    if(node.has("properties")) {
-      JsonNode propertiesNode = node.get("properties");
-      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
-      inputType.setProperties(properties);
-    }
+    setProperties(node, inputType);
 
     return inputType;
   }
@@ -75,7 +71,6 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
       inputType.setParameters(parameters);
     } else if (node.has("environmentVars")) {
       JsonNode nodes = node.get("environmentVars");
-
       JsonParser nodeParser = nodes.traverse(jsonParser.getCodec());
       EnvironmentVars envVar = environmentVarsDeserializer.deserialize(nodeParser, ctxt);
       inputType.setEnvironmentVars(envVar);

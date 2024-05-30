@@ -19,14 +19,11 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.AttachmentText;
-import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
@@ -51,11 +48,7 @@ public class OutputTypeDeserializer
 
     createOutputDataInfo(node, outputType, deserializationContext, jsonParser);
 
-    if(node.has("properties")) {
-      JsonNode propertiesNode = node.get("properties");
-      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
-      outputType.setProperties(properties);
-    }
+    setProperties(node, outputType);
 
     if(node.has("type")) {
       JsonNode typeNode = node.get("type");
