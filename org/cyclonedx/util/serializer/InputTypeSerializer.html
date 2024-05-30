@@ -103,10 +103,15 @@ var activeTableTab = "activeTableTab";
 <li>com.fasterxml.jackson.databind.JsonSerializer&lt;T&gt;</li>
 <li>
 <ul class="inheritance">
-<li>com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../../../org/cyclonedx/model/formulation/common/InputType.html" title="class in org.cyclonedx.model.formulation.common">InputType</a>&gt;</li>
+<li>com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;T&gt;</li>
+<li>
+<ul class="inheritance">
+<li><a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html" title="class in org.cyclonedx.util.serializer">org.cyclonedx.util.serializer.AbstractDataTypeSerializer</a>&lt;<a href="../../../../org/cyclonedx/model/formulation/common/InputType.html" title="class in org.cyclonedx.model.formulation.common">InputType</a>&gt;</li>
 <li>
 <ul class="inheritance">
 <li>org.cyclonedx.util.serializer.InputTypeSerializer</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -124,7 +129,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">InputTypeSerializer</span>
-extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../../../org/cyclonedx/model/formulation/common/InputType.html" title="class in org.cyclonedx.model.formulation.common">InputType</a>&gt;</pre>
+extends <a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html" title="class in org.cyclonedx.util.serializer">AbstractDataTypeSerializer</a>&lt;<a href="../../../../org/cyclonedx/model/formulation/common/InputType.html" title="class in org.cyclonedx.model.formulation.common">InputType</a>&gt;</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#org.cyclonedx.util.serializer.InputTypeSerializer">Serialized Form</a></dd>
@@ -209,6 +214,13 @@ extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../.
          com.fasterxml.jackson.databind.SerializerProvider&nbsp;serializerProvider)</code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.cyclonedx.util.serializer.AbstractDataTypeSerializer">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.cyclonedx.util.serializer.<a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html" title="class in org.cyclonedx.util.serializer">AbstractDataTypeSerializer</a></h3>
+<code><a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html#parseEnvironmentVars-com.fasterxml.jackson.core.JsonGenerator-java.util.List-">parseEnvironmentVars</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.fasterxml.jackson.databind.ser.std.StdSerializer">
 <!--   -->
