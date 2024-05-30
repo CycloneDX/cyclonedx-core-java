@@ -53,7 +53,9 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
     data.setEnvironmentVars(envVar);
   }
 
-  protected void setReference(JsonNode node, String fieldName, AbstractType type) throws JsonProcessingException {
+  protected void setReference(JsonNode node, String fieldName, AbstractType type)
+      throws JsonProcessingException
+  {
     if (node.has(fieldName)) {
       JsonNode fieldNode = node.get(fieldName);
       ResourceReferenceChoice reference = objectMapper.treeToValue(fieldNode, ResourceReferenceChoice.class);
