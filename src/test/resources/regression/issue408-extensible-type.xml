@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom serialNumber="urn:uuid:7fec5e81-b204-4eec-a0d6-383dc39c4867" version="1" xmlns="http://cyclonedx.org/schema/bom/1.5">
+  <components>
+    <component type="library" bom-ref="NPM:@ort:concluded-license:1.0">
+      <name>concluded-license</name>
+      <version>1.0</version>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <abc:test xmlns:abc="http://www.w3.org/1999/xhtml">test</abc:test>
+        </license>
+        <license>
+          <name>MIT WITH Libtool-exception</name>
+          <abc:test xmlns:abc="http://www.w3.org/1999/xhtml">test1</abc:test>
+        </license>
+      </licenses>
+      <purl>pkg:npm/%40ort/concluded-license@1.0?classifier=sources</purl>
+      <abc:info xmlns:abc="http://www.w3.org/1999/xhtml">test</abc:info>
+    </component>
+  </components>
+</bom>

@@ -34,7 +34,7 @@ import org.cyclonedx.model.license.Expression;
 public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
 {
 
-  ExpressionDeserializer expressionDeserializer = new ExpressionDeserializer();
+  final ExpressionDeserializer expressionDeserializer = new ExpressionDeserializer();
 
   @Override
   public LicenseChoice deserialize(
