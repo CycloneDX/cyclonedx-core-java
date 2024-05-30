@@ -514,7 +514,7 @@
           },
           "score" :  9.8,
           "severity" :  "critical",
-          "method" :  "CVSSv3",
+          "method" :  "CVSSv4",
           "vector" :  "AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
           "justification" :  "An optional reason for rating the vulnerability as it was"
         }
