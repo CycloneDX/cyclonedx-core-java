@@ -407,14 +407,14 @@ public class XmlParserTest
     @Test
     public void testIssue338RegressionWithSingleTool() throws Exception {
         final Bom bom = getXmlBom("regression/issue338-single-tool.xml");
-        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+        assertEquals("acme-tool-a", bom.getMetadata().getDeprecatedTools().get(0).getName());
     }
 
     @Test
     public void testIssue338RegressionWithMultipleTools() throws Exception {
         final Bom bom = getXmlBom("regression/issue338-multiple-tools.xml");
-        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
-        assertEquals("acme-tool-b", bom.getMetadata().getTools().get(1).getName());
+        assertEquals("acme-tool-a", bom.getMetadata().getDeprecatedTools().get(0).getName());
+        assertEquals("acme-tool-b", bom.getMetadata().getDeprecatedTools().get(1).getName());
     }
 
     @Test

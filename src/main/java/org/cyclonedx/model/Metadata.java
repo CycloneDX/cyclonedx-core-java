@@ -32,7 +32,7 @@ import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.util.deserializer.LifecycleDeserializer;
 import org.cyclonedx.util.deserializer.MetadataDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
-import org.cyclonedx.model.metadata.ToolInformation;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,14 +59,16 @@ public class Metadata
     @JacksonXmlProperty(localName = "lifecycle")
     private Lifecycles lifecycles;
 
-    @VersionFilter(Version.VERSION_12)
     @Deprecated
-    private List<Tool> tools;
+    @VersionFilter(Version.VERSION_12)
+    @JsonProperty("tools")
+    private List<Tool> deprecatedTools;
 
     @JacksonXmlElementWrapper(localName = "tools")
     @JacksonXmlProperty(localName = "tool")
+    @JsonProperty("tools")
     @VersionFilter(Version.VERSION_15)
-    private ToolInformation toolInformation;
+    private ToolInformation tools;
 
     @VersionFilter(Version.VERSION_12)
     private List<OrganizationalContact> authors;
@@ -99,22 +101,27 @@ public class Metadata
         this.timestamp = timestamp;
     }
 
-    @JacksonXmlElementWrapper(localName = "tools")
-    @JacksonXmlProperty(localName = "tool")
-    @JsonIgnore
-    public List<Tool> getTools() {
+    public List<Tool> getDeprecatedTools() {
+        return deprecatedTools;
+    }
+
+    public void setDeprecatedTools(final List<Tool> deprecatedTools) {
+        this.deprecatedTools = deprecatedTools;
+    }
+
+    public ToolInformation getTools() {
         return tools;
     }
 
-    public void setTools(List<Tool> tools) {
+    public void setTools(final ToolInformation tools) {
         this.tools = tools;
     }
 
     public void addTool(Tool tool) {
-        if (this.tools == null) {
-            this.tools = new ArrayList<>();
+        if (this.deprecatedTools == null) {
+            this.deprecatedTools = new ArrayList<>();
         }
-        this.tools.add(tool);
+        this.deprecatedTools.add(tool);
     }
 
     @JacksonXmlElementWrapper(localName = "authors")
@@ -206,16 +213,6 @@ public class Metadata
         this.lifecycles = lifecycles;
     }
 
-    @JacksonXmlElementWrapper(localName = "tools")
-    @JacksonXmlProperty(localName = "tool")
-    public ToolInformation getToolChoice() {
-        return toolInformation;
-    }
-
-    public void setToolChoice(final ToolInformation toolInformation) {
-        this.toolInformation = toolInformation;
-    }
-
     public OrganizationalEntity getManufacturer() {
         return manufacturer;
     }
@@ -226,23 +223,28 @@ public class Metadata
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Metadata metadata = (Metadata) o;
         return Objects.equals(timestamp, metadata.timestamp) &&
-                Objects.equals(authors, metadata.authors) &&
-                Objects.equals(component, metadata.component) &&
-                Objects.equals(manufacture, metadata.manufacture) &&
-                Objects.equals(supplier, metadata.supplier) &&
-                Objects.equals(licenses, metadata.licenses) &&
-                Objects.equals(lifecycles, metadata.lifecycles) &&
-                Objects.equals(toolInformation, metadata.toolInformation) &&
-                Objects.equals(properties, metadata.properties);
+            Objects.equals(authors, metadata.authors) &&
+            Objects.equals(component, metadata.component) &&
+            Objects.equals(manufacture, metadata.manufacture) &&
+            Objects.equals(supplier, metadata.supplier) &&
+            Objects.equals(licenses, metadata.licenses) &&
+            Objects.equals(lifecycles, metadata.lifecycles) &&
+            Objects.equals(tools, metadata.tools) &&
+            Objects.equals(deprecatedTools, metadata.deprecatedTools) &&
+            Objects.equals(properties, metadata.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, toolInformation, authors, component, manufacture, supplier, licenses, properties,
-            lifecycles);
+        return Objects.hash(timestamp, tools, deprecatedTools, authors, component, manufacture, supplier, licenses,
+            properties, lifecycles);
     }
 }

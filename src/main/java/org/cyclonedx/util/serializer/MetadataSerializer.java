@@ -10,7 +10,7 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Property;
-import org.cyclonedx.model.metadata.ToolInformation;
+import org.cyclonedx.model.ToolInformation;
 
 public class MetadataSerializer
     extends StdSerializer<Metadata>
@@ -111,13 +111,13 @@ public class MetadataSerializer
   private void parseTools(Metadata metadata, JsonGenerator jsonGenerator) throws IOException {
     if (metadata.getTools() != null) {
       if (isXml && jsonGenerator instanceof ToXmlGenerator) {
-        writeArrayFieldXML(metadata.getTools(), (ToXmlGenerator) jsonGenerator, "tool");
+        writeArrayFieldXML(metadata.getDeprecatedTools(), (ToXmlGenerator) jsonGenerator, "tool");
       }
       else {
-        writeArrayFieldJSON(jsonGenerator, "tools", metadata.getTools());
+        writeArrayFieldJSON(jsonGenerator, "tools", metadata.getDeprecatedTools());
       }
     } else if (version.getVersion() >= Version.VERSION_15.getVersion()) {
-      ToolInformation choice = metadata.getToolChoice();
+      ToolInformation choice = metadata.getTools();
       if (choice != null) {
         jsonGenerator.writeFieldName("tools");
         jsonGenerator.writeStartObject();

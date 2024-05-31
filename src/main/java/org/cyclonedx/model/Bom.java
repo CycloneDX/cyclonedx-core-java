@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Collections;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -94,7 +95,7 @@ public class Bom extends ExtensibleElement {
     private Declarations declarations;
 
     @VersionFilter(Version.VERSION_14)
-    @JsonDeserialize(using = VulnerabilityDeserializer.class)
+    //@JsonDeserialize(using = VulnerabilityDeserializer.class)
     private List<Vulnerability> vulnerabilities;
 
     @VersionFilter(Version.VERSION_15)
@@ -218,6 +219,7 @@ public class Bom extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "vulnerabilities")
     @JacksonXmlProperty(localName = "vulnerability")
+    @JsonProperty("vulnerabilities")
     public List<Vulnerability> getVulnerabilities() { return vulnerabilities; }
 
     public void setVulnerabilities(List<Vulnerability> vulnerabilities) { this.vulnerabilities = vulnerabilities; }

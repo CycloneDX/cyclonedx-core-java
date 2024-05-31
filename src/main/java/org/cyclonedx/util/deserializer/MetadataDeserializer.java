@@ -23,7 +23,7 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.Tool;
-import org.cyclonedx.model.metadata.ToolInformation;
+import org.cyclonedx.model.ToolInformation;
 
 public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
@@ -35,6 +35,8 @@ public class MetadataDeserializer
   private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
 
   private final LicenseDeserializer licenseDeserializer = new LicenseDeserializer();
+
+  private final ToolsDeserializer toolsDeserializer = new ToolsDeserializer();
 
   @Override
   public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
@@ -111,37 +113,16 @@ public class MetadataDeserializer
     }
 
     JsonNode toolsNode = node.get("tools");
-
     if (toolsNode != null) {
-      // Check if the 'tools' field is an array or an object
-      if (toolsNode.isArray()) {
-        List<Tool> tools = mapper.convertValue(toolsNode, new TypeReference<List<Tool>>() { });
-        metadata.setTools(tools);
-      }
-      else if (toolsNode.has("tool")) {
-        final JsonNode toolNode = toolsNode.get("tool");
-        // When deserializing XML BOMs, and multiple tools are provided, Jackson's internal
-        // representation looks like this:
-        //   {"tool": [{"name": "foo"}, {"name": "bar"}]}
-        // If only a single tool is provided, it looks like this:
-        //   {"tool": {"name": "foo"}}
-        if (toolNode.isArray()) {
-          List<Tool> tools = mapper.convertValue(toolsNode.get("tool"), new TypeReference<List<Tool>>() { });
-          metadata.setTools(tools);
-        } else {
-          Tool tool = mapper.convertValue(toolsNode.get("tool"), Tool.class);
-          metadata.setTools(Collections.singletonList(tool));
-        }
+      JsonParser toolsParser = node.get("tools").traverse(jsonParser.getCodec());
+      toolsParser.nextToken();
+      Object tools = toolsDeserializer.deserialize(toolsParser, ctxt);
+
+      if(tools instanceof ToolInformation) {
+        metadata.setTools((ToolInformation) tools);
       }
       else {
-        ToolInformation toolInformation = new ToolInformation();
-        if (toolsNode.has("components")) {
-          parseComponents(toolsNode.get("components"), toolInformation, mapper);
-        }
-        if (toolsNode.has("services")) {
-          parseServices(toolsNode.get("services"), toolInformation, mapper);
-        }
-        metadata.setToolChoice(toolInformation);
+        metadata.setDeprecatedTools((List<Tool>) tools);
       }
     }
 

@@ -95,7 +95,7 @@ public class AbstractParserTest
     assertBomProperties(bom, version.getVersionString());
 
     // Assertions for bom.metadata.tools
-    assertToolsMetadata(bom.getMetadata().getTools().get(0));
+    assertToolsMetadata(bom.getMetadata().getDeprecatedTools().get(0));
 
     // Assertions for bom.metadata.authors
     assertAuthorMetadata(bom.getMetadata().getAuthors().get(0));
@@ -546,12 +546,12 @@ public class AbstractParserTest
     assertEquals("Acme, Inc.", vuln.getCredits().getOrganizations().get(0).getName());
     assertEquals("https://example.com", vuln.getCredits().getOrganizations().get(0).getUrls().get(0));
 
-    //Tools
-    assertEquals(1, vuln.getTools().size());
-    assertEquals("Sonatype CLI", vuln.getTools().get(0).getName());
-    assertEquals("Sonatype", vuln.getTools().get(0).getVendor());
-    assertEquals("1.131", vuln.getTools().get(0).getVersion());
-    assertEquals(1, vuln.getTools().get(0).getHashes().size());
+    //Tools Deprecated
+    assertEquals(1, vuln.getDeprecatedTools().size());
+    assertEquals("Sonatype CLI", vuln.getDeprecatedTools().get(0).getName());
+    assertEquals("Sonatype", vuln.getDeprecatedTools().get(0).getVendor());
+    assertEquals("1.131", vuln.getDeprecatedTools().get(0).getVersion());
+    assertEquals(1, vuln.getDeprecatedTools().get(0).getHashes().size());
 
     //Analysis
     assertEquals(State.NOT_AFFECTED, vuln.getAnalysis().getState());
@@ -820,14 +820,14 @@ public class AbstractParserTest
     }
 
     //Tool
-    assertEquals(1, metadata.getTools().size());
-    assertEquals("Awesome Vendor", metadata.getTools().get(0).getVendor());
-    assertEquals("Awesome Tool", metadata.getTools().get(0).getName());
-    assertEquals("9.1.2", metadata.getTools().get(0).getVersion());
-    assertEquals(1, metadata.getTools().get(0).getHashes().size());
-    assertEquals("SHA-1", metadata.getTools().get(0).getHashes().get(0).getAlgorithm());
+    assertEquals(1, metadata.getDeprecatedTools().size());
+    assertEquals("Awesome Vendor", metadata.getDeprecatedTools().get(0).getVendor());
+    assertEquals("Awesome Tool", metadata.getDeprecatedTools().get(0).getName());
+    assertEquals("9.1.2", metadata.getDeprecatedTools().get(0).getVersion());
+    assertEquals(1, metadata.getDeprecatedTools().get(0).getHashes().size());
+    assertEquals("SHA-1", metadata.getDeprecatedTools().get(0).getHashes().get(0).getAlgorithm());
     assertEquals("25ed8e31b995bb927966616df2a42b979a2717f0",
-        metadata.getTools().get(0).getHashes().get(0).getValue());
+        metadata.getDeprecatedTools().get(0).getHashes().get(0).getValue());
 
     //Author
     assertEquals(1, metadata.getAuthors().size());
@@ -905,8 +905,8 @@ public class AbstractParserTest
     assertNull(metadata.getSupplier());
     assertNull(metadata.getTools());
 
-    assertEquals(1, metadata.getToolChoice().getComponents().size());
-    assertEquals(1, metadata.getToolChoice().getServices().size());
+    assertEquals(1, metadata.getTools().getComponents().size());
+    assertEquals(1, metadata.getTools().getServices().size());
   }
 
   void assertCommonBomProperties(Bom bom, Version version) {

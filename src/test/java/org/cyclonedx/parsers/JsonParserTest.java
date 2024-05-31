@@ -241,14 +241,20 @@ public class JsonParserTest
     @Test
     public void testIssue338RegressionWithSingleTool() throws Exception {
         final Bom bom = getJsonBom("regression/issue338-single-tool.json");
-        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
+        assertEquals("acme-tool-a", bom.getMetadata().getDeprecatedTools().get(0).getName());
+    }
+
+    @Test
+    public void testIssue338RegressionWithSingleTool_test() throws Exception {
+        final Bom bom = getJsonBom("1.6/valid-vulnerability-1.6.json");
+       // assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
     }
 
     @Test
     public void testIssue338RegressionWithMultipleTools() throws Exception {
         final Bom bom = getJsonBom("regression/issue338-multiple-tools.json");
-        assertEquals("acme-tool-a", bom.getMetadata().getTools().get(0).getName());
-        assertEquals("acme-tool-b", bom.getMetadata().getTools().get(1).getName());
+        assertEquals("acme-tool-a", bom.getMetadata().getDeprecatedTools().get(0).getName());
+        assertEquals("acme-tool-b", bom.getMetadata().getDeprecatedTools().get(1).getName());
     }
 
     @Test

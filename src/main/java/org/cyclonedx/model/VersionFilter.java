@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import org.cyclonedx.Version;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 public @interface VersionFilter {
   //Version where the attribute was introduced
   Version value();
