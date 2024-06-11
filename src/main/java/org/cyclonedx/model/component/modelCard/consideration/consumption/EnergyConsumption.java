@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard.consideration.consumption;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -71,5 +72,26 @@ public class EnergyConsumption
 
   public void setProperties(final List<Property> properties) {
     this.properties = properties;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof EnergyConsumption)) {
+      return false;
+    }
+    EnergyConsumption that = (EnergyConsumption) object;
+    return activity == that.activity && Objects.equals(energyProviders, that.energyProviders) &&
+        Objects.equals(activityEnergyCost, that.activityEnergyCost) &&
+        Objects.equals(co2CostEquivalent, that.co2CostEquivalent) &&
+        Objects.equals(co2CostOffset, that.co2CostOffset) &&
+        Objects.equals(properties, that.properties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(activity, energyProviders, activityEnergyCost, co2CostEquivalent, co2CostOffset, properties);
   }
 }

@@ -1,5 +1,7 @@
 package org.cyclonedx.model.component.evidence;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -76,5 +78,25 @@ public class Occurrence extends ExtensibleElement
 
   public void setAdditionalContext(final String additionalContext) {
     this.additionalContext = additionalContext;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Occurrence)) {
+      return false;
+    }
+    Occurrence that = (Occurrence) object;
+    return Objects.equals(bomRef, that.bomRef) && Objects.equals(location, that.location) &&
+        Objects.equals(line, that.line) && Objects.equals(offset, that.offset) &&
+        Objects.equals(symbol, that.symbol) &&
+        Objects.equals(additionalContext, that.additionalContext);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, location, line, offset, symbol, additionalContext);
   }
 }

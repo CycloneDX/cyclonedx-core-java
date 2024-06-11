@@ -20,6 +20,7 @@ package org.cyclonedx.model.formulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -112,5 +113,24 @@ public class Formula
 
     public void setWorkflows(final List<Workflow> workflows) {
         this.workflows = workflows;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Formula)) {
+            return false;
+        }
+        Formula formula = (Formula) object;
+        return Objects.equals(bomRef, formula.bomRef) && Objects.equals(components, formula.components) &&
+            Objects.equals(services, formula.services) && Objects.equals(workflows, formula.workflows) &&
+            Objects.equals(properties, formula.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bomRef, components, services, workflows, properties);
     }
 }

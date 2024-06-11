@@ -1,5 +1,7 @@
 package org.cyclonedx.model.component.crypto;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -122,5 +124,30 @@ public class RelatedCryptoMaterialProperties
 
   public void setSecuredBy(final SecuredBy securedBy) {
     this.securedBy = securedBy;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof RelatedCryptoMaterialProperties)) {
+      return false;
+    }
+    RelatedCryptoMaterialProperties that = (RelatedCryptoMaterialProperties) object;
+    return type == that.type && Objects.equals(id, that.id) && state == that.state &&
+        Objects.equals(algorithmRef, that.algorithmRef) &&
+        Objects.equals(creationDate, that.creationDate) &&
+        Objects.equals(activationDate, that.activationDate) &&
+        Objects.equals(updateDate, that.updateDate) &&
+        Objects.equals(expirationDate, that.expirationDate) && Objects.equals(value, that.value) &&
+        Objects.equals(size, that.size) && Objects.equals(format, that.format) &&
+        Objects.equals(securedBy, that.securedBy);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, id, state, algorithmRef, creationDate, activationDate, updateDate, expirationDate, value,
+        size, format, securedBy);
   }
 }

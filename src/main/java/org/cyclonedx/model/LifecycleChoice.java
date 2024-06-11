@@ -18,6 +18,8 @@
  */
 package org.cyclonedx.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -98,5 +100,23 @@ public class LifecycleChoice
 
     public void setPhase(final Phase phase) {
         this.phase = phase;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof LifecycleChoice)) {
+            return false;
+        }
+        LifecycleChoice choice = (LifecycleChoice) object;
+        return phase == choice.phase && Objects.equals(name, choice.name) &&
+            Objects.equals(description, choice.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phase, name, description);
     }
 }

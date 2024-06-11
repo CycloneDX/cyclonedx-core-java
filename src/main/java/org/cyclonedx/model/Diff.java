@@ -18,6 +18,8 @@
  */
 package org.cyclonedx.model;
 
+import java.util.Objects;
+
 public class Diff {
 
   private AttachmentText text;
@@ -37,5 +39,22 @@ public class Diff {
 
   public void setUrl(final String url) {
     this.url = url;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Diff)) {
+      return false;
+    }
+    Diff diff = (Diff) object;
+    return Objects.equals(text, diff.text) && Objects.equals(url, diff.url);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(text, url);
   }
 }

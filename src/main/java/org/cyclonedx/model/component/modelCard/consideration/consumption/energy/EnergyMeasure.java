@@ -1,5 +1,7 @@
 package org.cyclonedx.model.component.modelCard.consideration.consumption.energy;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -24,5 +26,22 @@ public class EnergyMeasure
 
   public void setUnit(final Unit unit) {
     this.unit = unit;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof EnergyMeasure)) {
+      return false;
+    }
+    EnergyMeasure that = (EnergyMeasure) object;
+    return Double.compare(value, that.value) == 0 && unit == that.unit;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(value, unit);
   }
 }

@@ -1,5 +1,7 @@
 package org.cyclonedx.model.attestation.evidence;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -31,5 +33,22 @@ public class Contents
 
   public void setUrl(final String url) {
     this.url = url;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Contents)) {
+      return false;
+    }
+    Contents contents = (Contents) object;
+    return Objects.equals(attachment, contents.attachment) && Objects.equals(url, contents.url);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(attachment, url);
   }
 }

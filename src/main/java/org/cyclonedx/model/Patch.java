@@ -19,6 +19,8 @@
 package org.cyclonedx.model;
 
 import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -82,5 +84,23 @@ public class Patch {
 
   public void setType(Type type) {
     this.type = type;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Patch)) {
+      return false;
+    }
+    Patch patch = (Patch) object;
+    return type == patch.type && Objects.equals(diff, patch.diff) &&
+        Objects.equals(resolves, patch.resolves);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, diff, resolves);
   }
 }

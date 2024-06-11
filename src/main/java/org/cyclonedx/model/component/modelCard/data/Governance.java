@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard.data;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -62,5 +63,23 @@ public class Governance
 
   public void setOwners(final List<DataGovernanceResponsibleParty> owners) {
     this.owners = owners;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Governance)) {
+      return false;
+    }
+    Governance that = (Governance) object;
+    return Objects.equals(custodians, that.custodians) && Objects.equals(stewards, that.stewards) &&
+        Objects.equals(owners, that.owners);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(custodians, stewards, owners);
   }
 }

@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.evidence;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -23,5 +24,22 @@ public class Callstack
 
   public void setFrames(final List<Frame> frames) {
     this.frames = frames;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Callstack)) {
+      return false;
+    }
+    Callstack callstack = (Callstack) object;
+    return Objects.equals(frames, callstack.frames);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(frames);
   }
 }

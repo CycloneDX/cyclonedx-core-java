@@ -29,6 +29,7 @@ import org.cyclonedx.Version;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
@@ -141,5 +142,25 @@ public class Composition {
             vulnerabilities = new ArrayList<>();
         }
         vulnerabilities.add(vulnerability);
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Composition)) {
+            return false;
+        }
+        Composition that = (Composition) object;
+        return Objects.equals(bomRef, that.bomRef) && aggregate == that.aggregate &&
+            Objects.equals(assemblies, that.assemblies) &&
+            Objects.equals(dependencies, that.dependencies) &&
+            Objects.equals(vulnerabilities, that.vulnerabilities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bomRef, aggregate, assemblies, dependencies, vulnerabilities);
     }
 }

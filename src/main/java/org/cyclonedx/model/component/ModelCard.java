@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -69,5 +70,26 @@ public class ModelCard extends ExtensibleElement
 
   public void setProperties(final List<Property> properties) {
     this.properties = properties;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof ModelCard)) {
+      return false;
+    }
+    ModelCard modelCard = (ModelCard) object;
+    return Objects.equals(bomRef, modelCard.bomRef) &&
+        Objects.equals(modelParameters, modelCard.modelParameters) &&
+        Objects.equals(quantitativeAnalysis, modelCard.quantitativeAnalysis) &&
+        Objects.equals(considerations, modelCard.considerations) &&
+        Objects.equals(properties, modelCard.properties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, modelParameters, quantitativeAnalysis, considerations, properties);
   }
 }

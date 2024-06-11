@@ -1,6 +1,7 @@
 package org.cyclonedx.model.definition;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -72,5 +73,24 @@ public class Level
 
   public void setRequirements(final List<String> requirements) {
     this.requirements = requirements;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Level)) {
+      return false;
+    }
+    Level level = (Level) object;
+    return Objects.equals(bomRef, level.bomRef) && Objects.equals(identifier, level.identifier) &&
+        Objects.equals(title, level.title) && Objects.equals(description, level.description) &&
+        Objects.equals(requirements, level.requirements);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, identifier, title, description, requirements);
   }
 }

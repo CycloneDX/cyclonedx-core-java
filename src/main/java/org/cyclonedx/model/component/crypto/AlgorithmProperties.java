@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.crypto;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -141,5 +142,28 @@ public class AlgorithmProperties
 
   public void setNistQuantumSecurityLevel(final Integer nistQuantumSecurityLevel) {
     this.nistQuantumSecurityLevel = nistQuantumSecurityLevel;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof AlgorithmProperties)) {
+      return false;
+    }
+    AlgorithmProperties that = (AlgorithmProperties) object;
+    return primitive == that.primitive && Objects.equals(parameterSetIdentifier, that.parameterSetIdentifier) &&
+        Objects.equals(curve, that.curve) && executionEnvironment == that.executionEnvironment &&
+        implementationPlatform == that.implementationPlatform && certificationLevel == that.certificationLevel &&
+        mode == that.mode && padding == that.padding && Objects.equals(cryptoFunctions, that.cryptoFunctions) &&
+        Objects.equals(classicalSecurityLevel, that.classicalSecurityLevel) &&
+        Objects.equals(nistQuantumSecurityLevel, that.nistQuantumSecurityLevel);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(primitive, parameterSetIdentifier, curve, executionEnvironment, implementationPlatform,
+        certificationLevel, mode, padding, cryptoFunctions, classicalSecurityLevel, nistQuantumSecurityLevel);
   }
 }

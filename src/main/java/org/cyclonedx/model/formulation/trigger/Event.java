@@ -1,6 +1,7 @@
 package org.cyclonedx.model.formulation.trigger;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -73,5 +74,25 @@ public class Event {
 
   public void setProperties(final List<Property> properties) {
     this.properties = properties;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Event)) {
+      return false;
+    }
+    Event event = (Event) object;
+    return Objects.equals(uid, event.uid) && Objects.equals(description, event.description) &&
+        Objects.equals(timeReceived, event.timeReceived) && Objects.equals(data, event.data) &&
+        Objects.equals(source, event.source) && Objects.equals(target, event.target) &&
+        Objects.equals(properties, event.properties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(uid, description, timeReceived, data, source, target, properties);
   }
 }

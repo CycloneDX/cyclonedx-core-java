@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard.data;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -43,5 +44,23 @@ public class Content
 
   public void setProperties(final List<Properties> properties) {
     this.properties = properties;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Content)) {
+      return false;
+    }
+    Content content = (Content) object;
+    return Objects.equals(attachment, content.attachment) && Objects.equals(url, content.url) &&
+        Objects.equals(properties, content.properties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(attachment, url, properties);
   }
 }

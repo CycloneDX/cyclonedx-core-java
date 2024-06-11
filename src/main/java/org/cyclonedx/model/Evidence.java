@@ -35,6 +35,7 @@ import org.cyclonedx.util.deserializer.LicenseDeserializer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -124,5 +125,26 @@ public class Evidence
 
     public void setIdentities(final List<Identity> identities) {
         this.identities = identities;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Evidence)) {
+            return false;
+        }
+        Evidence evidence = (Evidence) object;
+        return Objects.equals(licenses, evidence.licenses) &&
+            Objects.equals(copyright, evidence.copyright) &&
+            Objects.equals(identities, evidence.identities) &&
+            Objects.equals(occurrences, evidence.occurrences) &&
+            Objects.equals(callstack, evidence.callstack);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(licenses, copyright, identities, occurrences, callstack);
     }
 }

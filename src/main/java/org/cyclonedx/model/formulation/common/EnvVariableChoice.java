@@ -1,5 +1,7 @@
 package org.cyclonedx.model.formulation.common;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -32,5 +34,22 @@ public class EnvVariableChoice
 
   public void setEnvironmentVar(final Property environmentVar) {
     this.environmentVar = environmentVar;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof EnvVariableChoice)) {
+      return false;
+    }
+    EnvVariableChoice that = (EnvVariableChoice) object;
+    return Objects.equals(value, that.value) && Objects.equals(environmentVar, that.environmentVar);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(value, environmentVar);
   }
 }

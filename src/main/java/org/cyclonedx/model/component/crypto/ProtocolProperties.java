@@ -2,6 +2,7 @@ package org.cyclonedx.model.component.crypto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -61,5 +62,25 @@ public class ProtocolProperties
 
   public void setCryptoRefArray(final CryptoRef cryptoRefArray) {
     this.cryptoRefArray = cryptoRefArray;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof ProtocolProperties)) {
+      return false;
+    }
+    ProtocolProperties that = (ProtocolProperties) object;
+    return type == that.type && Objects.equals(version, that.version) &&
+        Objects.equals(cipherSuites, that.cipherSuites) &&
+        Objects.equals(ikev2TransformTypes, that.ikev2TransformTypes) &&
+        Objects.equals(cryptoRefArray, that.cryptoRefArray);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, version, cipherSuites, ikev2TransformTypes, cryptoRefArray);
   }
 }
