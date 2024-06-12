@@ -1,5 +1,7 @@
 package org.cyclonedx.model.attestation.affirmation;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -80,5 +82,25 @@ public class Signatory
     this.externalReference = externalReference;
     //if organization and external reference are present signature is not allowed
     signature = null;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Signatory)) {
+      return false;
+    }
+    Signatory signatory = (Signatory) object;
+    return Objects.equals(name, signatory.name) && Objects.equals(role, signatory.role) &&
+        Objects.equals(signature, signatory.signature) &&
+        Objects.equals(organization, signatory.organization) &&
+        Objects.equals(externalReference, signatory.externalReference);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, role, signature, organization, externalReference);
   }
 }

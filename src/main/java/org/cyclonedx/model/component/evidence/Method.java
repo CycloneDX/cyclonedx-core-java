@@ -1,5 +1,7 @@
 package org.cyclonedx.model.component.evidence;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -74,5 +76,23 @@ public class Method
     Technique(String name) {
       this.name = name;
     }
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Method)) {
+      return false;
+    }
+    Method method = (Method) object;
+    return technique == method.technique && Objects.equals(confidence, method.confidence) &&
+        Objects.equals(value, method.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(technique, confidence, value);
   }
 }

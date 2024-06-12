@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard.data;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -54,5 +55,23 @@ public class Graphics
 
   public void setCollection(final List<Graphic> collection) {
     this.collection = collection;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Graphics)) {
+      return false;
+    }
+    Graphics graphics = (Graphics) object;
+    return Objects.equals(description, graphics.description) &&
+        Objects.equals(collection, graphics.collection);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(description, collection);
   }
 }

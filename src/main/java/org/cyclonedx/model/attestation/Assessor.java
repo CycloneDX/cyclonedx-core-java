@@ -1,5 +1,7 @@
 package org.cyclonedx.model.attestation;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,5 +47,24 @@ public class Assessor
 
   public void setOrganization(final OrganizationalEntity organization) {
     this.organization = organization;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Assessor)) {
+      return false;
+    }
+    Assessor assessor = (Assessor) object;
+    return Objects.equals(bomRef, assessor.bomRef) &&
+        Objects.equals(thirdParty, assessor.thirdParty) &&
+        Objects.equals(organization, assessor.organization);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, thirdParty, organization);
   }
 }

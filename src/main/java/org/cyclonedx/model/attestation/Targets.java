@@ -1,6 +1,7 @@
 package org.cyclonedx.model.attestation;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -54,5 +55,23 @@ public class Targets
 
   public void setServices(final List<Service> services) {
     this.services = services;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Targets)) {
+      return false;
+    }
+    Targets targets = (Targets) object;
+    return Objects.equals(organizations, targets.organizations) &&
+        Objects.equals(components, targets.components) && Objects.equals(services, targets.services);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(organizations, components, services);
   }
 }

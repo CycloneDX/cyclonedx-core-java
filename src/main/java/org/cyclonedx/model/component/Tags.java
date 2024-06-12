@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -32,5 +33,22 @@ public class Tags
 
   public void setTags(final List<String> tags) {
     this.tags = tags;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Tags)) {
+      return false;
+    }
+    Tags tags1 = (Tags) object;
+    return Objects.equals(tags, tags1.tags);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(tags);
   }
 }

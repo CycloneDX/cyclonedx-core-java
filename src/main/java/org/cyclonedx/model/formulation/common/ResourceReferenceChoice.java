@@ -1,5 +1,7 @@
 package org.cyclonedx.model.formulation.common;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -27,5 +29,22 @@ public class ResourceReferenceChoice {
 
   public void setExternalReference(final ExternalReference externalReference) {
     this.externalReference = externalReference;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof ResourceReferenceChoice)) {
+      return false;
+    }
+    ResourceReferenceChoice that = (ResourceReferenceChoice) object;
+    return Objects.equals(ref, that.ref) && Objects.equals(externalReference, that.externalReference);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(ref, externalReference);
   }
 }

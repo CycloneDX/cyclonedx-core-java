@@ -1,6 +1,7 @@
 package org.cyclonedx.model.attestation;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -59,5 +60,23 @@ public class Attestation
 
   public void setSignature(final Signature signature) {
     this.signature = signature;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Attestation)) {
+      return false;
+    }
+    Attestation that = (Attestation) object;
+    return Objects.equals(summary, that.summary) && Objects.equals(assessor, that.assessor) &&
+        Objects.equals(map, that.map) && Objects.equals(signature, that.signature);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(summary, assessor, map, signature);
   }
 }

@@ -18,6 +18,8 @@
  */
 package org.cyclonedx.model;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -41,5 +43,22 @@ public class Copyright {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Copyright)) {
+            return false;
+        }
+        Copyright copyright = (Copyright) object;
+        return Objects.equals(text, copyright.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(text);
     }
 }

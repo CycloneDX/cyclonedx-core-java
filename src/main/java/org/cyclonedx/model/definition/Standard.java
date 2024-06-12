@@ -1,6 +1,7 @@
 package org.cyclonedx.model.definition;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -117,5 +118,28 @@ public class Standard
 
   public void setSignature(final Signature signature) {
     this.signature = signature;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Standard)) {
+      return false;
+    }
+    Standard standard = (Standard) object;
+    return Objects.equals(bomRef, standard.bomRef) && Objects.equals(name, standard.name) &&
+        Objects.equals(version, standard.version) &&
+        Objects.equals(description, standard.description) && Objects.equals(owner, standard.owner) &&
+        Objects.equals(requirements, standard.requirements) &&
+        Objects.equals(levels, standard.levels) &&
+        Objects.equals(externalReferences, standard.externalReferences) &&
+        Objects.equals(signature, standard.signature);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, name, version, description, owner, requirements, levels, externalReferences, signature);
   }
 }

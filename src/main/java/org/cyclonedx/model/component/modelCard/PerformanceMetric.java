@@ -1,5 +1,7 @@
 package org.cyclonedx.model.component.modelCard;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -73,5 +75,24 @@ public class PerformanceMetric extends ExtensibleElement
 
   public void setConfidenceInterval(final ConfidenceInterval confidenceInterval) {
     this.confidenceInterval = confidenceInterval;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof PerformanceMetric)) {
+      return false;
+    }
+    PerformanceMetric that = (PerformanceMetric) object;
+    return Objects.equals(type, that.type) && Objects.equals(value, that.value) &&
+        Objects.equals(slice, that.slice) &&
+        Objects.equals(confidenceInterval, that.confidenceInterval);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, value, slice, confidenceInterval);
   }
 }

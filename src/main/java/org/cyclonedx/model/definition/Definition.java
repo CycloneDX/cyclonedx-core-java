@@ -1,6 +1,7 @@
 package org.cyclonedx.model.definition;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,5 +26,22 @@ public class Definition
 
   public void setStandards(final List<Standard> standards) {
     this.standards = standards;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Definition)) {
+      return false;
+    }
+    Definition that = (Definition) object;
+    return Objects.equals(standards, that.standards);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(standards);
   }
 }

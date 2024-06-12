@@ -1,6 +1,7 @@
 package org.cyclonedx.model.attestation;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -46,5 +47,23 @@ public class Conformance
 
   public void setMitigationStrategies(final List<String> mitigationStrategies) {
     this.mitigationStrategies = mitigationStrategies;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Conformance)) {
+      return false;
+    }
+    Conformance that = (Conformance) object;
+    return Objects.equals(score, that.score) && Objects.equals(rationale, that.rationale) &&
+        Objects.equals(mitigationStrategies, that.mitigationStrategies);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(score, rationale, mitigationStrategies);
   }
 }

@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard.consideration.consumption.energy;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -74,5 +75,25 @@ public class EnergyProvider
 
   public void setExternalReferences(final List<ExternalReference> externalReferences) {
     this.externalReferences = externalReferences;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof EnergyProvider)) {
+      return false;
+    }
+    EnergyProvider that = (EnergyProvider) object;
+    return Objects.equals(bomRef, that.bomRef) && Objects.equals(description, that.description) &&
+        Objects.equals(organization, that.organization) && energySource == that.energySource &&
+        Objects.equals(energyProvided, that.energyProvided) &&
+        Objects.equals(externalReferences, that.externalReferences);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, description, organization, energySource, energyProvided, externalReferences);
   }
 }

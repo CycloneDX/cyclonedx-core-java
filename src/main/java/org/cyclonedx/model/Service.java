@@ -35,6 +35,7 @@ import org.cyclonedx.util.deserializer.StringListDeserializer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -265,5 +266,36 @@ public class Service extends ExtensibleElement {
 
     public void setTags(final Tags tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Service)) {
+            return false;
+        }
+        Service service = (Service) object;
+        return Objects.equals(bomRef, service.bomRef) && Objects.equals(provider, service.provider) &&
+            Objects.equals(group, service.group) && Objects.equals(name, service.name) &&
+            Objects.equals(version, service.version) &&
+            Objects.equals(description, service.description) &&
+            Objects.equals(endpoints, service.endpoints) &&
+            Objects.equals(authenticated, service.authenticated) &&
+            Objects.equals(xTrustBoundary, service.xTrustBoundary) &&
+            Objects.equals(data, service.data) && Objects.equals(licenses, service.licenses) &&
+            Objects.equals(externalReferences, service.externalReferences) &&
+            Objects.equals(properties, service.properties) && Objects.equals(tags, service.tags) &&
+            Objects.equals(services, service.services) &&
+            Objects.equals(releaseNotes, service.releaseNotes) &&
+            Objects.equals(signature, service.signature);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bomRef, provider, group, name, version, description, endpoints, authenticated,
+            xTrustBoundary,
+            data, licenses, externalReferences, properties, tags, services, releaseNotes, signature);
     }
 }

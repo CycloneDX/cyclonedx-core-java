@@ -20,6 +20,7 @@ package org.cyclonedx.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -288,5 +289,29 @@ public class ReleaseNotes
     public void setText(final AttachmentText text) {
       this.text = text;
     }
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof ReleaseNotes)) {
+      return false;
+    }
+    ReleaseNotes that = (ReleaseNotes) object;
+    return Objects.equals(type, that.type) && Objects.equals(title, that.title) &&
+        Objects.equals(featuredImage, that.featuredImage) &&
+        Objects.equals(socialImage, that.socialImage) &&
+        Objects.equals(description, that.description) && Objects.equals(timestamp, that.timestamp) &&
+        Objects.equals(aliases, that.aliases) && Objects.equals(tags, that.tags) &&
+        Objects.equals(resolves, that.resolves) && Objects.equals(notes, that.notes) &&
+        Objects.equals(properties, that.properties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, title, featuredImage, socialImage, description, timestamp, aliases, tags, resolves, notes,
+        properties);
   }
 }

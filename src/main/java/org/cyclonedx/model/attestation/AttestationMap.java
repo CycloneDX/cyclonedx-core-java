@@ -1,6 +1,7 @@
 package org.cyclonedx.model.attestation;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -71,5 +72,24 @@ public class AttestationMap
 
   public void setConfidence(final Confidence confidence) {
     this.confidence = confidence;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof AttestationMap)) {
+      return false;
+    }
+    AttestationMap that = (AttestationMap) object;
+    return Objects.equals(requirement, that.requirement) && Objects.equals(claims, that.claims) &&
+        Objects.equals(counterClaims, that.counterClaims) &&
+        Objects.equals(conformance, that.conformance) && Objects.equals(confidence, that.confidence);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(requirement, claims, counterClaims, conformance, confidence);
   }
 }

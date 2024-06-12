@@ -1,6 +1,7 @@
 package org.cyclonedx.model.attestation;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -125,5 +126,29 @@ public class Claim
 
   public void setSignature(final Signature signature) {
     this.signature = signature;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Claim)) {
+      return false;
+    }
+    Claim claim = (Claim) object;
+    return Objects.equals(bomRef, claim.bomRef) && Objects.equals(target, claim.target) &&
+        Objects.equals(predicate, claim.predicate) &&
+        Objects.equals(mitigationStrategies, claim.mitigationStrategies) &&
+        Objects.equals(reasoning, claim.reasoning) && Objects.equals(evidence, claim.evidence) &&
+        Objects.equals(counterEvidence, claim.counterEvidence) &&
+        Objects.equals(externalReferences, claim.externalReferences) &&
+        Objects.equals(signature, claim.signature);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, target, predicate, mitigationStrategies, reasoning, evidence, counterEvidence,
+        externalReferences, signature);
   }
 }

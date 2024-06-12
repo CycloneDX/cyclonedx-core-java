@@ -1,6 +1,7 @@
 package org.cyclonedx.model.attestation.evidence;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -71,5 +72,25 @@ public class Data
 
   public void setClassification(final String classification) {
     this.classification = classification;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Data)) {
+      return false;
+    }
+    Data data = (Data) object;
+    return Objects.equals(name, data.name) && Objects.equals(contents, data.contents) &&
+        Objects.equals(classification, data.classification) &&
+        Objects.equals(sensitiveData, data.sensitiveData) &&
+        Objects.equals(governance, data.governance);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, contents, classification, sensitiveData, governance);
   }
 }

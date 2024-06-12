@@ -18,6 +18,8 @@
  */
 package org.cyclonedx.model;
 
+import java.util.Objects;
+
 public class Attribute {
 
     private final String key;
@@ -36,4 +38,20 @@ public class Attribute {
         return this.value;
     }
 
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Attribute)) {
+            return false;
+        }
+        Attribute attribute = (Attribute) object;
+        return Objects.equals(key, attribute.key) && Objects.equals(value, attribute.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value);
+    }
 }

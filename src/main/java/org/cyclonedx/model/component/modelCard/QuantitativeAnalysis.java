@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -34,5 +35,23 @@ public class QuantitativeAnalysis
 
   public void setGraphics(final Graphics graphics) {
     this.graphics = graphics;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof QuantitativeAnalysis)) {
+      return false;
+    }
+    QuantitativeAnalysis that = (QuantitativeAnalysis) object;
+    return Objects.equals(performanceMetrics, that.performanceMetrics) &&
+        Objects.equals(graphics, that.graphics);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(performanceMetrics, graphics);
   }
 }

@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.evidence;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -100,5 +101,24 @@ public class Identity extends ExtensibleElement
 
   public void setConcludedValue(final String concludedValue) {
     this.concludedValue = concludedValue;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Identity)) {
+      return false;
+    }
+    Identity identity = (Identity) object;
+    return field == identity.field && Objects.equals(confidence, identity.confidence) &&
+        Objects.equals(concludedValue, identity.concludedValue) &&
+        Objects.equals(methods, identity.methods) && Objects.equals(tools, identity.tools);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(field, confidence, concludedValue, methods, tools);
   }
 }

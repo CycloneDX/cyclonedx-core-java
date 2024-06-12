@@ -1,6 +1,7 @@
 package org.cyclonedx.model.definition;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -122,5 +123,26 @@ public class Requirement
 
   public void setExternalReferences(final List<ExternalReference> externalReferences) {
     this.externalReferences = externalReferences;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Requirement)) {
+      return false;
+    }
+    Requirement that = (Requirement) object;
+    return Objects.equals(bomRef, that.bomRef) && Objects.equals(identifier, that.identifier) &&
+        Objects.equals(title, that.title) && Objects.equals(text, that.text) &&
+        Objects.equals(descriptions, that.descriptions) && Objects.equals(openCre, that.openCre) &&
+        Objects.equals(parent, that.parent) && Objects.equals(properties, that.properties) &&
+        Objects.equals(externalReferences, that.externalReferences);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, identifier, title, text, descriptions, openCre, parent, properties, externalReferences);
   }
 }

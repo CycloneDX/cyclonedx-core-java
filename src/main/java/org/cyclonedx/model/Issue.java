@@ -27,6 +27,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -122,5 +123,24 @@ public class Issue {
 
   public void setType(Type type) {
     this.type = type;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Issue)) {
+      return false;
+    }
+    Issue issue = (Issue) object;
+    return Objects.equals(id, issue.id) && Objects.equals(name, issue.name) &&
+        Objects.equals(description, issue.description) && Objects.equals(source, issue.source) &&
+        Objects.equals(references, issue.references) && type == issue.type;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, description, source, references, type);
   }
 }

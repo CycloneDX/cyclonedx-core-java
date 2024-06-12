@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.crypto;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -40,5 +41,23 @@ public class CipherSuite
 
   public void setIdentifiers(final List<String> identifiers) {
     this.identifiers = identifiers;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof CipherSuite)) {
+      return false;
+    }
+    CipherSuite that = (CipherSuite) object;
+    return Objects.equals(name, that.name) && Objects.equals(algorithms, that.algorithms) &&
+        Objects.equals(identifiers, that.identifiers);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, algorithms, identifiers);
   }
 }

@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -98,5 +99,28 @@ public class Considerations extends ExtensibleElement
 
   public void setEnvironmentalConsiderations(final EnvironmentalConsideration environmentalConsiderations) {
     this.environmentalConsiderations = environmentalConsiderations;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Considerations)) {
+      return false;
+    }
+    Considerations that = (Considerations) object;
+    return Objects.equals(users, that.users) && Objects.equals(useCases, that.useCases) &&
+        Objects.equals(technicalLimitations, that.technicalLimitations) &&
+        Objects.equals(performanceTradeoffs, that.performanceTradeoffs) &&
+        Objects.equals(ethicalConsiderations, that.ethicalConsiderations) &&
+        Objects.equals(environmentalConsiderations, that.environmentalConsiderations) &&
+        Objects.equals(fairnessAssessments, that.fairnessAssessments);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(users, useCases, technicalLimitations, performanceTradeoffs, ethicalConsiderations,
+        environmentalConsiderations, fairnessAssessments);
   }
 }

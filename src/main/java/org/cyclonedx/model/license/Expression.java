@@ -1,5 +1,7 @@
 package org.cyclonedx.model.license;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -61,5 +63,23 @@ public class Expression
 
   public void setValue(final String value) {
     this.value = value;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Expression)) {
+      return false;
+    }
+    Expression that = (Expression) object;
+    return Objects.equals(bomRef, that.bomRef) &&
+        Objects.equals(acknowledgement, that.acknowledgement) && Objects.equals(value, that.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, acknowledgement, value);
   }
 }

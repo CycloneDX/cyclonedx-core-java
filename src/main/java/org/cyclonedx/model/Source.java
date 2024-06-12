@@ -19,6 +19,8 @@
 package org.cyclonedx.model;
 
 import java.net.URL;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -48,5 +50,22 @@ public class Source {
 
   public void setName(final String name) {
     this.name = name;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Source)) {
+      return false;
+    }
+    Source source = (Source) object;
+    return Objects.equals(name, source.name) && Objects.equals(url, source.url);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, url);
   }
 }

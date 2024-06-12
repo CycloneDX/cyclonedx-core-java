@@ -1,5 +1,7 @@
 package org.cyclonedx.model.component.crypto;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -96,5 +98,30 @@ public class CertificateProperties
 
   public void setCertificateExtension(final String certificateExtension) {
     this.certificateExtension = certificateExtension;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof CertificateProperties)) {
+      return false;
+    }
+    CertificateProperties that = (CertificateProperties) object;
+    return Objects.equals(subjectName, that.subjectName) &&
+        Objects.equals(issuerName, that.issuerName) &&
+        Objects.equals(notValidBefore, that.notValidBefore) &&
+        Objects.equals(notValidAfter, that.notValidAfter) &&
+        Objects.equals(signatureAlgorithmRef, that.signatureAlgorithmRef) &&
+        Objects.equals(subjectPublicKeyRef, that.subjectPublicKeyRef) &&
+        Objects.equals(certificateFormat, that.certificateFormat) &&
+        Objects.equals(certificateExtension, that.certificateExtension);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(subjectName, issuerName, notValidBefore, notValidAfter, signatureAlgorithmRef,
+        subjectPublicKeyRef, certificateFormat, certificateExtension);
   }
 }

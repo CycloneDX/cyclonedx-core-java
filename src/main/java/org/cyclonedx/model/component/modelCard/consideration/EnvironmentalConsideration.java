@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.modelCard.consideration;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -33,5 +34,23 @@ public class EnvironmentalConsideration
 
   public void setProperties(final List<Property> properties) {
     this.properties = properties;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof EnvironmentalConsideration)) {
+      return false;
+    }
+    EnvironmentalConsideration that = (EnvironmentalConsideration) object;
+    return Objects.equals(energyConsumptions, that.energyConsumptions) &&
+        Objects.equals(properties, that.properties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(energyConsumptions, properties);
   }
 }

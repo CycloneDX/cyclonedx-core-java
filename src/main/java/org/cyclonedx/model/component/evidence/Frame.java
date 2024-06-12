@@ -1,6 +1,7 @@
 package org.cyclonedx.model.component.evidence;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -84,5 +85,25 @@ public class Frame extends ExtensibleElement
 
   public void setFullFilename(final String fullFilename) {
     this.fullFilename = fullFilename;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Frame)) {
+      return false;
+    }
+    Frame frame = (Frame) object;
+    return Objects.equals(packageFrame, frame.packageFrame) && Objects.equals(module, frame.module) &&
+        Objects.equals(function, frame.function) && Objects.equals(parameters, frame.parameters) &&
+        Objects.equals(line, frame.line) && Objects.equals(column, frame.column) &&
+        Objects.equals(fullFilename, frame.fullFilename);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(packageFrame, module, function, parameters, line, column, fullFilename);
   }
 }

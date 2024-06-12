@@ -1,5 +1,7 @@
 package org.cyclonedx.model.organization;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -81,5 +83,26 @@ public class PostalAddress
 
   public void setStreetAddress(final String streetAddress) {
     this.streetAddress = streetAddress;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof PostalAddress)) {
+      return false;
+    }
+    PostalAddress that = (PostalAddress) object;
+    return Objects.equals(bomRef, that.bomRef) && Objects.equals(country, that.country) &&
+        Objects.equals(region, that.region) && Objects.equals(locality, that.locality) &&
+        Objects.equals(postOfficeBoxNumber, that.postOfficeBoxNumber) &&
+        Objects.equals(postalCode, that.postalCode) &&
+        Objects.equals(streetAddress, that.streetAddress);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, country, region, locality, postOfficeBoxNumber, postalCode, streetAddress);
   }
 }

@@ -19,6 +19,7 @@
 package org.cyclonedx.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -35,5 +36,22 @@ public class Lifecycles
 
     public void setLifecycleChoice(final List<LifecycleChoice> lifecycleChoice) {
         this.lifecycleChoice = lifecycleChoice;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Lifecycles)) {
+            return false;
+        }
+        Lifecycles that = (Lifecycles) object;
+        return Objects.equals(lifecycleChoice, that.lifecycleChoice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(lifecycleChoice);
     }
 }

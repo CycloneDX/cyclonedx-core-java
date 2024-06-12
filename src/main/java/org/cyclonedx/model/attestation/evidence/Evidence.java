@@ -2,6 +2,7 @@ package org.cyclonedx.model.attestation.evidence;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -124,5 +125,27 @@ public class Evidence
 
   public void setSignature(final Signature signature) {
     this.signature = signature;
+  }
+
+  @Override
+  public boolean equals(final Object object) {
+    if (this == object) {
+      return true;
+    }
+    if (!(object instanceof Evidence)) {
+      return false;
+    }
+    Evidence evidence = (Evidence) object;
+    return Objects.equals(bomRef, evidence.bomRef) &&
+        Objects.equals(propertyName, evidence.propertyName) &&
+        Objects.equals(description, evidence.description) && Objects.equals(data, evidence.data) &&
+        Objects.equals(created, evidence.created) && Objects.equals(expires, evidence.expires) &&
+        Objects.equals(author, evidence.author) && Objects.equals(reviewer, evidence.reviewer) &&
+        Objects.equals(signature, evidence.signature);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(bomRef, propertyName, description, data, created, expires, author, reviewer, signature);
   }
 }
