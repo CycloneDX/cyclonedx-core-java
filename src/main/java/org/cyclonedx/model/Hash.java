@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import org.cyclonedx.Version;
+
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -37,11 +39,16 @@ public class Hash {
         SHA_384("SHA-384"),
         SHA_512("SHA-512"),
         SHA3_256("SHA3-256"),
-        SHA3_384("SHA3-384"),
         SHA3_512("SHA3-512"),
+        @VersionFilter(Version.VERSION_12)
+        SHA3_384("SHA3-384"),
+        @VersionFilter(Version.VERSION_12)
         BLAKE2b_256("BLAKE2b-256"),
+        @VersionFilter(Version.VERSION_12)
         BLAKE2b_384("BLAKE2b-384"),
+        @VersionFilter(Version.VERSION_12)
         BLAKE2b_512("BLAKE2b-512"),
+        @VersionFilter(Version.VERSION_12)
         BLAKE3("BLAKE3");
 
         private final String spec;
@@ -52,6 +59,15 @@ public class Hash {
 
         public String getSpec() {
             return spec;
+        }
+
+        public static Algorithm fromSpec(String spec) {
+            for (Algorithm algorithm : values()) {
+                if (algorithm.spec.equalsIgnoreCase(spec)) {
+                    return algorithm;
+                }
+            }
+            throw new IllegalArgumentException("No enum constant with spec " + spec);
         }
     }
 

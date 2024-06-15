@@ -34,15 +34,24 @@ public class VersionXmlAnnotationIntrospector extends JacksonXmlAnnotationIntros
 
   @Override
   public boolean hasIgnoreMarker(final AnnotatedMember m) {
+    // Check if the field has the VersionFilter annotation
     if (m.hasAnnotation(VersionFilter.class)) {
+      // Get the VersionFilter annotation from the field
       VersionFilter filter = m.getAnnotation(VersionFilter.class);
+      // Check if the version specified in the annotation is greater than the current version
       if (filter.value().getVersion() > version.getVersion()) {
+        // If true, it means the field was introduced after the current version, so we should ignore it
         return true;
       }
     }
+
+    // Check if the field has the JsonOnly annotation
     if (m.hasAnnotation(JsonOnly.class)) {
+      // If true, the field should be ignored for XML serialization
       return true;
     }
+
+    // If none of the above conditions are met, delegate to the superclass's hasIgnoreMarker method
     return super.hasIgnoreMarker(m);
   }
 }

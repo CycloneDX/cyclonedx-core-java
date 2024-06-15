@@ -133,6 +133,7 @@ public class Composition {
 
     @JacksonXmlElementWrapper(localName = "vulnerabilities")
     @JacksonXmlProperty(localName = "vulnerability")
+    @VersionFilter(Version.VERSION_15)
     public List<BomReference> getVulnerabilities() { return vulnerabilities; }
 
     public void setVulnerabilities(List<BomReference> vulnerabilities) { this.vulnerabilities = vulnerabilities; }

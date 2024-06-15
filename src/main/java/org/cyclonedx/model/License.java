@@ -58,7 +58,10 @@ public class License extends ExtensibleElement {
 
     @JacksonXmlProperty(localName = "text")
     @JsonProperty("text")
+    @VersionFilter(Version.VERSION_11)
     private AttachmentText attachmentText;
+
+    @VersionFilter(Version.VERSION_11)
     private String url;
 
     @VersionFilter(Version.VERSION_15)
@@ -96,10 +99,12 @@ public class License extends ExtensibleElement {
         this.licensing = licensing;
     }
 
+    @VersionFilter(Version.VERSION_11)
     public String getUrl() {
         return url;
     }
 
+    @VersionFilter(Version.VERSION_11)
     public void setUrl(String url) {
         this.url = url;
     }
