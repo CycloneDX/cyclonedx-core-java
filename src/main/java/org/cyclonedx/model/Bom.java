@@ -102,7 +102,6 @@ public class Bom extends ExtensibleElement {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @VersionFilter(Version.VERSION_13)
-    @CustomPropertyListSerializer
     private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)

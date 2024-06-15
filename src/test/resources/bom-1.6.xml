@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom serialNumber="urn:uuid:merged-uuid" version="1" xmlns="http://cyclonedx.org/schema/bom/1.6">
+  <components>
+    <component type="library" bom-ref="component-a">
+      <name>Component A</name>
+      <version>1.0.0</version>
+    </component>
+    <component type="library">
+      <name>acme-example</name>
+      <version>1.0.0</version>
+      <hashes>
+        <hash alg="MD5">641b6e166f8b33c5e959e2adcc18b1c7</hash>
+        <hash alg="SHA-1">9188560f22e0b73070d2efce670c74af2bdf30af</hash>
+        <hash alg="SHA-256">d88bc4e70bfb34d18b5542136639acbb26a8ae2429aa1e47489332fb389cc964</hash>
+        <hash alg="SHA-384">d4835048a0f57c74b8fb617d5366ab81376fc92bebe9a93bf24ba7f9da6c9aeeb6179f5d1361f6533211b15f3224cbad</hash>
+        <hash alg="SHA-512">74a51ff45e4c11df9ba1f0094282c80489649cb157a75fa337992d2d4592a5a1b8cb4525de8db0ae25233553924d76c36e093ea7fa9df4e5b8b07fd2e074efd6</hash>
+        <hash alg="SHA3-256">7478c7cf41c883a04ee89f1813f687886d53fa86f791fff90690c6221e3853aa</hash>
+        <hash alg="SHA3-384">a1eea7229716487ad2ebe96b2f997a8408f32f14047994fbcc99b49012cf86c96dbd518e5d57a61b0e57dd37dd0b48f5</hash>
+        <hash alg="SHA3-512">7d584825bc1767dfabe7e82b45ccb7a1119b145fa17e76b885e71429c706cef0a3171bc6575b968eec5da56a7966c02fec5402fcee55097ac01d40c550de9d20</hash>
+        <hash alg="BLAKE2b-256">d8779633380c050bccf4e733b763ab2abd8ad2db60b517d47fd29bbf76433237</hash>
+        <hash alg="BLAKE2b-384">e728ba56c2da995a559a178116c594e8bee4894a79ceb4399d8f479e5563cb1942b85936f646d14170717c576b14db7a</hash>
+        <hash alg="BLAKE2b-512">f8ce8d612a6c85c96cf7cebc230f6ddef26e6cedcfbc4a41c766033cc08c6ba097d1470948226807fb2d88d2a2b6fc0ff5e5440e93a603086fdd568bafcd1a9d</hash>
+        <hash alg="BLAKE3">26cdc7fb3fd65fc3b621a4ef70bc7d2489d5c19e70c76cf7ec20e538df0047cf</hash>
+      </hashes>
+    </component>
+    <component type="library" bom-ref="123">
+      <name>acme-library</name>
+      <version>1.0.0</version>
+      <components>
+        <component type="library" bom-ref="456">
+          <name>acme-library</name>
+          <version>1.0.0</version>
+        </component>
+      </components>
+    </component>
+    <component type="library" bom-ref="789">
+      <name>acme-library</name>
+      <version>1.0.0</version>
+    </component>
+    <component type="application">
+      <author>Acme Super Heros</author>
+      <name>Acme Application</name>
+      <version>9.1.1</version>
+      <swid tagId="swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1" name="Acme Application" version="9.1.1"/>
+    </component>
+    <component type="application">
+      <author>Acme Super Heros</author>
+      <name>Acme Application</name>
+      <version>9.1.1</version>
+      <swid tagId="swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1" name="Acme Application" version="9.1.1">
+        <text content-type="text/xml" encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiID8+CjxTb2Z0d2FyZUlkZW50aXR5IHhtbDpsYW5nPSJFTiIgbmFtZT0iQWNtZSBBcHBsaWNhdGlvbiIgdmVyc2lvbj0iOS4xLjEiIAogdmVyc2lvblNjaGVtZT0ibXVsdGlwYXJ0bnVtZXJpYyIgCiB0YWdJZD0ic3dpZGdlbi1iNTk1MWFjOS00MmMwLWYzODItM2YxZS1iYzdhMmE0NDk3Y2JfOS4xLjEiIAogeG1sbnM9Imh0dHA6Ly9zdGFuZGFyZHMuaXNvLm9yZy9pc28vMTk3NzAvLTIvMjAxNS9zY2hlbWEueHNkIj4gCiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiAKIHhzaTpzY2hlbWFMb2NhdGlvbj0iaHR0cDovL3N0YW5kYXJkcy5pc28ub3JnL2lzby8xOTc3MC8tMi8yMDE1LWN1cnJlbnQvc2NoZW1hLnhzZCBzY2hlbWEueHNkIiA+CiAgPE1ldGEgZ2VuZXJhdG9yPSJTV0lEIFRhZyBPbmxpbmUgR2VuZXJhdG9yIHYwLjEiIC8+IAogIDxFbnRpdHkgbmFtZT0iQWNtZSwgSW5jLiIgcmVnaWQ9ImV4YW1wbGUuY29tIiByb2xlPSJ0YWdDcmVhdG9yIiAvPiAKPC9Tb2Z0d2FyZUlkZW50aXR5Pg==</text>
+      </swid>
+    </component>
+    <component type="application">
+      <name>application-a</name>
+      <version>1.0</version>
+    </component>
+    <component type="library">
+      <name>library-a</name>
+      <version>1.0</version>
+    </component>
+    <component type="framework">
+      <name>framework-a</name>
+      <version>1.0</version>
+    </component>
+    <component type="container">
+      <name>container-a</name>
+      <version>1.0</version>
+    </component>
+    <component type="operating-system">
+      <name>operating-system-a</name>
+      <version>1.0</version>
+    </component>
+    <component type="firmware">
+      <name>firmware-a</name>
+      <version>1.0</version>
+    </component>
+    <component type="device">
+      <name>device-a</name>
+      <version>1.0</version>
+    </component>
+    <component type="file">
+      <name>file-a</name>
+      <version>1.0</version>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref="acme-application-1.0">
+      <dependency ref="pkg:maven/partner/shaded-library@1.0"/>
+      <dependency ref="pkg:maven/acme/library@3.0"/>
+    </dependency>
+  </dependencies>
+  <compositions>
+    <composition bom-ref="composition-1">
+      <aggregate>complete</aggregate>
+      <assemblies>
+        <assembly ref="pkg:maven/partner/shaded-library@1.0"/>
+      </assemblies>
+      <dependencies>
+        <dependency ref="acme-application-1.0"/>
+      </dependencies>
+    </composition>
+    <composition>
+      <aggregate>unknown</aggregate>
+      <assemblies>
+        <assembly ref="pkg:maven/acme/library@3.0"/>
+      </assemblies>
+    </composition>
+    <composition>
+      <aggregate>incomplete_first_party_only</aggregate>
+      <assemblies>
+        <assembly ref="vulnerability-1"/>
+      </assemblies>
+    </composition>
+  </compositions>
+  <annotations>
+    <annotation bom-ref="annotation-1">
+      <subjects>
+        <subject ref="component-a"/>
+      </subjects>
+      <annotator>
+        <organization>
+          <name>Acme, Inc.</name>
+          <url>https://example.com</url>
+          <contact>
+            <name>Acme Professional Services</name>
+            <email>professional.services@example.com</email>
+          </contact>
+        </organization>
+      </annotator>
+      <timestamp>2020-04-07T07:01:00Z</timestamp>
+      <text>This is a sample annotation made by an organization</text>
+    </annotation>
+    <annotation bom-ref="annotation-2">
+      <subjects>
+        <subject ref="component-a"/>
+      </subjects>
+      <annotator>
+        <individual>
+          <name>Samantha Wright</name>
+          <email>samantha.wright@example.com</email>
+          <phone>800-555-1212</phone>
+        </individual>
+      </annotator>
+      <timestamp>2020-04-07T07:01:00Z</timestamp>
+      <text>This is a sample annotation made by an person</text>
+    </annotation>
+    <annotation bom-ref="annotation-3">
+      <subjects>
+        <subject ref="component-a"/>
+      </subjects>
+      <annotator>
+        <component type="application">
+          <name>Awesome Tool</name>
+          <version>9.1.2</version>
+        </component>
+      </annotator>
+      <timestamp>2020-04-07T07:01:00Z</timestamp>
+      <text>This is a sample annotation made by a component</text>
+    </annotation>
+    <annotation bom-ref="annotation-4">
+      <subjects>
+        <subject ref="component-a"/>
+      </subjects>
+      <annotator>
+        <service bom-ref="b2a46a4b-8367-4bae-9820-95557cfe03a8">
+          <provider>
+            <name>Partner Org</name>
+            <url>https://partner.org</url>
+            <contact>
+              <name>Support</name>
+              <email>support@partner</email>
+              <phone>800-555-1212</phone>
+            </contact>
+          </provider>
+          <group>org.partner</group>
+          <name>BOM Annotation Service</name>
+          <version>2020-Q2</version>
+          <endpoints>
+            <endpoint>https://partner.org/api/v1/inspect</endpoint>
+            <endpoint>https://partner.org/api/v1/annotate</endpoint>
+          </endpoints>
+          <authenticated>true</authenticated>
+          <x-trust-boundary>true</x-trust-boundary>
+          <data>
+            <classification flow="bi-directional">pubic</classification>
+          </data>
+        </service>
+      </annotator>
+      <timestamp>2020-04-07T07:01:00Z</timestamp>
+      <text>This is a sample annotation made by a service</text>
+    </annotation>
+  </annotations>
+  <declarations>
+    <assessors>
+      <assessor bom-ref="assessor-1">
+        <thirdParty>false</thirdParty>
+        <organization>
+          <name>Acme Inc</name>
+        </organization>
+      </assessor>
+    </assessors>
+    <attestations>
+      <attestation>
+        <summary>Attestation summary here</summary>
+        <assessor>assessor-1</assessor>
+        <map>
+          <requirement>requirement-1</requirement>
+          <claims>
+            <claim>claim-1</claim>
+          </claims>
+          <counterClaims>
+            <counterClaim>counterClaim-1</counterClaim>
+          </counterClaims>
+          <conformance>
+            <score>0.8</score>
+            <rationale>Conformance rationale here</rationale>
+            <mitigationStrategies>
+              <mitigationStrategy>mitigations-1</mitigationStrategy>
+            </mitigationStrategies>
+          </conformance>
+          <confidence>
+            <score>1</score>
+            <rationale>Confidence rationale here</rationale>
+          </confidence>
+        </map>
+        <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+      </attestation>
+    </attestations>
+    <claims>
+      <claim bom-ref="claim-1">
+        <target>acme-inc</target>
+        <predicate>Predicate here</predicate>
+        <mitigationStrategies>
+          <mitigationStrategy>mitigationStrategy-1</mitigationStrategy>
+        </mitigationStrategies>
+        <reasoning>Reasoning here</reasoning>
+        <evidence>evidence-1</evidence>
+        <counterEvidence>counterEvidence-1</counterEvidence>
+        <externalReferences>
+          <reference type="issue-tracker">
+            <url>https://alm.example.com</url>
+          </reference>
+        </externalReferences>
+        <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+          <!-- XML signature here -->
+        </ds:Signature>
+      </claim>
+    </claims>
+    <evidence>
+      <evidence bom-ref="evidence-1">
+        <propertyName>internal.com.acme.someProperty</propertyName>
+        <description>Description here</description>
+        <data>
+          <name>Name of the data</name>
+          <contents>
+            <attachment content-type="text/plain">Evidence here</attachment>
+          </contents>
+          <classification>PII</classification>
+          <sensitiveData>Describe sensitive data here</sensitiveData>
+        </data>
+        <created>2023-04-25T00:00:00+00:00</created>
+        <expires>2023-05-25T00:00:00+00:00</expires>
+        <author>
+          <name>Mary</name>
+        </author>
+        <reviewer>
+          <name>Jane</name>
+        </reviewer>
+        <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+          <!-- XML signature here -->
+        </ds:Signature>
+      </evidence>
+      <evidence bom-ref="counterEvidence-1">
+        <propertyName>internal.com.acme.someProperty</propertyName>
+        <description>Description here</description>
+        <data>
+          <name>Name of the data</name>
+          <contents>
+            <attachment content-type="text/plain">Counter evidence here</attachment>
+          </contents>
+          <classification>Public</classification>
+          <sensitiveData>Describe sensitive data here</sensitiveData>
+        </data>
+        <created>2023-04-25T00:00:00+00:00</created>
+        <expires>2023-05-25T00:00:00+00:00</expires>
+        <author>
+          <name>Mary</name>
+        </author>
+        <reviewer>
+          <name>Jane</name>
+        </reviewer>
+      </evidence>
+      <evidence bom-ref="mitigationStrategy-1">
+        <propertyName>internal.com.acme.someProperty</propertyName>
+        <description>Description here</description>
+        <data>
+          <name>Name of the data</name>
+          <contents>
+            <attachment content-type="text/plain">Mitigation strategy here</attachment>
+          </contents>
+          <classification>Public</classification>
+          <sensitiveData>Describe sensitive data here</sensitiveData>
+        </data>
+        <created>2023-04-25T00:00:00+00:00</created>
+        <expires>2023-05-25T00:00:00+00:00</expires>
+        <author>
+          <name>Mary</name>
+        </author>
+        <reviewer>
+          <name>Jane</name>
+        </reviewer>
+      </evidence>
+    </evidence>
+    <targets>
+      <organizations>
+        <organization bom-ref="acme-inc">
+          <name>Acme Inc</name>
+        </organization>
+      </organizations>
+    </targets>
+    <affirmation>
+      <statement>I certify, to the best of my knowledge, that all information is correct...</statement>
+      <signatories>
+        <signatory>
+          <name>Tom</name>
+          <role>CEO</role>
+          <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <!-- XML signature here -->
+          </ds:Signature>
+        </signatory>
+        <signatory>
+          <name>Jerry</name>
+          <role>COO</role>
+          <organization>
+            <name>Acme Inc</name>
+          </organization>
+          <externalReference type="electronic-signature">
+            <url>https://example.com/coo-sig.png</url>
+          </externalReference>
+        </signatory>
+      </signatories>
+      <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <!-- XML signature here -->
+      </ds:Signature>
+    </affirmation>
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <!-- XML signature here -->
+    </ds:Signature>
+  </declarations>
+  <vulnerabilities>
+    <vulnerability bom-ref="vulnerability-1">
+      <id>ACME-12345</id>
+      <source>
+        <name>Acme Inc</name>
+      </source>
+    </vulnerability>
+  </vulnerabilities>
+</bom>
