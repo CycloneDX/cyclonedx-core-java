@@ -100,7 +100,7 @@ public class Bom extends ExtensibleElement {
     @VersionFilter(Version.VERSION_15)
     private List<Annotation> annotations;
 
-    @VersionFilter(Version.VERSION_13)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Property> properties;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -241,6 +241,7 @@ public class Bom extends ExtensibleElement {
     @JacksonXmlElementWrapper(localName = "properties")
     @JacksonXmlProperty(localName = "property")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @VersionFilter(Version.VERSION_13)
     public List<Property> getProperties() {
         return properties;
     }

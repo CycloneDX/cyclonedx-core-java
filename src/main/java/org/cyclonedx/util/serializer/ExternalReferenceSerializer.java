@@ -26,20 +26,25 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.apache.commons.collections4.CollectionUtils;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.ExternalReference.Type;
 import org.cyclonedx.model.Hash;
+import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.util.BomUtils;
 
 public class ExternalReferenceSerializer
     extends StdSerializer<ExternalReference>
 {
-  public ExternalReferenceSerializer() {
-    this(null);
+  private final Version version;
+
+  public ExternalReferenceSerializer(final Version version) {
+    this(null, version);
   }
 
-  public ExternalReferenceSerializer(final Class<ExternalReference> t) {
+  public ExternalReferenceSerializer(final Class<ExternalReference> t, final Version version) {
     super(t);
+    this.version = version;
   }
 
   @Override
@@ -50,6 +55,10 @@ public class ExternalReferenceSerializer
         (type, url) -> (type != null && url != null && BomUtils.validateUriString(url));
 
     if (!validateExternalReference.test(extRef.getType(), extRef.getUrl())) {
+      return;
+    }
+
+    if(!shouldSerializeField(extRef.getType())) {
       return;
     }
 
@@ -113,5 +122,23 @@ public class ExternalReferenceSerializer
       gen.writeEndArray();
     }
     gen.writeEndObject();
+  }
+
+  private boolean shouldSerializeField(Object obj) {
+    try {
+      if (obj instanceof Type) {
+        Type type = (Type) obj;
+        VersionFilter filter = type.getClass().getField(type.name()).getAnnotation(VersionFilter.class);
+        return filter == null || filter.value().getVersion() <= version.getVersion();
+      }
+      return true;
+    }catch (NoSuchFieldException e) {
+      return false;
+    }
+  }
+
+  @Override
+  public Class<ExternalReference> handledType() {
+    return ExternalReference.class;
   }
 }

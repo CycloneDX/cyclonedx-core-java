@@ -1,15 +1,18 @@
 package org.cyclonedx.util.serializer;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.model.metadata.ToolInformation;
 
 public class MetadataSerializer
@@ -45,12 +48,12 @@ public class MetadataSerializer
   {
     jsonGenerator.writeStartObject();
 
-    if (metadata.getTimestamp() != null) {
+    if (metadata.getTimestamp() != null && shouldSerializeField(metadata, "timestamp")) {
       jsonGenerator.writeFieldName("timestamp");
       new CustomDateSerializer().serialize(metadata.getTimestamp(), jsonGenerator, serializerProvider);
     }
 
-    if(metadata.getLifecycles() != null) {
+    if(metadata.getLifecycles() != null && shouldSerializeField(metadata, "lifecycles")) {
       jsonGenerator.writeFieldName("lifecycles");
       new LifecycleSerializer(isXml).serialize(metadata.getLifecycles(), jsonGenerator, serializerProvider);
     }
@@ -58,7 +61,7 @@ public class MetadataSerializer
     //Tools
     parseTools(metadata, jsonGenerator);
 
-    if (metadata.getAuthors() != null) {
+    if (metadata.getAuthors() != null && shouldSerializeField(metadata, "author")) {
       if (isXml) {
         ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
         writeArrayFieldXML(metadata.getAuthors(), xmlGenerator, "author");
@@ -68,28 +71,28 @@ public class MetadataSerializer
       }
     }
 
-    if(metadata.getComponent() != null) {
+    if(metadata.getComponent() != null && shouldSerializeField(metadata, "component")) {
       jsonGenerator.writeObjectField("component", metadata.getComponent());
     }
 
-    if(metadata.getManufacture() != null) {
+    if(metadata.getManufacture() != null && shouldSerializeField(metadata, "manufacture")) {
       jsonGenerator.writeObjectField("manufacture", metadata.getManufacture());
     }
 
-    if(metadata.getManufacturer() != null) {
+    if(metadata.getManufacturer() != null && shouldSerializeField(metadata, "manufacturer")) {
       jsonGenerator.writeObjectField("manufacturer", metadata.getManufacturer());
     }
 
-    if(metadata.getSupplier() != null) {
+    if(metadata.getSupplier() != null && shouldSerializeField(metadata, "supplier")) {
       jsonGenerator.writeObjectField("supplier", metadata.getSupplier());
     }
 
-    if(metadata.getLicenses() != null) {
+    if(metadata.getLicenses() != null && shouldSerializeField(metadata, "licenses")) {
       jsonGenerator.writeFieldName("licenses");
       new LicenseChoiceSerializer(isXml, version).serialize(metadata.getLicenses(), jsonGenerator, serializerProvider);
     }
 
-    if(metadata.getProperties()!=null) {
+    if (CollectionUtils.isNotEmpty(metadata.getProperties()) && shouldSerializeField(metadata, "properties")) {
       if (isXml) {
         ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
         xmlGenerator.writeFieldName("properties");
@@ -162,6 +165,17 @@ public class MetadataSerializer
         xmlGenerator.writeEndObject();
       }
       xmlGenerator.writeEndArray();
+    }
+  }
+
+  private boolean shouldSerializeField(Object obj, String fieldName) {
+    try {
+      Field field = obj.getClass().getDeclaredField(fieldName);
+      VersionFilter filter = field.getAnnotation(VersionFilter.class);
+      return filter == null || filter.value().getVersion() <= version.getVersion();
+    } catch (NoSuchFieldException e) {
+      // If the field does not exist, assume it should be serialized
+      return true;
     }
   }
 
