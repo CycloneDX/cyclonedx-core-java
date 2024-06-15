@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import org.cyclonedx.Version;
+import org.cyclonedx.model.Bom;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,17 +29,23 @@ public class CustomSerializerModifier
       BeanDescription beanDesc,
       List<BeanPropertyWriter> beanProperties)
   {
-    Iterator<BeanPropertyWriter> iterator = beanProperties.iterator();
-    while (iterator.hasNext()) {
-      BeanPropertyWriter writer = iterator.next();
-      if (isValidAttribute(writer)) {
-        if (shouldSerializeProperties(version)) {
-          JsonSerializer<?> serializer = new PropertiesSerializer(isXml);
-          writer.assignSerializer((JsonSerializer<Object>) serializer);
-        }
-        else {
-          // Remove the properties field from the list of properties
-          iterator.remove();
+    //Properties were introduced in 1.3 for XML and 1.5 for JSON
+    //Meaning that we should only serialize properties if the version is 1.3 or higher for XML
+    //and 1.5 or higher for JSON
+    //This is to ensure backwards compatibility with older versions of the schema
+    if (Bom.class.isAssignableFrom(beanDesc.getBeanClass())) {
+      Iterator<BeanPropertyWriter> iterator = beanProperties.iterator();
+      while (iterator.hasNext()) {
+        BeanPropertyWriter writer = iterator.next();
+        if (isValidAttribute(writer)) {
+          if (shouldSerializeProperties(version)) {
+            JsonSerializer<?> serializer = new PropertiesSerializer(isXml);
+            writer.assignSerializer((JsonSerializer<Object>) serializer);
+          }
+          else {
+            // Remove the properties field from the list of properties
+            iterator.remove();
+          }
         }
       }
     }
