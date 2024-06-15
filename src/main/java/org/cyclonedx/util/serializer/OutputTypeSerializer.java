@@ -50,10 +50,10 @@ public class OutputTypeSerializer
       jsonGenerator.writeObject( output.getData());
     }
 
-    writeField(jsonGenerator, "type", output.getType());
+    /*writeField(jsonGenerator, "type", output.getType());
     writeField(jsonGenerator, "source", output.getSource());
     writeField(jsonGenerator, "target", output.getTarget());
-    writeField(jsonGenerator, "properties", output.getProperties());
+    writeField(jsonGenerator, "properties", output.getProperties());*/
     jsonGenerator.writeEndObject();
   }
 
