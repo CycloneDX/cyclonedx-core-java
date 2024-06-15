@@ -24,15 +24,12 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.AttachmentText;
-import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public class OutputTypeDeserializer
     extends AbstractDataTypeDeserializer<OutputType> {
-
-  private final EnvironmentVarsDeserializer environmentVarsDeserializer = new EnvironmentVarsDeserializer();
 
   @Override
   public OutputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
@@ -63,11 +60,7 @@ public class OutputTypeDeserializer
       outputType.setResource(resource);
     }
     else if (node.has("environmentVars")) {
-      JsonNode nodes = node.get("environmentVars");
-
-      JsonParser nodeParser = nodes.traverse(jsonParser.getCodec());
-      EnvironmentVars envVar = environmentVarsDeserializer.deserialize(nodeParser, ctxt);
-      outputType.setEnvironmentVars(envVar);
+      setEnvironmentVars(node, outputType, jsonParser, ctxt);
     }
     else if (node.has("data")) {
       JsonNode dataNode = node.get("data");

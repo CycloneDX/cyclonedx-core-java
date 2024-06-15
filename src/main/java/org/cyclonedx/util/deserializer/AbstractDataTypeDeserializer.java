@@ -18,22 +18,40 @@
  */
 package org.cyclonedx.util.deserializer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.AbstractType;
+import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
     extends JsonDeserializer<T> {
 
   protected final ObjectMapper objectMapper = new ObjectMapper();
+
+  private final EnvironmentVarsDeserializer environmentVarsDeserializer = new EnvironmentVarsDeserializer();
+
+  protected void setEnvironmentVars(
+      final JsonNode node,
+      AbstractType data,
+      JsonParser jsonParser,
+      DeserializationContext ctxt) throws IOException
+  {
+    JsonNode nodes = node.get("environmentVars");
+    JsonParser nodeParser = nodes.traverse(jsonParser.getCodec());
+    EnvironmentVars envVar = environmentVarsDeserializer.deserialize(nodeParser, ctxt);
+    data.setEnvironmentVars(envVar);
+  }
 
   protected void setReference(JsonNode node, String fieldName, AbstractType type)
       throws JsonProcessingException
