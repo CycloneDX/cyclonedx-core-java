@@ -46,13 +46,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
     InputType inputType = new InputType();
 
     setSourceAndTarget(node, inputType);
-    createInputDataInfo(node, inputType);
-
-    setReference(node, "source", inputType);
-    setReference(node, "target", inputType);
-
     createInputDataInfo(node, inputType, jsonParser, deserializationContext);
-
     setProperties(node, inputType);
 
     return inputType;
