@@ -116,11 +116,11 @@ public class BomJsonGenerator extends AbstractBomGenerator
     }
   }
 
-  public String toJsonString() throws GeneratorException {
+  public String toJsonString() {
     try {
       return toJson(bom, true);
     } catch (GeneratorException e) {
-      throw new GeneratorException(e);
+      return "";
     }
   }
 
