@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -177,10 +177,11 @@ extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../.
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/ExternalReferenceSerializer.html#ExternalReferenceSerializer--">ExternalReferenceSerializer</a></span>()</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/ExternalReferenceSerializer.html#ExternalReferenceSerializer-java.lang.Class-org.cyclonedx.Version-">ExternalReferenceSerializer</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;t,
+                           <a href="../../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/ExternalReferenceSerializer.html#ExternalReferenceSerializer-java.lang.Class-">ExternalReferenceSerializer</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;t)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/ExternalReferenceSerializer.html#ExternalReferenceSerializer-org.cyclonedx.Version-">ExternalReferenceSerializer</a></span>(<a href="../../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -198,6 +199,10 @@ extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../.
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/ExternalReferenceSerializer.html#handledType--">handledType</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/ExternalReferenceSerializer.html#serialize-org.cyclonedx.model.ExternalReference-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">serialize</a></span>(<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&nbsp;extRef,
          com.fasterxml.jackson.core.JsonGenerator&nbsp;gen,
@@ -209,7 +214,7 @@ extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../.
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.fasterxml.jackson.databind.ser.std.StdSerializer</h3>
-<code>_neitherNull, _nonEmpty, acceptJsonFormatVisitor, createSchemaNode, createSchemaNode, findAnnotatedContentSerializer, findContextualConvertingSerializer, findConvertingContentSerializer, findFormatFeature, findFormatOverrides, findIncludeOverrides, findPropertyFilter, getSchema, getSchema, handledType, isDefaultSerializer, visitArrayFormat, visitArrayFormat, visitFloatFormat, visitIntFormat, visitIntFormat, visitStringFormat, visitStringFormat, wrapAndThrow, wrapAndThrow</code></li>
+<code>_neitherNull, _nonEmpty, acceptJsonFormatVisitor, createSchemaNode, createSchemaNode, findAnnotatedContentSerializer, findContextualConvertingSerializer, findConvertingContentSerializer, findFormatFeature, findFormatOverrides, findIncludeOverrides, findPropertyFilter, getSchema, getSchema, isDefaultSerializer, visitArrayFormat, visitArrayFormat, visitFloatFormat, visitIntFormat, visitIntFormat, visitStringFormat, visitStringFormat, wrapAndThrow, wrapAndThrow</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.fasterxml.jackson.databind.JsonSerializer">
@@ -239,22 +244,23 @@ extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../.
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ExternalReferenceSerializer--">
+<a name="ExternalReferenceSerializer-org.cyclonedx.Version-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>ExternalReferenceSerializer</h4>
-<pre>public&nbsp;ExternalReferenceSerializer()</pre>
+<pre>public&nbsp;ExternalReferenceSerializer(<a href="../../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</pre>
 </li>
 </ul>
-<a name="ExternalReferenceSerializer-java.lang.Class-">
+<a name="ExternalReferenceSerializer-java.lang.Class-org.cyclonedx.Version-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ExternalReferenceSerializer</h4>
-<pre>public&nbsp;ExternalReferenceSerializer(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;t)</pre>
+<pre>public&nbsp;ExternalReferenceSerializer(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;t,
+                                   <a href="../../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</pre>
 </li>
 </ul>
 </li>
@@ -268,7 +274,7 @@ extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../.
 <a name="serialize-org.cyclonedx.model.ExternalReference-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>serialize</h4>
 <pre>public&nbsp;void&nbsp;serialize(<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&nbsp;extRef,
@@ -280,6 +286,19 @@ extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../.
 <dd><code>serialize</code>&nbsp;in class&nbsp;<code>com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="handledType--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>handledType</h4>
+<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;handledType()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>handledType</code>&nbsp;in class&nbsp;<code>com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../../../org/cyclonedx/model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
