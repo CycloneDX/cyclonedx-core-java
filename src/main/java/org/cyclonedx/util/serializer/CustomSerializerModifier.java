@@ -49,7 +49,7 @@ public class CustomSerializerModifier
           else {
             // Remove the properties field from the list of properties
             iterator.remove();
-          })
+          }
         }
       }
     }

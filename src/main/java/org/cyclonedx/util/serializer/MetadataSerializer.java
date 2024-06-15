@@ -192,15 +192,4 @@ public class MetadataSerializer
   public Class<Metadata> handledType() {
     return Metadata.class;
   }
-
-  private boolean shouldSerializeField(Object obj, String fieldName) {
-    try {
-      Field field = obj.getClass().getDeclaredField(fieldName);
-      VersionFilter filter = field.getAnnotation(VersionFilter.class);
-      return filter == null || filter.value().getVersion() <= version.getVersion();
-    } catch (NoSuchFieldException e) {
-      // If the field does not exist, assume it should be serialized
-      return true;
-    }
-  }
 }
