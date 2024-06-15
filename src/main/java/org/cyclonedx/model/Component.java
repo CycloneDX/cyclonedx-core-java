@@ -162,16 +162,12 @@ public class Component extends ExtensibleElement {
     @JsonProperty("manufacturer")
     private OrganizationalEntity manufacturer;
 
-    @Deprecated
     @VersionFilter(Version.VERSION_12)
-    @JsonProperty("author")
-    private String deprecatedAuthor;
+    @Deprecated
+    private String author;
 
     @VersionFilter(Version.VERSION_16)
-    @JsonProperty("authors")
-    @JacksonXmlElementWrapper(localName = "authors")
-    @JacksonXmlProperty(localName = "author")
-    private List<OrganizationalContact> authors;
+    private List<OrganizationalContact> authorsList;
 
     @VersionFilter(Version.VERSION_11)
     private String publisher;
@@ -261,20 +257,20 @@ public class Component extends ExtensibleElement {
         this.supplier = supplier;
     }
 
-    public String getDeprecatedAuthor() {
-        return deprecatedAuthor;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setDeprecatedAuthorAuthor(String author) {
-        this.deprecatedAuthor = author;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public List<OrganizationalContact> getAuthors() {
-        return authors;
+        return authorsList;
     }
 
     public void setAuthors(List<OrganizationalContact> authors) {
-        this.authors = authors;
+        this.authorsList = authors;
     }
 
     public String getPublisher() {
@@ -576,8 +572,9 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(deprecatedAuthor, publisher, group, name, version, description, scope, hashes, licenses, copyright,
-            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
+        return Objects.hash(author, authorsList, publisher, group, name, version, description, scope, hashes, licenses,
+            copyright, cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard,
+            data);
     }
 
     @Override
@@ -587,8 +584,9 @@ public class Component extends ExtensibleElement {
         Component component = (Component) o;
         return modified == component.modified &&
                 Objects.equals(supplier, component.supplier) &&
-                Objects.equals(getDeprecatedAuthor(), component.getDeprecatedAuthor()) &&
+                Objects.equals(author, component.author) &&
                 Objects.equals(publisher, component.publisher) &&
+                Objects.equals(authorsList, component.authorsList) &&
                 Objects.equals(group, component.group) &&
                 Objects.equals(name, component.name) &&
                 Objects.equals(version, component.version) &&

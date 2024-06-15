@@ -40,6 +40,7 @@ import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -49,6 +50,8 @@ import org.w3c.dom.Document;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -860,5 +863,51 @@ public class BomXmlGeneratorTest {
     private void testDocument(Document doc) {
         assertNotNull(doc);
         assertNotNull(doc.toString());
+    }
+
+    private static Stream<Arguments> versionAndBom() {
+        return Stream.of(
+            Arguments.of(Version.VERSION_12, "/bom-1.2.xml"),
+            Arguments.of(Version.VERSION_13, "/bom-1.3.xml"),
+            Arguments.of(Version.VERSION_14, "/bom-1.4.xml"),
+            Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
+            Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.xml")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBom")
+    public void testFileIdentity(Version version, String bomFilePath)
+        throws Exception
+    {
+        final Bom inputBom = createCommonBomXml(bomFilePath);
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, inputBom);
+
+        Assertions.assertTrue(BomXmlGenerator.class.isAssignableFrom(generator.getClass()));
+        Assertions.assertEquals(version, generator.getSchemaVersion());
+
+        final String actual = generator.toXmlString();
+        final String expected = readFixture(bomFilePath);
+        Assertions.assertEquals(expected, actual);
+
+        XmlParser parser = new XmlParser();
+        File loadedFile = writeToFile(actual);
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private String readFixture(final String pPath)
+    {
+        try (InputStream is = getClass().getResourceAsStream(pPath)) {
+            if (is != null) {
+                return IOUtils.toString(is, StandardCharsets.UTF_8);
+            }
+            else {
+                Assertions.fail("failed to read expected data file: " + pPath);
+            }
+        }
+        catch (IOException e) {
+            Assertions.fail("failed to read expected data file: " + pPath, e);
+        }
+        return null;
     }
 }

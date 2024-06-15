@@ -20,10 +20,8 @@ package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
@@ -33,13 +31,12 @@ import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.license.Expression;
-import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -49,13 +46,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+
 import java.util.stream.Stream;
 import java.util.Objects;
 
@@ -229,6 +224,52 @@ public class BomJsonGeneratorTest {
             Arguments.of(Version.VERSION_13, "/1.6/valid-bom-1.6.json"),
             Arguments.of(Version.VERSION_12, "/1.6/valid-bom-1.6.json")
         );
+    }
+
+    private static Stream<Arguments> versionAndBom() {
+        return Stream.of(
+            Arguments.of(Version.VERSION_12, "/bom-1.2.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.3.json"),
+            Arguments.of(Version.VERSION_14, "/bom-1.4.json"),
+            Arguments.of(Version.VERSION_15, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.json")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBom")
+    public void testFileIdentity(Version version, String bomFilePath)
+        throws Exception
+    {
+        final Bom inputBom = createCommonJsonBom(bomFilePath);
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, inputBom);
+
+        Assertions.assertTrue(BomJsonGenerator.class.isAssignableFrom(generator.getClass()));
+        Assertions.assertEquals(version, generator.getSchemaVersion());
+
+        final String actual = generator.toJsonString().trim();
+        final String expected = readFixture(bomFilePath);
+        Assertions.assertEquals(expected, actual);
+
+        JsonParser parser = new JsonParser();
+        File loadedFile = writeToFile(actual);
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private String readFixture(final String pPath)
+    {
+        try (InputStream is = getClass().getResourceAsStream(pPath)) {
+            if (is != null) {
+                return IOUtils.toString(is, StandardCharsets.UTF_8).trim();
+            }
+            else {
+                Assertions.fail("failed to read expected data file: " + pPath);
+            }
+        }
+        catch (IOException e) {
+            Assertions.fail("failed to read expected data file: " + pPath, e);
+        }
+        return null;
     }
 
     @Test
