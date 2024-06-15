@@ -22,11 +22,9 @@ public class DatasetsChoiceDeserializer
     DatasetChoice datasetChoice = new DatasetChoice();
 
     if (node.has("ref")) {
-      String ref = node.get("ref").asText();
-      datasetChoice.setRef(ref);
+      datasetChoice.setRef(node.get("ref").asText());
     } else {
-      ComponentData componentData = objectMapper.treeToValue(node, ComponentData.class);
-      datasetChoice.setComponentData(componentData);
+      datasetChoice.setComponentData(objectMapper.treeToValue(node, ComponentData.class));
     }
 
     return datasetChoice;

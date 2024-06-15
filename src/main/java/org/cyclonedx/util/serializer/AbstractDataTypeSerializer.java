@@ -35,4 +35,11 @@ public abstract class AbstractDataTypeSerializer<T extends AbstractType> extends
     jsonGenerator.writeEndArray();
   }
 
+  protected void writeField(JsonGenerator jsonGenerator, String fieldName, Object fieldValue) throws IOException {
+    if (fieldValue != null) {
+      jsonGenerator.writeFieldName(fieldName);
+      jsonGenerator.writeObject(fieldValue);
+    }
+  }
+
 }

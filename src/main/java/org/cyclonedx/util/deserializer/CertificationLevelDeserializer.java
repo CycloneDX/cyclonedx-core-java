@@ -14,14 +14,12 @@ public class CertificationLevelDeserializer
   @Override
   public CertificationLevel deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     JsonNode node = parser.getCodec().readTree(parser);
-
     JsonNode certificationLevelNode = node.has("certificationLevel") ? node.get("certificationLevel") : node;
 
-    if (certificationLevelNode.isArray()) {
-      return CertificationLevel.fromString(certificationLevelNode.get(0).asText());
-    }
-    else {
-      return CertificationLevel.fromString(certificationLevelNode.asText());
-    }
+    String certificationLevelText = certificationLevelNode.isArray() ?
+        certificationLevelNode.get(0).asText() :
+        certificationLevelNode.asText();
+
+    return CertificationLevel.fromString(certificationLevelText);
   }
 }

@@ -46,7 +46,7 @@ public class LifecycleDeserializer
     }
 
     if (node != null) {
-      ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+      ArrayNode nodes = DeserializerUtils.getArrayNode(node, null);
       for (JsonNode choiceNode : nodes) {
         LifecycleChoice choice = createLifecycleChoice(choiceNode);
         if (choice != null) {

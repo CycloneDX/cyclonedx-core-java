@@ -2,6 +2,7 @@ package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -17,22 +18,19 @@ public class LicensingTypeDeserializer
   @Override
   public List<LicensingType> deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     JsonNode node = parser.getCodec().readTree(parser);
-    if (node.has("licenseType")) {
-      return parseLicenseTypes(node.get("licenseType"));
-    }
-    else {
-      return parseLicenseTypes(node);
-    }
+    return parseLicenseTypes(node.has("licenseType") ? node.get("licenseType") : node);
   }
 
   private List<LicensingType> parseLicenseTypes(JsonNode node) {
     List<LicensingType> types = new ArrayList<>();
+    ArrayNode nodes = DeserializerUtils.getArrayNode(node, null);
 
-    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+    if (nodes.isEmpty()) {
+      return Collections.emptyList();
+    }
 
-    for (JsonNode resolvesNode : nodes) {
-      LicensingType type = parseType(resolvesNode);
-      types.add(type);
+    for (JsonNode typeNode : nodes) {
+      types.add(parseType(typeNode));
     }
 
     return types;

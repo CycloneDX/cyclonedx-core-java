@@ -26,27 +26,31 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
 
     AttachmentText attachmentText = new AttachmentText();
 
-    JsonNode textNode = node.get("content");
-    if (textNode != null) {
-      attachmentText.setText(textNode.textValue());
-    }
-    else if (node.has("")) {
-      attachmentText.setText( node.get("").asText());
+    JsonNode contentNode = node.get("content");
+    if (contentNode != null) {
+      attachmentText.setText(contentNode.asText());
+    } else if (node.has("")) {
+      attachmentText.setText(node.get("").asText());
     }
 
-    JsonNode contentTypeNode = node.get("content-type");
-    if (contentTypeNode == null || !contentTypeNode.isTextual()) {
-      contentTypeNode = node.get("contentType");
-    }
+    JsonNode contentTypeNode = getContentTypeNode(node);
     if (contentTypeNode != null && contentTypeNode.isTextual()) {
-      attachmentText.setContentType(contentTypeNode.textValue());
+      attachmentText.setContentType(contentTypeNode.asText());
     }
 
     JsonNode encodingNode = node.get("encoding");
     if (encodingNode != null && encodingNode.isTextual()) {
-      attachmentText.setEncoding(encodingNode.textValue());
+      attachmentText.setEncoding(encodingNode.asText());
     }
 
     return attachmentText;
+  }
+
+  private JsonNode getContentTypeNode(JsonNode node) {
+    JsonNode contentTypeNode = node.get("content-type");
+    if (contentTypeNode == null || !contentTypeNode.isTextual()) {
+      contentTypeNode = node.get("contentType");
+    }
+    return contentTypeNode;
   }
 }

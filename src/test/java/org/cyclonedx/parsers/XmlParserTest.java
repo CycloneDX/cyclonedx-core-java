@@ -40,7 +40,6 @@ import org.cyclonedx.model.attestation.affirmation.Signatory;
 import org.cyclonedx.model.attestation.evidence.Data;
 import org.cyclonedx.model.attestation.evidence.Evidence;
 import org.cyclonedx.model.component.ModelCard;
-import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
@@ -427,15 +426,7 @@ public class XmlParserTest
     public void schema16_license_id_acknowledgement() throws Exception {
         final Bom bom = getXmlBom("1.6/valid-license-id-1.6.xml");
 
-        assertNotNull(bom.getComponents());
-        LicenseChoice lc = bom.getComponents().get(0).getLicenses();
-        assertNotNull(lc.getLicenses());
-        assertEquals(1, lc.getLicenses().size());
-
-        License license = lc.getLicenses().get(0);
-        assertEquals("Apache-2.0", license.getId());
-        assertEquals("my-license", license.getBomRef());
-        assertEquals("declared", license.getAcknowledgement());
+        assertAck(bom);
     }
 
     @Test
@@ -509,33 +500,13 @@ public class XmlParserTest
     public void schema16_component_identifiers() throws Exception {
         final Bom bom = getXmlBom("1.6/valid-component-identifiers-1.6.xml");
 
-        assertNotNull(bom.getComponents());
-        List<String> omnis = bom.getComponents().get(0).getOmniborId();
-        assertEquals(2, omnis.size());
-        assertTrue(omnis.containsAll(Arrays.asList("gitoid:blob:sha1:261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
-            "gitoid:blob:sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")));
-
-        List<String> swhid = bom.getComponents().get(0).getSwhid();
-        assertEquals(2, swhid.size());
-        assertTrue(swhid.containsAll(Arrays.asList("swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2",
-            "swh:1:dir:d198bc9d7a6bcf6db04f476d29314f157507d505")));
+        assertIdentifiers(bom);
     }
 
     @Test
     public void schema16_tags() throws Exception {
         final Bom bom = getXmlBom("1.6/valid-tags-1.6.xml");
-
-        assertNotNull(bom.getComponents());
-        Tags tags = bom.getComponents().get(0).getTags();
-        assertNotNull(tags);
-        assertEquals(3, tags.getTags().size());
-        assertTrue(tags.getTags().containsAll(Arrays.asList("json-parser", "javascript", "node.js")));
-
-        assertNotNull(bom.getServices());
-        tags = bom.getServices().get(0).getTags();
-        assertNotNull(tags);
-        assertEquals(4, tags.getTags().size());
-        assertTrue(tags.getTags().containsAll(Arrays.asList("microservice", "golang", "aws", "us-east-1")));
+        assertTags(bom);
     }
 
     @Test

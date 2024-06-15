@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -29,11 +30,8 @@ public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
 
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-
   private final LifecycleDeserializer lifecycleDeserializer = new LifecycleDeserializer();
-
   private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
-
   private final LicenseDeserializer licenseDeserializer = new LicenseDeserializer();
 
   @Override
@@ -42,17 +40,12 @@ public class MetadataDeserializer
 
     Metadata metadata = new Metadata();
 
-    ObjectMapper mapper;
-    if (jsonParser.getCodec() instanceof ObjectMapper) {
-      mapper = (ObjectMapper) jsonParser.getCodec();
-    } else {
-      mapper = new ObjectMapper();
-    }
+    ObjectMapper mapper = getMapper(jsonParser);
 
     // Parsing other fields in the Metadata object
     if (node.has("authors")) {
       JsonNode authorsNode = node.get("authors");
-      List<OrganizationalContact> authors = deserializerOrganizationalContact(authorsNode, mapper);
+      List<OrganizationalContact> authors = deserializeOrganizationalContact(authorsNode, mapper);
       metadata.setAuthors(authors);
     }
 
@@ -91,16 +84,7 @@ public class MetadataDeserializer
     }
 
     if (node.has("timestamp")) {
-      JsonNode timestampNode = node.get("timestamp");
-      if (timestampNode != null && timestampNode.isTextual()) {
-        String timestampStr = timestampNode.textValue();
-        try {
-          Date timestamp = dateFormat.parse(timestampStr);
-          metadata.setTimestamp(timestamp);
-        } catch (ParseException e) {
-          // Handle parsing exception
-        }
-      }
+      setTimestamp(node, metadata);
     }
 
     if (node.has("properties")) {
@@ -110,39 +94,8 @@ public class MetadataDeserializer
       metadata.setProperties(properties);
     }
 
-    JsonNode toolsNode = node.get("tools");
-
-    if (toolsNode != null) {
-      // Check if the 'tools' field is an array or an object
-      if (toolsNode.isArray()) {
-        List<Tool> tools = mapper.convertValue(toolsNode, new TypeReference<List<Tool>>() { });
-        metadata.setTools(tools);
-      }
-      else if (toolsNode.has("tool")) {
-        final JsonNode toolNode = toolsNode.get("tool");
-        // When deserializing XML BOMs, and multiple tools are provided, Jackson's internal
-        // representation looks like this:
-        //   {"tool": [{"name": "foo"}, {"name": "bar"}]}
-        // If only a single tool is provided, it looks like this:
-        //   {"tool": {"name": "foo"}}
-        if (toolNode.isArray()) {
-          List<Tool> tools = mapper.convertValue(toolsNode.get("tool"), new TypeReference<List<Tool>>() { });
-          metadata.setTools(tools);
-        } else {
-          Tool tool = mapper.convertValue(toolsNode.get("tool"), Tool.class);
-          metadata.setTools(Collections.singletonList(tool));
-        }
-      }
-      else {
-        ToolInformation toolInformation = new ToolInformation();
-        if (toolsNode.has("components")) {
-          parseComponents(toolsNode.get("components"), toolInformation, mapper);
-        }
-        if (toolsNode.has("services")) {
-          parseServices(toolsNode.get("services"), toolInformation, mapper);
-        }
-        metadata.setToolChoice(toolInformation);
-      }
+    if (node.has("tools")) {
+      parseTools(node.get("tools"), metadata, mapper);
     }
 
     return metadata;
@@ -172,7 +125,7 @@ public class MetadataDeserializer
     }
   }
 
-  static List<OrganizationalContact> deserializerOrganizationalContact(JsonNode node, final ObjectMapper mapper) {
+  static List<OrganizationalContact> deserializeOrganizationalContact(JsonNode node, final ObjectMapper mapper) {
     List<OrganizationalContact> organizationalContactList = new ArrayList<>();
 
     if (node.has("author")) {
@@ -181,13 +134,70 @@ public class MetadataDeserializer
 
     if (node.isArray()) {
       for (JsonNode authorNode : node) {
-        OrganizationalContact author = mapper.convertValue(authorNode, OrganizationalContact.class);
-        organizationalContactList.add(author);
+        deserializeAuthor(authorNode, mapper, organizationalContactList);
       }
-    } else if (node.isObject()) {
-      OrganizationalContact author = mapper.convertValue(node, OrganizationalContact.class);
-      organizationalContactList.add(author);
+    }
+    else if (node.isObject()) {
+      deserializeAuthor(node, mapper, organizationalContactList);
     }
     return organizationalContactList;
+  }
+
+  private void parseTools(JsonNode toolsNode, Metadata metadata, ObjectMapper mapper) throws JsonProcessingException {
+    if (toolsNode.isArray()) {
+      setToolInfo(toolsNode, metadata, mapper);
+    } else if (toolsNode.has("tool")) {
+      JsonNode toolNode = toolsNode.get("tool");
+      if (toolNode.isArray()) {
+        setToolInfo(toolNode, metadata, mapper);
+      } else {
+        Tool tool = mapper.convertValue(toolNode, Tool.class);
+        metadata.setTools(Collections.singletonList(tool));
+      }
+    } else {
+      ToolInformation toolInformation = new ToolInformation();
+      if (toolsNode.has("components")) {
+        parseComponents(toolsNode.get("components"), toolInformation, mapper);
+      }
+      if (toolsNode.has("services")) {
+        parseServices(toolsNode.get("services"), toolInformation, mapper);
+      }
+      metadata.setToolChoice(toolInformation);
+    }
+  }
+
+  private void setToolInfo(JsonNode node, Metadata metadata, ObjectMapper mapper){
+    List<Tool> tools = mapper.convertValue(node, new TypeReference<List<Tool>>() {});
+    metadata.setTools(tools);
+  }
+
+
+  static void deserializeAuthor(
+      JsonNode node,
+      final ObjectMapper mapper,
+      List<OrganizationalContact> organizationalContactList)
+  {
+    OrganizationalContact author = mapper.convertValue(node, OrganizationalContact.class);
+    organizationalContactList.add(author);
+  }
+
+  private ObjectMapper getMapper(JsonParser jsonParser) {
+    if (jsonParser.getCodec() instanceof ObjectMapper) {
+      return (ObjectMapper) jsonParser.getCodec();
+    } else {
+      return new ObjectMapper();
+    }
+  }
+
+  private void setTimestamp(JsonNode node, Metadata metadata) {
+    JsonNode timestampNode = node.get("timestamp");
+    if (timestampNode != null && timestampNode.isTextual()) {
+      try {
+        Date timestamp = dateFormat.parse(timestampNode.textValue());
+        metadata.setTimestamp(timestamp);
+      } catch (ParseException e) {
+        // Handle parsing exception
+      }
+    }
   }
 }

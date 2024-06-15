@@ -21,22 +21,15 @@ public class ResolvesDeserializer
   @Override
   public List<Resolves> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     JsonNode node = parser.getCodec().readTree(parser);
-
-    if (node.has("issue")) {
-      return parseResolvesNode(node.get("issue"));
-    }
-    else {
-      return parseResolvesNode(node);
-    }
+    return parseResolvesNode(node.has("issue") ? node.get("issue") : node);
   }
 
   private List<Resolves> parseResolvesNode(JsonNode node) {
     List<Resolves> resolvesList = new ArrayList<>();
-    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
+    ArrayNode nodes = DeserializerUtils.getArrayNode(node, mapper);
 
     for (JsonNode resolvesNode : nodes) {
-      Resolves resolves = parseResolves(resolvesNode);
-      resolvesList.add(resolves);
+      resolvesList.add(parseResolves(resolvesNode));
     }
     return resolvesList;
   }
@@ -66,18 +59,22 @@ public class ResolvesDeserializer
     }
 
     if (node.has("references")) {
-      JsonNode referencesNode = node.get("references");
-      List<String> references = new ArrayList<>();
-      if (referencesNode.isArray()) {
-        for (JsonNode refNode : referencesNode) {
-          references.add(refNode.asText());
-        }
-      }
-      else {
-        references.add(referencesNode.get("url").asText());
-      }
-      resolves.setReferences(references);
+      resolves.setReferences(parseReferences(node.get("references")));
     }
+
     return resolves;
+  }
+
+  private List<String> parseReferences(JsonNode referencesNode) {
+    List<String> references = new ArrayList<>();
+    if (referencesNode.isArray()) {
+      for (JsonNode refNode : referencesNode) {
+        references.add(refNode.asText());
+      }
+    }
+    else {
+      references.add(referencesNode.get("url").asText());
+    }
+    return references;
   }
 }

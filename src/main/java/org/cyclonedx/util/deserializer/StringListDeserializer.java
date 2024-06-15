@@ -15,14 +15,13 @@ public class StringListDeserializer
   @Override
   public List<String> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
     JsonNode node = p.getCodec().readTree(p);
+    String currentName = p.getCurrentName();
 
-    if (p.getCurrentName().equalsIgnoreCase("aliases")) {
+    if ("aliases".equalsIgnoreCase(currentName)) {
       return deserializeList(node, "alias");
-    }
-    else if (p.getCurrentName().equalsIgnoreCase("endpoints")) {
+    } else if ("endpoints".equalsIgnoreCase(currentName)) {
       return deserializeList(node, "endpoint");
-    }
-    else if (p.getCurrentName().equalsIgnoreCase("altIds")) {
+    } else if ("altIds".equalsIgnoreCase(currentName)) {
       return deserializeList(node, "altId");
     }
     return null;
@@ -31,17 +30,15 @@ public class StringListDeserializer
   private List<String> deserializeList(JsonNode node, String itemName) {
     List<String> list = new ArrayList<>();
 
-    if(node.has(itemName)) {
-      node = node.get(itemName);
-    }
+    JsonNode itemsNode = node.has(itemName) ? node.get(itemName) : node;
 
-    if (node != null) {
-      if (node.isArray()) {
-        for (JsonNode nodeObject : node) {
-          list.add(nodeObject.asText());
+    if (itemsNode != null) {
+      if (itemsNode.isArray()) {
+        for (JsonNode itemNode : itemsNode) {
+          list.add(itemNode.asText());
         }
       } else {
-        list.add(node.asText());
+        list.add(itemsNode.asText());
       }
     }
 

@@ -21,6 +21,7 @@ package org.cyclonedx.util.deserializer;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -34,37 +35,43 @@ public class OrganizationalChoiceDeserializer
     extends JsonDeserializer<OrganizationalChoice>
 {
   @Override
-  public OrganizationalChoice deserialize(JsonParser jp, DeserializationContext ctxt)
-      throws IOException
-  {
+  public OrganizationalChoice deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
     JsonNode node = jp.getCodec().readTree(jp);
-
     OrganizationalChoice organizationalChoice = new OrganizationalChoice();
 
-    if(node.has("individual")) {
+    if (node.has("individual")) {
       OrganizationalContact individual = jp.getCodec().treeToValue(node.get("individual"), OrganizationalContact.class);
       organizationalChoice.setIndividual(individual);
-    }
-    else if(node.has("organization")) {
+    } else if (node.has("organization")) {
       JsonNode organizationNode = node.get("organization");
-      OrganizationalEntity organization = new OrganizationalEntity();
-      organization.setName(organizationNode.get("name").asText());
-
-      if (organizationNode.has("contact")) {
-        JsonNode contactsNode = organizationNode.get("contact");
-        if (contactsNode instanceof ArrayNode) {
-          for (JsonNode contactNode : contactsNode) {
-            OrganizationalContact contact = jp.getCodec().treeToValue(contactNode, OrganizationalContact.class);
-            organization.addContact(contact);
-          }
-        } else if (contactsNode instanceof ObjectNode) {
-          OrganizationalContact contact = jp.getCodec().treeToValue(contactsNode, OrganizationalContact.class);
-          organization.addContact(contact);
-        }
-      }
+      OrganizationalEntity organization = deserializeOrganization(jp, organizationNode);
       organizationalChoice.setOrganization(organization);
     }
 
     return organizationalChoice;
+  }
+
+  private OrganizationalEntity deserializeOrganization(JsonParser jp, JsonNode organizationNode) throws JsonProcessingException {
+    OrganizationalEntity organization = new OrganizationalEntity();
+    organization.setName(organizationNode.get("name").asText());
+
+    if (organizationNode.has("contact")) {
+      JsonNode contactsNode = organizationNode.get("contact");
+      if (contactsNode.isArray()) {
+        for (JsonNode contactNode : contactsNode) {
+          addContactToOrganization(jp, organization, contactNode);
+        }
+      } else if (contactsNode.isObject()) {
+        addContactToOrganization(jp, organization, contactsNode);
+      }
+    }
+    return organization;
+  }
+
+  private void addContactToOrganization(JsonParser jp, OrganizationalEntity organization, JsonNode node)
+      throws JsonProcessingException
+  {
+    OrganizationalContact contact = jp.getCodec().treeToValue(node, OrganizationalContact.class);
+    organization.addContact(contact);
   }
 }

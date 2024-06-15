@@ -39,18 +39,18 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
     JsonNode nodes = node.get("environmentVars");
     List<EnvVariableChoice> environmentVars = new ArrayList<>();
 
-    ArrayNode environmentVarsNode = (nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(null).add(nodes));
-
-    for (JsonNode envVarNode : environmentVarsNode) {
-      EnvVariableChoice envVar = objectMapper.treeToValue(envVarNode, EnvVariableChoice.class);
-      environmentVars.add(envVar);
+    if (nodes != null) {
+      ArrayNode environmentVarsNode = DeserializerUtils.getArrayNode(nodes, objectMapper);
+      for (JsonNode envVarNode : environmentVarsNode) {
+        EnvVariableChoice envVar = objectMapper.treeToValue(envVarNode, EnvVariableChoice.class);
+        environmentVars.add(envVar);
+      }
     }
+
     data.setEnvironmentVars(environmentVars);
   }
 
-  protected void setReference(JsonNode node, String fieldName, AbstractType type)
-      throws JsonProcessingException
-  {
+  protected void setReference(JsonNode node, String fieldName, AbstractType type) throws JsonProcessingException {
     if (node.has(fieldName)) {
       JsonNode fieldNode = node.get(fieldName);
       ResourceReferenceChoice reference = objectMapper.treeToValue(fieldNode, ResourceReferenceChoice.class);
@@ -61,5 +61,10 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
         type.setTarget(reference);
       }
     }
+  }
+
+  protected void setSourceAndTarget(JsonNode node, AbstractType type) throws JsonProcessingException {
+    setReference(node, "source", type);
+    setReference(node, "target", type);
   }
 }

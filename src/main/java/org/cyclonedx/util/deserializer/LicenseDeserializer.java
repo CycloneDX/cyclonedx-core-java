@@ -45,7 +45,7 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
     JsonNode rootNode = p.getCodec().readTree(p);
 
     if (!rootNode.isEmpty()) {
-      ArrayNode nodes = (rootNode.isArray() ? (ArrayNode) rootNode : new ArrayNode(null).add(rootNode));
+      ArrayNode nodes = DeserializerUtils.getArrayNode(rootNode, null);
       LicenseChoice licenseChoice = new LicenseChoice();
 
       for (JsonNode node : nodes) {
@@ -71,7 +71,7 @@ public class LicenseDeserializer extends JsonDeserializer<LicenseChoice>
   }
 
   private void processLicenseNode(JsonParser p, JsonNode licenseNode, LicenseChoice licenseChoice) throws IOException {
-    ArrayNode licenseNodes = (licenseNode.isArray() ? (ArrayNode) licenseNode : new ArrayNode(null).add(licenseNode));
+    ArrayNode licenseNodes = DeserializerUtils.getArrayNode(licenseNode, null);
 
     for (JsonNode license : licenseNodes) {
       License licenseObj = p.getCodec().treeToValue(license, License.class);

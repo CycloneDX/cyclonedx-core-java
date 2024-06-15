@@ -18,12 +18,7 @@ public class HashesDeserializer
   @Override
   public List<Hash> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     JsonNode node = parser.getCodec().readTree(parser);
-    if (node.has("hash")) {
-      return parseHashes(node.get("hash"));
-    }
-    else {
-      return parseHashes(node);
-    }
+    return parseHashes(node.has("hash") ? node.get("hash") : node);
   }
 
   private List<Hash> parseHashes(JsonNode node) {
@@ -31,30 +26,18 @@ public class HashesDeserializer
       return Collections.emptyList();
     }
 
+    ArrayNode nodes = DeserializerUtils.getArrayNode(node, null);
     List<Hash> hashes = new ArrayList<>();
-    ArrayNode nodes = (node.isArray() ? (ArrayNode) node : new ArrayNode(null).add(node));
 
-    for (JsonNode resolvesNode : nodes) {
-      Hash hash = parseHash(resolvesNode);
-      hashes.add(hash);
+    for (JsonNode hashNode : nodes) {
+      hashes.add(parseHash(hashNode));
     }
     return hashes;
   }
 
   private Hash parseHash(JsonNode node) {
-    String alg = null;
-    if (node.has("alg")) {
-      alg = node.get("alg").asText();
-    }
-
-    String value = null;
-    JsonNode valueNode = node.get("content");
-    if (valueNode != null) {
-      value = valueNode.textValue();
-    }
-    else if (node.has("")) {
-      value = node.get("").asText();
-    }
+    String alg = node.has("alg") ? node.get("alg").asText() : null;
+    String value = node.has("content") ? node.get("content").asText() : node.has("") ? node.get("").asText() : null;
 
     return new Hash(alg, value);
   }

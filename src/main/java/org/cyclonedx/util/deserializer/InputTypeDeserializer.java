@@ -40,9 +40,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
     InputType inputType = new InputType();
 
-    setReference(node, "source", inputType);
-    setReference(node, "target", inputType);
-
+    setSourceAndTarget(node, inputType);
     createInputDataInfo(node, inputType);
 
     if(node.has("properties")) {
