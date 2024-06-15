@@ -54,11 +54,18 @@ public class InputTypeSerializer
       jsonGenerator.writeObject(input.getData());
     }
 
-    /*writeField(jsonGenerator, "source", input.getSource());
+    writeField(jsonGenerator, "source", input.getSource());
     writeField(jsonGenerator, "target", input.getTarget());
-    writeField(jsonGenerator, "properties", input.getProperties());*/
+    writeField(jsonGenerator, "properties", input.getProperties());
 
     jsonGenerator.writeEndObject();
+  }
+
+  protected void writeField(JsonGenerator jsonGenerator, String fieldName, Object fieldValue) throws IOException {
+    if (fieldValue != null) {
+      jsonGenerator.writeFieldName(fieldName);
+      jsonGenerator.writeObject(fieldValue);
+    }
   }
 
   @Override
