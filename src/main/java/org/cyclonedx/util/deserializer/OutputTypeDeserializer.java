@@ -42,12 +42,7 @@ public class OutputTypeDeserializer
     OutputType outputType = new OutputType();
 
     setSourceAndTarget(node, outputType);
-    createOutputDataInfo(node, outputType);
-    setReference(node, "source", outputType);
-    setReference(node, "target", outputType);
-
     createOutputDataInfo(node, outputType, deserializationContext, jsonParser);
-
     setProperties(node, outputType);
 
     if(node.has("type")) {

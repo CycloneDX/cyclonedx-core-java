@@ -35,21 +35,6 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
 
   protected final ObjectMapper objectMapper = new ObjectMapper();
 
-  protected void setEnvironmentVars(final JsonNode node, AbstractType data) throws JsonProcessingException {
-    JsonNode nodes = node.get("environmentVars");
-    List<EnvVariableChoice> environmentVars = new ArrayList<>();
-
-    if (nodes != null) {
-      ArrayNode environmentVarsNode = DeserializerUtils.getArrayNode(nodes, objectMapper);
-      for (JsonNode envVarNode : environmentVarsNode) {
-        EnvVariableChoice envVar = objectMapper.treeToValue(envVarNode, EnvVariableChoice.class);
-        environmentVars.add(envVar);
-      }
-    }
-
-    data.setEnvironmentVars(environmentVars);
-  }
-
   protected void setReference(JsonNode node, String fieldName, AbstractType type)
       throws JsonProcessingException
   {
