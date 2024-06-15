@@ -24,14 +24,11 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.AttachmentText;
-import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
 
 public class OutputTypeDeserializer
     extends AbstractDataTypeDeserializer<OutputType> {
-
-  private final EnvironmentVarsDeserializer environmentVarsDeserializer = new EnvironmentVarsDeserializer();
 
   @Override
   public OutputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
