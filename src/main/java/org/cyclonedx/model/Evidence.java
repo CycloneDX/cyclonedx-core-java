@@ -48,7 +48,7 @@ public class Evidence
 
     private List<Copyright> copyright;
 
-    @VersionFilter(Version.VERSION_16)
+    @VersionFilter(Version.VERSION_15)
     private List<Identity> identities;
 
     @VersionFilter(Version.VERSION_15)
