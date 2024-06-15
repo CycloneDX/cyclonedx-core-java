@@ -412,6 +412,7 @@ public class Component extends ExtensibleElement {
     @JacksonXmlElementWrapper(localName = "externalReferences")
     @JacksonXmlProperty(localName = "reference")
     @JsonDeserialize(using = ExternalReferencesDeserializer.class)
+    @VersionFilter(Version.VERSION_11)
     public List<ExternalReference> getExternalReferences() {
         return externalReferences;
     }
