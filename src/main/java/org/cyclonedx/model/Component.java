@@ -183,6 +183,7 @@ public class Component extends ExtensibleElement {
 
     @VersionFilter(Version.VERSION_11)
     private List<ExternalReference> externalReferences;
+
     @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
 
