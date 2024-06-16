@@ -105,6 +105,7 @@ public class Component extends ExtensibleElement {
         FIRMWARE("firmware"),
         @JsonProperty("file")
         FILE("file"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("machine-learning-model")
         MACHINE_LEARNING_MODEL("machine-learning-model"),
         @JsonProperty("data")
