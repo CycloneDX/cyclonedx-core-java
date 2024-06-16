@@ -135,8 +135,8 @@ public class AbstractParserTest
     assertNotNull(component.getSwid());
     assertEquals("Acme Application", component.getSwid().getName());
     assertEquals("9.1.1", component.getSwid().getVersion());
-    assertEquals(0, component.getSwid().getTagVersion());
-    assertFalse(component.getSwid().isPatch());
+    assertNull(component.getSwid().getTagVersion());
+    assertNull(component.getSwid().isPatch());
   }
 
   void assertManufacturerMetadata(OrganizationalEntity manufacturer, Version version, boolean deprecated)
@@ -846,8 +846,8 @@ public class AbstractParserTest
     assertEquals("swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1", component.getSwid().getTagId());
     assertEquals("Acme Application", component.getSwid().getName());
     assertEquals("9.1.1", component.getSwid().getVersion());
-    assertEquals(0, component.getSwid().getTagVersion());
-    assertFalse(component.getSwid().isPatch());
+    assertNull(component.getSwid().getTagVersion());
+    assertNull(component.getSwid().isPatch());
 
     //Release Notes
     ReleaseNotes releaseNotes = metadata.getComponent().getReleaseNotes();

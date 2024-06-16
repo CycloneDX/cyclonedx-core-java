@@ -48,8 +48,12 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
-    {"supplier",
+    {
+     "type",
+     "bom-ref",
+     "supplier",
      "manufacturer",
+     "authors",
      "author",
      "publisher",
      "group",

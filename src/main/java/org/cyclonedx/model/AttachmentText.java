@@ -31,6 +31,7 @@ import org.cyclonedx.util.deserializer.AttachmentTextDeserializer;
 
 @SuppressWarnings("unused")
 @JsonPropertyOrder({
+    "contentType",
     "content-type",
     "encoding"})
 @JsonInclude(JsonInclude.Include.NON_NULL)

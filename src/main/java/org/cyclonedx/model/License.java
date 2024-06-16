@@ -35,7 +35,7 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_EMPTY)
-@JsonPropertyOrder({"id", "name", "acknowledgement", "licensing", "text", "url", "properties"})
+@JsonPropertyOrder({"bom-ref","id", "name", "acknowledgement", "licensing", "text", "url", "properties"})
 @JsonRootName("license")
 public class License extends ExtensibleElement {
 

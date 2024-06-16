@@ -14,8 +14,8 @@ import org.cyclonedx.model.formulation.common.OutputType;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
-    "uid", "name", "description", "resourceReferences", "type", "event", "conditions", "timeActivated", "inputs",
-    "outputs", "properties"
+    "bom-ref", "uid", "name", "description", "resourceReferences", "type", "event", "conditions", "timeActivated",
+    "inputs", "outputs", "properties"
 })
 public class Trigger
     extends BasicDataAbstract
