@@ -34,8 +34,8 @@ public class XmlParseTest extends BaseParseTest {
         final List<File> files = getAllResources();
         final List<DynamicTest> dynamicTests = new ArrayList<>();
         for (final File file : files) {
-            if (file.getName().endsWith("1.6.xml")) {
-                if (file.getName().startsWith("valid-machine")) {
+            if (file.getName().endsWith(".xml")) {
+                if (file.getName().startsWith("valid")) {
                     //dynamicTests.add(DynamicTest.dynamicTest(file.getName(), () -> assertNotNull(parseBom(file))));
                     dynamicTests.add(DynamicTest.dynamicTest(file.getName(), () -> {
                         final Bom bom = parseBom(file);
