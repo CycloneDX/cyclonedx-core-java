@@ -36,7 +36,7 @@ import org.cyclonedx.model.Service;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
-    {"components", "services", "workflows", "properties"})
+    {"bom-ref", "components", "services", "workflows", "properties"})
 public class Formula
     extends ExtensibleElement
 {

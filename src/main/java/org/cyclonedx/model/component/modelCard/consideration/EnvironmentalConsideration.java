@@ -18,6 +18,8 @@ public class EnvironmentalConsideration
 
   private List<Property> properties;
 
+  @JacksonXmlElementWrapper(localName = "energyConsumptions")
+  @JacksonXmlProperty(localName = "energyConsumption")
   public List<EnergyConsumption> getEnergyConsumptions() {
     return energyConsumptions;
   }

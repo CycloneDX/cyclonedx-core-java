@@ -4,6 +4,7 @@
   "version" : 1,
   "components" : [
     {
+      "type" : "library",
       "group" : "org.example",
       "name" : "mylibrary",
       "version" : "1.0.0",
@@ -27,8 +28,7 @@
             }
           ]
         }
-      ],
-      "type" : "library"
+      ]
     }
   ]
 }

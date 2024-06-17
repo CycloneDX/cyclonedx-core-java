@@ -13,8 +13,8 @@ import org.cyclonedx.model.formulation.task.Task;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
     {
-        "uid", "name", "description", "resourceReferences", "tasks", "taskDependencies", "taskTypes", "trigger",
-        "steps", "inputs", "outputs", "timeStart", "timeEnd", "workspaces", "runtimeTopology", "properties"
+        "bom-ref", "uid", "name", "description", "resourceReferences", "tasks", "taskDependencies", "taskTypes",
+        "trigger", "steps", "inputs", "outputs", "timeStart", "timeEnd", "workspaces", "runtimeTopology", "properties"
     })
 public class Workflow extends FormulationCommon
 {

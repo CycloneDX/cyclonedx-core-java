@@ -48,8 +48,12 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder(
-    {"supplier",
+    {
+     "type",
+     "bom-ref",
+     "supplier",
      "manufacturer",
+     "authors",
      "author",
      "publisher",
      "group",
@@ -148,6 +152,9 @@ public class Component extends ExtensibleElement {
     @JsonProperty("mime-type")
     private String mimeType;
 
+    @JacksonXmlProperty(isAttribute = true)
+    private Type type;
+
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
@@ -191,9 +198,6 @@ public class Component extends ExtensibleElement {
 
     @VersionFilter(Version.VERSION_13)
     private Evidence evidence;
-
-    @JacksonXmlProperty(isAttribute = true)
-    private Type type;
 
     @VersionFilter(Version.VERSION_14)
     private ReleaseNotes releaseNotes;
@@ -505,6 +509,7 @@ public class Component extends ExtensibleElement {
     }
 
     @JacksonXmlElementWrapper(useWrapping = false)
+    @VersionFilter(Version.VERSION_16)
     public List<String> getOmniborId() {
         return omniborId;
     }
@@ -514,6 +519,7 @@ public class Component extends ExtensibleElement {
     }
 
     @JacksonXmlElementWrapper(useWrapping = false)
+    @VersionFilter(Version.VERSION_16)
     public List<String> getSwhid() {
         return swhid;
     }

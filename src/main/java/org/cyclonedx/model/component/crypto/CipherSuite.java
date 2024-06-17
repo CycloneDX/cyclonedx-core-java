@@ -6,6 +6,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -27,6 +29,8 @@ public class CipherSuite
     this.name = name;
   }
 
+  @JacksonXmlElementWrapper(localName = "algorithms")
+  @JacksonXmlProperty(localName = "algorithm")
   public List<String> getAlgorithms() {
     return algorithms;
   }
@@ -35,6 +39,8 @@ public class CipherSuite
     this.algorithms = algorithms;
   }
 
+  @JacksonXmlElementWrapper(localName = "identifiers")
+  @JacksonXmlProperty(localName = "identifier")
   public List<String> getIdentifiers() {
     return identifiers;
   }

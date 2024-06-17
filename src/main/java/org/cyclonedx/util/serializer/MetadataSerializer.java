@@ -34,16 +34,21 @@ public class MetadataSerializer
 
   @Override
   public void serialize(Metadata output, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-      throws IOException {
+      throws IOException
+  {
     if (isXml && jsonGenerator instanceof ToXmlGenerator) {
       ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
       createMetadataInfo(output, xmlGenerator, serializerProvider);
-    } else {
+    }
+    else {
       createMetadataInfo(output, jsonGenerator, serializerProvider);
     }
   }
 
-  private void createMetadataInfo(final Metadata metadata, final JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+  private void createMetadataInfo(
+      final Metadata metadata,
+      final JsonGenerator jsonGenerator,
+      SerializerProvider serializerProvider)
       throws IOException
   {
     jsonGenerator.writeStartObject();
@@ -53,7 +58,7 @@ public class MetadataSerializer
       new CustomDateSerializer().serialize(metadata.getTimestamp(), jsonGenerator, serializerProvider);
     }
 
-    if(metadata.getLifecycles() != null && shouldSerializeField(metadata, "lifecycles")) {
+    if (metadata.getLifecycles() != null && shouldSerializeField(metadata, "lifecycles")) {
       jsonGenerator.writeFieldName("lifecycles");
       new LifecycleSerializer(isXml).serialize(metadata.getLifecycles(), jsonGenerator, serializerProvider);
     }
@@ -71,23 +76,23 @@ public class MetadataSerializer
       }
     }
 
-    if(metadata.getComponent() != null && shouldSerializeField(metadata, "component")) {
+    if (metadata.getComponent() != null && shouldSerializeField(metadata, "component")) {
       jsonGenerator.writeObjectField("component", metadata.getComponent());
     }
 
-    if(metadata.getManufacture() != null && shouldSerializeField(metadata, "manufacture")) {
-      jsonGenerator.writeObjectField("manufacture", metadata.getManufacture());
-    }
-
-    if(metadata.getManufacturer() != null && shouldSerializeField(metadata, "manufacturer")) {
+    if (metadata.getManufacturer() != null && shouldSerializeField(metadata, "manufacturer")) {
       jsonGenerator.writeObjectField("manufacturer", metadata.getManufacturer());
     }
 
-    if(metadata.getSupplier() != null && shouldSerializeField(metadata, "supplier")) {
+    if (metadata.getManufacture() != null && shouldSerializeField(metadata, "manufacture")) {
+      jsonGenerator.writeObjectField("manufacture", metadata.getManufacture());
+    }
+
+    if (metadata.getSupplier() != null && shouldSerializeField(metadata, "supplier")) {
       jsonGenerator.writeObjectField("supplier", metadata.getSupplier());
     }
 
-    if(metadata.getLicenses() != null && shouldSerializeField(metadata, "licenses")) {
+    if (metadata.getLicenses() != null && shouldSerializeField(metadata, "licenses")) {
       jsonGenerator.writeFieldName("licenses");
       new LicenseChoiceSerializer(isXml, version).serialize(metadata.getLicenses(), jsonGenerator, serializerProvider);
     }
@@ -119,7 +124,8 @@ public class MetadataSerializer
       else {
         writeArrayFieldJSON(jsonGenerator, "tools", metadata.getTools());
       }
-    } else if (version.getVersion() >= Version.VERSION_15.getVersion()) {
+    }
+    else if (version.getVersion() >= Version.VERSION_15.getVersion()) {
       ToolInformation choice = metadata.getToolChoice();
       if (choice != null) {
         jsonGenerator.writeFieldName("tools");
@@ -145,7 +151,9 @@ public class MetadataSerializer
     }
   }
 
-  private <T> void writeArrayFieldJSON(JsonGenerator jsonGenerator, String fieldName, List<T> items) throws IOException {
+  private <T> void writeArrayFieldJSON(JsonGenerator jsonGenerator, String fieldName, List<T> items)
+      throws IOException
+  {
     if (items != null) {
       jsonGenerator.writeArrayFieldStart(fieldName);
       for (T item : items) {
@@ -173,7 +181,8 @@ public class MetadataSerializer
       Field field = obj.getClass().getDeclaredField(fieldName);
       VersionFilter filter = field.getAnnotation(VersionFilter.class);
       return filter == null || filter.value().getVersion() <= version.getVersion();
-    } catch (NoSuchFieldException e) {
+    }
+    catch (NoSuchFieldException e) {
       // If the field does not exist, assume it should be serialized
       return true;
     }

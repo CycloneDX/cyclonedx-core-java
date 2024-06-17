@@ -31,7 +31,7 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"id", "name", "description", "source", "reference"})
+@JsonPropertyOrder({"id", "name", "description", "source", "references"})
 public class Issue {
 
   public enum Type {

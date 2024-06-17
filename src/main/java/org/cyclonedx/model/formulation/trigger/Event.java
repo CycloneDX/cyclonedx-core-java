@@ -3,19 +3,36 @@ package org.cyclonedx.model.formulation.trigger;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_EMPTY)
+@JsonPropertyOrder({"uid", "description", "timeReceived", "data", "source", "target", "properties"})
+@JsonRootName("event")
 public class Event {
+
   private String uid;
+
   private String description;
+
   private String timeReceived;
+
   private AttachmentText data;
+
   private ResourceReferenceChoice source;
+
   private ResourceReferenceChoice target;
+
   private List<Property> properties;
 
   public String getUid() {
@@ -42,6 +59,8 @@ public class Event {
     this.timeReceived = timeReceived;
   }
 
+  @JacksonXmlProperty(localName = "data")
+  @JsonProperty("data")
   public AttachmentText getData() {
     return data;
   }
