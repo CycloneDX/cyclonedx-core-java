@@ -94,8 +94,7 @@ public class ExternalReferenceSerializer
     toXmlGenerator.writeEndObject();
   }
 
-  private void serializeJson(final JsonGenerator gen, final ExternalReference extRef)
-      throws IOException
+  private void serializeJson(final JsonGenerator gen, final ExternalReference extRef) throws IOException
   {
     gen.writeStartObject();
     gen.writeStringField("type", extRef.getType().getTypeName());
@@ -117,11 +116,6 @@ public class ExternalReferenceSerializer
     gen.writeEndObject();
   }
 
-  @Override
-  public Class<ExternalReference> handledType() {
-    return ExternalReference.class;
-  }
-
   private boolean shouldSerializeField(Object obj) {
     try {
       if (obj instanceof Type) {
@@ -133,5 +127,10 @@ public class ExternalReferenceSerializer
     }catch (NoSuchFieldException e) {
       return false;
     }
+  }
+
+  @Override
+  public Class<ExternalReference> handledType() {
+    return ExternalReference.class;
   }
 }
