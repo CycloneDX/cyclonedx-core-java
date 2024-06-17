@@ -1,12 +1,10 @@
 package org.cyclonedx.util.serializer;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.cyclonedx.Version;
-import org.cyclonedx.model.Bom;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.model.Property;
 
 import java.io.IOException;
