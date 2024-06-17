@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +32,9 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL) // We want to include empty List<Dependency>, so DO NOT use Include.NON_EMPTY
 public class Dependency extends BomReference {
+
+    @VersionFilter(Version.VERSION_16)
+    private BomReference provides;
 
     @JsonProperty("dependsOn")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -60,16 +65,31 @@ public class Dependency extends BomReference {
         }
     }
 
+    public BomReference getProvides() {
+        return provides;
+    }
+
+    public void setProvides(final BomReference provides) {
+        this.provides = provides;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Dependency)) return false;
-        Dependency that = (Dependency) o;
-        return Objects.equals(getRef(), that.getRef());
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Dependency)) {
+            return false;
+        }
+        if (!super.equals(object)) {
+            return false;
+        }
+        Dependency that = (Dependency) object;
+        return Objects.equals(dependencies, that.dependencies) && Objects.equals(provides, that.provides);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRef());
+        return Objects.hash(super.hashCode(), dependencies, provides);
     }
 }
