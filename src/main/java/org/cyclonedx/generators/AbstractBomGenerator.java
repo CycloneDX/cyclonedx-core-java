@@ -9,6 +9,7 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.Component12Mixin;
 import org.cyclonedx.model.component.Component16Mixin;
+import org.cyclonedx.util.serializer.CustomEnumSerializerModifier;
 import org.cyclonedx.util.serializer.CustomSerializerModifier;
 import org.cyclonedx.util.serializer.EnvironmentVarsSerializer;
 import org.cyclonedx.util.serializer.EvidenceSerializer;
@@ -61,6 +62,9 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
   }
 
   protected void setupObjectMapper(boolean isXml) {
+    mapper.addMixIn(Component.class, Component12Mixin.class);
+    mapper.addMixIn(Component.class, Component16Mixin.class);
+
     SimpleModule licenseModule = new SimpleModule();
     licenseModule.addSerializer(new LicenseChoiceSerializer(isXml, version));
     mapper.registerModule(licenseModule);
@@ -120,5 +124,8 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     mapper.addMixIn(Component.class, Component12Mixin.class);
     mapper.addMixIn(Component.class, Component16Mixin.class);
 
+    SimpleModule module = new SimpleModule();
+    module.setSerializerModifier(new CustomEnumSerializerModifier(version));
+    //mapper.registerModule(module);
   }
 }
