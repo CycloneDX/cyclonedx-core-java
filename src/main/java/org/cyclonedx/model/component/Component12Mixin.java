@@ -8,5 +8,5 @@ public abstract class Component12Mixin
 {
   @JsonProperty("author")
   @VersionFilter(Version.VERSION_12)
-  abstract String getOldAuthor();
+  abstract String getAuthor();
 }
