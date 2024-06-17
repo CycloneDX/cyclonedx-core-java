@@ -47,7 +47,7 @@ public class HashSerializer
   public void serialize(
       final Hash hash, final JsonGenerator gen, final SerializerProvider provider) throws IOException
   {
-    if(!shouldSerializeField(hash.getAlgorithm())) {
+    if (!shouldSerializeField(hash.getAlgorithm())) {
       return;
     }
 
