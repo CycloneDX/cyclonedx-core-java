@@ -20,6 +20,7 @@ package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
@@ -33,6 +34,7 @@ import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,9 +44,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.Objects;
 
@@ -134,30 +139,6 @@ public class BomJsonGeneratorTest {
         assertTrue(jsonParser.isValid(file, Version.VERSION_13));
     }
 
-    static Stream<Arguments> testData() {
-        return Stream.of(
-            Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.xml"),
-            Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
-            Arguments.of(Version.VERSION_14, "/bom-1.4.xml"),
-            Arguments.of(Version.VERSION_13, "/bom-1.3.xml")
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("testData")
-    public void testJsonGeneration(Version version, String bomXmlPath)
-        throws Exception
-    {
-        Bom bom = createCommonXmlBom(bomXmlPath);
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
-
-        assertEquals(version, generator.getSchemaVersion());
-
-        File file = writeToFile(generator.toJsonString());
-        JsonParser parser = new JsonParser();
-        assertTrue(parser.isValid(file, version));
-    }
-
     @Test
     public void schema14MultipleDependenciesJsonTest() throws Exception {
         final byte[] bomBytes = IOUtils.toByteArray(
@@ -183,6 +164,105 @@ public class BomJsonGeneratorTest {
         assertNotNull(bom2.getComponents().get(0).getExternalReferences());
         assertEquals("bom", bom2.getComponents().get(0).getExternalReferences().get(0).getType().getTypeName());
         assertEquals("urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1", bom2.getComponents().get(0).getExternalReferences().get(0).getUrl());
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBomProvider")
+    public void testGeneration_backwardCompatibility(Version version, String bomFilePath) throws Exception {
+        Bom bom = createCommonJsonBom(bomFilePath);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBomProvider")
+    public void testGeneration_backwardCompatibility_jsonToXml(Version version, String bomFilePath) throws Exception {
+        Bom bom = createCommonJsonBom(bomFilePath);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private static Stream<Arguments> versionAndBomProvider() {
+        return Stream.of(
+            // Backward compatibility tests from BOM 1.2
+            Arguments.of(Version.VERSION_12, "/bom-1.2.json"),
+
+            // Backward compatibility tests from BOM 1.3
+            Arguments.of(Version.VERSION_13, "/bom-1.3.json"),
+            Arguments.of(Version.VERSION_12, "/bom-1.3.json"),
+
+            // Backward compatibility tests from BOM 1.4
+            Arguments.of(Version.VERSION_14, "/bom-1.4.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.4.json"),
+            Arguments.of(Version.VERSION_12, "/bom-1.4.json"),
+
+            // Backward compatibility tests from BOM 1.5
+            Arguments.of(Version.VERSION_15, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_14, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_12, "/bom-1.5.json"),
+
+            // Backward compatibility tests from BOM 1.6
+            Arguments.of(Version.VERSION_16, "/bom-1.6.json"),
+            Arguments.of(Version.VERSION_15, "/bom-1.6.json"),
+            Arguments.of(Version.VERSION_14, "/bom-1.6.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.6.json"),
+            Arguments.of(Version.VERSION_12, "/bom-1.6.json")
+        );
+    }
+
+    private static Stream<Arguments> versionAndBom() {
+        return Stream.of(
+            Arguments.of(Version.VERSION_12, "/bom-1.2.json"),
+            Arguments.of(Version.VERSION_13, "/bom-1.3.json"),
+            Arguments.of(Version.VERSION_14, "/bom-1.4.json"),
+            Arguments.of(Version.VERSION_15, "/bom-1.5.json"),
+            Arguments.of(Version.VERSION_16, "/bom-1.6.json")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBom")
+    public void testFileIdentity(Version version, String bomFilePath)
+        throws Exception
+    {
+        final Bom inputBom = createCommonJsonBom(bomFilePath);
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, inputBom);
+
+        Assertions.assertTrue(BomJsonGenerator.class.isAssignableFrom(generator.getClass()));
+        Assertions.assertEquals(version, generator.getSchemaVersion());
+
+        final String actual = generator.toJsonString().trim();
+        final String expected = readFixture(bomFilePath);
+        Assertions.assertEquals(expected, actual);
+
+        JsonParser parser = new JsonParser();
+        File loadedFile = writeToFile(actual);
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private String readFixture(final String pPath)
+    {
+        try (InputStream is = getClass().getResourceAsStream(pPath)) {
+            if (is != null) {
+                return IOUtils.toString(is, StandardCharsets.UTF_8).trim();
+            }
+            else {
+                Assertions.fail("failed to read expected data file: " + pPath);
+            }
+        }
+        catch (IOException e) {
+            Assertions.fail("failed to read expected data file: " + pPath, e);
+        }
+        return null;
     }
 
     @Test

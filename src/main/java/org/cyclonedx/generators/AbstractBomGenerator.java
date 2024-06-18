@@ -5,7 +5,12 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.component.Component12Mixin;
+import org.cyclonedx.model.component.Component16Mixin;
+import org.cyclonedx.util.serializer.CustomEnumSerializerModifier;
 import org.cyclonedx.util.serializer.CustomSerializerModifier;
+import org.cyclonedx.util.serializer.EnvironmentVarsSerializer;
 import org.cyclonedx.util.serializer.EvidenceSerializer;
 import org.cyclonedx.util.serializer.ExternalReferenceSerializer;
 import org.cyclonedx.util.serializer.HashSerializer;
@@ -39,6 +44,9 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
   }
 
   protected void setupObjectMapper(boolean isXml) {
+    mapper.addMixIn(Component.class, Component12Mixin.class);
+    mapper.addMixIn(Component.class, Component16Mixin.class);
+
     SimpleModule licenseModule = new SimpleModule();
     licenseModule.addSerializer(new LicenseChoiceSerializer(isXml, version));
     mapper.registerModule(licenseModule);
@@ -46,6 +54,10 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     SimpleModule lifecycleModule = new SimpleModule();
     lifecycleModule.addSerializer(new LifecycleSerializer(isXml));
     mapper.registerModule(lifecycleModule);
+
+    SimpleModule hash1Module = new SimpleModule();
+    hash1Module.addSerializer(new HashSerializer(version));
+    mapper.registerModule(hash1Module);
 
     SimpleModule metadataModule = new SimpleModule();
     metadataModule.addSerializer(new MetadataSerializer(isXml, getSchemaVersion()));
@@ -59,24 +71,31 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     outputTypeModule.addSerializer(new OutputTypeSerializer(isXml));
     mapper.registerModule(outputTypeModule);
 
+    SimpleModule envTypeModule = new SimpleModule();
+    envTypeModule.addSerializer(new EnvironmentVarsSerializer(isXml));
+    mapper.registerModule(envTypeModule);
+
+    SimpleModule propertiesModule = new SimpleModule();
+    propertiesModule.setSerializerModifier(new CustomSerializerModifier(isXml, version));
+    mapper.registerModule(propertiesModule);
+
     SimpleModule evidenceModule = new SimpleModule();
     evidenceModule.addSerializer(new EvidenceSerializer(isXml, getSchemaVersion()));
     mapper.registerModule(evidenceModule);
-
-    SimpleModule signatoryModule = new SimpleModule();
-    signatoryModule.addSerializer(new SignatorySerializer(isXml));
-    mapper.registerModule(signatoryModule);
 
     SimpleModule externalSerializer = new SimpleModule();
     externalSerializer.addSerializer(new ExternalReferenceSerializer(getSchemaVersion()));
     mapper.registerModule(externalSerializer);
 
-    SimpleModule hash1Module = new SimpleModule();
-    hash1Module.addSerializer(new HashSerializer(version));
-    mapper.registerModule(hash1Module);
+    SimpleModule signatoryModule = new SimpleModule();
+    signatoryModule.addSerializer(new SignatorySerializer(isXml));
+    mapper.registerModule(signatoryModule);
 
-    SimpleModule propertiesModule = new SimpleModule();
-    propertiesModule.setSerializerModifier(new CustomSerializerModifier(isXml, version));
-    mapper.registerModule(propertiesModule);
+    mapper.addMixIn(Component.class, Component12Mixin.class);
+    mapper.addMixIn(Component.class, Component16Mixin.class);
+
+    SimpleModule module = new SimpleModule();
+    module.setSerializerModifier(new CustomEnumSerializerModifier(version));
+    //mapper.registerModule(module);
   }
 }

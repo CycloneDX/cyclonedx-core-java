@@ -105,6 +105,7 @@ public class Component extends ExtensibleElement {
         FIRMWARE("firmware"),
         @JsonProperty("file")
         FILE("file"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("machine-learning-model")
         MACHINE_LEARNING_MODEL("machine-learning-model"),
         @JsonProperty("data")
@@ -158,9 +159,16 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
-    @Deprecated
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
+
     @VersionFilter(Version.VERSION_12)
+    @Deprecated
     private String author;
+
+    @VersionFilter(Version.VERSION_16)
+    private List<OrganizationalContact> authorsList;
 
     @VersionFilter(Version.VERSION_11)
     private String publisher;
@@ -180,6 +188,7 @@ public class Component extends ExtensibleElement {
 
     @VersionFilter(Version.VERSION_16)
     private List<String> swhid;
+
     @VersionFilter(Version.VERSION_12)
     private Swid swid;
 
@@ -222,14 +231,6 @@ public class Component extends ExtensibleElement {
     @JsonUnwrapped
     private Tags tags;
 
-    @VersionFilter(Version.VERSION_16)
-    @JsonProperty("authors")
-    private List<OrganizationalContact> authors;
-
-    @VersionFilter(Version.VERSION_16)
-    @JsonProperty("manufacturer")
-    private OrganizationalEntity manufacturer;
-
     @JsonOnly
     @VersionFilter(Version.VERSION_14)
     private Signature signature;
@@ -264,6 +265,14 @@ public class Component extends ExtensibleElement {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public List<OrganizationalContact> getAuthors() {
+        return authorsList;
+    }
+
+    public void setAuthors(List<OrganizationalContact> authors) {
+        this.authorsList = authors;
     }
 
     public String getPublisher() {
@@ -552,14 +561,6 @@ public class Component extends ExtensibleElement {
         this.tags = tags;
     }
 
-    public List<OrganizationalContact> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(final List<OrganizationalContact> authors) {
-        this.authors = authors;
-    }
-
     public OrganizationalEntity getManufacturer() {
         return manufacturer;
     }
@@ -570,8 +571,9 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenses, copyright,
-            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
+        return Objects.hash(author, authorsList, publisher, group, name, version, description, scope, hashes, licenses,
+            copyright, cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard,
+            data);
     }
 
     @Override
@@ -583,6 +585,7 @@ public class Component extends ExtensibleElement {
                 Objects.equals(supplier, component.supplier) &&
                 Objects.equals(author, component.author) &&
                 Objects.equals(publisher, component.publisher) &&
+                Objects.equals(authorsList, component.authorsList) &&
                 Objects.equals(group, component.group) &&
                 Objects.equals(name, component.name) &&
                 Objects.equals(version, component.version) &&
