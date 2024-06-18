@@ -26,7 +26,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.AttachmentText;
-import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.InputType.Parameter;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
@@ -41,18 +40,13 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
     InputType inputType = new InputType();
 
     setSourceAndTarget(node, inputType);
-    createInputDataInfo(node, inputType);
-
-    if(node.has("properties")) {
-      JsonNode propertiesNode = node.get("properties");
-      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
-      inputType.setProperties(properties);
-    }
+    createInputDataInfo(node, inputType, jsonParser, deserializationContext);
+    setProperties(node, inputType);
 
     return inputType;
   }
 
-  private void createInputDataInfo(JsonNode node, InputType inputType)
+  private void createInputDataInfo(JsonNode node, InputType inputType, JsonParser jsonParser, DeserializationContext ctxt)
       throws IOException
   {
     if (node.has("resource")) {
@@ -64,7 +58,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
       List<Parameter> parameters = objectMapper.convertValue(parametersNode, new TypeReference<List<Parameter>>() {});
       inputType.setParameters(parameters);
     } else if (node.has("environmentVars")) {
-      setEnvironmentVars(node, inputType);
+      setEnvironmentVars(node, inputType, jsonParser, ctxt);
     } else if (node.has("data")) {
       JsonNode dataNode = node.get("data");
       AttachmentText data = objectMapper.treeToValue(dataNode, AttachmentText.class);
