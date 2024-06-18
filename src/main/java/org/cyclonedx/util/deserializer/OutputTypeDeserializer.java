@@ -19,18 +19,13 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.AttachmentText;
-import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
-import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public class OutputTypeDeserializer
     extends AbstractDataTypeDeserializer<OutputType> {
@@ -43,7 +38,7 @@ public class OutputTypeDeserializer
     OutputType outputType = new OutputType();
 
     setSourceAndTarget(node, outputType);
-    createOutputDataInfo(node, outputType);
+    createOutputDataInfo(node, outputType, deserializationContext, jsonParser);
     setProperties(node, outputType);
 
     if(node.has("type")) {
@@ -55,12 +50,14 @@ public class OutputTypeDeserializer
     return outputType;
   }
 
-  private void createOutputDataInfo(JsonNode node, OutputType outputType) throws JsonProcessingException {
+  private void createOutputDataInfo(JsonNode node, OutputType outputType, DeserializationContext ctxt, JsonParser jsonParser)
+      throws IOException
+  {
     if (node.has("resource")) {
       setResource(node, outputType);
     }
     else if (node.has("environmentVars")) {
-      setEnvironmentVars(node, outputType);
+      setEnvironmentVars(node, outputType, jsonParser, ctxt);
     }
     else if (node.has("data")) {
       JsonNode dataNode = node.get("data");
