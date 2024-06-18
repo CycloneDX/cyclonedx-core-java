@@ -32,8 +32,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 public class Copyright {
 
     @JacksonXmlCData
-    @JsonProperty("text")
-    @JacksonXmlProperty(localName = "text")
     private String text;
 
     public Copyright() {}
