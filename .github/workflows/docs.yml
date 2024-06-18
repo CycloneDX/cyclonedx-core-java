@@ -6,24 +6,26 @@ on:
       - master
   workflow_dispatch:
 
+permissions: { }
+
 jobs:
   build-documentation:
     name: "Build documentation"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push commits to gh-pages branch
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # tag=v4.1.7
       - name: Set up JDK 8
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # tag=v4.2.1
         with:
           distribution: temurin
           java-version: 8
       - name: Build with Maven
-        run: mvn package --file pom.xml
-
+        run: mvn -B --no-transfer-progress package
       - name: Deploy documentation
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@5c6e9e9f3672ce8fd37b9856193d2a537941e66c # tag=v4.6.1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: target/apidocs
+          branch: gh-pages
+          folder: target/apidocs

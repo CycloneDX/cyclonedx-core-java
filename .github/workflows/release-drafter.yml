@@ -1,11 +1,11 @@
 name: Release Drafter
+
 on:
   push:
     branches:
-      - master
+    - master
 
-permissions:
-  contents: read
+permissions: { }
 
 jobs:
   update_release_draft:
@@ -14,6 +14,6 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: release-drafter/release-drafter@3f0f87098bd6b5c5b9a36d49c41d998ea58f9348 # tag=v6.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,22 +1,47 @@
 name: Maven CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+permissions: { }
 
 jobs:
-  build:
+  test:
+    name: Test
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
-        java-version: [ 8 ]
-        distro: [ 'zulu', 'temurin' ]
-    runs-on: ${{ matrix.os }}
-
+        java-version: [ 8, 11, 17, 21 ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v4.1.7
+    - name: Checkout Repository
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # tag=v4.1.7
     - name: Set up JDK ${{ matrix.java-version }}
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # tag=v4.2.1
       with:
-        distribution: ${{ matrix.distro }}
+        distribution: temurin
         java-version: ${{ matrix.java-version }}
-    - name: Build with Maven
-      run: mvn package --file pom.xml
+        cache: maven
+    - name: Test
+      run: mvn -B --no-transfer-progress clean verify
+    # Publishing coverage to Codacy is only possible for builds of push events.
+    # PRs from forks do not get access to repository secrets.
+    # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+    - name: Publish test coverage
+      if: ${{ github.event_name != 'pull_request' && github.repository_owner == 'CycloneDX' && matrix.java-version == '21' }}
+      uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # tag=v1.3.0
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        language: Java
+        coverage-reports: target/site/jacoco/jacoco.xml
+    - name: Upload PR test coverage report
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # tag=v4.3.3
+      with:
+        name: pr-test-coverage-report-java-${{ matrix.java-version }}
+        path: target/site/jacoco/jacoco.xml
