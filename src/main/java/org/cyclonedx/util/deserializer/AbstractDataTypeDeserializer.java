@@ -70,7 +70,7 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
     setReference(node, "source", type);
     setReference(node, "target", type);
   }
-
+  
   protected void setResource(JsonNode node, AbstractType type) throws JsonProcessingException {
     JsonNode resourceNode = node.get("resource");
     ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
