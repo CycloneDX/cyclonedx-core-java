@@ -13,8 +13,8 @@ import org.cyclonedx.model.formulation.common.BasicDataAbstract;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
-    "uid", "name", "aliases", "description", "resourceReferences", "accessMode", "mountPath", "managedDataType",
-    "volumeRequest", "volume", "properties"
+    "bom-ref", "uid", "name", "aliases", "description", "resourceReferences", "accessMode", "mountPath",
+    "managedDataType", "volumeRequest", "volume", "properties"
 })
 public class Workspace extends BasicDataAbstract
 {

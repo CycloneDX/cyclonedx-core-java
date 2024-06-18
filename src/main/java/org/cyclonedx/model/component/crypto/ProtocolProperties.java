@@ -6,7 +6,10 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,6 +43,9 @@ public class ProtocolProperties
     this.version = version;
   }
 
+  @JacksonXmlElementWrapper(localName = "cipherSuites")
+  @JacksonXmlProperty(localName = "cipherSuite")
+  @JsonProperty("cipherSuites")
   public List<CipherSuite> getCipherSuites() {
     return cipherSuites;
   }

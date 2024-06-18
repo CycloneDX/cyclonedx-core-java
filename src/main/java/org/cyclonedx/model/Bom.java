@@ -107,6 +107,7 @@ public class Bom extends ExtensibleElement {
     private int version = 1;
 
     @JacksonXmlProperty(isAttribute = true)
+    @VersionFilter(Version.VERSION_11)
     private String serialNumber;
 
     @JsonOnly

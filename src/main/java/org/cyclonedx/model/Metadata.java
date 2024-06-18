@@ -41,7 +41,8 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
-    "timestamp", "lifecycles", "tools", "authors", "component", "manufacture", "supplier", "licenses", "properties"
+    "timestamp", "lifecycles", "tools", "authors", "component", "manufacturer", "manufacture", "supplier", "licenses",
+    "properties"
 })
 @JsonDeserialize(using = MetadataDeserializer.class)
 public class Metadata

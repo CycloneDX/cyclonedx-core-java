@@ -38,10 +38,10 @@ public class Swid {
     private String version;
 
     @JacksonXmlProperty(isAttribute = true)
-    private int tagVersion;
+    private Integer tagVersion;
 
     @JacksonXmlProperty(isAttribute = true)
-    private boolean patch;
+    private Boolean patch;
 
     @JacksonXmlProperty(localName = "text")
     @JsonProperty("text")
@@ -71,19 +71,19 @@ public class Swid {
         this.version = version;
     }
 
-    public int getTagVersion() {
+    public Integer getTagVersion() {
         return tagVersion;
     }
 
-    public void setTagVersion(int tagVersion) {
+    public void setTagVersion(Integer tagVersion) {
         this.tagVersion = tagVersion;
     }
 
-    public boolean isPatch() {
+    public Boolean isPatch() {
         return patch;
     }
 
-    public void setPatch(boolean patch) {
+    public void setPatch(Boolean patch) {
         this.patch = patch;
     }
 
