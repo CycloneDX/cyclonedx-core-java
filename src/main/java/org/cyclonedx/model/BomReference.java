@@ -28,7 +28,6 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BomReference {
 
-    @JsonProperty("ref")
     @JacksonXmlProperty(isAttribute = true)
     private String ref;
 

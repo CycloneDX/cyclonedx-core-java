@@ -26,9 +26,7 @@ public class Event {
   private String description;
 
   private String timeReceived;
-  
-  @JacksonXmlProperty(localName = "data")
-  @JsonProperty("data")
+
   private AttachmentText data;
 
   private ResourceReferenceChoice source;
