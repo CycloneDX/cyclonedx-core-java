@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.parse;
 
-import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.parsers.BomParserFactory;
 import org.cyclonedx.CycloneDxSchema;
@@ -70,7 +69,7 @@ public abstract class BaseParseTest {
         }
     }
 
-    void generateBomJson(final String testName, final Bom bom) throws GeneratorException {
+    void generateBomJson(final String testName, final Bom bom) {
         for (Version version : CycloneDxSchema.ALL_VERSIONS) {
             System.out.println("Generating CycloneDX " + version.getVersionString() + " JSON for " + testName);
             BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
