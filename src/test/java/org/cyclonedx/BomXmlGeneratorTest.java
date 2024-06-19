@@ -19,6 +19,7 @@
 package org.cyclonedx;
 
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.*;
@@ -531,6 +532,13 @@ public class BomXmlGeneratorTest {
 
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testXxeProtection() {
+        assertThrows(ParseException.class, () -> {
+            createCommonBomXml("/security/xxe-protection.xml");
+        });
     }
 
     @Test
