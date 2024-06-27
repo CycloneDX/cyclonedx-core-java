@@ -120,6 +120,9 @@ public class LicenseChoiceSerializer
     }
     else if (lc.getExpression() != null) {
       serializeExpressionToXml(lc, toXmlGenerator);
+    } else {
+      toXmlGenerator.writeStartArray();
+      toXmlGenerator.writeEndArray();
     }
   }
 
@@ -155,7 +158,10 @@ public class LicenseChoiceSerializer
     else if (licenseChoice.getExpression() != null &&
         StringUtils.isNotBlank(licenseChoice.getExpression().getValue())) {
       serializeExpressionToJson(licenseChoice, gen);
-    }
+    } else {
+      gen.writeStartArray();
+      gen.writeEndArray();
+  }
   }
 
   private void serializeExpressionToXml(

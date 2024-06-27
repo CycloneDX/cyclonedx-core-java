@@ -18,6 +18,7 @@
  */
 package org.cyclonedx;
 
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
@@ -373,6 +374,29 @@ public class BomXmlGeneratorTest {
 
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue439Regression_xmlEmptyLicense() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = new Bom();
+        bom.addComponent(getComponentWithEmptyLicenseChoice());
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        String xmlString = generator.toXmlString();
+
+        assertFalse(xmlString.isEmpty());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(xmlString.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    private static Component getComponentWithEmptyLicenseChoice() {
+        Component component = new Component();
+        component.setName("xalan");
+        component.setType(Component.Type.LIBRARY);
+        component.setLicenses(new LicenseChoice());
+        component.setPurl("pkg:maven/xalan/xalan@2.6.0?type=jar");
+        return component;
     }
 
     @Test

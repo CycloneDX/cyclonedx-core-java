@@ -19,6 +19,7 @@
 package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
@@ -246,6 +247,29 @@ public class BomJsonGeneratorTest {
 
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue439Regression_jsonEmptyLicense() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = new Bom();
+        bom.addComponent(getComponentWithEmptyLicenseChoice());
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        String jsonString = generator.toJsonString();
+
+        assertFalse(jsonString.isEmpty());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(jsonString.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    private static Component getComponentWithEmptyLicenseChoice() {
+        Component component = new Component();
+        component.setName("xalan");
+        component.setType(Component.Type.LIBRARY);
+        component.setLicenses(new LicenseChoice());
+        component.setPurl("pkg:maven/xalan/xalan@2.6.0?type=jar");
+        return component;
     }
 
     @Test
