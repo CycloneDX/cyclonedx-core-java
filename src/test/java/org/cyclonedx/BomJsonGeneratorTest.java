@@ -49,11 +49,7 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BomJsonGeneratorTest {
 
@@ -69,6 +65,16 @@ public class BomJsonGeneratorTest {
     public void after() {
         tempFile.delete();
         tempFile.getParentFile().delete();
+    }
+
+    @Test
+    public void testGenerateBomPrior12() {
+        Throwable exception = assertThrowsExactly(
+                IllegalArgumentException.class,
+                () -> new BomJsonGenerator(new Bom(), Version.VERSION_11)
+        );
+
+        assertEquals("CycloneDX version 1.1 does not support the JSON format", exception.getMessage());
     }
 
     @Test

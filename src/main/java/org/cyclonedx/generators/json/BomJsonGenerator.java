@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.cyclonedx.Format;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.AbstractBomGenerator;
@@ -46,7 +47,7 @@ public class BomJsonGenerator extends AbstractBomGenerator
    * @param bom the BOM to generate
    */
   public BomJsonGenerator(Bom bom, final Version version) {
-    super(version, bom);
+    super(version, bom, Format.JSON);
     Bom modifiedBom = null;
     try {
       modifiedBom = injectBomFormatAndSpecVersion(bom);
