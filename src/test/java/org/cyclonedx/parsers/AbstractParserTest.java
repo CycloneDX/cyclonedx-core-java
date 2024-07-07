@@ -78,7 +78,7 @@ import org.cyclonedx.model.vulnerability.Vulnerability.Rating.Severity;
 import org.cyclonedx.model.vulnerability.Vulnerability.Version.Status;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -549,11 +549,36 @@ public class AbstractParserTest
     assertEquals("https://example.com", vuln.getCredits().getOrganizations().get(0).getUrls().get(0));
 
     //Tools
-    assertEquals(1, vuln.getTools().size());
-    assertEquals("Sonatype CLI", vuln.getTools().get(0).getName());
-    assertEquals("Sonatype", vuln.getTools().get(0).getVendor());
-    assertEquals("1.131", vuln.getTools().get(0).getVersion());
-    assertEquals(1, vuln.getTools().get(0).getHashes().size());
+    if (version == Version.VERSION_15) {
+      assertNull(vuln.getTools());
+    }
+    else {
+      assertEquals(1, vuln.getTools().size());
+      assertEquals("Sonatype CLI", vuln.getTools().get(0).getName());
+      assertEquals("Sonatype", vuln.getTools().get(0).getVendor());
+      assertEquals("1.131", vuln.getTools().get(0).getVersion());
+      assertEquals(1, vuln.getTools().get(0).getHashes().size());
+    }
+
+    // ToolChoice
+    if (version == Version.VERSION_15) {
+      assertEquals(1, vuln.getToolChoice().getComponents().size(), 1);
+      assertEquals(Type.APPLICATION, vuln.getToolChoice().getComponents().get(0).getType());
+      assertEquals("Sonatype", vuln.getToolChoice().getComponents().get(0).getGroup());
+      assertEquals("Sonatype CLI", vuln.getToolChoice().getComponents().get(0).getName());
+      assertEquals("1.131", vuln.getToolChoice().getComponents().get(0).getVersion());
+      assertEquals("SHA-256", vuln.getToolChoice().getComponents().get(0).getHashes().get(0).getAlgorithm());
+      assertEquals("2eaf8c62831a1658c95d41fdc683cd177c147733c64a93e59cb2362829e45b7d",
+              vuln.getToolChoice().getComponents().get(0).getHashes().get(0).getValue());
+
+      assertEquals(1, vuln.getToolChoice().getServices().size());
+      assertEquals("Sonatype", vuln.getToolChoice().getServices().get(0).getProvider().getName());
+      assertEquals("Sonatype CLI Scanner", vuln.getToolChoice().getServices().get(0).getName());
+      assertEquals("https://www.sonatype.com/scanner", vuln.getToolChoice().getServices().get(0).getEndpoints().get(0));
+    }
+    else {
+      assertNull(vuln.getToolChoice());
+    }
 
     //Analysis
     assertEquals(State.NOT_AFFECTED, vuln.getAnalysis().getState());
@@ -822,14 +847,41 @@ public class AbstractParserTest
     }
 
     //Tool
-    assertEquals(1, metadata.getTools().size());
-    assertEquals("Awesome Vendor", metadata.getTools().get(0).getVendor());
-    assertEquals("Awesome Tool", metadata.getTools().get(0).getName());
-    assertEquals("9.1.2", metadata.getTools().get(0).getVersion());
-    assertEquals(1, metadata.getTools().get(0).getHashes().size());
-    assertEquals("SHA-1", metadata.getTools().get(0).getHashes().get(0).getAlgorithm());
-    assertEquals("25ed8e31b995bb927966616df2a42b979a2717f0",
-        metadata.getTools().get(0).getHashes().get(0).getValue());
+    if (version == Version.VERSION_15 ) {
+      assertNull(metadata.getTools());
+    }
+    else {
+      assertEquals(1, metadata.getTools().size());
+      assertEquals("Awesome Vendor", metadata.getTools().get(0).getVendor());
+      assertEquals("Awesome Tool", metadata.getTools().get(0).getName());
+      assertEquals("9.1.2", metadata.getTools().get(0).getVersion());
+      assertEquals(1, metadata.getTools().get(0).getHashes().size());
+      assertEquals("SHA-1", metadata.getTools().get(0).getHashes().get(0).getAlgorithm());
+      assertEquals("25ed8e31b995bb927966616df2a42b979a2717f0",
+              metadata.getTools().get(0).getHashes().get(0).getValue());
+    }
+
+    // ToolChoice
+    if (version == Version.VERSION_15) {
+      assertEquals(1, metadata.getToolChoice().getComponents().size());
+      assertEquals("Awesome Vendor", metadata.getToolChoice().getComponents().get(0).getGroup());
+      assertEquals("Awesome Tool", metadata.getToolChoice().getComponents().get(0).getName());
+      assertEquals("9.1.2", metadata.getToolChoice().getComponents().get(0).getVersion());
+      assertEquals("SHA-1", metadata.getToolChoice().getComponents().get(0).getHashes().get(0).getAlgorithm());
+      assertEquals("25ed8e31b995bb927966616df2a42b979a2717f0",
+              metadata.getToolChoice().getComponents().get(0).getHashes().get(0).getValue());
+
+      assertEquals(1, metadata.getToolChoice().getServices().size());
+      assertEquals("Acme Org", metadata.getToolChoice().getServices().get(0).getProvider().getName());
+      assertEquals("https://example.com", metadata.getToolChoice().getServices().get(0).getProvider().getUrls().get(0));
+      assertEquals("com.example", metadata.getToolChoice().getServices().get(0).getGroup());
+      assertEquals("Acme Signing Server", metadata.getToolChoice().getServices().get(0).getName());
+      assertEquals("Signs artifacts", metadata.getToolChoice().getServices().get(0).getDescription());
+      assertIterableEquals(Arrays.asList("https://example.com/sign", "https://example.com/verify", "https://example.com/tsa"),
+              metadata.getToolChoice().getServices().get(0).getEndpoints());
+    } else {
+      assertNull(metadata.getToolChoice());
+    }
 
     //Author
     assertEquals(1, metadata.getAuthors().size());

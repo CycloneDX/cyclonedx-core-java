@@ -1,11 +1,9 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -25,11 +23,11 @@ import org.cyclonedx.model.Property;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.Tool;
 import org.cyclonedx.model.metadata.ToolInformation;
+import org.cyclonedx.util.TimestampUtils;
 
 public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
 
-  private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
   private final LifecycleDeserializer lifecycleDeserializer = new LifecycleDeserializer();
   private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
   private final LicenseDeserializer licenseDeserializer = new LicenseDeserializer();
@@ -192,12 +190,7 @@ public class MetadataDeserializer
   private void setTimestamp(JsonNode node, Metadata metadata) {
     JsonNode timestampNode = node.get("timestamp");
     if (timestampNode != null && timestampNode.isTextual()) {
-      try {
-        Date timestamp = dateFormat.parse(timestampNode.textValue());
-        metadata.setTimestamp(timestamp);
-      } catch (ParseException e) {
-        // Handle parsing exception
-      }
+      metadata.setTimestamp(TimestampUtils.parseTimestamp(timestampNode.textValue()));
     }
   }
 }

@@ -14,19 +14,44 @@
         "description": "Integration testing specific to the runtime platform"
       }
     ],
-    "tools": [
-      {
-        "vendor": "Awesome Vendor",
-        "name": "Awesome Tool",
-        "version": "9.1.2",
-        "hashes": [
-          {
-            "alg": "SHA-1",
-            "content": "25ed8e31b995bb927966616df2a42b979a2717f0"
-          }
-        ]
-      }
-    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "group": "Awesome Vendor",
+          "name": "Awesome Tool",
+          "version": "9.1.2",
+          "hashes": [
+            {
+              "alg": "SHA-1",
+              "content": "25ed8e31b995bb927966616df2a42b979a2717f0"
+            },
+            {
+              "alg": "SHA-256",
+              "content": "a74f733635a19aefb1f73e5947cef59cd7440c6952ef0f03d09d974274cbd6df"
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "provider": {
+            "name": "Acme Org",
+            "url": [
+              "https://example.com"
+            ]
+          },
+          "group": "com.example",
+          "name": "Acme Signing Server",
+          "description": "Signs artifacts",
+          "endpoints": [
+            "https://example.com/sign",
+            "https://example.com/verify",
+            "https://example.com/tsa"
+          ]
+        }
+      ]
+    },
     "authors": [
       {
         "name": "Samantha Wright",
@@ -547,19 +572,33 @@
           }
         ]
       },
-      "tools": [
-        {
-          "vendor": "Sonatype",
-          "name": "Sonatype CLI",
-          "version": "1.131",
-          "hashes": [
-            {
-              "alg": "SHA-256",
-              "content": "2eaf8c62831a1658c95d41fdc683cd177c147733c64a93e59cb2362829e45b7d"
-            }
-          ]
-        }
-      ],
+      "tools": {
+        "components": [
+          {
+            "type": "application",
+            "group": "Sonatype",
+            "name": "Sonatype CLI",
+            "version": "1.131",
+            "hashes": [
+              {
+                "alg": "SHA-256",
+                "content": "2eaf8c62831a1658c95d41fdc683cd177c147733c64a93e59cb2362829e45b7d"
+              }
+            ]
+          }
+        ],
+        "services": [
+          {
+            "provider": {
+              "name": "Sonatype"
+            },
+            "name": "Sonatype CLI Scanner",
+            "endpoints": [
+              "https://www.sonatype.com/scanner"
+            ]
+          }
+        ]
+      },
       "analysis": {
         "state": "not_affected",
         "justification": "code_not_reachable",
