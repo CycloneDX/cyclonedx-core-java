@@ -22,6 +22,7 @@ import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.vulnerability.Vulnerability;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -66,26 +67,33 @@ public class ObjectLocator {
 
         // TODO is BOM-Link
 
-
         if (this.bom.getMetadata() != null && this.bom.getMetadata().getComponent() != null) {
-            Component c = findComponent(Collections.singletonList(this.bom.getMetadata().getComponent()), this.bomRef);
+            final Component c = findComponent(Collections.singletonList(this.bom.getMetadata().getComponent()), this.bomRef);
             if (c != null) {
                 this.isMetadataComponent = true;
                 this.object = c;
-            }
-            c = findComponent(this.bom.getComponents(), this.bomRef);
-            if (c != null) {
-                this.object = c;
-            }
-            final Service s = findService(this.bom.getServices(), this.bomRef);
-            if (s != null) {
-                this.object = s;
-            }
-            final Vulnerability v = findVulnerability(this.bom.getVulnerabilities(), this.bomRef);
-            if (v != null) {
-                this.object = v;
+                return this;
             }
         }
+
+        final Component c = findComponent(this.bom.getComponents(), this.bomRef);
+        if (c != null) {
+            this.object = c;
+            return this;
+        }
+
+        final Service s = findService(this.bom.getServices(), this.bomRef);
+        if (s != null) {
+            this.object = s;
+            return this;
+        }
+
+        final Vulnerability v = findVulnerability(this.bom.getVulnerabilities(), this.bomRef);
+        if (v != null) {
+            this.object = v;
+            return this;
+        }
+
         return this;
     }
 
