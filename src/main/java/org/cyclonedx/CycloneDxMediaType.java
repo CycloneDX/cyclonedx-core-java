@@ -18,6 +18,7 @@
  */
 package org.cyclonedx;
 
+@Deprecated
 public class CycloneDxMediaType {
 
     private CycloneDxMediaType() { }
