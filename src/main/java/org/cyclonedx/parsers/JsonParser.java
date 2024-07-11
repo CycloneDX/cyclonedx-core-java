@@ -24,6 +24,7 @@ import com.networknt.schema.ValidationMessage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Format;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
@@ -171,10 +172,19 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public List<ParseException> validate(final JsonNode bomJson, final Version schemaVersion) throws IOException {
         final List<ParseException> exceptions = new ArrayList<>();
+
+        if (!schemaVersion.getFormats().contains(Format.JSON)) {
+            exceptions.add(
+                    new ParseException("CycloneDX version " + schemaVersion.getVersionString() +
+                            " does not support the JSON format")
+            );
+        }
+
         Set<ValidationMessage> errors = getJsonSchema(schemaVersion, mapper).validate(mapper.readTree(bomJson.toString()));
         for (ValidationMessage message: errors) {
             exceptions.add(new ParseException(message.getMessage()));
         }
+
         return exceptions;
     }
 

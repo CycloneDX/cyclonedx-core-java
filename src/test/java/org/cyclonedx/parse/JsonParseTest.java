@@ -18,14 +18,18 @@
  */
 package org.cyclonedx.parse;
 
+import org.cyclonedx.Version;
+import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.parsers.JsonParser;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class JsonParseTest extends BaseParseTest {
@@ -51,4 +55,15 @@ public class JsonParseTest extends BaseParseTest {
         return dynamicTests;
     }
 
+    @Test
+    public void testValidateBomPrior12() throws IOException {
+        final JsonParser parser = new JsonParser();
+
+        final List<ParseException> exceptions = parser.validate("", Version.VERSION_11);
+
+        assertThat(exceptions.stream().map(ParseException::getMessage)).containsExactly(
+                "CycloneDX version 1.1 does not support the JSON format",
+                "$: unknown found, object expected"
+        );
+    }
 }
