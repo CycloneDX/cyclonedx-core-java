@@ -193,7 +193,9 @@ extends <a href="../../../../org/cyclonedx/generators/AbstractBomGenerator.html"
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/generators/json/BomJsonGenerator.html#toString--">toString</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/generators/json/BomJsonGenerator.html#toString--">toString</a></span>()</code>
+<div class="block">Creates a text representation of a CycloneDX BoM Document.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -276,7 +278,12 @@ extends <a href="../../../../org/cyclonedx/generators/AbstractBomGenerator.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>toJsonString</h4>
-<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;toJsonString()</pre>
+<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;toJsonString()
+                    throws <a href="../../../../org/cyclonedx/exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../org/cyclonedx/exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></code></dd>
+</dl>
 </li>
 </ul>
 <a name="toString--">
@@ -286,9 +293,14 @@ extends <a href="../../../../org/cyclonedx/generators/AbstractBomGenerator.html"
 <li class="blockList">
 <h4>toString</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;toString()</pre>
+<div class="block">Creates a text representation of a CycloneDX BoM Document. This method calls <a href="../../../../org/cyclonedx/generators/json/BomJsonGenerator.html#toJsonString--"><code>toJsonString()</code></a> and will return
+ an empty string if <a href="../../../../org/cyclonedx/generators/json/BomJsonGenerator.html#toJsonString--"><code>toJsonString()</code></a> throws an exception. It's preferred to call <a href="../../../../org/cyclonedx/generators/json/BomJsonGenerator.html#toJsonString--"><code>toJsonString()</code></a>
+ directly so that exceptions can be caught.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a String of the BoM</dd>
 </dl>
 </li>
 </ul>

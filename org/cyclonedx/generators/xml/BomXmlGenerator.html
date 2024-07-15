@@ -204,13 +204,13 @@ extends <a href="../../../../org/cyclonedx/generators/AbstractBomGenerator.html"
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toString--">toString</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toString--">toString</a></span>()</code>
+<div class="block">Creates a text representation of a CycloneDX BoM Document.</div>
+</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--">toXmlString</a></span>()</code>
-<div class="block">Creates a text representation of a CycloneDX BoM Document.</div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--">toXmlString</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -333,16 +333,9 @@ extends <a href="../../../../org/cyclonedx/generators/AbstractBomGenerator.html"
 <h4>toXmlString</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;toXmlString()
                    throws <a href="../../../../org/cyclonedx/exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></pre>
-<div class="block">Creates a text representation of a CycloneDX BoM Document. This method calls <a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--"><code>toXmlString()</code></a> and will return
- an empty string if <a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--"><code>toXmlString()</code></a> throws an exception. It's preferred to call <a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--"><code>toXmlString()</code></a>
- directly so that exceptions can be caught.</div>
 <dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>a String of the BoM</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../../org/cyclonedx/exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></code></dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>1.1.0</dd>
 </dl>
 </li>
 </ul>
@@ -353,9 +346,16 @@ extends <a href="../../../../org/cyclonedx/generators/AbstractBomGenerator.html"
 <li class="blockList">
 <h4>toString</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;toString()</pre>
+<div class="block">Creates a text representation of a CycloneDX BoM Document. This method calls <a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--"><code>toXmlString()</code></a> and will return
+ an empty string if <a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--"><code>toXmlString()</code></a> throws an exception. It's preferred to call <a href="../../../../org/cyclonedx/generators/xml/BomXmlGenerator.html#toXmlString--"><code>toXmlString()</code></a>
+ directly so that exceptions can be caught.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a String of the BoM</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.1.0</dd>
 </dl>
 </li>
 </ul>
