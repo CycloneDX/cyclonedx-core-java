@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.util.DefaultXmlPrettyPrinter;
+import org.cyclonedx.Format;
 import org.cyclonedx.generators.AbstractBomGenerator;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
@@ -49,7 +50,7 @@ public class BomXmlGenerator extends AbstractBomGenerator
      * @param bom the BOM to generate
      */
     public BomXmlGenerator(final Bom bom, final Version version) {
-        super(version, bom);
+        super(version, bom, Format.XML);
 
         mapper = new XmlMapper();
         prettyPrinter = new DefaultXmlPrettyPrinter();

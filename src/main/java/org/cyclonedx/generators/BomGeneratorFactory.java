@@ -18,12 +18,24 @@
  */
 package org.cyclonedx.generators;
 
+import org.cyclonedx.Format;
 import org.cyclonedx.Version;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 
 public class BomGeneratorFactory {
+    public static AbstractBomGenerator create(Version version, Bom bom, Format format) {
+        AbstractBomGenerator generator;
+
+        switch (format) {
+            case XML: generator = createXml(version, bom); break;
+            case JSON: generator = createJson(version, bom); break;
+            default: throw new IllegalArgumentException("Unsupported format " + format);
+        }
+
+        return generator;
+    }
 
     public static BomXmlGenerator createXml(Version version, Bom bom) {
         return new BomXmlGenerator(bom, version);

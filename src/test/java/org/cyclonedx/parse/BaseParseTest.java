@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.parse;
 
+import org.cyclonedx.Format;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.parsers.BomParserFactory;
 import org.cyclonedx.CycloneDxSchema;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class BaseParseTest {
 
@@ -61,7 +63,11 @@ public abstract class BaseParseTest {
     }
 
     void generateBomXml(final String testName, final Bom bom) throws ParserConfigurationException {
-        for (Version version : CycloneDxSchema.ALL_VERSIONS) {
+        List<Version> xmlVersions = Arrays.stream(Version.values())
+                .filter(v -> v.getFormats().contains(Format.XML))
+                .collect(Collectors.toList());
+
+        for (Version version : xmlVersions) {
             System.out.println("Generating CycloneDX " + version.getVersionString() + " XML for " + testName);
             BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
             Document doc = generator.generate();
@@ -70,7 +76,11 @@ public abstract class BaseParseTest {
     }
 
     void generateBomJson(final String testName, final Bom bom) {
-        for (Version version : CycloneDxSchema.ALL_VERSIONS) {
+        List<Version> jsonVersions = Arrays.stream(Version.values())
+                .filter(v -> v.getFormats().contains(Format.JSON))
+                .collect(Collectors.toList());
+
+        for (Version version : jsonVersions) {
             System.out.println("Generating CycloneDX " + version.getVersionString() + " JSON for " + testName);
             BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
             Assertions.assertNotNull(generator.toJsonString());

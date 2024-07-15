@@ -3,6 +3,7 @@ package org.cyclonedx.generators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.Format;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.serializer.CustomSerializerModifier;
@@ -24,10 +25,19 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
 
   protected Bom bom;
 
-  public AbstractBomGenerator(final Version version, final Bom bom) {
+  protected Format format;
+
+  public AbstractBomGenerator(final Version version, final Bom bom, final Format format) {
     this.mapper = new ObjectMapper();
     this.version = version;
     this.bom = bom;
+    this.format = format;
+
+    if (!version.getFormats().contains(format)) {
+      throw new IllegalArgumentException(
+              "CycloneDX version " + version.getVersionString() + " does not support the " + format + " format"
+      );
+    }
   }
 
   /**
@@ -36,6 +46,14 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
    */
   public Version getSchemaVersion() {
     return version;
+  }
+
+  /**
+   * Returns the format that this generator creates.
+   * @return a Format enum
+   */
+  public Format getFormat() {
+    return format;
   }
 
   protected void setupObjectMapper(boolean isXml) {
