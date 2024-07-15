@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -143,10 +143,14 @@ extends <a href="../../../org/cyclonedx/CycloneDxSchema.html" title="class in or
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#bom">bom</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../../../org/cyclonedx/Format.html" title="enum in org.cyclonedx">Format</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#format">format</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected com.fasterxml.jackson.databind.ObjectMapper</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#mapper">mapper</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#version">version</a></span></code>&nbsp;</td>
 </tr>
@@ -172,8 +176,9 @@ extends <a href="../../../org/cyclonedx/CycloneDxSchema.html" title="class in or
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#AbstractBomGenerator-org.cyclonedx.Version-org.cyclonedx.model.Bom-">AbstractBomGenerator</a></span>(<a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
-                    <a href="../../../org/cyclonedx/model/Bom.html" title="class in org.cyclonedx.model">Bom</a>&nbsp;bom)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#AbstractBomGenerator-org.cyclonedx.Version-org.cyclonedx.model.Bom-org.cyclonedx.Format-">AbstractBomGenerator</a></span>(<a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
+                    <a href="../../../org/cyclonedx/model/Bom.html" title="class in org.cyclonedx.model">Bom</a>&nbsp;bom,
+                    <a href="../../../org/cyclonedx/Format.html" title="enum in org.cyclonedx">Format</a>&nbsp;format)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -191,12 +196,18 @@ extends <a href="../../../org/cyclonedx/CycloneDxSchema.html" title="class in or
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../../../org/cyclonedx/Format.html" title="enum in org.cyclonedx">Format</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#getFormat--">getFormat</a></span>()</code>
+<div class="block">Returns the format that this generator creates.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#getSchemaVersion--">getSchemaVersion</a></span>()</code>
 <div class="block">Returns the version of the CycloneDX schema used by this instance</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/cyclonedx/generators/AbstractBomGenerator.html#setupObjectMapper-boolean-">setupObjectMapper</a></span>(boolean&nbsp;isXml)</code>&nbsp;</td>
 </tr>
@@ -250,10 +261,19 @@ extends <a href="../../../org/cyclonedx/CycloneDxSchema.html" title="class in or
 <a name="bom">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>bom</h4>
 <pre>protected&nbsp;<a href="../../../org/cyclonedx/model/Bom.html" title="class in org.cyclonedx.model">Bom</a> bom</pre>
+</li>
+</ul>
+<a name="format">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>format</h4>
+<pre>protected&nbsp;<a href="../../../org/cyclonedx/Format.html" title="enum in org.cyclonedx">Format</a> format</pre>
 </li>
 </ul>
 </li>
@@ -264,14 +284,15 @@ extends <a href="../../../org/cyclonedx/CycloneDxSchema.html" title="class in or
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="AbstractBomGenerator-org.cyclonedx.Version-org.cyclonedx.model.Bom-">
+<a name="AbstractBomGenerator-org.cyclonedx.Version-org.cyclonedx.model.Bom-org.cyclonedx.Format-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>AbstractBomGenerator</h4>
 <pre>public&nbsp;AbstractBomGenerator(<a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
-                            <a href="../../../org/cyclonedx/model/Bom.html" title="class in org.cyclonedx.model">Bom</a>&nbsp;bom)</pre>
+                            <a href="../../../org/cyclonedx/model/Bom.html" title="class in org.cyclonedx.model">Bom</a>&nbsp;bom,
+                            <a href="../../../org/cyclonedx/Format.html" title="enum in org.cyclonedx">Format</a>&nbsp;format)</pre>
 </li>
 </ul>
 </li>
@@ -293,6 +314,20 @@ extends <a href="../../../org/cyclonedx/CycloneDxSchema.html" title="class in or
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a CycloneDxSchemaVersion enum</dd>
+</dl>
+</li>
+</ul>
+<a name="getFormat--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFormat</h4>
+<pre>public&nbsp;<a href="../../../org/cyclonedx/Format.html" title="enum in org.cyclonedx">Format</a>&nbsp;getFormat()</pre>
+<div class="block">Returns the format that this generator creates.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a Format enum</dd>
 </dl>
 </li>
 </ul>
