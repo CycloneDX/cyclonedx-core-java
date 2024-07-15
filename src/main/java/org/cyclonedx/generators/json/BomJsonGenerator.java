@@ -114,14 +114,17 @@ public class BomJsonGenerator extends AbstractBomGenerator
     }
   }
 
-  public String toJsonString() {
-    try {
+  public String toJsonString() throws GeneratorException {
       return toJson(bom, true);
-    } catch (GeneratorException e) {
-      return "";
-    }
   }
 
+  /**
+   * Creates a text representation of a CycloneDX BoM Document. This method calls {@link #toJsonString()} and will return
+   * an empty string if {@link #toJsonString()} throws an exception. It's preferred to call {@link #toJsonString()}
+   * directly so that exceptions can be caught.
+   *
+   * @return a String of the BoM
+   */
   @Override
   public String toString() {
     try {

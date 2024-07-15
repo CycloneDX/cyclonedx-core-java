@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.parse;
 
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.Format;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.parsers.BomParserFactory;
@@ -75,7 +76,7 @@ public abstract class BaseParseTest {
         }
     }
 
-    void generateBomJson(final String testName, final Bom bom) {
+    void generateBomJson(final String testName, final Bom bom) throws GeneratorException {
         List<Version> jsonVersions = Arrays.stream(Version.values())
                 .filter(v -> v.getFormats().contains(Format.JSON))
                 .collect(Collectors.toList());
