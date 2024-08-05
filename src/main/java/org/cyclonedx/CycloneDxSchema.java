@@ -92,6 +92,8 @@ public abstract class CycloneDxSchema
     final Map<String, String> offlineMappings = new HashMap<>();
     offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json",
         getClass().getClassLoader().getResource("spdx.schema.json").toExternalForm());
+    offlineMappings.put("http://cyclonedx.org/schema/jsf-0.82.schema.json",
+        getClass().getClassLoader().getResource("jsf-0.82.schema.json").toExternalForm());
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json",
         getClass().getClassLoader().getResource("bom-1.2-strict.schema.json").toExternalForm());
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json",
