@@ -1,0 +1,38 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "bom-ref": "0a7ac0b2-0f52-45c6-8f73-4dbcfb25286b",
+      "type": "application",
+      "name": "Acme Application",
+      "version": "9.1.1"
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "ac9c4a17-2bc2-42ef-81af-01a8e363501f",
+      "type": "library",
+      "name": "tomcat-catalina",
+      "version": "9.0.14"
+    }
+  ],
+  "services": [
+    {
+      "bom-ref": "b2a46a4b-8367-4bae-9820-95557cfe03a8",
+      "name": "Stock ticker service"
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "bom-ref": "6eee14da-8f42-4cc4-bb65-203235f02415",
+      "id": "SNYK-JAVA-COMFASTERXMLJACKSONCORE-32111",
+      "source": {
+        "name": "Snyk",
+        "url": "https://snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-32111"
+      }
+    }
+  ]
+}
