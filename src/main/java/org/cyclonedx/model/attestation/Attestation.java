@@ -2,12 +2,15 @@ package org.cyclonedx.model.attestation;
 
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.Signature;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -26,6 +29,8 @@ public class Attestation
 
   private List<AttestationMap> map;
 
+  @JsonProperty("signature")
+  @JsonOnly
   private Signature signature;
 
   public String getSummary() {

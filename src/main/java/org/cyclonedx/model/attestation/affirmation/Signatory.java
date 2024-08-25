@@ -1,12 +1,15 @@
 package org.cyclonedx.model.attestation.affirmation;
 
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Signature;
 import org.cyclonedx.util.deserializer.SignatoryDeserializer;
@@ -21,6 +24,7 @@ public class Signatory
 
   private String role;
 
+  @JsonOnly
   private Signature signature;
 
   private OrganizationalEntity organization;

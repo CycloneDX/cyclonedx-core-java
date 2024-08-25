@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.Signature;
 import org.cyclonedx.model.attestation.affirmation.Affirmation;
 import org.cyclonedx.model.attestation.evidence.Evidence;
@@ -37,8 +38,11 @@ public class Declarations
 
   private Affirmation affirmation;
 
+  @JsonOnly
   private Signature signature;
 
+  @JacksonXmlElementWrapper(localName = "assessors")
+  @JacksonXmlProperty(localName = "assessor")
   public List<Assessor> getAssessors() {
     return assessors;
   }

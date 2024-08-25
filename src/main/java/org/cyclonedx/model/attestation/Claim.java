@@ -2,6 +2,7 @@ package org.cyclonedx.model.attestation;
 
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.Signature;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -44,6 +46,7 @@ public class Claim
 
   private List<ExternalReference> externalReferences;
 
+  @JsonOnly
   private Signature signature;
 
   public String getBomRef() {
@@ -111,7 +114,7 @@ public class Claim
   }
 
   @JacksonXmlElementWrapper(localName = "externalReferences")
-  @JacksonXmlProperty(localName = "externalReference")
+  @JacksonXmlProperty(localName = "reference")
   public List<ExternalReference> getExternalReferences() {
     return externalReferences;
   }
