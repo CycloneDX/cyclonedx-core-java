@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.Signature;
@@ -28,7 +29,7 @@ import org.cyclonedx.util.serializer.CustomDateSerializer;
     "reviewer",
     "signature"
 })
-public class Evidence
+public class Evidence extends ExtensibleElement
 {
   @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
   @JsonProperty("bom-ref")

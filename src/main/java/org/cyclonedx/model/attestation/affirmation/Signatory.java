@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -18,7 +19,7 @@ import org.cyclonedx.util.deserializer.SignatoryDeserializer;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonTypeName("signatory")
 @JsonDeserialize(using = SignatoryDeserializer.class)
-public class Signatory
+public class Signatory extends ExtensibleElement
 {
   private String name;
 

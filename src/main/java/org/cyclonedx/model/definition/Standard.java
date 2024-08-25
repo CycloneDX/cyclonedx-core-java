@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.Signature;
@@ -25,7 +26,7 @@ import org.cyclonedx.model.Signature;
     "externalReferences",
     "signature"
 })
-public class Standard
+public class Standard extends ExtensibleElement
 {
   @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
   @JsonProperty("bom-ref")
