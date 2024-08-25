@@ -2,6 +2,7 @@ package org.cyclonedx.model.attestation;
 
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
