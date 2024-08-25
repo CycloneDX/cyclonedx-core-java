@@ -302,6 +302,18 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    @Test
+    public void schema16_testFormulation() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/1.6/valid-formulation-1.6.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private void assertLicenseInformation(Bom bom, Version version) {
 
         //First Component
