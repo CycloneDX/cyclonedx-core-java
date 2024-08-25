@@ -480,6 +480,18 @@ public class BomXmlGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    @Test
+    public void schema16_testFormulation() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.6/valid-formulation-1.6.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private void assertLicenseInformation(Bom bom, Version version) {
 
         //First Component
