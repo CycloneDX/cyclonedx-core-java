@@ -15,6 +15,7 @@ import org.cyclonedx.util.deserializer.SignatoryDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonTypeName("signatory")
 @JsonPropertyOrder({"name", "role", "signature", "organization", "externalReference"})
 @JsonDeserialize(using = SignatoryDeserializer.class)
 public class Signatory extends ExtensibleElement

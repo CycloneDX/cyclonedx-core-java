@@ -399,6 +399,18 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
+    public void schema16_testAttestations_json() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.6/valid-attestation-1.6.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
     public void schema16_testCompositions() throws Exception {
         Version version = Version.VERSION_16;
         Bom bom = createCommonXmlBom("/1.6/valid-compositions-1.6.xml");
