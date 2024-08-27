@@ -24,6 +24,7 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.*;
+import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ExtensibleType;
@@ -458,6 +459,30 @@ public class BomXmlGeneratorTest {
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
     }
+
+    @Test
+    public void schema16_testAttestations_xml() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonBomXml("/1.6/valid-attestation-1.6.xml");
+        addSignature(bom);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    private void addSignature(Bom bom) {
+        List<Attribute> attributes = new ArrayList<>();
+        attributes.add(new Attribute("xmlns", "http://www.w3.org/2000/09/xmldsig#"));
+        ExtensibleType signature = new ExtensibleType("ds", "Signature",  attributes, "");
+        bom.getDeclarations().getAffirmation().getSignatories().get(0).addExtensibleType(signature);
+         /* <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                        <!-- XML signature here -->
+                    </ds:Signature>*/
+    }
+
 
     @Test
     public void schema16_testCompositions() throws Exception {

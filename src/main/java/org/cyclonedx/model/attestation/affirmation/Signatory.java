@@ -1,11 +1,10 @@
 package org.cyclonedx.model.attestation.affirmation;
 
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.cyclonedx.model.ExtensibleElement;
@@ -18,6 +17,7 @@ import org.cyclonedx.util.deserializer.SignatoryDeserializer;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonTypeName("signatory")
+@JsonPropertyOrder({"name", "role", "signature", "organization", "externalReference"})
 @JsonDeserialize(using = SignatoryDeserializer.class)
 public class Signatory extends ExtensibleElement
 {
