@@ -24,25 +24,14 @@ import java.util.Date;
 
 @SuppressWarnings("unused")
 public final class TimestampUtils {
-  private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-  private static final SimpleDateFormat ALT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 
-  private TimestampUtils() {}public static Date parseTimestamp(String text) {
-    if (text != null) {
-      Date date = parseTimestamp(text, DEFAULT_DATE_FORMAT);
-      if (date != null) {
-        return date;
-      } else {
-        return parseTimestamp(text, ALT_DATE_FORMAT);
-      }
-    }
-    return null;
-  }
+  private TimestampUtils() {}
 
-  private static Date parseTimestamp(String text, SimpleDateFormat dateFormat) {
+  public static Date parseTimestamp(String text) {
     try {
-      return dateFormat.parse(text);
-    } catch (ParseException e) {
+      return DATE_FORMAT.parse(text);
+    } catch (ParseException | NullPointerException e) {
       return null;
     }
   }
