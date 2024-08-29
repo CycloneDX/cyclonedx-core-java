@@ -548,20 +548,8 @@ public class AbstractParserTest
     assertEquals("Acme, Inc.", vuln.getCredits().getOrganizations().get(0).getName());
     assertEquals("https://example.com", vuln.getCredits().getOrganizations().get(0).getUrls().get(0));
 
-    //Tools
     if (version == Version.VERSION_15) {
-      assertNull(vuln.getTools());
-    }
-    else {
-      assertEquals(1, vuln.getTools().size());
-      assertEquals("Sonatype CLI", vuln.getTools().get(0).getName());
-      assertEquals("Sonatype", vuln.getTools().get(0).getVendor());
-      assertEquals("1.131", vuln.getTools().get(0).getVersion());
-      assertEquals(1, vuln.getTools().get(0).getHashes().size());
-    }
-
-    // ToolChoice
-    if (version == Version.VERSION_15) {
+      // ToolChoice
       assertEquals(1, vuln.getToolChoice().getComponents().size(), 1);
       assertEquals(Type.APPLICATION, vuln.getToolChoice().getComponents().get(0).getType());
       assertEquals("Sonatype", vuln.getToolChoice().getComponents().get(0).getGroup());
@@ -575,8 +563,16 @@ public class AbstractParserTest
       assertEquals("Sonatype", vuln.getToolChoice().getServices().get(0).getProvider().getName());
       assertEquals("Sonatype CLI Scanner", vuln.getToolChoice().getServices().get(0).getName());
       assertEquals("https://www.sonatype.com/scanner", vuln.getToolChoice().getServices().get(0).getEndpoints().get(0));
-    }
-    else {
+
+      assertNull(vuln.getTools());
+    } else {
+      // Tools
+      assertEquals(1, vuln.getTools().size());
+      assertEquals("Sonatype CLI", vuln.getTools().get(0).getName());
+      assertEquals("Sonatype", vuln.getTools().get(0).getVendor());
+      assertEquals("1.131", vuln.getTools().get(0).getVersion());
+      assertEquals(1, vuln.getTools().get(0).getHashes().size());
+
       assertNull(vuln.getToolChoice());
     }
 
