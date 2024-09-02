@@ -289,7 +289,7 @@ public class XmlParserTest
         // Assertions for bom.components
         assertComponent(components.get(0), Component.Type.APPLICATION, "pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar");
 
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_12);
 
         // Assertions for bom.dependencies
         assertEquals(1, bom.getDependencies().size());
@@ -313,7 +313,7 @@ public class XmlParserTest
 
         assertComponent(components.get(0), Component.Type.APPLICATION, "pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar");
 
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_13);
 
         // Assertions for bom.dependencies
         assertEquals(1, bom.getDependencies().size());
@@ -334,7 +334,7 @@ public class XmlParserTest
 
         assertMetadata(bom.getMetadata(), Version.VERSION_14);
         assertComponent(bom, Version.VERSION_14);
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_14);
         assertCompositions(bom, Version.VERSION_14);
         assertVulnerabilities(bom, Version.VERSION_14);
 
@@ -361,7 +361,7 @@ public class XmlParserTest
 
         assertMetadata(bom.getMetadata(), Version.VERSION_15);
         assertComponent(bom, Version.VERSION_15);
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_15);
         assertCompositions(bom, Version.VERSION_15);
         assertVulnerabilities(bom, Version.VERSION_15);
 

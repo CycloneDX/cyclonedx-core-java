@@ -403,6 +403,7 @@
       ],
       "authenticated": true,
       "x-trust-boundary": true,
+      "trustZone": "value",
       "data": [
         {
           "flow": "inbound",
