@@ -44,7 +44,6 @@ public abstract class AbstractType extends ExtensibleElement
     this.resource = resource;
   }
 
-
   @JacksonXmlElementWrapper(localName = "environmentVars")
   public EnvironmentVars getEnvironmentVars() {
     return environmentVars;

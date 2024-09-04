@@ -140,6 +140,7 @@ public class BomXmlGenerator extends AbstractBomGenerator
      *
      * @return a String of the BoM
      * @since 1.1.0
+     *
      */
     @Override
     public String toString() {
