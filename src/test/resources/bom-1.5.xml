@@ -311,6 +311,7 @@
             </endpoints>
             <authenticated>true</authenticated>
             <x-trust-boundary>true</x-trust-boundary>
+            <trustZone>value</trustZone>
             <data>
                 <classification flow="inbound">PII</classification>
                 <classification flow="outbound">PIFI</classification>
