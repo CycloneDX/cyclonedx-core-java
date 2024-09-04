@@ -404,7 +404,7 @@
                     </source>
                     <score>9.8</score>
                     <severity>critical</severity>
-                    <method>CVSSv3</method>
+                    <method>CVSSv4</method>
                     <vector>AN/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</vector>
                     <justification>An optional reason for rating the vulnerability as it was</justification>
                 </rating>
