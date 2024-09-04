@@ -70,7 +70,6 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
     setReference(node, "target", type);
   }
 
-
   protected void setProperties(JsonNode node, T type)
       throws JsonProcessingException
   {
