@@ -96,8 +96,7 @@ public class ExternalReferenceSerializer
     toXmlGenerator.writeEndObject();
   }
 
-  private void serializeJson(final JsonGenerator gen, final ExternalReference extRef) throws IOException
-  {
+  private void serializeJson(final JsonGenerator gen, final ExternalReference extRef) throws IOException {
     gen.writeStartObject();
     gen.writeStringField("type", extRef.getType().getTypeName());
     gen.writeStringField("url", extRef.getUrl());

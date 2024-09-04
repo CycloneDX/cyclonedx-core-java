@@ -31,8 +31,6 @@ import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.InputType.Parameter;
 
 public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputType> {
-  private final ObjectMapper objectMapper = new ObjectMapper();
-
 
   @Override
   public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)

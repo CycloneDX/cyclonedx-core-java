@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
@@ -13,7 +11,6 @@ import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
 
 import java.util.Iterator;
-import java.util.List;
 
 public class CustomSerializerModifier
     extends BeanSerializerModifier
@@ -67,7 +64,6 @@ public class CustomSerializerModifier
       return "properties".equals(writer.getWrapperName().getSimpleName());
     }
     else {
-
       return "properties".equals(writer.getName());
     }
   }
