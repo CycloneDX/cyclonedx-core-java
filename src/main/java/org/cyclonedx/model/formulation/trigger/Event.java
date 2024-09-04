@@ -16,7 +16,7 @@ import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({"uid", "description", "timeReceived", "data", "source", "target", "properties"})
 @JsonRootName("event")
 public class Event {

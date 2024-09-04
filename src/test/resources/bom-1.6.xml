@@ -125,6 +125,7 @@
     </component>
     <component type="library">
       <name>acme-library</name>
+      <version>9.1.1</version>
     </component>
     <component type="library">
       <group>com.acme</group>
@@ -193,6 +194,7 @@
     </component>
     <component type="library">
       <name>acme-library</name>
+      <version>9.1.1</version>
     </component>
     <component type="library">
       <group>com.acme</group>
@@ -325,6 +327,7 @@
     </component>
     <component type="cryptographic-asset" bom-ref="aes128gcm">
       <name>AES</name>
+      <version>9.1.1</version>
       <cryptoProperties>
         <assetType>algorithm</assetType>
         <algorithmProperties>
@@ -373,6 +376,7 @@
     </component>
     <component type="cryptographic-asset" bom-ref="asset-1">
       <name>Name here</name>
+      <version>9.1.1</version>
       <cryptoProperties>
         <assetType>algorithm</assetType>
         <algorithmProperties>
@@ -398,6 +402,7 @@
     </component>
     <component type="cryptographic-asset" bom-ref="asset-2">
       <name>Name here</name>
+      <version>9.1.1</version>
       <cryptoProperties>
         <assetType>certificate</assetType>
         <certificateProperties>
@@ -415,6 +420,7 @@
     </component>
     <component type="cryptographic-asset" bom-ref="asset-3">
       <name>Name here</name>
+      <version>9.1.1</version>
       <cryptoProperties>
         <assetType>protocol</assetType>
         <protocolProperties>
@@ -437,6 +443,7 @@
     </component>
     <component type="cryptographic-asset" bom-ref="asset-4">
       <name>Name here</name>
+      <version>9.1.1</version>
       <cryptoProperties>
         <assetType>related-crypto-material</assetType>
         <relatedCryptoMaterialProperties>
@@ -766,6 +773,7 @@
       <publisher>meta</publisher>
       <group>meta-llama</group>
       <name>llama-2-7b</name>
+      <version>9.1.1</version>
       <externalReferences>
         <reference type="distribution">
           <url>https://huggingface.co/meta-llama/Llama-2-7b</url>
