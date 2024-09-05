@@ -159,10 +159,6 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
-    @VersionFilter(Version.VERSION_16)
-    @JsonProperty("manufacturer")
-    private OrganizationalEntity manufacturer;
-
     @VersionFilter(Version.VERSION_12)
     @Deprecated
     private String author;
@@ -231,6 +227,10 @@ public class Component extends ExtensibleElement {
     @JsonUnwrapped
     private Tags tags;
 
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("manufacturer")
+    private OrganizationalEntity manufacturer;
+
     @JsonOnly
     @VersionFilter(Version.VERSION_14)
     private Signature signature;
@@ -265,14 +265,6 @@ public class Component extends ExtensibleElement {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public List<OrganizationalContact> getAuthors() {
-        return authorsList;
-    }
-
-    public void setAuthors(List<OrganizationalContact> authors) {
-        this.authorsList = authors;
     }
 
     public String getPublisher() {
@@ -567,6 +559,14 @@ public class Component extends ExtensibleElement {
 
     public void setManufacturer(final OrganizationalEntity manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public List<OrganizationalContact> getAuthors() {
+        return authorsList;
+    }
+
+    public void setAuthors(List<OrganizationalContact> authors) {
+        this.authorsList = authors;
     }
 
     @Override
