@@ -51,7 +51,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -362,6 +361,34 @@ public class BomXmlGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    @ParameterizedTest
+    @MethodSource("versionAndBomProviderForward")
+    public void testGeneration_ForwardCompatibility(Version version, String bomFilePath) throws Exception {
+        Bom bom = createCommonBomXml(bomFilePath);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @ParameterizedTest
+    @MethodSource("versionAndBomProviderForward")
+    public void testGeneration_ForwardCompatibility_xmlToJson(Version version, String bomFilePath) throws Exception {
+
+        if (version.getVersion() <= Version.VERSION_11.getVersion()) {
+            return;
+        }
+        Bom bom = createCommonBomXml(bomFilePath);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private static Stream<Arguments> versionAndBomProvider() {
         return Stream.of(
             // Backward compatibility tests from BOM 1.0
@@ -401,6 +428,47 @@ public class BomXmlGeneratorTest {
             Arguments.of(Version.VERSION_13, "/bom-1.6.xml"),
             Arguments.of(Version.VERSION_12, "/bom-1.6.xml"),
             Arguments.of(Version.VERSION_11, "/bom-1.6.xml")
+        );
+    }
+
+    private static Stream<Arguments> versionAndBomProviderForward() {
+        return Stream.of(
+            // Backward compatibility tests from BOM 1.0
+            Arguments.of(Version.VERSION_10, "/bom-1.0.xml"),
+            Arguments.of(Version.VERSION_11, "/bom-1.0.xml"),
+            Arguments.of(Version.VERSION_12, "/bom-1.0.xml"),
+            Arguments.of(Version.VERSION_13, "/bom-1.0.xml"),
+            Arguments.of(Version.VERSION_14, "/bom-1.0.xml"),
+            Arguments.of(Version.VERSION_15, "/bom-1.0.xml"),
+            Arguments.of(Version.VERSION_16, "/bom-1.0.xml"),
+
+            // Backward compatibility tests from BOM 1.1
+            Arguments.of(Version.VERSION_11, "/bom-1.1.xml"),
+            Arguments.of(Version.VERSION_11, "/bom-1.1-vulnerability-1.0.xml"),
+            Arguments.of(Version.VERSION_11, "/bom-1.1-dependency-graph-1.0.xml"),
+            Arguments.of(Version.VERSION_12, "/bom-1.1.xml"),
+            Arguments.of(Version.VERSION_13, "/bom-1.1.xml"),
+            Arguments.of(Version.VERSION_14, "/bom-1.1.xml"),
+            Arguments.of(Version.VERSION_15, "/bom-1.1.xml"),
+            Arguments.of(Version.VERSION_16, "/bom-1.1.xml"),
+
+            // Backward compatibility tests from BOM 1.2
+            Arguments.of(Version.VERSION_13, "/bom-1.2.xml"),
+            Arguments.of(Version.VERSION_14, "/bom-1.2.xml"),
+            Arguments.of(Version.VERSION_15, "/bom-1.2.xml"),
+            Arguments.of(Version.VERSION_16, "/bom-1.2.xml"),
+
+            // Backward compatibility tests from BOM 1.3
+            Arguments.of(Version.VERSION_14, "/bom-1.3.xml"),
+            Arguments.of(Version.VERSION_15, "/bom-1.3.xml"),
+            Arguments.of(Version.VERSION_16, "/bom-1.3.xml"),
+
+            // Backward compatibility tests from BOM 1.4
+            Arguments.of(Version.VERSION_15, "/bom-1.4.xml"),
+            Arguments.of(Version.VERSION_16, "/bom-1.4.xml"),
+
+            // Backward compatibility tests from BOM 1.5
+            Arguments.of(Version.VERSION_16, "/bom-1.5.xml")
         );
     }
 
