@@ -124,6 +124,12 @@
       <swid tagId="swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1" name="Acme Application" version="9.1.1"/>
     </component>
     <component type="library">
+      <authors>
+        <author>
+          <name>Acme Inc</name>
+          <email>licensing@example.com</email>
+        </author>
+      </authors>
       <name>acme-library</name>
       <version>9.1.1</version>
     </component>

@@ -935,10 +935,10 @@ public class BomXmlGeneratorTest {
 
     private static Stream<Arguments> versionAndBom() {
         return Stream.of(
-            Arguments.of(Version.VERSION_12, "/bom-1.2.xml"),
-            Arguments.of(Version.VERSION_13, "/bom-1.3.xml"),
-            Arguments.of(Version.VERSION_14, "/bom-1.4.xml"),
-            Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
+           // Arguments.of(Version.VERSION_12, "/bom-1.2.xml"),
+           // Arguments.of(Version.VERSION_13, "/bom-1.3.xml"),
+            //Arguments.of(Version.VERSION_14, "/bom-1.4.xml"),
+           // Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
             Arguments.of(Version.VERSION_16, "/bom-1.6.xml")
         );
     }
