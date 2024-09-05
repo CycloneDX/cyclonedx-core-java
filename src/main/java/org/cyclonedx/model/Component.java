@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.cyclonedx.Version;
@@ -159,8 +160,8 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
-    @VersionFilter(Version.VERSION_12)
     @Deprecated
+    @VersionFilter(Version.VERSION_12)
     private String author;
 
     @VersionFilter(Version.VERSION_16)
@@ -258,12 +259,13 @@ public class Component extends ExtensibleElement {
         this.supplier = supplier;
     }
 
+    // Getters
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public List<OrganizationalContact> getAuthorsList() {
+        return authorsList;
     }
 
     public String getPublisher() {
@@ -561,14 +563,6 @@ public class Component extends ExtensibleElement {
 
     public void setManufacturer(final OrganizationalEntity manufacturer) {
         this.manufacturer = manufacturer;
-    }
-
-    public List<OrganizationalContact> getAuthors() {
-        return authorsList;
-    }
-
-    public void setAuthors(List<OrganizationalContact> authors) {
-        this.authorsList = authors;
     }
 
     @Override
