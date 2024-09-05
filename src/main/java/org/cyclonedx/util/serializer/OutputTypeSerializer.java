@@ -100,6 +100,7 @@ public class OutputTypeSerializer
     }
   }
 
+  @Override
   public Class<OutputType> handledType() {
     return OutputType.class;
   }
