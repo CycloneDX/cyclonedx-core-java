@@ -120,7 +120,7 @@
     <component type="application">
       <author>Acme Super Heros</author>
       <name>Acme Application</name>
-      <version>9.1.1</version>
+      <version>9.1.2</version>
       <swid tagId="swidgen-242eb18a-503e-ca37-393b-cf156ef09691_9.1.1" name="Acme Application" version="9.1.1"/>
     </component>
     <component type="library">
@@ -136,7 +136,7 @@
           <component type="library">
             <group>org.example</group>
             <name>sample-library</name>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
           </component>
         </ancestors>
         <patches>
@@ -194,18 +194,18 @@
     </component>
     <component type="library">
       <name>acme-library</name>
-      <version>9.1.1</version>
+      <version>9.1.2</version>
     </component>
     <component type="library">
       <group>com.acme</group>
       <name>sample-library</name>
-      <version>1.0.0</version>
+      <version>1.0.2</version>
       <pedigree>
         <ancestors>
           <component type="library">
             <group>org.example</group>
             <name>sample-library</name>
-            <version>1.0.0</version>
+            <version>1.0.4</version>
           </component>
         </ancestors>
         <patches>
@@ -269,17 +269,17 @@
     </component>
     <component type="library" bom-ref="123">
       <name>acme-library</name>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
       <components>
         <component type="library" bom-ref="456">
           <name>acme-library</name>
-          <version>1.0.0</version>
+          <version>1.0.3</version>
         </component>
       </components>
     </component>
     <component type="library" bom-ref="789">
       <name>acme-library</name>
-      <version>1.0.0</version>
+      <version>1.0.6</version>
     </component>
     <component type="library" bom-ref="library-a">
       <name>acme-library-a</name>
