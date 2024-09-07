@@ -160,12 +160,7 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
-    @Deprecated
-    @VersionFilter(Version.VERSION_12)
-    private String author;
-
-    @VersionFilter(Version.VERSION_16)
-    private List<OrganizationalContact> authorsList;
+    private Object authorOrAuthors;
 
     @VersionFilter(Version.VERSION_11)
     private String publisher;
@@ -259,13 +254,42 @@ public class Component extends ExtensibleElement {
         this.supplier = supplier;
     }
 
-    // Getters
+    // Unified getter for both authors and author
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("authors") // This name will work for both a single String and a List
+    @JacksonXmlElementWrapper(localName = "authors", useWrapping = false)
+    @JacksonXmlProperty(localName = "author")
+    public Object getAuthorOrAuthors() {
+        return authorOrAuthors;
+    }
+
+    // Unified setter for both authors and author
+    public void setAuthorOrAuthors(Object authorOrAuthors) {
+        this.authorOrAuthors = authorOrAuthors;
+    }
+
+    // Convenience methods to help with accessing the field
+
     public String getAuthor() {
-        return author;
+        if (authorOrAuthors instanceof String) {
+            return (String) authorOrAuthors;
+        }
+        return null;
+    }
+
+    public void setAuthor(String author) {
+        this.authorOrAuthors = author;
     }
 
     public List<OrganizationalContact> getAuthorsList() {
-        return authorsList;
+        if (authorOrAuthors instanceof List) {
+            return (List<OrganizationalContact>) authorOrAuthors;
+        }
+        return null;
+    }
+
+    public void setAuthorsList(List<OrganizationalContact> authorsList) {
+        this.authorOrAuthors = authorsList;
     }
 
     public String getPublisher() {
@@ -567,7 +591,7 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, authorsList, publisher, group, name, version, description, scope, hashes, licenses,
+        return Objects.hash(authorOrAuthors, publisher, group, name, version, description, scope, hashes, licenses,
             copyright, cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard,
             data);
     }
@@ -579,9 +603,8 @@ public class Component extends ExtensibleElement {
         Component component = (Component) o;
         return modified == component.modified &&
                 Objects.equals(supplier, component.supplier) &&
-                Objects.equals(author, component.author) &&
+                Objects.equals(authorOrAuthors, component.authorOrAuthors) &&
                 Objects.equals(publisher, component.publisher) &&
-                Objects.equals(authorsList, component.authorsList) &&
                 Objects.equals(group, component.group) &&
                 Objects.equals(name, component.name) &&
                 Objects.equals(version, component.version) &&
