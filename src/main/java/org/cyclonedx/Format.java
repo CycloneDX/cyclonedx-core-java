@@ -23,7 +23,7 @@ public enum Format {
 
     /**
      * The official CycloneDX media type assigned by IANA for this format, see
-     * https://cyclonedx.org/specification/overview/#registered-media-types.
+     * <a href="https://cyclonedx.org/specification/overview/#registered-media-types">...</a>.
      *
      * @return The identifier for the media type.
      */

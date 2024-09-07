@@ -25,7 +25,7 @@ import java.util.UUID;
 
 /**
  * Parses URNs that conform to the "cdx" namespace identifier
- * as defined by https://www.iana.org/assignments/urn-formal/cdx
+ * as defined by <a href="https://www.iana.org/assignments/urn-formal/cdx">...</a>
  * @since 7.1.4
  */
 public class BomLink {

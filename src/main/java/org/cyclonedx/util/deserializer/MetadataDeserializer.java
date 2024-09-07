@@ -143,7 +143,7 @@ public class MetadataDeserializer
     return organizationalContactList;
   }
 
-  private void parseTools(JsonNode toolsNode, Metadata metadata, ObjectMapper mapper) throws JsonProcessingException {
+  private void parseTools(JsonNode toolsNode, Metadata metadata, ObjectMapper mapper) {
     if (toolsNode.isArray()) {
       setToolInfo(toolsNode, metadata, mapper);
     } else if (toolsNode.has("tool")) {

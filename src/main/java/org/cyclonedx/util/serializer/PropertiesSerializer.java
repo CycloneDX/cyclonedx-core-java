@@ -32,31 +32,40 @@ public class PropertiesSerializer
     }
 
     if (isXml) {
-      ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
-      xmlGenerator.writeStartArray();
-      for (Property property : properties) {
-        xmlGenerator.writeStartObject("property");
-        xmlGenerator.setNextIsAttribute(true);
-        xmlGenerator.writeFieldName("name");
-        xmlGenerator.writeString(property.getName());
-        xmlGenerator.setNextIsAttribute(false);
-
-        xmlGenerator.setNextIsUnwrapped(true);
-        xmlGenerator.writeStringField("", property.getValue());
-        xmlGenerator.writeEndObject();
-      }
-      xmlGenerator.writeEndArray();
+      serializeXml(properties, (ToXmlGenerator) jsonGenerator);
     }
     else {
-      jsonGenerator.writeStartArray();
-      for (Property property : properties) {
-        jsonGenerator.writeStartObject();
-        jsonGenerator.writeObjectField("name", property.getName());
-        jsonGenerator.writeObjectField("value", property.getValue());
-        jsonGenerator.writeEndObject();
-      }
-      jsonGenerator.writeEndArray();
+      serializerJson(properties, jsonGenerator);
     }
+  }
+
+  private void serializerJson(List<Property> properties, JsonGenerator jsonGenerator) throws IOException {
+    jsonGenerator.writeStartArray();
+    for (Property property : properties) {
+      jsonGenerator.writeStartObject();
+      jsonGenerator.writeObjectField("name", property.getName());
+      jsonGenerator.writeObjectField("value", property.getValue());
+      jsonGenerator.writeEndObject();
+    }
+    jsonGenerator.writeEndArray();
+  }
+
+  private static void serializeXml(final List<Property> properties, final ToXmlGenerator xmlGenerator)
+      throws IOException
+  {
+    xmlGenerator.writeStartArray();
+    for (Property property : properties) {
+      xmlGenerator.writeStartObject("property");
+      xmlGenerator.setNextIsAttribute(true);
+      xmlGenerator.writeFieldName("name");
+      xmlGenerator.writeString(property.getName());
+      xmlGenerator.setNextIsAttribute(false);
+
+      xmlGenerator.setNextIsUnwrapped(true);
+      xmlGenerator.writeStringField("", property.getValue());
+      xmlGenerator.writeEndObject();
+    }
+    xmlGenerator.writeEndArray();
   }
 
   @Override
