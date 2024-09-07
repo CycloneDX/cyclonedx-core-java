@@ -680,9 +680,9 @@ public class AbstractParserTest
     assertEquals("http://www.apache.org/licenses/LICENSE-2.0",
         evidence.getLicenseChoice().getLicenses().get(0).getUrl());
 
-    if (version == Version.VERSION_15) {
+    if (version.getVersion() >= Version.VERSION_15.getVersion()) {
       assertCallStack(evidence.getCallstack());
-      assertOccurrences(evidence.getOccurrences());
+      assertOccurrences(evidence.getOccurrences(), version);
       assertEquals(1, evidence.getIdentities().size());
       assertIdentifiers(evidence.getIdentities().get(0), version);
     }
@@ -693,12 +693,16 @@ public class AbstractParserTest
     }
   }
 
-  private void assertOccurrences(final List<Occurrence> occurrences){
+  private void assertOccurrences(final List<Occurrence> occurrences, Version version){
     assertEquals(occurrences.size(), 1);
     Occurrence occurrence = occurrences.get(0);
 
     assertNotNull(occurrence.getBomRef());
     assertNotNull(occurrence.getLocation());
+
+    if (version.getVersion() >= Version.VERSION_16.getVersion()) {
+      assertNotNull(occurrence.getSymbol());
+    }
   }
 
   private void assertCallStack(final Callstack callstack){
