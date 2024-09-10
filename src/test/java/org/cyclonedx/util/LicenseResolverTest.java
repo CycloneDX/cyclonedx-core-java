@@ -48,7 +48,7 @@ public class LicenseResolverTest {
         assertEquals("GPL-3.0-only", c1.getLicenses().get(0).getId());
         assertEquals("https://www.gnu.org/licenses/gpl-3.0-standalone.html", c1.getLicenses().get(0).getUrl());
         assertNotNull(c1.getLicenses().get(0).getAttachmentText().getText());
-        assertEquals("plain/text", c1.getLicenses().get(0).getAttachmentText().getContentType());
+        assertEquals("text/plain", c1.getLicenses().get(0).getAttachmentText().getContentType());
         assertEquals("base64", c1.getLicenses().get(0).getAttachmentText().getEncoding());
 
         LicenseResolver.LicenseTextSettings textSettings = new LicenseResolver.LicenseTextSettings( true, LicenseResolver.LicenseEncoding.NONE);
@@ -57,7 +57,7 @@ public class LicenseResolverTest {
         assertEquals("GPL-3.0-only", c2.getLicenses().get(0).getId());
         assertEquals("https://www.gnu.org/licenses/gpl-3.0-standalone.html", c2.getLicenses().get(0).getUrl());
         assertNotNull(c2.getLicenses().get(0).getAttachmentText().getText());
-        assertEquals("plain/text", c2.getLicenses().get(0).getAttachmentText().getContentType());
+        assertEquals("text/plain", c2.getLicenses().get(0).getAttachmentText().getContentType());
         assertNull(c2.getLicenses().get(0).getAttachmentText().getEncoding());
 
         textSettings = new LicenseResolver.LicenseTextSettings( true, LicenseResolver.LicenseEncoding.BASE64);
@@ -66,7 +66,7 @@ public class LicenseResolverTest {
         assertEquals("GPL-3.0-only", c3.getLicenses().get(0).getId());
         assertEquals("https://www.gnu.org/licenses/gpl-3.0-standalone.html", c3.getLicenses().get(0).getUrl());
         assertNotNull(c3.getLicenses().get(0).getAttachmentText().getText());
-        assertEquals("plain/text", c3.getLicenses().get(0).getAttachmentText().getContentType());
+        assertEquals("text/plain", c3.getLicenses().get(0).getAttachmentText().getContentType());
         assertEquals("base64", c3.getLicenses().get(0).getAttachmentText().getEncoding());
     }
 
