@@ -26,7 +26,10 @@ import org.cyclonedx.util.deserializer.CertificationLevelDeserializer;
     "curve",
     "executionEnvironment",
     "implementationPlatform",
-    "certificationLevel", "mode", "padding", "cryptoFunctions",
+    "certificationLevel",
+    "mode",
+    "padding",
+    "cryptoFunctions",
     "classicalSecurityLevel", "nistQuantumSecurityLevel"
 })
 public class AlgorithmProperties

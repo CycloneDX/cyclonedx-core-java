@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.model.attestation.affirmation.Signatory;
 
@@ -34,29 +35,59 @@ public class SignatorySerializer
     }
   }
 
+  private void serializeXml(final ToXmlGenerator gen, final Signatory signatory, final SerializerProvider provider)
+      throws IOException
+  {
+    //It might have extensible types (signature)
+    if (CollectionUtils.isNotEmpty(signatory.getExtensibleTypes())) {
+      gen.writeStartObject();
+
+      if (StringUtils.isNotBlank(signatory.getName())) {
+        gen.writeStringField("name", signatory.getName());
+      }
+
+      if (StringUtils.isNotBlank(signatory.getRole())) {
+        gen.writeStringField("role", signatory.getRole());
+      }
+
+      new ExtensibleTypesSerializer().serialize(signatory.getExtensibleTypes(), gen, provider);
+      gen.writeEndObject();
+    }
+  }
+
   private void serializeJson(final JsonGenerator gen, final Signatory signatory)
       throws IOException
   {
-    gen.writeStartObject();
+    boolean shouldSerialize = false;
 
-    if (StringUtils.isNotBlank(signatory.getName())) {
-      gen.writeStringField("name", signatory.getName());
+    if (signatory.getSignature() != null && !isXml) {
+      shouldSerialize = true;
+    }
+    else if (signatory.getExternalReference() != null && signatory.getOrganization() != null) {
+      shouldSerialize = true;
     }
 
-    if (StringUtils.isNotBlank(signatory.getRole())) {
-      gen.writeStringField("role", signatory.getRole());
-    }
+    // Only serialize if the required values are set
+    if (shouldSerialize) {
+      gen.writeStartObject();
 
-    if (signatory.getSignature() != null) {
-      gen.writeObjectField("signature", signatory.getSignature());
-    }
-    else {
-      if (signatory.getExternalReference() != null && signatory.getOrganization() != null) {
+      if (StringUtils.isNotBlank(signatory.getName())) {
+        gen.writeStringField("name", signatory.getName());
+      }
+
+      if (StringUtils.isNotBlank(signatory.getRole())) {
+        gen.writeStringField("role", signatory.getRole());
+      }
+
+      if (signatory.getSignature() != null) {
+        gen.writeObjectField("signature", signatory.getSignature());
+      }
+      else if (signatory.getExternalReference() != null && signatory.getOrganization() != null) {
         gen.writeObjectField("organization", signatory.getOrganization());
         gen.writeObjectField("externalReference", signatory.getExternalReference());
       }
+      gen.writeEndObject();
     }
-    gen.writeEndObject();
   }
 
   @Override

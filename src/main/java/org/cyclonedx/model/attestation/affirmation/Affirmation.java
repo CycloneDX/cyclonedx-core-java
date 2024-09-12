@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.ExtensibleElement;
+import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.Signature;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,12 +19,13 @@ import org.cyclonedx.model.Signature;
     "signatories",
     "signature"
 })
-public class Affirmation
+public class Affirmation extends ExtensibleElement
 {
   private String statement;
 
   private List<Signatory> signatories;
 
+  @JsonOnly
   private Signature signature;
 
   public String getStatement() {

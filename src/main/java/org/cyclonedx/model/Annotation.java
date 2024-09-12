@@ -58,6 +58,8 @@ public class Annotation extends ExtensibleElement
 
     private String text;
 
+    @JsonOnly
+    @JsonProperty("signature")
     private Signature signature;
 
     public String getBomRef() {

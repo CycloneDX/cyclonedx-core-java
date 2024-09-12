@@ -291,6 +291,66 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
+    public void schema16_testExpressions() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/1.6/valid-license-expression-1.6.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema16_testAttestations() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/1.6/valid-attestation-1.6.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema16_testAttestations_json() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.6/valid-attestation-1.6.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema16_testCompositions() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/1.6/valid-compositions-1.6.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema16_testVulnerabilities() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/1.6/valid-vulnerability-1.6.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
     public void schema15_testEvidence() throws Exception {
         Version version = Version.VERSION_15;
         Bom bom = createCommonXmlBom("/1.5/valid-evidence-1.5_2.xml");

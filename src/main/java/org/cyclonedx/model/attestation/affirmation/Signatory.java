@@ -4,23 +4,27 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Signature;
 import org.cyclonedx.util.deserializer.SignatoryDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonTypeName("signatory")
+@JsonPropertyOrder({"name", "role", "signature", "organization", "externalReference"})
 @JsonDeserialize(using = SignatoryDeserializer.class)
-public class Signatory
+public class Signatory extends ExtensibleElement
 {
   private String name;
 
   private String role;
 
+  @JsonOnly
   private Signature signature;
 
   private OrganizationalEntity organization;
