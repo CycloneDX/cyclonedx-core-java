@@ -66,7 +66,7 @@ public class SignatoryDeserializer
     return signatory;
   }
 
-  private void parseOrganizationAndReference(JsonNode node, Signatory signatory) throws IOException {
+  private void parseOrganizationAndReference(JsonNode node, Signatory signatory) {
     JsonNode organizationNode = node.get("organization");
     JsonNode externalReferenceNode = node.get("externalReference");
 

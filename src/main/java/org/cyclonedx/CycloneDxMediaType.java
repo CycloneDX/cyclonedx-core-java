@@ -25,13 +25,13 @@ public class CycloneDxMediaType {
 
     /**
      * Official CycloneDX XML media type assigned by IANA.
-     * https://www.iana.org/assignments/media-types/application/vnd.cyclonedx+xml
+     * <a href="https://www.iana.org/assignments/media-types/application/vnd.cyclonedx+xml">...</a>
      */
     public static final String APPLICATION_CYCLONEDX_XML = "application/vnd.cyclonedx+xml";
 
     /**
      * Official CycloneDX JSON media type assigned by IANA.
-     * https://www.iana.org/assignments/media-types/application/vnd.cyclonedx+json
+     * <a href="https://www.iana.org/assignments/media-types/application/vnd.cyclonedx+json">...</a>
      */
     public static final String APPLICATION_CYCLONEDX_JSON = "application/vnd.cyclonedx+json";
 

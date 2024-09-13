@@ -25,7 +25,7 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
 
   protected Bom bom;
 
-  protected Format format;
+  protected final Format format;
 
   public AbstractBomGenerator(final Version version, final Bom bom, final Format format) {
     this.mapper = new ObjectMapper();

@@ -26,7 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 /**
  * Helper class for Jackson serializing/deserializing lists that have same localname, but different wrapper name.
  * Currently used by Ancestors, Descendants and Variants
- * Workaround for: https://github.com/FasterXML/jackson-dataformat-xml/issues/192
+ * Workaround for: <a href="https://github.com/FasterXML/jackson-dataformat-xml/issues/192">...</a>
  * @since 4.0.0
  */
 public abstract class ComponentWrapper {
