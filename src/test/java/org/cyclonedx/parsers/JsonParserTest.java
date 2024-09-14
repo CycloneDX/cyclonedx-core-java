@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -254,6 +255,18 @@ public class JsonParserTest
     public void testIssue343Regression() throws Exception {
         final Bom bom = getJsonBom("regression/issue343-empty-hashes.json");
         assertEquals(0, bom.getComponents().get(0).getHashes().size());
+    }
+
+    @Test
+    public void testIssue507Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue507.json");
+        assertThat(bom.getComponents()).hasSize(1);
+        assertThat(bom.getComponents().get(0).getLicenses()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses()).hasSize(1);
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing().getPurchaser()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing().getPurchaser().getOrganization()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing().getPurchaser().getOrganization().getContacts()).hasSize(1);
     }
 
     @Test
