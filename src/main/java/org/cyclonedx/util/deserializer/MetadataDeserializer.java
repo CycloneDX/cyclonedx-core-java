@@ -16,9 +16,8 @@ import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Property;
-import org.cyclonedx.model.Tool;
-import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.util.TimestampUtils;
+import org.cyclonedx.util.ToolsJsonParser;
 
 public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
@@ -26,8 +25,6 @@ public class MetadataDeserializer
   private final LifecycleDeserializer lifecycleDeserializer = new LifecycleDeserializer();
   private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
   private final LicenseDeserializer licenseDeserializer = new LicenseDeserializer();
-  private final ToolsDeserializer toolsDeserializer = new ToolsDeserializer();
-  private final ToolInformationDeserializer toolInformationDeserializer = new ToolInformationDeserializer();
 
   @Override
   public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
@@ -90,16 +87,9 @@ public class MetadataDeserializer
     }
 
     if (node.has("tools")) {
-      JsonNode toolsNode = node.get("tools");
-      JsonParser toolsParser = toolsNode.traverse(jsonParser.getCodec());
-      toolsParser.nextToken();
-      if (toolsNode.has("components") || toolsNode.has("services")) {
-        ToolInformation toolInformation = toolInformationDeserializer.deserialize(toolsParser, ctxt);
-        metadata.setToolChoice(toolInformation);
-      } else {
-        List<Tool> tools = toolsDeserializer.deserialize(toolsParser, ctxt);
-        metadata.setTools(tools);
-      }
+      ToolsJsonParser toolsParser = new ToolsJsonParser(node, jsonParser, ctxt);
+      metadata.setTools(toolsParser.getTools());
+      metadata.setToolChoice(toolsParser.getToolInformation());
     }
 
     return metadata;
