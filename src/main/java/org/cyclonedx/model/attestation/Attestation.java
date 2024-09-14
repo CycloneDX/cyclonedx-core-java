@@ -5,9 +5,11 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.Signature;
 
@@ -19,7 +21,7 @@ import org.cyclonedx.model.Signature;
     "map",
     "signature"
 })
-public class Attestation
+public class Attestation extends ExtensibleElement
 {
   private String summary;
 
@@ -27,6 +29,7 @@ public class Attestation
 
   private List<AttestationMap> map;
 
+  @JsonProperty("signature")
   @JsonOnly
   private Signature signature;
 
