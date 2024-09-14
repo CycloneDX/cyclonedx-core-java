@@ -29,7 +29,7 @@ public class SignatorySerializer
       throws IOException {
     if (isXml && jsonGenerator instanceof ToXmlGenerator) {
       ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
-      serializeJson(xmlGenerator, value);
+      serializeXml(xmlGenerator, value, serializerProvider);
     } else {
       serializeJson(jsonGenerator, value);
     }
