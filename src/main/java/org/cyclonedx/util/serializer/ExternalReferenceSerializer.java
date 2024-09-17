@@ -87,16 +87,7 @@ public class ExternalReferenceSerializer
       toXmlGenerator.writeStartObject();
       for (Hash hash : extRef.getHashes()) {
         toXmlGenerator.writeFieldName("hash");
-        toXmlGenerator.writeStartObject();
-        toXmlGenerator.setNextIsAttribute(true);
-        toXmlGenerator.writeFieldName("alg");
-        toXmlGenerator.writeString(hash.getAlgorithm());
-        toXmlGenerator.setNextIsAttribute(false);
-
-        toXmlGenerator.setNextIsUnwrapped(true);
-        toXmlGenerator.writeStringField("", hash.getValue());
-
-        toXmlGenerator.writeEndObject();
+        SerializerUtils.serializeHashXml(toXmlGenerator, hash);
       }
       toXmlGenerator.writeEndObject();
     }

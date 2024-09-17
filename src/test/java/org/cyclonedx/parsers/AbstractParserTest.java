@@ -604,7 +604,7 @@ public class AbstractParserTest
     assertEquals(Status.AFFECTED, vuln.getAffects().get(0).getVersions().get(1).getStatus());
   }
 
-  void assertServices(final Bom bom) {
+  void assertServices(final Bom bom, final Version version) {
     //Services
     List<Service> services = bom.getServices();
     assertEquals(1, services.size());
@@ -615,6 +615,13 @@ public class AbstractParserTest
     List<String> urls = provider.getUrls();
     assertEquals(1, urls.size());
     assertEquals("https://partner.org", urls.get(0));
+
+    if (Version.VERSION_15.getVersion() <= version.getVersion()) {
+      assertEquals("value", s.getTrustZone());
+    }
+    else {
+      assertNull(s.getTrustZone());
+    }
 
     List<OrganizationalContact> contacts = provider.getContacts();
     assertEquals(1, contacts.size());

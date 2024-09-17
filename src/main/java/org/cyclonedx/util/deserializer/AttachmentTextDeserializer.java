@@ -31,6 +31,8 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
       attachmentText.setText(contentNode.asText());
     } else if (node.has("")) {
       attachmentText.setText(node.get("").asText());
+    } else if (node.isTextual()) {
+      attachmentText.setText(node.textValue());
     }
 
     JsonNode contentTypeNode = getContentTypeNode(node);

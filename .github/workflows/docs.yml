@@ -18,14 +18,14 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # tag=v4.1.7
       - name: Set up JDK 8
-        uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018 # tag=v4.2.2
+        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # tag=v4.3.0
         with:
           distribution: temurin
           java-version: 8
       - name: Build with Maven
         run: mvn -B --no-transfer-progress package
       - name: Deploy documentation
-        uses: JamesIves/github-pages-deploy-action@94f3c658273cf92fb48ef99e5fbc02bd2dc642b2 # tag=v4.6.3
+        uses: JamesIves/github-pages-deploy-action@920cbb300dcd3f0568dbc42700c61e2fd9e6139c # tag=v4.6.4
         with:
           branch: gh-pages
           folder: target/apidocs

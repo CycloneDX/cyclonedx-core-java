@@ -158,6 +158,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @param schemaVersion the schema version to validate against
      * @throws IOException when errors are encountered
      * @since 3.0.0
+     * @return a list of exceptions encountered during validation
      */
     public List<ParseException> validate(final String bomString, final Version schemaVersion) throws IOException {
         return validate(mapper.readTree(bomString), schemaVersion);
@@ -169,6 +170,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @param schemaVersion the schema version to validate against
      * @throws IOException when errors are encountered
      * @since 3.0.0
+     * @return a list of exceptions encountered during validation
      */
     public List<ParseException> validate(final JsonNode bomJson, final Version schemaVersion) throws IOException {
         final List<ParseException> exceptions = new ArrayList<>();

@@ -50,6 +50,7 @@ import java.util.Objects;
         "endpoints",
         "authenticated",
         "xTrustBoundary",
+        "trustZone",
         "data",
         "licenses",
         "externalReferences",
@@ -74,6 +75,8 @@ public class Service extends ExtensibleElement {
     @JacksonXmlProperty(localName = "x-trust-boundary")
     @JsonProperty("x-trust-boundary")
     private Boolean xTrustBoundary;
+    @VersionFilter(Version.VERSION_15)
+    private String trustZone;
     private List<ServiceData> data;
     private LicenseChoice licenses;
     private List<ExternalReference> externalReferences;
@@ -269,6 +272,14 @@ public class Service extends ExtensibleElement {
         this.tags = tags;
     }
 
+    public String getTrustZone() {
+        return trustZone;
+    }
+
+    public void setTrustZone(final String trustZone) {
+        this.trustZone = trustZone;
+    }
+
     @Override
     public boolean equals(final Object object) {
         if (this == object) {
@@ -290,13 +301,13 @@ public class Service extends ExtensibleElement {
             Objects.equals(properties, service.properties) && Objects.equals(tags, service.tags) &&
             Objects.equals(services, service.services) &&
             Objects.equals(releaseNotes, service.releaseNotes) &&
+            Objects.equals(trustZone, service.trustZone) &&
             Objects.equals(signature, service.signature);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bomRef, provider, group, name, version, description, endpoints, authenticated,
-            xTrustBoundary,
-            data, licenses, externalReferences, properties, tags, services, releaseNotes, signature);
+        return Objects.hash(bomRef, provider, group, name, version, description, endpoints, authenticated, signature,
+            xTrustBoundary, trustZone, data, licenses, externalReferences, properties, tags, services, releaseNotes);
     }
 }

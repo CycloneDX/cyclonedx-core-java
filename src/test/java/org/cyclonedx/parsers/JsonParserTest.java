@@ -107,7 +107,7 @@ public class JsonParserTest
         assertEquals("(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
             c3.getLicenseChoice().getExpression().getValue());
 
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_12);
 
         // Assertions for bom.dependencies
         assertEquals(2, bom.getDependencies().size());
@@ -126,7 +126,7 @@ public class JsonParserTest
 
         assertMetadata(bom, Version.VERSION_13);
 
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_13);
 
         final List<Component> components = bom.getComponents();
         assertEquals(3, components.size());
@@ -171,7 +171,7 @@ public class JsonParserTest
 
         assertMetadata(bom.getMetadata(), Version.VERSION_14);
         assertComponent(bom, Version.VERSION_14);
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_14);
         assertCompositions(bom, Version.VERSION_14);
         assertVulnerabilities(bom, Version.VERSION_14);
 
@@ -199,7 +199,7 @@ public class JsonParserTest
 
         assertMetadata(bom.getMetadata(), Version.VERSION_15);
         assertComponent(bom, Version.VERSION_15);
-        assertServices(bom);
+        assertServices(bom, Version.VERSION_15);
         assertCompositions(bom, Version.VERSION_15);
         assertVulnerabilities(bom, Version.VERSION_15);
 

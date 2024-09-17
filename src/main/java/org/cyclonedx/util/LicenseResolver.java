@@ -200,7 +200,7 @@ public final class LicenseResolver {
             if (is != null) {
                 final String text = IOUtils.toString(is, StandardCharsets.UTF_8);
                 final AttachmentText attachment = new AttachmentText();
-                attachment.setContentType("plain/text");
+                attachment.setContentType("text/plain");
                 switch(licenseTextSettings.getEncoding()){
                     case NONE:
                         attachment.setEncoding(null);

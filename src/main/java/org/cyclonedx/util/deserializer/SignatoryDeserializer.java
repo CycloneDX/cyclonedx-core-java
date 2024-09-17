@@ -54,7 +54,7 @@ public class SignatoryDeserializer
       signatory.setRole(node.get("role").asText());
     }
 
-    JsonNode signatureNode = node.get("Signature");
+    JsonNode signatureNode = node.get("signature");
     if (signatureNode != null) {
       Signature signature = mapper.convertValue(node.get("signature"), Signature.class);
       signatory.setSignature(signature);
@@ -66,7 +66,7 @@ public class SignatoryDeserializer
     return signatory;
   }
 
-  private void parseOrganizationAndReference(JsonNode node, Signatory signatory) throws IOException {
+  private void parseOrganizationAndReference(JsonNode node, Signatory signatory) {
     JsonNode organizationNode = node.get("organization");
     JsonNode externalReferenceNode = node.get("externalReference");
 

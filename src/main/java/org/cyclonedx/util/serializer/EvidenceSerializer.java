@@ -69,14 +69,7 @@ public class EvidenceSerializer
       xmlGenerator.writeEndObject(); // End the occurrences object
     }
 
-    if (evidence.getCallstack() != null && shouldSerializeField(evidence, "callstack")) {
-      xmlGenerator.writeObjectField("callstack", evidence.getCallstack());
-    }
-
-    if (evidence.getLicenses() != null && shouldSerializeField(evidence, "licenses")) {
-      xmlGenerator.writeFieldName("licenses");
-      new LicenseChoiceSerializer(isXml, version).serialize(evidence.getLicenses(), xmlGenerator, serializerProvider);
-    }
+    serializeCommonInfo(xmlGenerator, evidence, serializerProvider);
 
     if (CollectionUtils.isNotEmpty(evidence.getCopyright()) && shouldSerializeField(evidence, "copyright")) {
       xmlGenerator.writeFieldName("copyright");
@@ -104,14 +97,7 @@ public class EvidenceSerializer
       gen.writeObjectField("occurrences", evidence.getOccurrences());
     }
 
-    if (evidence.getCallstack() != null && shouldSerializeField(evidence, "callstack")) {
-      gen.writeObjectField("callstack", evidence.getCallstack());
-    }
-
-    if (evidence.getLicenses() != null && shouldSerializeField(evidence, "licenses")) {
-      gen.writeFieldName("licenses");
-      new LicenseChoiceSerializer(isXml, version).serialize(evidence.getLicenses(), gen, serializerProvider);
-    }
+    serializeCommonInfo(gen, evidence, serializerProvider);
 
     if (CollectionUtils.isNotEmpty(evidence.getCopyright()) && shouldSerializeField(evidence, "copyright")) {
       gen.writeFieldName("copyright");
@@ -124,6 +110,21 @@ public class EvidenceSerializer
       gen.writeEndArray();
     }
     gen.writeEndObject();
+  }
+
+  private void serializeCommonInfo(
+      final JsonGenerator gen,
+      final Evidence evidence,
+      final SerializerProvider serializerProvider) throws IOException
+  {
+    if (evidence.getCallstack() != null && shouldSerializeField(evidence, "callstack")) {
+      gen.writeObjectField("callstack", evidence.getCallstack());
+    }
+
+    if (evidence.getLicenses() != null && shouldSerializeField(evidence, "licenses")) {
+      gen.writeFieldName("licenses");
+      new LicenseChoiceSerializer(isXml, version).serialize(evidence.getLicenses(), gen, serializerProvider);
+    }
   }
 
   private boolean shouldSerializeField(Object obj, String fieldName) {

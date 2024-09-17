@@ -78,8 +78,8 @@ public class Evidence
         this.licenses = licenses;
     }
 
-    @JacksonXmlElementWrapper(useWrapping = false)
-    @JacksonXmlProperty(localName = "copyright")
+    @JacksonXmlElementWrapper(localName = "copyright")
+    @JacksonXmlProperty(localName = "text")
     @JsonProperty("copyright")
     public List<Copyright> getCopyright() {
         return copyright;

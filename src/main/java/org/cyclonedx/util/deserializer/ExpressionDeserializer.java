@@ -38,7 +38,7 @@ public class ExpressionDeserializer
     }
 
     if (node.isTextual()) {
-      return new Expression(node.asText());
+      return new Expression(node.asText().trim());
     }
     else {
       return parseExpressionNode(node);
@@ -58,10 +58,10 @@ public class ExpressionDeserializer
 
     JsonNode textNode = node.get("expression");
     if (textNode != null) {
-      expression.setValue(textNode.asText());
+      expression.setValue(textNode.asText().trim());
     }
     else if (node.has("")) {
-      expression.setValue(node.get("").asText());
+      expression.setValue(node.get("").asText().trim());
     }
 
     return expression;
