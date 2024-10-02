@@ -1,4 +1,4 @@
-package org.cyclonedx.model.component.modelCard;
+package org.cyclonedx.model.component.data;
 
 import java.util.Objects;
 
