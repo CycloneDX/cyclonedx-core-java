@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.cyclonedx.Version;
@@ -14,6 +15,7 @@ import org.cyclonedx.model.VersionFilter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JacksonXmlRootElement(localName = "occurrence")
+@JsonPropertyOrder({"bom-ref", "location", "line", "offset", "symbol", "additionalContext"})
 public class Occurrence extends ExtensibleElement
 {
   @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
@@ -30,7 +32,7 @@ public class Occurrence extends ExtensibleElement
   private Integer offset;
 
   @VersionFilter(Version.VERSION_16)
-  private Integer symbol;
+  private String symbol;
 
   @VersionFilter(Version.VERSION_16)
   private String additionalContext;
@@ -67,11 +69,11 @@ public class Occurrence extends ExtensibleElement
     this.offset = offset;
   }
 
-  public Integer getSymbol() {
+  public String getSymbol() {
     return symbol;
   }
 
-  public void setSymbol(final Integer symbol) {
+  public void setSymbol(final String symbol) {
     this.symbol = symbol;
   }
 
