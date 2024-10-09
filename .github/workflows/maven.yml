@@ -41,7 +41,7 @@ jobs:
         coverage-reports: target/site/jacoco/jacoco.xml
     - name: Upload PR test coverage report
       if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # tag=v4.4.1
+      uses: actions/upload-artifact@84480863f228bb9747b473957fcc9e309aa96097 # tag=v4.4.2
       with:
         name: pr-test-coverage-report-java-${{ matrix.java-version }}
         path: target/site/jacoco/jacoco.xml
