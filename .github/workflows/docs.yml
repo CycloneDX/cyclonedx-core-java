@@ -28,4 +28,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@881db5376404c5c8d621010bcbec0310b58d5e29 # tag=v4.6.8
         with:
           branch: gh-pages
-          folder: target/apidocs
+          folder: target/reports/apidocs
