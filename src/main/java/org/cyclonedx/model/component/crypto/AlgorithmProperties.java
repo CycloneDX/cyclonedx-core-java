@@ -5,8 +5,8 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.component.crypto.enums.CertificationLevel;
@@ -16,7 +16,6 @@ import org.cyclonedx.model.component.crypto.enums.ImplementationPlatform;
 import org.cyclonedx.model.component.crypto.enums.Mode;
 import org.cyclonedx.model.component.crypto.enums.Padding;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
-import org.cyclonedx.util.deserializer.CertificationLevelDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -44,8 +43,7 @@ public class AlgorithmProperties
 
   private ImplementationPlatform implementationPlatform;
 
-  @JsonDeserialize(using = CertificationLevelDeserializer.class)
-  private CertificationLevel certificationLevel;
+  private List<CertificationLevel> certificationLevel;
 
   private Mode mode;
 
@@ -97,11 +95,14 @@ public class AlgorithmProperties
     this.implementationPlatform = implementationPlatform;
   }
 
-  public CertificationLevel getCertificationLevel() {
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "certificationLevel")
+  @JsonProperty("certificationLevel")
+  public List<CertificationLevel> getCertificationLevel() {
     return certificationLevel;
   }
 
-  public void setCertificationLevel(final CertificationLevel certificationLevel) {
+  public void setCertificationLevel(final List<CertificationLevel> certificationLevel) {
     this.certificationLevel = certificationLevel;
   }
 
