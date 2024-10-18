@@ -12,14 +12,32 @@
             </lifecycle>
         </lifecycles>
         <tools>
-            <tool>
-                <vendor>Awesome Vendor</vendor>
-                <name>Awesome Tool</name>
-                <version>9.1.2</version>
-                <hashes>
-                    <hash alg="SHA-1">25ed8e31b995bb927966616df2a42b979a2717f0</hash>
-                </hashes>
-            </tool>
+            <components>
+                <component type="application">
+                    <group>Awesome Vendor</group>
+                    <name>Awesome Tool</name>
+                    <version>9.1.2</version>
+                    <hashes>
+                        <hash alg="SHA-1">25ed8e31b995bb927966616df2a42b979a2717f0</hash>
+                    </hashes>
+                </component>
+            </components>
+            <services>
+                <service>
+                    <provider>
+                        <name>Acme Org</name>
+                        <url>https://example.com</url>
+                    </provider>
+                    <group>com.example</group>
+                    <name>Acme Signing Server</name>
+                    <description>Signs artifacts</description>
+                    <endpoints>
+                        <endpoint>https://example.com/sign</endpoint>
+                        <endpoint>https://example.com/verify</endpoint>
+                        <endpoint>https://example.com/tsa</endpoint>
+                    </endpoints>
+                </service>
+            </services>
         </tools>
         <authors>
             <author>
@@ -422,14 +440,27 @@
                 </individuals>
             </credits>
             <tools>
-                <tool>
-                    <vendor>Sonatype</vendor>
-                    <name>Sonatype CLI</name>
-                    <version>1.131</version>
-                    <hashes>
-                        <hash alg="SHA-256">2eaf8c62831a1658c95d41fdc683cd177c147733c64a93e59cb2362829e45b7d</hash>
-                    </hashes>
-                </tool>
+                <components>
+                    <component type = "application">
+                        <group>Sonatype</group>
+                        <name>Sonatype CLI</name>
+                        <version>1.131</version>
+                        <hashes>
+                            <hash alg="SHA-256">2eaf8c62831a1658c95d41fdc683cd177c147733c64a93e59cb2362829e45b7d</hash>
+                        </hashes>
+                    </component>
+                </components>
+                <services>
+                    <service>
+                        <provider>
+                            <name>Sonatype</name>
+                        </provider>
+                        <name>Sonatype CLI Scanner</name>
+                        <endpoints>
+                            <endpoint>https://www.sonatype.com/scanner</endpoint>
+                        </endpoints>
+                    </service>
+                </services>
             </tools>
             <analysis>
                 <state>not_affected</state>
