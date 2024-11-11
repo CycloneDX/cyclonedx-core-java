@@ -25,7 +25,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B --no-transfer-progress package
       - name: Deploy documentation
-        uses: JamesIves/github-pages-deploy-action@881db5376404c5c8d621010bcbec0310b58d5e29 # tag=v4.6.8
+        uses: JamesIves/github-pages-deploy-action@62fec3add6773ec5dbbf18d2ee4260911aa35cf4 # tag=v4.6.9
         with:
           branch: gh-pages
           folder: target/reports/apidocs
