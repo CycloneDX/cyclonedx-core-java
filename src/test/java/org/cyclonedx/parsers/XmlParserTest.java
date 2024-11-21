@@ -591,8 +591,8 @@ public class XmlParserTest
         assertEquals(1, assessors.size());
 
         Assessor assessor = assessors.get(0);
-        assertEquals(false, assessor.getThirdParty());
-        assertEquals("Acme Inc", assessor.getOrganization().getName());
+        assertEquals(true, assessor.getThirdParty());
+        assertEquals("Assessors Inc", assessor.getOrganization().getName());
         assertEquals("assessor-1", assessor.getBomRef());
 
         //Attestations
@@ -612,7 +612,7 @@ public class XmlParserTest
         Conformance conformance = map.getConformance();
         assertEquals(0.8, conformance.getScore());
         assertEquals("Conformance rationale here", conformance.getRationale());
-        assertEquals("mitigations-1", conformance.getMitigationStrategies().get(0));
+        assertEquals("mitigationStrategy-1", conformance.getMitigationStrategies().get(0));
 
         Confidence confidence = map.getConfidence();
         assertEquals(1.0, confidence.getScore());
