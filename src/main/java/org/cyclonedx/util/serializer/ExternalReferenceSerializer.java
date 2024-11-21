@@ -33,6 +33,8 @@ import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.util.BomUtils;
 
+import static org.cyclonedx.util.serializer.SerializerUtils.serializeHashJson;
+
 public class ExternalReferenceSerializer
     extends StdSerializer<ExternalReference>
 {
@@ -105,10 +107,7 @@ public class ExternalReferenceSerializer
       gen.writeFieldName("hashes");
       gen.writeStartArray();
       for (Hash hash : extRef.getHashes()) {
-        gen.writeStartObject();
-        gen.writeStringField("alg", hash.getAlgorithm());
-        gen.writeStringField("content", hash.getValue());
-        gen.writeEndObject();
+        serializeHashJson(gen, hash);
       }
       gen.writeEndArray();
     }

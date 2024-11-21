@@ -43,7 +43,7 @@ public class SignatoryDeserializer
     return parseSignatory(node);
   }
 
-  private Signatory parseSignatory(JsonNode node) throws IOException {
+  private Signatory parseSignatory(JsonNode node) {
     Signatory signatory = new Signatory();
 
     if (node.has("name")) {

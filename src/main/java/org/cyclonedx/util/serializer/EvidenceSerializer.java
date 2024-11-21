@@ -1,7 +1,6 @@
 package org.cyclonedx.util.serializer;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -11,9 +10,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Copyright;
 import org.cyclonedx.model.Evidence;
-import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.evidence.Occurrence;
+
+import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
 
 public class EvidenceSerializer
     extends StdSerializer<Evidence>
@@ -45,7 +45,7 @@ public class EvidenceSerializer
 
   private void serializeXml(final ToXmlGenerator xmlGenerator, final Evidence evidence, SerializerProvider serializerProvider) throws IOException {
     xmlGenerator.writeStartObject();
-    if (CollectionUtils.isNotEmpty(evidence.getIdentities()) && shouldSerializeField(evidence, "identities")) {
+    if (CollectionUtils.isNotEmpty(evidence.getIdentities()) && shouldSerializeField(evidence, version, "identities")) {
       if (version.getVersion() >= Version.VERSION_16.getVersion()) {
         xmlGenerator.writeFieldName("identity");
         xmlGenerator.writeStartArray();
@@ -59,7 +59,7 @@ public class EvidenceSerializer
       }
     }
 
-    if (CollectionUtils.isNotEmpty(evidence.getOccurrences()) && shouldSerializeField(evidence, "occurrences")) {
+    if (CollectionUtils.isNotEmpty(evidence.getOccurrences()) && shouldSerializeField(evidence, version, "occurrences")) {
       xmlGenerator.writeFieldName("occurrences");
       xmlGenerator.writeStartObject(); // Start the occurrences object
       for (Occurrence occurrence : evidence.getOccurrences()) {
@@ -71,7 +71,7 @@ public class EvidenceSerializer
 
     serializeCommonInfo(xmlGenerator, evidence, serializerProvider);
 
-    if (CollectionUtils.isNotEmpty(evidence.getCopyright()) && shouldSerializeField(evidence, "copyright")) {
+    if (CollectionUtils.isNotEmpty(evidence.getCopyright()) && shouldSerializeField(evidence, version, "copyright")) {
       xmlGenerator.writeFieldName("copyright");
       xmlGenerator.writeStartObject();
       for (Copyright item : evidence.getCopyright()) {
@@ -84,7 +84,7 @@ public class EvidenceSerializer
 
   private void serializeJson(final JsonGenerator gen, final Evidence evidence, SerializerProvider serializerProvider) throws IOException {
     gen.writeStartObject();
-    if (CollectionUtils.isNotEmpty(evidence.getIdentities()) && shouldSerializeField(evidence, "identities")) {
+    if (CollectionUtils.isNotEmpty(evidence.getIdentities()) && shouldSerializeField(evidence, version, "identities")) {
       if (version.getVersion() >= Version.VERSION_16.getVersion()) {
         gen.writeObjectField("identity", evidence.getIdentities());
       }
@@ -93,13 +93,13 @@ public class EvidenceSerializer
       }
     }
 
-    if (CollectionUtils.isNotEmpty(evidence.getOccurrences()) && shouldSerializeField(evidence, "occurrences")) {
+    if (CollectionUtils.isNotEmpty(evidence.getOccurrences()) && shouldSerializeField(evidence, version, "occurrences")) {
       gen.writeObjectField("occurrences", evidence.getOccurrences());
     }
 
     serializeCommonInfo(gen, evidence, serializerProvider);
 
-    if (CollectionUtils.isNotEmpty(evidence.getCopyright()) && shouldSerializeField(evidence, "copyright")) {
+    if (CollectionUtils.isNotEmpty(evidence.getCopyright()) && shouldSerializeField(evidence, version, "copyright")) {
       gen.writeFieldName("copyright");
       gen.writeStartArray();
       for (Copyright item : evidence.getCopyright()) {
@@ -117,24 +117,13 @@ public class EvidenceSerializer
       final Evidence evidence,
       final SerializerProvider serializerProvider) throws IOException
   {
-    if (evidence.getCallstack() != null && shouldSerializeField(evidence, "callstack")) {
+    if (evidence.getCallstack() != null && shouldSerializeField(evidence, version, "callstack")) {
       gen.writeObjectField("callstack", evidence.getCallstack());
     }
 
-    if (evidence.getLicenses() != null && shouldSerializeField(evidence, "licenses")) {
+    if (evidence.getLicenses() != null && shouldSerializeField(evidence, version, "licenses")) {
       gen.writeFieldName("licenses");
       new LicenseChoiceSerializer(isXml, version).serialize(evidence.getLicenses(), gen, serializerProvider);
-    }
-  }
-
-  private boolean shouldSerializeField(Object obj, String fieldName) {
-    try {
-      Field field = obj.getClass().getDeclaredField(fieldName);
-      VersionFilter filter = field.getAnnotation(VersionFilter.class);
-      return filter == null || filter.value().getVersion() <= version.getVersion();
-    } catch (NoSuchFieldException e) {
-      // If the field does not exist, assume it should be serialized
-      return true;
     }
   }
 

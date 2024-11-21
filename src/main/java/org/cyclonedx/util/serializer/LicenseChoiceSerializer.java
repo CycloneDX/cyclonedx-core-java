@@ -19,7 +19,6 @@
 package org.cyclonedx.util.serializer;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -31,8 +30,9 @@ import org.cyclonedx.Version;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Property;
-import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.model.license.Expression;
+
+import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
 
 public class LicenseChoiceSerializer
     extends StdSerializer<LicenseChoice>
@@ -86,7 +86,7 @@ public class LicenseChoiceSerializer
           toXmlGenerator.writeStringField("name", l.getName());
         }
 
-        if (l.getLicensing() != null && shouldSerializeField(l, "licensing")) {
+        if (l.getLicensing() != null && shouldSerializeField(l, version,"licensing")) {
           toXmlGenerator.writeObjectField("licensing", l.getLicensing());
         }
 
@@ -98,7 +98,7 @@ public class LicenseChoiceSerializer
           toXmlGenerator.writeStringField("url", l.getUrl());
         }
 
-        if (CollectionUtils.isNotEmpty(l.getProperties()) && shouldSerializeField(l, "properties")) {
+        if (CollectionUtils.isNotEmpty(l.getProperties()) && shouldSerializeField(l, version, "properties")) {
           toXmlGenerator.writeFieldName("properties");
           toXmlGenerator.writeStartObject();
 
@@ -134,13 +134,13 @@ public class LicenseChoiceSerializer
   {
     toXmlGenerator.writeStartObject();
 
-    if (StringUtils.isNotBlank(bomRef) && shouldSerializeField(object, "bomRef")) {
+    if (StringUtils.isNotBlank(bomRef) && shouldSerializeField(object, version, "bomRef")) {
       toXmlGenerator.setNextIsAttribute(true);
       toXmlGenerator.writeFieldName("bom-ref");
       toXmlGenerator.writeString(bomRef);
       toXmlGenerator.setNextIsAttribute(false);
     }
-    if (StringUtils.isNotBlank(acknowledgement) && shouldSerializeField(object, "acknowledgement")) {
+    if (StringUtils.isNotBlank(acknowledgement) && shouldSerializeField(object, version, "acknowledgement")) {
       toXmlGenerator.setNextIsAttribute(true);
       toXmlGenerator.writeFieldName("acknowledgement");
       toXmlGenerator.writeString(acknowledgement);
@@ -198,34 +198,13 @@ public class LicenseChoiceSerializer
     gen.writeStartObject();
     gen.writeStringField("expression", expression.getValue());
     if (StringUtils.isNotBlank(expression.getAcknowledgement()) &&
-        shouldSerializeField(expression, "acknowledgement")) {
+        shouldSerializeField(expression, version, "acknowledgement")) {
       gen.writeStringField("acknowledgement", expression.getAcknowledgement());
     }
-    if (StringUtils.isNotBlank(expression.getBomRef()) && shouldSerializeField(expression, "bomRef")) {
+    if (StringUtils.isNotBlank(expression.getBomRef()) && shouldSerializeField(expression, version, "bomRef")) {
       gen.writeStringField("bom-ref", expression.getBomRef());
     }
     gen.writeEndObject();
     gen.writeEndArray();
-  }
-
-  private boolean shouldSerialize(Object obj) {
-    for (Field field : obj.getClass().getDeclaredFields()) {
-      VersionFilter filter = field.getAnnotation(VersionFilter.class);
-      if (filter != null && filter.value().getVersion() > version.getVersion()) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private boolean shouldSerializeField(Object obj, String fieldName) {
-    try {
-      Field field = obj.getClass().getDeclaredField(fieldName);
-      VersionFilter filter = field.getAnnotation(VersionFilter.class);
-      return filter == null || filter.value().getVersion() <= version.getVersion();
-    } catch (NoSuchFieldException e) {
-      // If the field does not exist, assume it should be serialized
-      return true;
-    }
   }
 }
