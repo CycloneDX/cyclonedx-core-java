@@ -28,7 +28,7 @@ import org.cyclonedx.Version;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.Tags;
-import org.cyclonedx.model.component.modelCard.ComponentData;
+import org.cyclonedx.model.component.data.ComponentData;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
