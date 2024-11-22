@@ -29,6 +29,8 @@ import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.Hash.Algorithm;
 import org.cyclonedx.model.VersionFilter;
 
+import static org.cyclonedx.util.serializer.SerializerUtils.serializeHashJson;
+
 public class HashSerializer
     extends StdSerializer<Hash>
 {
@@ -55,17 +57,8 @@ public class HashSerializer
       SerializerUtils.serializeHashXml((ToXmlGenerator) gen, hash);
     }
     else {
-      serializeJson(gen, hash);
+      serializeHashJson(gen, hash);
     }
-  }
-
-  private void serializeJson(final JsonGenerator gen, final Hash hash)
-      throws IOException
-  {
-    gen.writeStartObject();
-    gen.writeStringField("alg", hash.getAlgorithm());
-    gen.writeStringField("content", hash.getValue());
-    gen.writeEndObject();
   }
 
   @Override

@@ -44,12 +44,7 @@ public class OutputTypeDeserializer
 
     setSourceAndTarget(node, outputType);
     createOutputDataInfo(node, outputType);
-
-    if(node.has("properties")) {
-      JsonNode propertiesNode = node.get("properties");
-      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
-      outputType.setProperties(properties);
-    }
+    setProperties(node, outputType);
 
     if(node.has("type")) {
       JsonNode typeNode = node.get("type");
@@ -62,9 +57,7 @@ public class OutputTypeDeserializer
 
   private void createOutputDataInfo(JsonNode node, OutputType outputType) throws JsonProcessingException {
     if (node.has("resource")) {
-      JsonNode resourceNode = node.get("resource");
-      ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
-      outputType.setResource(resource);
+      setResource(node, outputType);
     }
     else if (node.has("environmentVars")) {
       setEnvironmentVars(node, outputType);
