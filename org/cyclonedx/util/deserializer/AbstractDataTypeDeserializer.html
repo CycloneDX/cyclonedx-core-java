@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -200,11 +200,21 @@ extends com.fasterxml.jackson.databind.JsonDeserializer&lt;T&gt;</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/deserializer/AbstractDataTypeDeserializer.html#setProperties-com.fasterxml.jackson.databind.JsonNode-org.cyclonedx.model.formulation.common.AbstractType-">setProperties</a></span>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
+             <a href="../../../../org/cyclonedx/model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/deserializer/AbstractDataTypeDeserializer.html#setReference-com.fasterxml.jackson.databind.JsonNode-java.lang.String-org.cyclonedx.model.formulation.common.AbstractType-">setReference</a></span>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
             <a href="../../../../org/cyclonedx/model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/deserializer/AbstractDataTypeDeserializer.html#setResource-com.fasterxml.jackson.databind.JsonNode-org.cyclonedx.model.formulation.common.AbstractType-">setResource</a></span>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
+           <a href="../../../../org/cyclonedx/model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/deserializer/AbstractDataTypeDeserializer.html#setSourceAndTarget-com.fasterxml.jackson.databind.JsonNode-org.cyclonedx.model.formulation.common.AbstractType-">setSourceAndTarget</a></span>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
                   <a href="../../../../org/cyclonedx/model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code>&nbsp;</td>
@@ -306,12 +316,42 @@ extends com.fasterxml.jackson.databind.JsonDeserializer&lt;T&gt;</pre>
 <a name="setSourceAndTarget-com.fasterxml.jackson.databind.JsonNode-org.cyclonedx.model.formulation.common.AbstractType-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setSourceAndTarget</h4>
 <pre>protected&nbsp;void&nbsp;setSourceAndTarget(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
                                   <a href="../../../../org/cyclonedx/model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)
                            throws com.fasterxml.jackson.core.JsonProcessingException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>com.fasterxml.jackson.core.JsonProcessingException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setResource-com.fasterxml.jackson.databind.JsonNode-org.cyclonedx.model.formulation.common.AbstractType-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setResource</h4>
+<pre>protected&nbsp;void&nbsp;setResource(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
+                           <a href="../../../../org/cyclonedx/model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)
+                    throws com.fasterxml.jackson.core.JsonProcessingException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>com.fasterxml.jackson.core.JsonProcessingException</code></dd>
+</dl>
+</li>
+</ul>
+<a name="setProperties-com.fasterxml.jackson.databind.JsonNode-org.cyclonedx.model.formulation.common.AbstractType-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setProperties</h4>
+<pre>protected&nbsp;void&nbsp;setProperties(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
+                             <a href="../../../../org/cyclonedx/model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)
+                      throws com.fasterxml.jackson.core.JsonProcessingException</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>com.fasterxml.jackson.core.JsonProcessingException</code></dd>
