@@ -1,4 +1,5 @@
 {
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
   "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
@@ -76,6 +77,13 @@
             "name": "Partner Org",
             "url": [
               "https://partner.org"
+            ],
+            "contact" : [
+              {
+                "name": "Support",
+                "email": "support@partner.org",
+                "phone": "800-555-1212"
+              }
             ]
           },
           "group": "org.partner",

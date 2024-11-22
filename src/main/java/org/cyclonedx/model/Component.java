@@ -207,8 +207,7 @@ public class Component extends ExtensibleElement {
     private ModelCard modelCard;
 
     @VersionFilter(Version.VERSION_15)
-    @JsonProperty("data")
-    private ComponentData data;
+    private List<ComponentData> data;
 
     @VersionFilter(Version.VERSION_16)
     @JsonProperty("cryptoProperties")
@@ -500,11 +499,14 @@ public class Component extends ExtensibleElement {
         this.modelCard = modelCard;
     }
 
-    public ComponentData getData() {
+    @JsonProperty("data")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "data")
+    public List<ComponentData> getData() {
         return data;
     }
 
-    public void setData(final ComponentData data) {
+    public void setData(final List<ComponentData> data) {
         this.data = data;
     }
 
