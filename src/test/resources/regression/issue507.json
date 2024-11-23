@@ -1,0 +1,28 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "components": [
+    {
+      "type": "library",
+      "name": "acme-library",
+      "licenses": [
+        {
+          "license": {
+            "name": "foo",
+            "licensing": {
+              "purchaser": {
+                "organization": {
+                  "contact": [
+                    {
+                      "name": ""
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

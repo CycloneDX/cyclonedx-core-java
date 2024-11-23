@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -257,6 +258,18 @@ public class JsonParserTest
     }
 
     @Test
+    public void testIssue507Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue507.json");
+        assertThat(bom.getComponents()).hasSize(1);
+        assertThat(bom.getComponents().get(0).getLicenses()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses()).hasSize(1);
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing().getPurchaser()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing().getPurchaser().getOrganization()).isNotNull();
+        assertThat(bom.getComponents().get(0).getLicenses().getLicenses().get(0).getLicensing().getPurchaser().getOrganization().getContacts()).hasSize(1);
+    }
+
+    @Test
     public void schema16_license_id_acknowledgement() throws Exception {
         final Bom bom = getJsonBom("1.6/valid-license-id-1.6.json");
 
@@ -433,8 +446,8 @@ public class JsonParserTest
         assertEquals(1, assessors.size());
 
         Assessor assessor = assessors.get(0);
-        assertEquals(false, assessor.getThirdParty());
-        assertEquals("Acme Inc", assessor.getOrganization().getName());
+        assertEquals(true, assessor.getThirdParty());
+        assertEquals("Assessors Inc", assessor.getOrganization().getName());
         assertEquals("assessor-1", assessor.getBomRef());
 
         //Attestations
@@ -454,7 +467,7 @@ public class JsonParserTest
         Conformance conformance = map.getConformance();
         assertEquals(0.8, conformance.getScore());
         assertEquals("Conformance rationale here", conformance.getRationale());
-        assertEquals("mitigations-1", conformance.getMitigationStrategies().get(0));
+        assertEquals("mitigationStrategy-1", conformance.getMitigationStrategies().get(0));
 
         Confidence confidence = map.getConfidence();
         assertEquals(1.0, confidence.getScore());

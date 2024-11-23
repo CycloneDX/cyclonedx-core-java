@@ -51,7 +51,9 @@ public class OrganizationalChoiceDeserializer
 
   private OrganizationalEntity deserializeOrganization(JsonParser jp, JsonNode organizationNode) throws JsonProcessingException {
     OrganizationalEntity organization = new OrganizationalEntity();
-    organization.setName(organizationNode.get("name").asText());
+    if (organizationNode.has("name")) {
+      organization.setName(organizationNode.get("name").asText());
+    }
 
     if (organizationNode.has("contact")) {
       JsonNode contactsNode = organizationNode.get("contact");

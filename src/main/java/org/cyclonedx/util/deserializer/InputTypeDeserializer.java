@@ -42,12 +42,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
 
     setSourceAndTarget(node, inputType);
     createInputDataInfo(node, inputType);
-
-    if(node.has("properties")) {
-      JsonNode propertiesNode = node.get("properties");
-      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
-      inputType.setProperties(properties);
-    }
+    setProperties(node, inputType);
 
     return inputType;
   }
@@ -56,9 +51,7 @@ public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputTyp
       throws IOException
   {
     if (node.has("resource")) {
-      JsonNode resourceNode = node.get("resource");
-      ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
-      inputType.setResource(resource);
+      setResource(node, inputType);
     } else if (node.has("parameters")) {
       JsonNode parametersNode = node.get("parameters");
       List<Parameter> parameters = objectMapper.convertValue(parametersNode, new TypeReference<List<Parameter>>() {});

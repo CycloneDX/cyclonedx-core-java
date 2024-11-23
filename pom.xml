@@ -23,7 +23,7 @@
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
     <packaging>jar</packaging>
-    <version>9.0.6-SNAPSHOT</version>
+    <version>9.1.1-SNAPSHOT</version>
 
     <name>CycloneDX Core (Java)</name>
     <description>The CycloneDX core module provides a model representation of the BOM along with utilities to assist in creating, parsing, and validating BOMs.</description>
@@ -77,12 +77,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Maven Plugin Versions -->
-        <maven.cyclonedx.plugin.version>2.8.1</maven.cyclonedx.plugin.version>
-        <maven.javadoc.plugin.version>3.10.0</maven.javadoc.plugin.version>
+        <maven.cyclonedx.plugin.version>2.9.0</maven.cyclonedx.plugin.version>
+        <maven.javadoc.plugin.version>3.11.1</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.6.0</maven.github.release.plugin.version>
-        <project.build.outputTimestamp>2024-08-06T14:08:19Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-10-15T21:02:52Z</project.build.outputTimestamp>
     </properties>
 
     <scm>
@@ -154,7 +154,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.16.1</version>
+            <version>2.18.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -181,7 +181,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.17.2</version>
+            <version>2.18.1</version>
         </dependency>
 
         <!-- JSON Schema library -->
@@ -189,7 +189,7 @@
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>json-schema-validator</artifactId>
-            <version>1.5.1</version>
+            <version>1.5.3</version>
         </dependency>
 
         <!-- Unit Test -->
@@ -204,14 +204,14 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.11.0</version>
+            <version>5.11.3</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.11.0</version>
+            <version>5.11.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -312,7 +312,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.5.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -349,7 +349,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.6</version>
+                        <version>3.2.7</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
