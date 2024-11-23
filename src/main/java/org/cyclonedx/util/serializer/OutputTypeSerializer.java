@@ -4,11 +4,12 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.model.formulation.common.OutputType;
 
 public class OutputTypeSerializer
-    extends AbstractDataTypeSerializer<OutputType>
+    extends StdSerializer<OutputType>
 {
   private final boolean isXml;
 
@@ -26,16 +27,13 @@ public class OutputTypeSerializer
       throws IOException {
     if (isXml && jsonGenerator instanceof ToXmlGenerator) {
       ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
-      xmlGenerator.writeStartObject();
-      xmlGenerator.writeFieldName("input");
-      createOutputChoice(value, xmlGenerator);
-      xmlGenerator.writeEndObject();
+      createOutputChoiceXml(value, xmlGenerator, serializerProvider);
     } else {
-      createOutputChoice(value, jsonGenerator);
+      createOutputChoiceJson(value, jsonGenerator, serializerProvider);
     }
   }
 
-  private void createOutputChoice(final OutputType output, final JsonGenerator jsonGenerator)
+  private void createOutputChoiceJson(final OutputType output, final JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
       throws IOException
   {
     jsonGenerator.writeStartObject();
@@ -44,8 +42,8 @@ public class OutputTypeSerializer
       jsonGenerator.writeFieldName("resource");
       jsonGenerator.writeObject( output.getResource());
     }
-    else if (output.getEnvironmentVars() != null && !output.getEnvironmentVars().isEmpty()) {
-      parseEnvironmentVars(jsonGenerator, output.getEnvironmentVars());
+    else if (output.getEnvironmentVars() != null) {
+      new EnvironmentVarsSerializer(isXml).serialize(output.getEnvironmentVars(), jsonGenerator, serializerProvider);
     }
     else if (output.getData() != null) {
       jsonGenerator.writeFieldName("data");
@@ -59,7 +57,48 @@ public class OutputTypeSerializer
     jsonGenerator.writeEndObject();
   }
 
+  private void createOutputChoiceXml(final OutputType output, final ToXmlGenerator xmlGenerator, SerializerProvider serializerProvider)
+      throws IOException
+  {
+    xmlGenerator.writeStartObject();
 
+    if (output.getResource() != null) {
+      xmlGenerator.writeFieldName("resource");
+      xmlGenerator.writeObject( output.getResource());
+    }
+    else if (output.getEnvironmentVars() != null) {
+      new EnvironmentVarsSerializer(isXml).serialize(output.getEnvironmentVars(), xmlGenerator, serializerProvider);
+    }
+    else if (output.getData() != null) {
+      xmlGenerator.writeFieldName("data");
+      xmlGenerator.writeObject( output.getData());
+    }
+
+    if (output.getType() != null) {
+      xmlGenerator.writeFieldName("type");
+      xmlGenerator.writeObject(output.getType());
+    }
+    if (output.getSource() != null) {
+      xmlGenerator.writeFieldName("source");
+      xmlGenerator.writeObject(output.getSource());
+    }
+    if (output.getTarget() != null) {
+      xmlGenerator.writeFieldName("target");
+      xmlGenerator.writeObject(output.getTarget());
+    }
+    if (output.getProperties() != null) {
+      xmlGenerator.writeFieldName("properties");
+      xmlGenerator.writeObject( output.getProperties());
+    }
+    xmlGenerator.writeEndObject();
+  }
+
+  protected void writeField(JsonGenerator jsonGenerator, String fieldName, Object fieldValue) throws IOException {
+    if (fieldValue != null) {
+      jsonGenerator.writeFieldName(fieldName);
+      jsonGenerator.writeObject(fieldValue);
+    }
+  }
 
   @Override
   public Class<OutputType> handledType() {

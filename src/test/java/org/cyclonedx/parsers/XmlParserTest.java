@@ -704,7 +704,7 @@ public class XmlParserTest
         assertEquals("128", ap.getParameterSetIdentifier());
         assertEquals(ExecutionEnvironment.SOFTWARE_PLAIN_RAM, ap.getExecutionEnvironment());
         assertEquals(ImplementationPlatform.X86_64, ap.getImplementationPlatform());
-        assertEquals(CertificationLevel.NONE, ap.getCertificationLevel());
+        assertEquals(CertificationLevel.NONE, ap.getCertificationLevel().get(0));
         assertEquals(Mode.GCM, ap.getMode());
         assertEquals(128, ap.getClassicalSecurityLevel());
         assertEquals(1, ap.getNistQuantumSecurityLevel());

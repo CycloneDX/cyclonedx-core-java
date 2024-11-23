@@ -62,8 +62,7 @@ public class SignatorySerializer
 
     if (signatory.getSignature() != null && !isXml) {
       shouldSerialize = true;
-    }
-    else if (signatory.getExternalReference() != null && signatory.getOrganization() != null) {
+    } else if (signatory.getExternalReference() != null && signatory.getOrganization() != null) {
       shouldSerialize = true;
     }
 

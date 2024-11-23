@@ -16,7 +16,7 @@ public abstract class AbstractType extends ExtensibleElement
   private ResourceReferenceChoice source;
   private ResourceReferenceChoice target;
   private ResourceReferenceChoice resource;
-  private List<EnvVariableChoice> environmentVars;
+  private EnvironmentVars environmentVars;
   private AttachmentText data;
   private List<Property> properties;
 
@@ -44,13 +44,12 @@ public abstract class AbstractType extends ExtensibleElement
     this.resource = resource;
   }
 
-
   @JacksonXmlElementWrapper(localName = "environmentVars")
-  public List<EnvVariableChoice> getEnvironmentVars() {
+  public EnvironmentVars getEnvironmentVars() {
     return environmentVars;
   }
 
-  public void setEnvironmentVars(final List<EnvVariableChoice> environmentVars) {
+  public void setEnvironmentVars(final EnvironmentVars environmentVars) {
     this.environmentVars = environmentVars;
   }
 
