@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -103,15 +103,10 @@ var activeTableTab = "activeTableTab";
 <li>com.fasterxml.jackson.databind.JsonSerializer&lt;T&gt;</li>
 <li>
 <ul class="inheritance">
-<li>com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;T&gt;</li>
-<li>
-<ul class="inheritance">
-<li><a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html" title="class in org.cyclonedx.util.serializer">org.cyclonedx.util.serializer.AbstractDataTypeSerializer</a>&lt;<a href="../../../../org/cyclonedx/model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</li>
+<li>com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../../../org/cyclonedx/model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</li>
 <li>
 <ul class="inheritance">
 <li>org.cyclonedx.util.serializer.OutputTypeSerializer</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -129,7 +124,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">OutputTypeSerializer</span>
-extends <a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html" title="class in org.cyclonedx.util.serializer">AbstractDataTypeSerializer</a>&lt;<a href="../../../../org/cyclonedx/model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</pre>
+extends com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../../../org/cyclonedx/model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#org.cyclonedx.util.serializer.OutputTypeSerializer">Serialized Form</a></dd>
@@ -213,14 +208,13 @@ extends <a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSeria
          com.fasterxml.jackson.core.JsonGenerator&nbsp;jsonGenerator,
          com.fasterxml.jackson.databind.SerializerProvider&nbsp;serializerProvider)</code>&nbsp;</td>
 </tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/OutputTypeSerializer.html#writeField-com.fasterxml.jackson.core.JsonGenerator-java.lang.String-java.lang.Object-">writeField</a></span>(com.fasterxml.jackson.core.JsonGenerator&nbsp;jsonGenerator,
+          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</code>&nbsp;</td>
+</tr>
 </table>
-<ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.cyclonedx.util.serializer.AbstractDataTypeSerializer">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;org.cyclonedx.util.serializer.<a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html" title="class in org.cyclonedx.util.serializer">AbstractDataTypeSerializer</a></h3>
-<code><a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html#parseEnvironmentVars-com.fasterxml.jackson.core.JsonGenerator-java.util.List-">parseEnvironmentVars</a>, <a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html#writeField-com.fasterxml.jackson.core.JsonGenerator-java.lang.String-java.lang.Object-">writeField</a></code></li>
-</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.fasterxml.jackson.databind.ser.std.StdSerializer">
 <!--   -->
@@ -296,6 +290,22 @@ extends <a href="../../../../org/cyclonedx/util/serializer/AbstractDataTypeSeria
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>serialize</code>&nbsp;in class&nbsp;<code>com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;<a href="../../../../org/cyclonedx/model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="writeField-com.fasterxml.jackson.core.JsonGenerator-java.lang.String-java.lang.Object-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>writeField</h4>
+<pre>protected&nbsp;void&nbsp;writeField(com.fasterxml.jackson.core.JsonGenerator&nbsp;jsonGenerator,
+                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)
+                   throws <a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
 </dl>

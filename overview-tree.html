@@ -203,7 +203,7 @@
 <li type="circle">org.cyclonedx.model.component.modelCard.consideration.consumption.energy.<a href="org/cyclonedx/model/component/modelCard/consideration/consumption/energy/EnergyMeasure.html" title="class in org.cyclonedx.model.component.modelCard.consideration.consumption.energy"><span class="typeNameLink">EnergyMeasure</span></a></li>
 <li type="circle">org.cyclonedx.model.component.modelCard.consideration.consumption.energy.<a href="org/cyclonedx/model/component/modelCard/consideration/consumption/energy/EnergyProvider.html" title="class in org.cyclonedx.model.component.modelCard.consideration.consumption.energy"><span class="typeNameLink">EnergyProvider</span></a></li>
 <li type="circle">org.cyclonedx.model.component.modelCard.consideration.<a href="org/cyclonedx/model/component/modelCard/consideration/EnvironmentalConsideration.html" title="class in org.cyclonedx.model.component.modelCard.consideration"><span class="typeNameLink">EnvironmentalConsideration</span></a></li>
-<li type="circle">org.cyclonedx.model.formulation.common.<a href="org/cyclonedx/model/formulation/common/EnvVariableChoice.html" title="class in org.cyclonedx.model.formulation.common"><span class="typeNameLink">EnvVariableChoice</span></a></li>
+<li type="circle">org.cyclonedx.model.formulation.common.<a href="org/cyclonedx/model/formulation/common/EnvironmentVars.html" title="class in org.cyclonedx.model.formulation.common"><span class="typeNameLink">EnvironmentVars</span></a></li>
 <li type="circle">org.cyclonedx.model.formulation.trigger.<a href="org/cyclonedx/model/formulation/trigger/Event.html" title="class in org.cyclonedx.model.formulation.trigger"><span class="typeNameLink">Event</span></a></li>
 <li type="circle">org.cyclonedx.model.license.<a href="org/cyclonedx/model/license/Expression.html" title="class in org.cyclonedx.model.license"><span class="typeNameLink">Expression</span></a></li>
 <li type="circle">org.cyclonedx.model.<a href="org/cyclonedx/model/ExtensibleElement.html" title="class in org.cyclonedx.model"><span class="typeNameLink">ExtensibleElement</span></a>
@@ -286,10 +286,8 @@
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/OutputTypeDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">OutputTypeDeserializer</span></a></li>
 </ul>
 </li>
-<li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/CertificationLevelDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">CertificationLevelDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/ComponentWrapperDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">ComponentWrapperDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/DatasetsChoiceDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">DatasetsChoiceDeserializer</span></a></li>
-<li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/EnvVariableChoiceDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">EnvVariableChoiceDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/ExpressionDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">ExpressionDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/ExternalReferencesDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">ExternalReferencesDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/HashesDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">HashesDeserializer</span></a></li>
@@ -311,6 +309,7 @@
 <ul>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/AttachmentTextDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">AttachmentTextDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/DependencyDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">DependencyDeserializer</span></a></li>
+<li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/EnvironmentVarsDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">EnvironmentVarsDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/ExtensionDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">ExtensionDeserializer</span></a></li>
 <li type="circle">org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/VulnerabilityDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">VulnerabilityDeserializer</span></a></li>
 </ul>
@@ -324,23 +323,20 @@
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/PropertiesSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">PropertiesSerializer</span></a></li>
 <li type="circle">com.fasterxml.jackson.databind.ser.std.StdSerializer&lt;T&gt; (implements com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable, com.fasterxml.jackson.databind.jsonschema.SchemaAware, java.io.<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a>)
 <ul>
-<li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/AbstractDataTypeSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">AbstractDataTypeSerializer</span></a>&lt;T&gt;
-<ul>
-<li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/InputTypeSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">InputTypeSerializer</span></a></li>
-<li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/OutputTypeSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">OutputTypeSerializer</span></a></li>
-</ul>
-</li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/ComponentWrapperSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">ComponentWrapperSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/CustomDateSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">CustomDateSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/DependencySerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">DependencySerializer</span></a> (implements com.fasterxml.jackson.databind.ser.ContextualSerializer)</li>
+<li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/EnvironmentVarsSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">EnvironmentVarsSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/EvidenceSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">EvidenceSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/ExtensibleTypesSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">ExtensibleTypesSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/ExtensionSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">ExtensionSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/ExternalReferenceSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">ExternalReferenceSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/HashSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">HashSerializer</span></a></li>
+<li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/InputTypeSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">InputTypeSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/LicenseChoiceSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">LicenseChoiceSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/LifecycleSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">LifecycleSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/MetadataSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">MetadataSerializer</span></a></li>
+<li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/OutputTypeSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">OutputTypeSerializer</span></a></li>
 <li type="circle">org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/SignatorySerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">SignatorySerializer</span></a></li>
 <li type="circle">com.fasterxml.jackson.databind.ser.std.StdScalarSerializer&lt;T&gt;
 <ul>
