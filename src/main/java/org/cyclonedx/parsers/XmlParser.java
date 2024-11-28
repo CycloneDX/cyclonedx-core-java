@@ -70,10 +70,6 @@ public class XmlParser extends CycloneDxSchema implements Parser {
 
     public XmlParser() {
         mapper = new XmlMapper();
-        //mapper.addMixIn(Component.class, Component12Mixin.class);
-        //mapper.addMixIn(Component.class, Component16Mixin.class);
-
-        mapper.addMixIn(Component.class, ComponentMixin.class);
     }
 
     private static final Map<String, String> NAMESPACE_TO_VERSION_MAP = new HashMap<>();

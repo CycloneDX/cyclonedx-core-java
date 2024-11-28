@@ -160,7 +160,9 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
-    private Object authorOrAuthors;
+    @Deprecated
+    @VersionFilter(Version.VERSION_12)
+    private String author;
 
     @VersionFilter(Version.VERSION_11)
     private String publisher;
@@ -223,6 +225,10 @@ public class Component extends ExtensibleElement {
     private Tags tags;
 
     @VersionFilter(Version.VERSION_16)
+    @JsonProperty("authors")
+    private List<OrganizationalContact> authors;
+
+    @VersionFilter(Version.VERSION_16)
     @JsonProperty("manufacturer")
     private OrganizationalEntity manufacturer;
 
@@ -254,42 +260,22 @@ public class Component extends ExtensibleElement {
         this.supplier = supplier;
     }
 
-    // Unified getter for both authors and author
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("authors") // This name will work for both a single String and a List
-    @JacksonXmlElementWrapper(localName = "authors", useWrapping = false)
-    @JacksonXmlProperty(localName = "author")
-    public Object getAuthorOrAuthors() {
-        return authorOrAuthors;
-    }
-
-    // Unified setter for both authors and author
-    public void setAuthorOrAuthors(Object authorOrAuthors) {
-        this.authorOrAuthors = authorOrAuthors;
-    }
-
     // Convenience methods to help with accessing the field
 
     public String getAuthor() {
-        if (authorOrAuthors instanceof String) {
-            return (String) authorOrAuthors;
-        }
-        return null;
+        return author;
     }
 
     public void setAuthor(String author) {
-        this.authorOrAuthors = author;
+        this.author = author;
     }
 
-    public List<OrganizationalContact> getAuthorsList() {
-        if (authorOrAuthors instanceof List) {
-            return (List<OrganizationalContact>) authorOrAuthors;
-        }
-        return null;
+    public List<OrganizationalContact> getAuthors() {
+        return authors;
     }
 
-    public void setAuthorsList(List<OrganizationalContact> authorsList) {
-        this.authorOrAuthors = authorsList;
+    public void setAuthors(final List<OrganizationalContact> authors) {
+        this.authors = authors;
     }
 
     public String getPublisher() {
@@ -591,7 +577,7 @@ public class Component extends ExtensibleElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(authorOrAuthors, publisher, group, name, version, description, scope, hashes, licenses,
+        return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenses,
             copyright, cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard,
             data);
     }
@@ -603,7 +589,7 @@ public class Component extends ExtensibleElement {
         Component component = (Component) o;
         return modified == component.modified &&
                 Objects.equals(supplier, component.supplier) &&
-                Objects.equals(authorOrAuthors, component.authorOrAuthors) &&
+                Objects.equals(author, component.author) &&
                 Objects.equals(publisher, component.publisher) &&
                 Objects.equals(group, component.group) &&
                 Objects.equals(name, component.name) &&

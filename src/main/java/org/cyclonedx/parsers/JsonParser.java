@@ -53,8 +53,6 @@ public class JsonParser extends CycloneDxSchema implements Parser {
 
     public JsonParser() {
         mapper = new ObjectMapper();
-        mapper.addMixIn(Component.class, Component12Mixin.class);
-        mapper.addMixIn(Component.class, Component16Mixin.class);
     }
 
     /**
