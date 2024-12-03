@@ -44,4 +44,25 @@ public enum Version
     this.version = version;
     this.formats = formats;
   }
+
+  /**
+   * Returns the version based on the given version string.
+   *
+   * @param versionString The version string.
+   * @return The version or null if not found.
+   */
+  public static Version fromVersionString(String versionString) {
+    if (versionString != null) {
+      switch (versionString) {
+        case "1.0": return VERSION_10;
+        case "1.1": return VERSION_11;
+        case "1.2": return VERSION_12;
+        case "1.3": return VERSION_13;
+        case "1.4": return VERSION_14;
+        case "1.5": return VERSION_15;
+        case "1.6": return VERSION_16;
+      }
+    }
+    return null;
+  }
 }
