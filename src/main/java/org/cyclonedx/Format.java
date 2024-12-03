@@ -30,4 +30,20 @@ public enum Format {
     public String getMediaType() {
         return mediaType;
     }
+
+    /**
+     * Returns the format based on the given file extension.
+     *
+     * @param extension The file extension.
+     * @return The format or null if not found.
+     */
+    public static Format fromExtension(String extension) {
+        if (extension != null) {
+            switch (extension) {
+                case "xml": return XML;
+                case "json": return JSON;
+            }
+        }
+        return null;
+    }
 }
