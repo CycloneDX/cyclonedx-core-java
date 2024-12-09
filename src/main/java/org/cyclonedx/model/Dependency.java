@@ -34,7 +34,7 @@ import java.util.Objects;
 public class Dependency extends BomReference {
 
     @VersionFilter(Version.VERSION_16)
-    private BomReference provides;
+    private List<BomReference> provides;
 
     @JsonProperty("dependsOn")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -65,11 +65,11 @@ public class Dependency extends BomReference {
         }
     }
 
-    public BomReference getProvides() {
+    public List<BomReference> getProvides() {
         return provides;
     }
 
-    public void setProvides(final BomReference provides) {
+    public void setProvides(final List<BomReference> provides) {
         this.provides = provides;
     }
 

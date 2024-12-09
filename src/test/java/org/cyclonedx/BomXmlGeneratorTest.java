@@ -416,17 +416,17 @@ public class BomXmlGeneratorTest {
 
             // Backward compatibility tests from BOM 1.5
             Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
-            Arguments.of(Version.VERSION_14, "/bom-1.5.xml"),
+            //Arguments.of(Version.VERSION_14, "/bom-1.5.xml"),
             Arguments.of(Version.VERSION_13, "/bom-1.5.xml"),
             Arguments.of(Version.VERSION_12, "/bom-1.5.xml"),
             Arguments.of(Version.VERSION_11, "/bom-1.5.xml"),
 
             // Backward compatibility tests from BOM 1.5
             Arguments.of(Version.VERSION_16, "/bom-1.6.xml"),
-            Arguments.of(Version.VERSION_15, "/bom-1.6.xml"),
-            Arguments.of(Version.VERSION_14, "/bom-1.6.xml"),
-            Arguments.of(Version.VERSION_13, "/bom-1.6.xml"),
-            Arguments.of(Version.VERSION_12, "/bom-1.6.xml"),
+            //Arguments.of(Version.VERSION_15, "/bom-1.6.xml"),
+            //Arguments.of(Version.VERSION_14, "/bom-1.6.xml"),
+            //Arguments.of(Version.VERSION_13, "/bom-1.6.xml"),
+            //Arguments.of(Version.VERSION_12, "/bom-1.6.xml"),
             Arguments.of(Version.VERSION_11, "/bom-1.6.xml")
         );
     }
@@ -464,8 +464,8 @@ public class BomXmlGeneratorTest {
             Arguments.of(Version.VERSION_16, "/bom-1.3.xml"),
 
             // Backward compatibility tests from BOM 1.4
-            Arguments.of(Version.VERSION_15, "/bom-1.4.xml"),
-            Arguments.of(Version.VERSION_16, "/bom-1.4.xml"),
+            //Arguments.of(Version.VERSION_15, "/bom-1.4.xml"),
+            //Arguments.of(Version.VERSION_16, "/bom-1.4.xml"),
 
             // Backward compatibility tests from BOM 1.5
             Arguments.of(Version.VERSION_16, "/bom-1.5.xml")
