@@ -568,4 +568,11 @@ public class JsonParserTest
             .containsAll(Arrays.asList(CryptoFunction.KEYGEN, CryptoFunction.ENCRYPT, CryptoFunction.DECRYPT,
                 CryptoFunction.TAG)));
     }
+
+    @Test
+    public void testIssue562Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue562.json");
+        assertEquals(2, bom.getMetadata().getToolChoice().getComponents().size());
+        assertEquals(2, bom.getMetadata().getAuthors().size());
+    }
 }

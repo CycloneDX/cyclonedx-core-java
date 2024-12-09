@@ -11,6 +11,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.model.component.evidence.Occurrence;
 import org.cyclonedx.model.metadata.ToolInformation;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
@@ -164,15 +165,14 @@ public class MetadataSerializer
   }
 
   private <T> void writeArrayFieldXML(List<T> items, ToXmlGenerator xmlGenerator, String fieldName) throws IOException {
-    if (items != null) {
+    if (CollectionUtils.isNotEmpty(items)) {
       xmlGenerator.writeFieldName(fieldName + "s");
-      xmlGenerator.writeStartArray();
+      xmlGenerator.writeStartObject();
       for (T item : items) {
-        xmlGenerator.writeStartObject();
-        xmlGenerator.writeObjectField(fieldName, item);
-        xmlGenerator.writeEndObject();
+        xmlGenerator.writeFieldName(fieldName);
+        xmlGenerator.writeObject(item);
       }
-      xmlGenerator.writeEndArray();
+      xmlGenerator.writeEndObject();
     }
   }
 

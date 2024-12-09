@@ -45,7 +45,7 @@ public class ToolInformationDeserializer
     return parseToolInformation(node);
   }
 
-  private ToolInformation parseToolInformation(JsonNode toolsNode) throws IOException {
+  private ToolInformation parseToolInformation(JsonNode toolsNode) {
     ToolInformation toolInformation = new ToolInformation();
     if (toolsNode.has("components")) {
       parseComponents(toolsNode.get("components"), toolInformation);
@@ -58,24 +58,42 @@ public class ToolInformationDeserializer
 
   private void parseComponents(JsonNode componentsNode, ToolInformation toolInformation) {
     if (componentsNode != null) {
+      // Case JSON input where "components" is an array
       if (componentsNode.isArray()) {
         List<Component> components = mapper.convertValue(componentsNode, new TypeReference<List<Component>>() {});
         toolInformation.setComponents(components);
-      } else if (componentsNode.isObject()) {
-        Component component = mapper.convertValue(componentsNode, Component.class);
-        toolInformation.setComponents(Collections.singletonList(component));
+      }
+      // Case XML-like input where "components" contains "component"
+      else if (componentsNode.isObject() && componentsNode.has("component")) {
+        JsonNode componentNode = componentsNode.get("component");
+        if (componentNode.isArray()) {
+          List<Component> components = mapper.convertValue(componentNode, new TypeReference<List<Component>>() {});
+          toolInformation.setComponents(components);
+        } else if (componentNode.isObject()) {
+          Component component = mapper.convertValue(componentNode, Component.class);
+          toolInformation.setComponents(Collections.singletonList(component));
+        }
       }
     }
   }
 
   private void parseServices(JsonNode servicesNode, ToolInformation toolInformation) {
     if (servicesNode != null) {
+      // Case JSON input where "services" is an array
       if (servicesNode.isArray()) {
         List<Service> services = mapper.convertValue(servicesNode, new TypeReference<List<Service>>() {});
         toolInformation.setServices(services);
-      } else if (servicesNode.isObject()) {
-        Service service = mapper.convertValue(servicesNode, Service.class);
-        toolInformation.setServices(Collections.singletonList(service));
+      }
+      // Case XML-like input where "services" contains "component"
+      else if (servicesNode.isObject() && servicesNode.has("service")) {
+        JsonNode serviceNode = servicesNode.get("service");
+        if (serviceNode.isArray()) {
+          List<Service> services = mapper.convertValue(servicesNode, new TypeReference<List<Service>>() {});
+          toolInformation.setServices(services);
+        } else if (serviceNode.isObject()) {
+          Service service = mapper.convertValue(servicesNode, Service.class);
+          toolInformation.setServices(Collections.singletonList(service));
+        }
       }
     }
   }
