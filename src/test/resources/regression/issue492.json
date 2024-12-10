@@ -1,0 +1,17 @@
+{
+  "bomFormat":"CycloneDX",
+  "specVersion":"1.4",
+  "serialNumber":"urn:uuid:0c81ff2e-d64e-4897-bfa4-2f0f7d8ab767",
+  "version" : 1,
+  "metadata" : {
+    "timestamp":"2024-12-09T21:56:45Z",
+    "tools": [
+      {
+        "name": "tool-a"
+      },
+      {
+        "name": "tool-b"
+      }
+    ]
+  }
+}

@@ -547,7 +547,7 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void testIssue562() throws Exception {
-        Version version = Version.VERSION_15;
+        Version version = Version.VERSION_16;
         Bom bom = createCommonJsonBom("/regression/issue562.json");
 
 
@@ -558,7 +558,18 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    @Test
+    public void testIssue492() throws Exception {
+        Version version = Version.VERSION_14;
+        Bom bom = createCommonJsonBom("/regression/issue492.json");
 
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
 
     private void assertExternalReferenceInfo(Bom bom) {
         assertEquals(3, bom.getExternalReferences().size());
