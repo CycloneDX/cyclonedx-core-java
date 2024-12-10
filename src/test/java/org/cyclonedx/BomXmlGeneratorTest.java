@@ -32,8 +32,10 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.license.Expression;
+import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
@@ -50,7 +52,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.Objects;
 
@@ -672,11 +676,67 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void testIssue408Regression_extensibleTypes() throws Exception {
+        Bom bom = new Bom();
+        bom.setSerialNumber("urn:uuid:" + UUID.randomUUID());
+
+        Metadata meta = new Metadata();
+
+        // ToolInformation test
+        Component tool1 = new Component();
+        tool1.setType(Component.Type.APPLICATION);
+        tool1.setName("TOOL 1");
+        tool1.setVersion("v1");
+
+        Component tool2 = new Component();
+        tool2.setType(Component.Type.APPLICATION);
+        tool2.setName("TOOL 2");
+        tool2.setVersion("v2");
+
+        ToolInformation tools = new ToolInformation();
+        List<Component> components = new LinkedList<>();
+        components.add(tool1);
+        components.add(tool2);
+        tools.setComponents(components);
+        meta.setToolChoice(tools);
+
+        // Author test
+        OrganizationalContact auth1 = new OrganizationalContact();
+        auth1.setName("Author 1");
+        meta.addAuthor(auth1);
+
+        OrganizationalContact auth2 = new OrganizationalContact();
+        auth2.setName("Author 2");
+        meta.addAuthor(auth2);
+
+        bom.setMetadata(meta);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_16, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, Version.VERSION_16));
+    }
+
+    @Test
+    public void testIssue562() throws Exception {
         Version version = Version.VERSION_15;
-        Bom bom = createCommonBomXml("/regression/issue408-extensible-type.xml");
-        addExtensibleTypes(bom);
+        Bom bom = createCommonBomXml("/regression/issue562.xml");
 
         BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue492() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonBomXml("/regression/issue492.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+
         File loadedFile = writeToFile(generator.toXmlString());
 
         XmlParser parser = new XmlParser();
