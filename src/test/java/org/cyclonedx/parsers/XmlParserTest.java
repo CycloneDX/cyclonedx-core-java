@@ -713,4 +713,17 @@ public class XmlParserTest
             .containsAll(Arrays.asList(CryptoFunction.KEYGEN, CryptoFunction.ENCRYPT, CryptoFunction.DECRYPT,
                 CryptoFunction.TAG)));
     }
+
+    @Test
+    public void testIssue562Regression() throws Exception {
+        final Bom bom = getXmlBom("regression/issue562.xml");
+        assertEquals(2, bom.getMetadata().getToolChoice().getComponents().size());
+        assertEquals(2, bom.getMetadata().getAuthors().size());
+    }
+
+    @Test
+    public void testIssue492Regression() throws Exception {
+        final Bom bom = getXmlBom("regression/issue492.xml");
+        assertEquals(2, bom.getMetadata().getTools().size());
+    }
 }
