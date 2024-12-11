@@ -86,9 +86,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:CycloneDX/cyclonedx-core-java.git</connection>
+        <connection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</connection>
         <url>https://github.com/CycloneDX/cyclonedx-core-java.git</url>
-        <developerConnection>scm:git:git@github.com:CycloneDX/cyclonedx-core-java.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
