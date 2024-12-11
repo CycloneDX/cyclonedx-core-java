@@ -1,0 +1,74 @@
+name: Maven Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Perform a dry run of the Maven release'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          # Export the gpg private key using the following command and add the contents of that file to the GitHub secret
+          # gpg --armor --export-secret-keys <key_id> > gpg_key.asc
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Set up git
+        run: |
+          git config --global user.email "info@cyclonedx.org"
+          git config --global user.name "CycloneDX Automation"
+          git config --global credential.helper 'store --file ~/.git-credentials'
+          echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
+
+      - name: Set Maven options
+        id: maven_options
+        run: |
+          # Set the Maven options based on the 'dry_run' input
+          if ${{ github.event.inputs.dry_run }}; then
+            echo "options=release:prepare -DdryRun=true -Prelease" >> $GITHUB_ENV
+          else
+            echo "options=release:clean release:prepare release:perform -Prelease" >> $GITHUB_ENV
+          fi
+
+      - name: Run Maven command
+        # This requires the connection and developerConnection elements in the scm section of the pom
+        # to be set to "scm:git:https:...." thus preventing the release plugin from using SSH.
+        run: |
+          mvn -B ${{ env.options }}
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: ${{ github.event.inputs.dry_run == false }}
+
+      - name: Rollback if release fails
+        if: failure() && github.event.inputs.dry_run == false
+        run: |
+          echo "Release failed. Rolling back..."
+          mvn -B release:rollback -Prelease
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
