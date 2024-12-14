@@ -29,7 +29,6 @@ import org.cyclonedx.model.Service;
 import org.cyclonedx.model.metadata.ToolInformation;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 public class ToolInformationDeserializer
@@ -71,7 +70,7 @@ public class ToolInformationDeserializer
           toolInformation.setComponents(components);
         } else if (componentNode.isObject()) {
           Component component = mapper.convertValue(componentNode, Component.class);
-          toolInformation.setComponents(Collections.singletonList(component));
+          toolInformation.getComponents().add(component);
         }
       }
     }
@@ -84,7 +83,7 @@ public class ToolInformationDeserializer
         List<Service> services = mapper.convertValue(servicesNode, new TypeReference<List<Service>>() {});
         toolInformation.setServices(services);
       }
-      // Case XML-like input where "services" contains "component"
+      // Case XML-like input where "services" contains "service"
       else if (servicesNode.isObject() && servicesNode.has("service")) {
         JsonNode serviceNode = servicesNode.get("service");
         if (serviceNode.isArray()) {
@@ -92,7 +91,7 @@ public class ToolInformationDeserializer
           toolInformation.setServices(services);
         } else if (serviceNode.isObject()) {
           Service service = mapper.convertValue(servicesNode, Service.class);
-          toolInformation.setServices(Collections.singletonList(service));
+          toolInformation.getServices().add(service);
         }
       }
     }

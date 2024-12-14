@@ -27,6 +27,7 @@ import org.cyclonedx.generators.xml.*;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
@@ -727,6 +728,24 @@ public class BomXmlGeneratorTest {
         File loadedFile = writeToFile(generator.toXmlString());
 
         XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue571() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonBomXml("/regression/issue571.xml");
+
+        Component component = new Component();
+        component.setName("test");
+        component.setVersion("v2");
+        component.setType(Type.APPLICATION);
+        bom.getMetadata().getToolChoice().getComponents().add(component);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(loadedFile, version));
     }
 

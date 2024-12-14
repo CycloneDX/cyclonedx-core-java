@@ -19,18 +19,24 @@
 package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.license.Expression;
+import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
@@ -46,6 +52,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.Objects;
 
@@ -550,6 +560,23 @@ public class BomJsonGeneratorTest {
         Version version = Version.VERSION_16;
         Bom bom = createCommonJsonBom("/regression/issue562.json");
 
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue571() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/regression/issue571.json");
+
+        Component component = new Component();
+        component.setName("test");
+        component.setVersion("v2");
+        component.setType(Type.APPLICATION);
+        bom.getMetadata().getToolChoice().getComponents().add(component);
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
         File loadedFile = writeToFile(generator.toJsonString());
