@@ -58,10 +58,9 @@ public class AffectDeserializer
         if (versionNode.isArray()) {
           List<Vulnerability.Version> versions = mapper.convertValue(versionNode, new TypeReference<List<Vulnerability.Version>>() {});
           affect.setVersions(versions);
-        } else {
-          affect.setVersions(Collections.singletonList(
-                  mapper.convertValue(versionNode, Vulnerability.Version.class)
-          ));
+        }
+        else {
+          affect.addVersion(mapper.convertValue(versionNode, Vulnerability.Version.class));
         }
       }
     }
