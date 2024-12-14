@@ -31,17 +31,18 @@ The following table provides information on the version of this node module, the
 as well as the output format options. Use the latest possible version of this library that is the compatible with 
 the CycloneDX version supported by the target system.
 
-| Version | Schema Version | Format(s) |
-|---------|----------------|-----------|
-| 9.x     | CycloneDX v1.6 | XML/JSON  |
-| 8.x     | CycloneDX v1.5 | XML/JSON  |
-| 7.x     | CycloneDX v1.4 | XML/JSON  |
-| 6.x     | CycloneDX v1.4 | XML/JSON  |
-| 5.x     | CycloneDX v1.3 | XML/JSON  |
-| 4.x     | CycloneDX v1.2 | XML/JSON  |
-| 3.x     | CycloneDX v1.2 | XML/JSON  |
-| 2.x     | CycloneDX v1.1 | XML       |
-| 1.x     | CycloneDX v1.0 | XML       |
+| Version |  Schema Version  | Format(s) |
+|---------|------------------|-----------|
+| 10.x    | CycloneDX v1.6.1 | XML/JSON  |
+| 9.x     | CycloneDX v1.6   | XML/JSON  |
+| 8.x     | CycloneDX v1.5   | XML/JSON  |
+| 7.x     | CycloneDX v1.4   | XML/JSON  |
+| 6.x     | CycloneDX v1.4   | XML/JSON  |
+| 5.x     | CycloneDX v1.3   | XML/JSON  |
+| 4.x     | CycloneDX v1.2   | XML/JSON  |
+| 3.x     | CycloneDX v1.2   | XML/JSON  |
+| 2.x     | CycloneDX v1.1   | XML       |
+| 1.x     | CycloneDX v1.0   | XML       |
 
 ## Library API Documentation
 
