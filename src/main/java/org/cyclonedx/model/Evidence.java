@@ -108,6 +108,13 @@ public class Evidence
         this.occurrences = occurrences;
     }
 
+    public void addOccurrence(Occurrence occurrence) {
+        if (this.occurrences == null) {
+            this.occurrences = new ArrayList<>();
+        }
+        this.occurrences.add(occurrence);
+    }
+
     public Callstack getCallstack() {
         return callstack;
     }
