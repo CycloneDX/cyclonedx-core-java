@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
 
 public class ExpressionDeserializer
@@ -53,7 +54,7 @@ public class ExpressionDeserializer
     }
 
     if (node.has("acknowledgement")) {
-      expression.setAcknowledgement(node.get("acknowledgement").asText());
+      expression.setAcknowledgement(Acknowledgement.fromString(node.get("acknowledgement").asText()));
     }
 
     JsonNode textNode = node.get("expression");

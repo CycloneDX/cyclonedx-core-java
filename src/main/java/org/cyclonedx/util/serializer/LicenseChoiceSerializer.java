@@ -30,6 +30,7 @@ import org.cyclonedx.Version;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Property;
+import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
@@ -129,7 +130,7 @@ public class LicenseChoiceSerializer
   private void serializeXmlAttributes(
       final ToXmlGenerator toXmlGenerator,
       final String bomRef,
-      final String acknowledgement,
+      final Acknowledgement acknowledgement,
       final Object object) throws IOException
   {
     toXmlGenerator.writeStartObject();
@@ -140,10 +141,10 @@ public class LicenseChoiceSerializer
       toXmlGenerator.writeString(bomRef);
       toXmlGenerator.setNextIsAttribute(false);
     }
-    if (StringUtils.isNotBlank(acknowledgement) && shouldSerializeField(object, version, "acknowledgement")) {
+    if (acknowledgement != null && shouldSerializeField(object, version, "acknowledgement")) {
       toXmlGenerator.setNextIsAttribute(true);
       toXmlGenerator.writeFieldName("acknowledgement");
-      toXmlGenerator.writeString(acknowledgement);
+      toXmlGenerator.writeString(acknowledgement.getValue());
       toXmlGenerator.setNextIsAttribute(false);
     }
   }
@@ -197,9 +198,8 @@ public class LicenseChoiceSerializer
     gen.writeStartArray();
     gen.writeStartObject();
     gen.writeStringField("expression", expression.getValue());
-    if (StringUtils.isNotBlank(expression.getAcknowledgement()) &&
-        shouldSerializeField(expression, version, "acknowledgement")) {
-      gen.writeStringField("acknowledgement", expression.getAcknowledgement());
+    if (expression.getAcknowledgement() != null && shouldSerializeField(expression, version, "acknowledgement")) {
+      gen.writeStringField("acknowledgement", expression.getAcknowledgement().getValue());
     }
     if (StringUtils.isNotBlank(expression.getBomRef()) && shouldSerializeField(expression, version, "bomRef")) {
       gen.writeStringField("bom-ref", expression.getBomRef());

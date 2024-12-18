@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.Version;
+import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
 @SuppressWarnings("unused")
@@ -51,7 +53,7 @@ public class License extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true, localName = "acknowledgement")
     @JsonProperty("acknowledgement")
     @VersionFilter(Version.VERSION_16)
-    private String acknowledgement;
+    private Acknowledgement acknowledgement;
 
     @VersionFilter(Version.VERSION_15)
     private Licensing licensing;
@@ -120,6 +122,13 @@ public class License extends ExtensibleElement {
         this.properties = properties;
     }
 
+    public void addProperty(Property property) {
+        if(this.properties == null) {
+            this.properties = new ArrayList<>();
+        }
+        this.properties.add(property);
+    }
+
     public AttachmentText getAttachmentText() {
         return attachmentText;
     }
@@ -128,11 +137,11 @@ public class License extends ExtensibleElement {
         this.attachmentText = attachmentText;
     }
 
-    public String getAcknowledgement() {
+    public Acknowledgement getAcknowledgement() {
         return acknowledgement;
     }
 
-    public void setAcknowledgement(final String acknowledgement) {
+    public void setAcknowledgement(final Acknowledgement acknowledgement) {
         this.acknowledgement = acknowledgement;
     }
 
