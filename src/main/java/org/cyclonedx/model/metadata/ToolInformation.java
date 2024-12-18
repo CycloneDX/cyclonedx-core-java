@@ -1,5 +1,6 @@
 package org.cyclonedx.model.metadata;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,6 +22,9 @@ public class ToolInformation
   private List<Service> services;
 
   public List<Component> getComponents() {
+    if(components==null) {
+      components = new ArrayList<>();
+    }
     return components;
   }
 
@@ -29,6 +33,9 @@ public class ToolInformation
   }
 
   public List<Service> getServices() {
+    if(services==null) {
+      services = new ArrayList<>();
+    }
     return services;
   }
 
