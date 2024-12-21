@@ -41,6 +41,13 @@ public class Property extends ExtensibleElement {
     @JacksonXmlText
     private String value;
 
+    public Property() {
+    }
+     public Property(String name, String value) {
+        this.name = name;
+        this.value = value;
+     }
+
     public String getName() {
         return name;
     }
