@@ -27,7 +27,7 @@ public class Expression
   @JacksonXmlProperty(isAttribute = true, localName = "acknowledgement")
   @JsonProperty("acknowledgement")
   @VersionFilter(Version.VERSION_16)
-  private String acknowledgement;
+  private Acknowledgement acknowledgement;
 
   @JacksonXmlText
   @JsonProperty("expression")
@@ -49,11 +49,11 @@ public class Expression
     this.bomRef = bomRef;
   }
 
-  public String getAcknowledgement() {
+  public Acknowledgement getAcknowledgement() {
     return acknowledgement;
   }
 
-  public void setAcknowledgement(final String acknowledgement) {
+  public void setAcknowledgement(final Acknowledgement acknowledgement) {
     this.acknowledgement = acknowledgement;
   }
 

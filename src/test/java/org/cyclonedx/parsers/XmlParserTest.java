@@ -60,6 +60,7 @@ import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.
 import org.cyclonedx.model.definition.Level;
 import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
+import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -440,7 +441,7 @@ public class XmlParserTest
         Expression expression = lc.getExpression();
         assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", expression.getValue());
         assertEquals("my-license", expression.getBomRef());
-        assertEquals("declared", expression.getAcknowledgement());
+        assertEquals(Acknowledgement.DECLARED, expression.getAcknowledgement());
     }
 
     @Test

@@ -70,6 +70,7 @@ import org.cyclonedx.model.formulation.trigger.Event;
 import org.cyclonedx.model.formulation.trigger.Trigger;
 import org.cyclonedx.model.formulation.workspace.Volume;
 import org.cyclonedx.model.formulation.workspace.Workspace;
+import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.Justification;
 import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.State;
@@ -1010,7 +1011,7 @@ public class AbstractParserTest
     License license = lc.getLicenses().get(0);
     assertEquals("Apache-2.0", license.getId());
     assertEquals("my-license", license.getBomRef());
-    assertEquals("declared", license.getAcknowledgement());
+    assertEquals(Acknowledgement.DECLARED, license.getAcknowledgement());
   }
 
   Bom getXmlBom(String filename) throws ParseException, IOException {
