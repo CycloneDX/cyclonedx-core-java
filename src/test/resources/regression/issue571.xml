@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.6" serialNumber="urn:uuid:0c81ff2e-d64e-4897-bfa4-2f0f7d8ab767" version="1">
+  <metadata>
+    <timestamp>2024-12-09T21:56:45Z</timestamp>
+    <tools>
+      <components>
+        <component type="application">
+          <name>TOOL 1</name>
+          <version>v1</version>
+        </component>
+      </components>
+    </tools>
+    <authors>
+      <author>
+        <name>Author 1</name>
+      </author>
+      <author>
+        <name>Author 2</name>
+      </author>
+    </authors>
+  </metadata>
+</bom>
