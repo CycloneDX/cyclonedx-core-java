@@ -20,18 +20,22 @@ package org.cyclonedx.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 @SuppressWarnings("unused")
 public final class TimestampUtils {
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+  private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]");
 
   private TimestampUtils() {}
 
   public static Date parseTimestamp(String text) {
     try {
-      return DATE_FORMAT.parse(text);
-    } catch (ParseException | NullPointerException e) {
+      ZonedDateTime zdt = ZonedDateTime.parse(text, DATE_FORMAT);
+      return Date.from(zdt.toInstant());
+    } catch (DateTimeParseException | NullPointerException e) {
       return null;
     }
   }
