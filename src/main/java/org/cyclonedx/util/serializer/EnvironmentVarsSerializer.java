@@ -48,17 +48,7 @@ public class EnvironmentVarsSerializer
       xmlGenerator.writeStartObject();
       for (Object choice : choices) {
         if (choice instanceof Property) {
-          xmlGenerator.writeFieldName("environmentVar");
-          xmlGenerator.writeStartObject();
-          Property prop = (Property) choice;
-          xmlGenerator.setNextIsAttribute(true);
-          xmlGenerator.writeFieldName("name");
-          xmlGenerator.writeString(prop.getName());
-          xmlGenerator.setNextIsAttribute(false);
-
-          xmlGenerator.setNextIsUnwrapped(true);
-          xmlGenerator.writeStringField("", prop.getValue());
-          xmlGenerator.writeEndObject();
+          SerializerUtils.serializeProperty("environmentVar", (Property) choice, xmlGenerator);
         } else if (choice instanceof String) {
           xmlGenerator.writeFieldName("value");
           xmlGenerator.writeString((String) choice);
