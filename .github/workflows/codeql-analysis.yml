@@ -31,10 +31,10 @@ jobs:
       if: ${{ github.event_name == 'pull_request' }}
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@17a820bf2e43b47be2c72b39cc905417bc1ab6d0 # tag=v3.28.6
+      uses: github/codeql-action/init@dd746615b3b9d728a6a37ca2045b68ca76d4841a # tag=v3.28.8
       with:
         languages: java
     - name: Autobuild
-      uses: github/codeql-action/autobuild@17a820bf2e43b47be2c72b39cc905417bc1ab6d0 # tag=v3.28.6
+      uses: github/codeql-action/autobuild@dd746615b3b9d728a6a37ca2045b68ca76d4841a # tag=v3.28.8
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@17a820bf2e43b47be2c72b39cc905417bc1ab6d0 # tag=v3.28.6
+      uses: github/codeql-action/analyze@dd746615b3b9d728a6a37ca2045b68ca76d4841a # tag=v3.28.8
