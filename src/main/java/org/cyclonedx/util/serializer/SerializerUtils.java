@@ -44,7 +44,7 @@ public class SerializerUtils
   }
 
   public static void serializeProperty(String propertyName,  Property prop, ToXmlGenerator xmlGenerator) throws IOException {
-    xmlGenerator.writeFieldName("environmentVar");
+    xmlGenerator.writeFieldName(propertyName);
     xmlGenerator.writeStartObject();
     xmlGenerator.setNextIsAttribute(true);
     xmlGenerator.writeFieldName("name");
