@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -157,10 +157,22 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                 <a href="../../../../org/cyclonedx/model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&nbsp;hash)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/SerializerUtils.html#serializeProperty-java.lang.String-org.cyclonedx.model.Property-com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator-">serializeProperty</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;propertyName,
+                 <a href="../../../../org/cyclonedx/model/Property.html" title="class in org.cyclonedx.model">Property</a>&nbsp;prop,
+                 com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator&nbsp;xmlGenerator)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/SerializerUtils.html#shouldSerializeField-java.lang.Object-org.cyclonedx.Version-java.lang.String-">shouldSerializeField</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;obj,
                     <a href="../../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName)</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/cyclonedx/util/serializer/SerializerUtils.html#writeField-com.fasterxml.jackson.core.JsonGenerator-java.lang.String-java.lang.Object-">writeField</a></span>(com.fasterxml.jackson.core.JsonGenerator&nbsp;jsonGenerator,
+          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -234,12 +246,44 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <a name="shouldSerializeField-java.lang.Object-org.cyclonedx.Version-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>shouldSerializeField</h4>
 <pre>public static&nbsp;boolean&nbsp;shouldSerializeField(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;obj,
                                            <a href="../../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName)</pre>
+</li>
+</ul>
+<a name="serializeProperty-java.lang.String-org.cyclonedx.model.Property-com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>serializeProperty</h4>
+<pre>public static&nbsp;void&nbsp;serializeProperty(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;propertyName,
+                                     <a href="../../../../org/cyclonedx/model/Property.html" title="class in org.cyclonedx.model">Property</a>&nbsp;prop,
+                                     com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator&nbsp;xmlGenerator)
+                              throws <a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="writeField-com.fasterxml.jackson.core.JsonGenerator-java.lang.String-java.lang.Object-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>writeField</h4>
+<pre>public static&nbsp;void&nbsp;writeField(com.fasterxml.jackson.core.JsonGenerator&nbsp;jsonGenerator,
+                              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fieldName,
+                              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;fieldValue)
+                       throws <a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
+</dl>
 </li>
 </ul>
 </li>
