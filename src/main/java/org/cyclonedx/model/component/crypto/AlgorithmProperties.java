@@ -29,7 +29,8 @@ import org.cyclonedx.model.component.crypto.enums.Primitive;
     "mode",
     "padding",
     "cryptoFunctions",
-    "classicalSecurityLevel", "nistQuantumSecurityLevel"
+    "classicalSecurityLevel",
+    "nistQuantumSecurityLevel"
 })
 public class AlgorithmProperties
 {

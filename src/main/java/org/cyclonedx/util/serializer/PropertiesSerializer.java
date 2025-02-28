@@ -55,15 +55,7 @@ public class PropertiesSerializer
   {
     xmlGenerator.writeStartArray();
     for (Property property : properties) {
-      xmlGenerator.writeStartObject("property");
-      xmlGenerator.setNextIsAttribute(true);
-      xmlGenerator.writeFieldName("name");
-      xmlGenerator.writeString(property.getName());
-      xmlGenerator.setNextIsAttribute(false);
-
-      xmlGenerator.setNextIsUnwrapped(true);
-      xmlGenerator.writeStringField("", property.getValue());
-      xmlGenerator.writeEndObject();
+      SerializerUtils.serializeProperty("property", property, xmlGenerator);
     }
     xmlGenerator.writeEndArray();
   }

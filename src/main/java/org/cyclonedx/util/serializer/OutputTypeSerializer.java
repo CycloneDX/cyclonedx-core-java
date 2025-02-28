@@ -50,10 +50,10 @@ public class OutputTypeSerializer
       jsonGenerator.writeObject( output.getData());
     }
 
-    writeField(jsonGenerator, "type", output.getType());
-    writeField(jsonGenerator, "source", output.getSource());
-    writeField(jsonGenerator, "target", output.getTarget());
-    writeField(jsonGenerator, "properties", output.getProperties());
+    SerializerUtils.writeField(jsonGenerator, "type", output.getType());
+    SerializerUtils.writeField(jsonGenerator, "source", output.getSource());
+    SerializerUtils.writeField(jsonGenerator, "target", output.getTarget());
+    SerializerUtils.writeField(jsonGenerator, "properties", output.getProperties());
     jsonGenerator.writeEndObject();
   }
 
@@ -91,13 +91,6 @@ public class OutputTypeSerializer
       xmlGenerator.writeObject( output.getProperties());
     }
     xmlGenerator.writeEndObject();
-  }
-
-  protected void writeField(JsonGenerator jsonGenerator, String fieldName, Object fieldValue) throws IOException {
-    if (fieldValue != null) {
-      jsonGenerator.writeFieldName(fieldName);
-      jsonGenerator.writeObject(fieldValue);
-    }
   }
 
   @Override

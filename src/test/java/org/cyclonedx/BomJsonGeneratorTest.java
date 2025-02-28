@@ -20,10 +20,8 @@ package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
-import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
@@ -33,10 +31,8 @@ import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.license.Expression;
-import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.AfterEach;
@@ -52,10 +48,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.Objects;
 

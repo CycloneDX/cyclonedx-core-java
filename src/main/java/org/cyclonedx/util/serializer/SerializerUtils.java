@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Hash;
+import org.cyclonedx.model.Property;
 import org.cyclonedx.model.VersionFilter;
 
 public class SerializerUtils
@@ -42,5 +43,23 @@ public class SerializerUtils
     }
   }
 
+  public static void serializeProperty(String propertyName,  Property prop, ToXmlGenerator xmlGenerator) throws IOException {
+    xmlGenerator.writeFieldName(propertyName);
+    xmlGenerator.writeStartObject();
+    xmlGenerator.setNextIsAttribute(true);
+    xmlGenerator.writeFieldName("name");
+    xmlGenerator.writeString(prop.getName());
+    xmlGenerator.setNextIsAttribute(false);
 
+    xmlGenerator.setNextIsUnwrapped(true);
+    xmlGenerator.writeStringField("", prop.getValue());
+    xmlGenerator.writeEndObject();
+  }
+
+  public static void writeField(JsonGenerator jsonGenerator, String fieldName, Object fieldValue) throws IOException {
+    if (fieldValue != null) {
+      jsonGenerator.writeFieldName(fieldName);
+      jsonGenerator.writeObject(fieldValue);
+    }
+  }
 }
