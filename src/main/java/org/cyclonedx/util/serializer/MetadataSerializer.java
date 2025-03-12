@@ -11,7 +11,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Property;
-import org.cyclonedx.model.component.evidence.Occurrence;
 import org.cyclonedx.model.metadata.ToolInformation;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
@@ -67,7 +66,7 @@ public class MetadataSerializer
     //Tools
     parseTools(metadata, jsonGenerator);
 
-    if (metadata.getAuthors() != null && shouldSerializeField(metadata, version, "author")) {
+    if (CollectionUtils.isNotEmpty(metadata.getAuthors()) && shouldSerializeField(metadata, version, "author")) {
       if (isXml) {
         ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
         writeArrayFieldXML(metadata.getAuthors(), xmlGenerator, "author");
@@ -132,18 +131,18 @@ public class MetadataSerializer
         jsonGenerator.writeFieldName("tools");
         jsonGenerator.writeStartObject();
         if (isXml && jsonGenerator instanceof ToXmlGenerator) {
-          if (choice.getComponents() != null) {
+          if (CollectionUtils.isNotEmpty(choice.getComponents())) {
             writeArrayFieldXML(choice.getComponents(), (ToXmlGenerator) jsonGenerator, "component");
           }
-          if (choice.getServices() != null) {
+          if (CollectionUtils.isNotEmpty(choice.getServices())) {
             writeArrayFieldXML(choice.getServices(), (ToXmlGenerator) jsonGenerator, "service");
           }
         }
         else {
-          if (choice.getComponents() != null) {
+          if (CollectionUtils.isNotEmpty(choice.getComponents())) {
             writeArrayFieldJSON(jsonGenerator, "components", choice.getComponents());
           }
-          if (choice.getServices() != null) {
+          if (CollectionUtils.isNotEmpty(choice.getServices())) {
             writeArrayFieldJSON(jsonGenerator, "services", choice.getServices());
           }
         }
