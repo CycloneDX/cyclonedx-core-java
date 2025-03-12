@@ -548,6 +548,18 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
+    public void testServicesMetadata() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/regression/valid-metadata-tool-no-services.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
     public void testIssue562() throws Exception {
         Version version = Version.VERSION_16;
         Bom bom = createCommonJsonBom("/regression/issue562.json");
