@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
@@ -333,7 +334,7 @@ public class AbstractParserTest
       assertNull(inputType.getData());
       assertNull(inputType.getEnvironmentVars());
     }
-    else if (inputType.getParameters() != null) {
+    else if (CollectionUtils.isNotEmpty(inputType.getParameters())) {
       assertNull(inputType.getResource());
       assertNull(inputType.getData());
       assertNull(inputType.getEnvironmentVars());
@@ -426,7 +427,7 @@ public class AbstractParserTest
   }
 
   private void assertProperties(List<Property> properties) {
-    if (properties != null) {
+    if (CollectionUtils.isNotEmpty(properties)) {
       Property property = properties.get(0);
       assertNotNull(property.getName());
       assertNotNull(property.getValue());

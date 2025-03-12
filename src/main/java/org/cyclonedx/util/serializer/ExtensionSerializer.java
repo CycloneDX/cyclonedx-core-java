@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.Extension.ExtensionType;
@@ -91,7 +92,7 @@ public class ExtensionSerializer
   private void processAdvisories(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
-    if (vuln.getAdvisories() != null && !vuln.getAdvisories().isEmpty()) {
+    if (CollectionUtils.isNotEmpty(vuln.getAdvisories())) {
       staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.ADVISORIES, Vulnerability10.NAMESPACE_URI);
       for (Advisory a : vuln.getAdvisories()) {
         generateTextNode(staxWriter, Vulnerability10.ADVISORY, a.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
@@ -103,7 +104,7 @@ public class ExtensionSerializer
   private void processRecommendations(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
-    if (vuln.getRecommendations() != null && !vuln.getRecommendations().isEmpty()) {
+    if (CollectionUtils.isNotEmpty(vuln.getRecommendations())) {
       staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.RECOMMENDATIONS, Vulnerability10.NAMESPACE_URI);
       for (Recommendation r : vuln.getRecommendations()) {
         generateTextNode(staxWriter, Vulnerability10.RECOMMENDATION, r.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
@@ -115,7 +116,7 @@ public class ExtensionSerializer
   private void processCwes(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
-    if (vuln.getCwes() != null && !vuln.getCwes().isEmpty()) {
+    if (CollectionUtils.isNotEmpty(vuln.getCwes())) {
       staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.CWES, Vulnerability10.NAMESPACE_URI);
       for (Cwe c : vuln.getCwes()) {
         generateTextNodeFromNumber(staxWriter, Vulnerability10.CWE, c.getText(), Vulnerability10.NAMESPACE_URI, Vulnerability10.PREFIX);
@@ -141,7 +142,7 @@ public class ExtensionSerializer
   private void processRatings(final XMLStreamWriter staxWriter, final Vulnerability10 vuln)
       throws XMLStreamException
   {
-    if (vuln.getRatings() != null && !vuln.getRatings().isEmpty()) {
+    if (CollectionUtils.isNotEmpty(vuln.getRatings())) {
       staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.RATINGS, Vulnerability10.NAMESPACE_URI);
       for (Rating r : vuln.getRatings()) {
         staxWriter.writeStartElement(Vulnerability10.PREFIX, Vulnerability10.RATING, Vulnerability10.NAMESPACE_URI);

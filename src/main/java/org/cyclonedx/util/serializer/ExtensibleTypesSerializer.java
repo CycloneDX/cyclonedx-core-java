@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.ExtensibleType;
 
@@ -52,9 +53,9 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
     final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
     final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
     try {
-      if (extensibleTypes != null && !extensibleTypes.isEmpty()) {
+      if (CollectionUtils.isNotEmpty(extensibleTypes)) {
         for (ExtensibleType ext : extensibleTypes) {
-          if (ext.getAttributes() != null && !ext.getAttributes().isEmpty()) {
+          if (CollectionUtils.isNotEmpty(ext.getAttributes())) {
             Attribute xmlNS = ext.getAttributes().stream()
                 .filter(a -> a.getKey().contains(XMLNS))
                 .findAny()
@@ -71,7 +72,7 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
             staxWriter.writeStartElement(ext.getNamespace(), ext.getName(), "http://www.w3.org/1999/xhtml");
           }
 
-          if (ext.getExtensibleTypes() != null && !ext.getExtensibleTypes().isEmpty()) {
+          if (CollectionUtils.isNotEmpty(ext.getExtensibleTypes())) {
             serialize(ext.getExtensibleTypes(), generator, provider);
           }
           if (ext.getValue() != null) {
