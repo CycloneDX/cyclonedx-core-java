@@ -19,6 +19,7 @@
 package org.cyclonedx.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
@@ -111,7 +112,7 @@ public final class LicenseResolver {
           licenses = mapper.readValue(is, LicenseList.class);        
         }
 
-        if (licenses != null && licenses.licenses != null && !licenses.licenses.isEmpty()) {
+        if (licenses != null && CollectionUtils.isNotEmpty(licenses.licenses)) {
             for (LicenseDetail licenseDetail : licenses.licenses) {
 
                 final String primaryLicenseUrl = (licenseDetail.seeAlso != null && !licenseDetail.seeAlso.isEmpty()) ? licenseDetail.seeAlso.get(0) : null;
@@ -162,7 +163,7 @@ public final class LicenseResolver {
 
         if (mappings != null) {
             for (final SpdxLicenseMapping licenseMapping : mappings) {
-                if (licenseMapping.names != null && !licenseMapping.names.isEmpty()) {
+                if (CollectionUtils.isNotEmpty(licenseMapping.names)) {
                     for (final String name : licenseMapping.names) {
                         if (licenseString.equalsIgnoreCase(name)) {
                             if (licenseMapping.exp.startsWith("(") && licenseMapping.exp.endsWith(")")) {

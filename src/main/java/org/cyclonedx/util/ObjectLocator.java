@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.util;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Service;
@@ -102,7 +103,7 @@ public class ObjectLocator {
         for (final Component component: components) {
             if (bomRef.equals(component.getBomRef())) {
                 return component;
-            } else if (component.getComponents() != null) {
+            } else if (CollectionUtils.isNotEmpty(component.getComponents())) {
                 final Component child = findComponent(component.getComponents(), bomRef);
                 if (child != null) return child;
             }
@@ -115,7 +116,7 @@ public class ObjectLocator {
         for (final Service service: services) {
             if (bomRef.equals(service.getBomRef())) {
                 return service;
-            } else if (service.getServices() != null) {
+            } else if (CollectionUtils.isNotEmpty(service.getServices())) {
                 final Service child = findService(service.getServices(), bomRef);
                 if (child != null) return child;
             }
