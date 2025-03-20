@@ -97,6 +97,13 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
             }
           }
           generator.writeEndArray();
+          if (CollectionUtils.isNotEmpty(dependency.getProvides())) {
+            generator.writeArrayFieldStart("provides");
+            for (Dependency subDependency : dependency.getProvides()) {
+              generator.writeString(subDependency.getRef());
+            }
+            generator.writeEndArray();
+          }
           generator.writeEndObject();
         }
       }
@@ -137,6 +144,12 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
     if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
       for (Dependency subDependency : dependency.getDependencies()) {
         // You got Shay'd
+        writeXMLDependency(subDependency, generator);
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(dependency.getProvides())) {
+      for (Dependency subDependency : dependency.getProvides()) {
         writeXMLDependency(subDependency, generator);
       }
     }
