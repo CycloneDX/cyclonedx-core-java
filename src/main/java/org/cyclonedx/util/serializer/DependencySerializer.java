@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.DependencyList;
 
@@ -99,7 +100,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
           generator.writeEndArray();
           if (CollectionUtils.isNotEmpty(dependency.getProvides())) {
             generator.writeArrayFieldStart("provides");
-            for (Dependency subDependency : dependency.getProvides()) {
+            for (BomReference subDependency : dependency.getProvides()) {
               generator.writeString(subDependency.getRef());
             }
             generator.writeEndArray();
@@ -141,6 +142,11 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
     generator.writeString(dependency.getRef());
     generator.setNextIsAttribute(false);
 
+    // Write provides
+    if (CollectionUtils.isNotEmpty(dependency.getProvides())) {
+        writeXMLProvides(dependency, generator);
+    }
+
     if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
       for (Dependency subDependency : dependency.getDependencies()) {
         // You got Shay'd
@@ -148,17 +154,30 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
       }
     }
 
-    if (CollectionUtils.isNotEmpty(dependency.getProvides())) {
-      for (Dependency subDependency : dependency.getProvides()) {
-        writeXMLDependency(subDependency, generator);
-      }
+    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
+      generator.writeEndArray();
     }
 
-    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
-    generator.writeEndArray();
+    generator.writeEndObject();
   }
 
-    generator.writeEndObject();
+  private void writeXMLProvides(final Dependency dependency, final ToXmlGenerator generator)
+      throws IOException, XMLStreamException
+  {
+    QName qName = new QName("provides");
+    generator.setNextName(qName);
+    generator.writeFieldName(qName.getLocalPart());
+    generator.writeStartArray();
+
+    for (BomReference ref : dependency.getProvides()) {
+      generator.writeStartObject();
+      generator.setNextIsAttribute(true);
+      generator.writeFieldName("ref");
+      generator.writeString(ref.getRef());
+      generator.setNextIsAttribute(false);
+      generator.writeEndObject();
+    }
+    generator.writeEndArray();
   }
 
   private void processNamespace(final ToXmlGenerator toXmlGenerator, final String dependencies)

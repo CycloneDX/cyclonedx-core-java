@@ -39,8 +39,9 @@ public class Dependency extends BomReference {
 
     @VersionFilter(Version.VERSION_16)
     @JsonProperty("provides")
+    @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "provides")
-    private List<Dependency> provides;
+    private List<BomReference> provides;
 
     public Dependency(final String ref) {
         super(ref);
@@ -66,18 +67,15 @@ public class Dependency extends BomReference {
         }
     }
 
-    @VersionFilter(Version.VERSION_16)
-    public List<Dependency> getProvides() {
+    public List<BomReference> getProvides() {
         return provides;
     }
 
-    @VersionFilter(Version.VERSION_16)
-    public void setProvides(final List<Dependency> provides) {
+    public void setProvides(final List<BomReference> provides) {
         this.provides = provides;
     }
 
-    @VersionFilter(Version.VERSION_16)
-    public void addProvides(final Dependency dependency) {
+    public void addProvides(final BomReference dependency) {
         if (provides == null) {
             provides = new ArrayList<>();
         }
