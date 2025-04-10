@@ -26,7 +26,17 @@
               "type": "dataset",
               "name": "Training Data",
               "contents": {
-                "url": "https://example.com/path/to/dataset"
+                "url": "https://example.com/path/to/dataset",
+                "properties": [
+                  {
+                    "name": "Foo",
+                    "value": "Bar"
+                  },
+                  {
+                    "name": "Foo",
+                    "value": "Two"
+                  }
+                ]
               },
               "classification": "public"
             }
