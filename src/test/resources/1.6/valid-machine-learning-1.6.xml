@@ -21,6 +21,10 @@
                             <name>Training Data</name>
                             <contents>
                                 <url>https://example.com/path/to/dataset</url>
+                                <properties>
+                                    <property name="foo">bar</property>
+                                    <property name="foo1">bar2</property>
+                                </properties>
                             </contents>
                             <classification>public</classification>
                         </dataset>

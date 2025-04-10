@@ -2,13 +2,15 @@ package org.cyclonedx.model.component.data;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.AttachmentText;
+import org.cyclonedx.model.Property;
+import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -18,7 +20,7 @@ public class Content
 
   private String url;
 
-  private List<Properties> properties;
+  private List<Property> properties;
 
   public AttachmentText getAttachment() {
     return attachment;
@@ -38,11 +40,12 @@ public class Content
 
   @JacksonXmlElementWrapper(localName = "properties")
   @JacksonXmlProperty(localName = "property")
-  public List<Properties> getProperties() {
+  @JsonDeserialize(using = PropertiesDeserializer.class)
+  public List<Property> getProperties() {
     return properties;
   }
 
-  public void setProperties(final List<Properties> properties) {
+  public void setProperties(final List<Property> properties) {
     this.properties = properties;
   }
 

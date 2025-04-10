@@ -48,8 +48,10 @@ import org.cyclonedx.model.component.crypto.enums.ExecutionEnvironment;
 import org.cyclonedx.model.component.crypto.enums.ImplementationPlatform;
 import org.cyclonedx.model.component.crypto.enums.Mode;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
+import org.cyclonedx.model.component.data.Content;
 import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.modelCard.Considerations;
+import org.cyclonedx.model.component.modelCard.ModelParameters;
 import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
 import org.cyclonedx.model.component.modelCard.consideration.consumption.Activity;
 import org.cyclonedx.model.component.modelCard.consideration.consumption.EnergyConsumption;
@@ -350,6 +352,23 @@ public class JsonParserTest
         assertNull(ep.getOrganization().getAddress().getPostOfficeBoxNumber());
         assertEquals("New Jersey", ep.getOrganization().getAddress().getRegion());
         assertNull(eec.getProperties());
+    }
+
+    @Test
+    public void schema16_ml() throws Exception {
+        final Bom bom = getJsonBom("1.6/valid-machine-learning-1.6.json");
+
+        assertNotNull(bom.getComponents());
+        ModelCard mc = bom.getComponents().get(0).getModelCard();
+        assertNotNull(mc);
+
+        ModelParameters mp = mc.getModelParameters();
+        assertNotNull(mp);
+
+        Content content = mp.getDatasets().get(0).getComponentData().getContents();
+        assertNotNull(content);
+
+        assertEquals(2, content.getProperties().size());
     }
 
     @Test
