@@ -1,7 +1,6 @@
 package org.cyclonedx.model.component.crypto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,9 +22,10 @@ public class ProtocolProperties
 
   private List<CipherSuite> cipherSuites;
 
-  private Map<String, CryptoRef> ikev2TransformTypes;
+  @JsonProperty("ikev2TransformTypes")
+  private Ikev2TransformTypes ikev2TransformTypes;
 
-  private CryptoRef cryptoRefArray;
+  private List<String> cryptoRefArray;
 
   public ProtocolType getType() {
     return type;
@@ -54,19 +54,22 @@ public class ProtocolProperties
     this.cipherSuites = cipherSuites;
   }
 
-  public Map<String, CryptoRef> getIkev2TransformTypes() {
+  public Ikev2TransformTypes getIkev2TransformTypes() {
     return ikev2TransformTypes;
   }
 
-  public void setIkev2TransformTypes(final Map<String, CryptoRef> ikev2TransformTypes) {
+  public void setIkev2TransformTypes(final Ikev2TransformTypes ikev2TransformTypes) {
     this.ikev2TransformTypes = ikev2TransformTypes;
   }
 
-  public CryptoRef getCryptoRefArray() {
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "cryptoRef")
+  @JsonProperty("cryptoRefArray")
+  public List<String> getCryptoRefArray() {
     return cryptoRefArray;
   }
 
-  public void setCryptoRefArray(final CryptoRef cryptoRefArray) {
+  public void setCryptoRefArray(final List<String> cryptoRefArray) {
     this.cryptoRefArray = cryptoRefArray;
   }
 
