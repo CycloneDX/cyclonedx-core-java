@@ -322,7 +322,7 @@ the order they are declared.</div>
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-byte:A-org.cyclonedx.Version-">isValid</a></span>(byte[]&nbsp;bomBytes,
+<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#isValid-byte:A-org.cyclonedx.Version-">isValid</a></span>(byte[]&nbsp;bomBytes,
        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
 </td>
@@ -336,21 +336,7 @@ the order they are declared.</div>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#isValid-byte:A-org.cyclonedx.Version-">isValid</a></span>(byte[]&nbsp;bomBytes,
-       <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
-<div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-java.io.File-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
-       <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
-<div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#isValid-java.io.File-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-byte:A-org.cyclonedx.Version-">isValid</a></span>(byte[]&nbsp;bomBytes,
        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
 </td>
@@ -364,14 +350,14 @@ the order they are declared.</div>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-java.io.InputStream-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#isValid-java.io.File-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#isValid-java.io.InputStream-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-java.io.File-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
 </td>
@@ -385,7 +371,21 @@ the order they are declared.</div>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-java.io.Reader-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
+<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#isValid-java.io.InputStream-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+       <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
+<div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-java.io.InputStream-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+       <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
+<div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#isValid-java.io.Reader-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
 </td>
@@ -399,14 +399,14 @@ the order they are declared.</div>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#isValid-java.io.Reader-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#isValid-java.io.Reader-org.cyclonedx.Version-">isValid</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Verifies a CycloneDX BOM conforms to the specified specification version.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-byte:A-org.cyclonedx.Version-">validate</a></span>(byte[]&nbsp;bomBytes,
+<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#validate-byte:A-org.cyclonedx.Version-">validate</a></span>(byte[]&nbsp;bomBytes,
         <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
 </td>
@@ -420,21 +420,7 @@ the order they are declared.</div>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#validate-byte:A-org.cyclonedx.Version-">validate</a></span>(byte[]&nbsp;bomBytes,
-        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
-<div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-java.io.File-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
-        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
-<div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#validate-java.io.File-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-byte:A-org.cyclonedx.Version-">validate</a></span>(byte[]&nbsp;bomBytes,
         <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
 </td>
@@ -448,14 +434,14 @@ the order they are declared.</div>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-java.io.InputStream-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#validate-java.io.File-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
         <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#validate-java.io.InputStream-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-java.io.File-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file,
         <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
 </td>
@@ -469,6 +455,20 @@ the order they are declared.</div>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Parser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/Parser.html#validate-java.io.InputStream-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
+<div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-java.io.InputStream-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html?is-external=true" title="class or interface in java.io">InputStream</a>&nbsp;inputStream,
+        <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
+<div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#validate-com.fasterxml.jackson.databind.JsonNode-org.cyclonedx.Version-">validate</a></span>(com.fasterxml.jackson.databind.JsonNode&nbsp;bomJson,
         <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Verifies a CycloneDX BOM conforms to the specification through JSON validation.</div>
@@ -476,7 +476,7 @@ the order they are declared.</div>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-java.io.Reader-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
+<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#validate-java.io.Reader-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
         <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
 </td>
@@ -490,7 +490,7 @@ the order they are declared.</div>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../org/cyclonedx/exception/ParseException.html" title="class in org.cyclonedx.exception">ParseException</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">JsonParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/JsonParser.html#validate-java.io.Reader-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
+<td class="colLast"><span class="typeNameLabel">XmlParser.</span><code><span class="memberNameLink"><a href="../../../org/cyclonedx/parsers/XmlParser.html#validate-java.io.Reader-org.cyclonedx.Version-">validate</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html?is-external=true" title="class or interface in java.io">Reader</a>&nbsp;reader,
         <a href="../../../org/cyclonedx/Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;schemaVersion)</code>
 <div class="block">Validates a CycloneDX BOM conforms to a specific specification version.</div>
 </td>
