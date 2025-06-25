@@ -2,10 +2,15 @@ name: Maven Publish Snapshot
 
 on: [workflow_dispatch]
 
+permissions: {}
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # for git-push after version modifications
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # tag=v4.2.2
