@@ -9,12 +9,14 @@ on:
         default: false
         type: boolean
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: write  # for git-push after version modifications
 
     steps:
       - name: Checkout code
