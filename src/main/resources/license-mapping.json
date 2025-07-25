@@ -27,7 +27,8 @@
       "Apache License version 2.0",
       "Apache 2 Style License",
       "ASF 2.0",
-      "AL 2.0"
+      "AL 2.0",
+      "ASL, version 2"
     ]
   },
   {
@@ -209,6 +210,7 @@
       "LGPL v2.1",
       "LGPL-2.1",
       "LGPL2.1",
+      "LGPL, version 2.1",
       "GNU Lesser General Public License Version 2.1, February 1999",
       "GNU Lesser General Public License, Version 2.1",
       "GNU Library or Lesser General Public License (LGPL) V2.1"
