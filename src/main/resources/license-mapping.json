@@ -3,7 +3,9 @@
     "exp": "Apache-1.0",
     "names": [
       "Apache License",
-      "Apache Software Licenses"
+      "Apache Software Licenses",
+      "Apache Software License",
+      "Similar to Apache License but with the acknowledgment clause removed"
     ]
   },
   {
