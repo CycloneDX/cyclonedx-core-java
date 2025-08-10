@@ -45,6 +45,12 @@
     ]
   },
   {
+    "exp": "BSD-3-Clause-No-Nuclear-License",
+    "names": [
+      "BSD 3-clause License w/nuclear disclaimer"
+    ]
+  },
+  {
     "exp": "BSD-3-Clause",
     "names": [
       "BSD 3 Clause",
