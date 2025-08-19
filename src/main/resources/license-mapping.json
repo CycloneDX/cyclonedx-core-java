@@ -305,5 +305,11 @@
     "names": [
       "The W3C Software License"
     ]
+  },
+  {
+    "exp": "CPL-1.0",
+    "names": [
+      "CPL"
+    ]
   }
 ]
