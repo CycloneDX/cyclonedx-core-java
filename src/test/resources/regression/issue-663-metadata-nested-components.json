@@ -1,0 +1,49 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:12345678-1234-1234-1234-123456789abc",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-01-01T12:00:00Z",
+    "component": {
+      "type": "application",
+      "bom-ref": "main-app",
+      "name": "Main Application",
+      "version": "1.0.0",
+      "description": "Main application component",
+      "components": [
+        {
+          "type": "library",
+          "bom-ref": "nested-lib-1",
+          "name": "Nested Library 1",
+          "version": "2.1.0",
+          "description": "First nested library"
+        },
+        {
+          "type": "library",
+          "bom-ref": "nested-lib-2",
+          "name": "Nested Library 2",
+          "version": "3.2.1",
+          "description": "Second nested library",
+          "components": [
+            {
+              "type": "library",
+              "bom-ref": "deeply-nested-lib",
+              "name": "Deeply Nested Library",
+              "version": "1.5.0",
+              "description": "Deeply nested component"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "root-lib",
+      "name": "Root Level Library",
+      "version": "4.0.0"
+    }
+  ]
+}

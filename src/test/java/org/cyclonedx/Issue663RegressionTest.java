@@ -49,7 +49,7 @@ public class Issue663RegressionTest {
     @DisplayName("Should successfully parse BOM with nested components in metadata")
     public void testParsingMetadataWithNestedComponents() throws Exception {
         // Arrange
-        File inputFile = new File("src/test/resources/issue-663-metadata-nested-components.xml");
+        File inputFile = new File("src/test/resources/regression/issue-663-metadata-nested-components.xml");
         Parser parser = BomParserFactory.createParser(inputFile);
         
         // Act & Assert - This should not throw an exception
@@ -162,7 +162,7 @@ public class Issue663RegressionTest {
     @DisplayName("Should successfully convert XML with nested components to JSON and back")
     public void testXmlToJsonRoundTripWithNestedComponents() throws Exception {
         // Arrange
-        File inputFile = new File("src/test/resources/issue-663-metadata-nested-components.xml");
+        File inputFile = new File("src/test/resources/regression/issue-663-metadata-nested-components.xml");
         XmlParser xmlParser = new XmlParser();
         JsonParser jsonParser = new JsonParser();
         
@@ -190,64 +190,15 @@ public class Issue663RegressionTest {
     @Test
     @DisplayName("Should successfully convert JSON with nested components to XML and back")
     public void testJsonToXmlRoundTripWithNestedComponents() throws Exception {
-        // Arrange - Create JSON equivalent of our test XML
-        String nestedComponentsJson = "{\n" +
-            "  \"bomFormat\": \"CycloneDX\",\n" +
-            "  \"specVersion\": \"1.6\",\n" +
-            "  \"serialNumber\": \"urn:uuid:12345678-1234-1234-1234-123456789abc\",\n" +
-            "  \"version\": 1,\n" +
-            "  \"metadata\": {\n" +
-            "    \"timestamp\": \"2023-01-01T12:00:00Z\",\n" +
-            "    \"component\": {\n" +
-            "      \"type\": \"application\",\n" +
-            "      \"bom-ref\": \"main-app\",\n" +
-            "      \"name\": \"Main Application\",\n" +
-            "      \"version\": \"1.0.0\",\n" +
-            "      \"description\": \"Main application component\",\n" +
-            "      \"components\": [\n" +
-            "        {\n" +
-            "          \"type\": \"library\",\n" +
-            "          \"bom-ref\": \"nested-lib-1\",\n" +
-            "          \"name\": \"Nested Library 1\",\n" +
-            "          \"version\": \"2.1.0\",\n" +
-            "          \"description\": \"First nested library\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"type\": \"library\",\n" +
-            "          \"bom-ref\": \"nested-lib-2\",\n" +
-            "          \"name\": \"Nested Library 2\",\n" +
-            "          \"version\": \"3.2.1\",\n" +
-            "          \"description\": \"Second nested library\",\n" +
-            "          \"components\": [\n" +
-            "            {\n" +
-            "              \"type\": \"library\",\n" +
-            "              \"bom-ref\": \"deeply-nested-lib\",\n" +
-            "              \"name\": \"Deeply Nested Library\",\n" +
-            "              \"version\": \"1.5.0\",\n" +
-            "              \"description\": \"Deeply nested component\"\n" +
-            "            }\n" +
-            "          ]\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    }\n" +
-            "  },\n" +
-            "  \"components\": [\n" +
-            "    {\n" +
-            "      \"type\": \"library\",\n" +
-            "      \"bom-ref\": \"root-lib\",\n" +
-            "      \"name\": \"Root Level Library\",\n" +
-            "      \"version\": \"4.0.0\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
-        
+        // Arrange
+        File inputFile = new File("src/test/resources/regression/issue-663-metadata-nested-components.json");
         JsonParser jsonParser = new JsonParser();
         XmlParser xmlParser = new XmlParser();
         
         // Act & Assert
         assertThatNoException().isThrownBy(() -> {
             // Step 1: Parse original JSON
-            Bom originalBom = jsonParser.parse(nestedComponentsJson.getBytes());
+            Bom originalBom = jsonParser.parse(inputFile);
             
             // Step 2: Convert to XML
             BomXmlGenerator xmlGenerator = BomGeneratorFactory.createXml(Version.VERSION_16, originalBom);
@@ -269,7 +220,7 @@ public class Issue663RegressionTest {
     @DisplayName("Should maintain data integrity through complete round-trip XML->JSON->XML->JSON")
     public void testCompleteRoundTripDataIntegrity() throws Exception {
         // Arrange
-        File inputFile = new File("src/test/resources/issue-663-metadata-nested-components.xml");
+        File inputFile = new File("src/test/resources/regression/issue-663-metadata-nested-components.xml");
         XmlParser xmlParser = new XmlParser();
         JsonParser jsonParser = new JsonParser();
         
