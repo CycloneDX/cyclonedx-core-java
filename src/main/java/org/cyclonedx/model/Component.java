@@ -29,6 +29,7 @@ import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.data.ComponentData;
+import org.cyclonedx.util.deserializer.ComponentListDeserializer;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -452,6 +453,7 @@ public class Component extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "components")
     @JacksonXmlProperty(localName = "component")
+    @JsonDeserialize(using = ComponentListDeserializer.class)
     public List<Component> getComponents() {
         return components;
     }

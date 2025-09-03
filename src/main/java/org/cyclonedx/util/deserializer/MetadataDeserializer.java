@@ -42,7 +42,7 @@ public class MetadataDeserializer
     }
 
     if(node.has("component")) {
-      Component component = mapper.convertValue(node.get("component"), Component.class);
+      Component component = deserializeComponent(node.get("component"), jsonParser, mapper);
       metadata.setComponent(component);
     }
 
@@ -134,6 +134,18 @@ public class MetadataDeserializer
     JsonNode timestampNode = node.get("timestamp");
     if (timestampNode != null && timestampNode.isTextual()) {
       metadata.setTimestamp(TimestampUtils.parseTimestamp(timestampNode.textValue()));
+    }
+  }
+
+  /**
+   * Deserializes a Component from a JsonNode, handling both simple and complex nested structures.
+   * This method properly handles XML parsing where nested components might be represented
+   * as single objects or arrays depending on the XML structure.
+   */
+  private Component deserializeComponent(JsonNode componentNode, JsonParser originalParser, ObjectMapper mapper) throws IOException {
+    try (JsonParser componentParser = componentNode.traverse(originalParser.getCodec())) {
+      componentParser.nextToken(); // Advance to the first token
+      return componentParser.readValueAs(Component.class);
     }
   }
 }
