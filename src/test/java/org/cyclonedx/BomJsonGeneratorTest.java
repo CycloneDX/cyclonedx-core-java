@@ -27,6 +27,7 @@ import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
@@ -326,6 +327,72 @@ public class BomJsonGeneratorTest {
 
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema16_testDependencyProvides_json() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.6/valid-dependency-provides-1.6.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        Bom parsedBom = parser.parse(loadedFile);
+        assertNotNull(parsedBom.getDependencies());
+        assertEquals(3, parsedBom.getDependencies().size());
+        // Test dependency library-a
+        Dependency libA = parsedBom.getDependencies().get(0);
+        assertEquals("library-a", libA.getRef());
+        assertNotNull(libA.getDependencies());
+        assertEquals(0, libA.getDependencies().size());
+        assertNull(libA.getProvides());
+        // Test dependency library-b
+        Dependency libB = parsedBom.getDependencies().get(1);
+        assertEquals("library-b", libB.getRef());
+        assertEquals(1, libB.getDependencies().size());
+        assertEquals("library-c", libB.getDependencies().get(0).getRef());
+        // Test dependency library-c
+        Dependency libC = parsedBom.getDependencies().get(2);
+        assertEquals("library-c", libC.getRef());
+        assertNotNull(libC.getDependencies());
+        assertNotNull(libC.getProvides());
+        assertEquals("library-d", libC.getProvides().get(0).getRef());
+    }
+
+    @Test
+    public void schema16_testDependencyProvides() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/1.6/valid-dependency-provides-1.6.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        Bom parsedBom = parser.parse(loadedFile);
+        assertNotNull(parsedBom.getDependencies());
+        assertEquals(3, parsedBom.getDependencies().size());
+        // Test dependency library-a
+        Dependency libA = parsedBom.getDependencies().get(0);
+        assertEquals("library-a", libA.getRef());
+        assertNotNull(libA.getDependencies());
+        assertEquals(0, libA.getDependencies().size());
+        assertNull(libA.getProvides());
+        // Test dependency library-b
+        Dependency libB = parsedBom.getDependencies().get(1);
+        assertEquals("library-b", libB.getRef());
+        assertEquals(1, libB.getDependencies().size());
+        assertEquals("library-c", libB.getDependencies().get(0).getRef());
+        // Test dependency library-c
+        Dependency libC = parsedBom.getDependencies().get(2);
+        assertEquals("library-c", libC.getRef());
+        assertNotNull(libC.getDependencies());
+        assertNotNull(libC.getProvides());
+        assertEquals("library-d", libC.getProvides().get(0).getRef());
     }
 
     @Test
