@@ -46,13 +46,21 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -784,6 +792,64 @@ public class BomXmlGeneratorTest {
 
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testComponentAuthorSerializationOutputAsString() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonBomXml("/1.6/valid-component-authors-1.6.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        String xmlString = generator.toXmlString();
+        File loadedFile = writeToFile(xmlString);
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        // Verify the xml content
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        Document doc = dbf.newDocumentBuilder()
+                .parse(new java.io.ByteArrayInputStream(xmlString.getBytes()));
+
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext(new NamespaceContext() {
+            @Override
+            public String getNamespaceURI(String prefix) {
+                return "bom".equals(prefix) ? "http://cyclonedx.org/schema/bom/1.6" : null;
+            }
+            @Override
+            public String getPrefix(String namespaceURI) {
+                return "http://cyclonedx.org/schema/bom/1.6".equals(namespaceURI) ? "bom" : null;
+            }
+            @Override
+            public Iterator<String> getPrefixes(String namespaceURI) {
+                return Collections.singleton("bom").iterator();
+            }
+        });
+
+        NodeList authors = (NodeList) xpath.evaluate(
+                "//bom:component/bom:authors/bom:author",
+                doc,
+                XPathConstants.NODESET
+        );
+        assertEquals(2, authors.getLength(), "There should be exactly 2 <author> elements");
+
+        String author1 = xpath.evaluate("//bom:component/bom:authors/bom:author[1]/bom:name", doc);
+        String author2 = xpath.evaluate("//bom:component/bom:authors/bom:author[2]/bom:name", doc);
+
+        assertEquals("Test Author 1", author1);
+        assertEquals("Test Author 2", author2);
+    }
+
+    @Test
+    public void testComponentAuthorsDeserializationLegacy() throws Exception {
+        Bom bom = createCommonBomXml("/1.6/invalid-component-authors-legacy-1.6.xml");
+        Component component = bom.getComponents().get(0);
+        assertNotNull(component.getAuthors());
+        assertEquals(2, component.getAuthors().size());
+        assertEquals("Test Author 1", component.getAuthors().get(0).getName());
+        assertEquals("Test Author 2", component.getAuthors().get(1).getName());
     }
 
     private void assertExternalReferenceInfo(Bom bom) {

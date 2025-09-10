@@ -29,6 +29,7 @@ import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.data.ComponentData;
+import org.cyclonedx.util.deserializer.ComponentAuthorsDeserializer;
 import org.cyclonedx.util.deserializer.ComponentListDeserializer;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
@@ -223,7 +224,6 @@ public class Component extends ExtensibleElement {
     private Tags tags;
 
     @VersionFilter(Version.VERSION_16)
-    @JsonProperty("authors")
     private List<OrganizationalContact> authors;
 
     @VersionFilter(Version.VERSION_16)
@@ -556,10 +556,13 @@ public class Component extends ExtensibleElement {
         this.tags = tags;
     }
 
+    @JacksonXmlElementWrapper(localName = "authors")
+    @JacksonXmlProperty(localName = "author")
     public List<OrganizationalContact> getAuthors() {
         return authors;
     }
 
+    @JsonDeserialize(using = ComponentAuthorsDeserializer.class)
     public void setAuthors(final List<OrganizationalContact> authors) {
         this.authors = authors;
     }

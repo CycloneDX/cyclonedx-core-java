@@ -602,6 +602,18 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    @Test
+    public void testComponentAuthorsDeserializationJsonObject16() throws Exception {
+        Bom bom = createCommonJsonBom("/1.6/valid-component-authors-json-object-1.6.json");
+        Component component = bom.getComponents().get(0);
+        assertNotNull(component.getAuthors());
+        assertEquals(2, component.getAuthors().size());
+        assertEquals("Test Author 1", component.getAuthors().get(0).getName());
+        assertEquals("author1@example.com", component.getAuthors().get(0).getEmail());
+        assertEquals("Test Author 2", component.getAuthors().get(1).getName());
+        assertNull(component.getAuthors().get(1).getEmail());
+    }
+
     private void assertExternalReferenceInfo(Bom bom) {
         assertEquals(3, bom.getExternalReferences().size());
         assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());
