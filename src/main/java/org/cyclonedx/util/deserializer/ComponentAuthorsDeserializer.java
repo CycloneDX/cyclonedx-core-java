@@ -37,10 +37,19 @@ public class ComponentAuthorsDeserializer extends JsonDeserializer<List<Organiza
         if (p instanceof FromXmlParser) { // Handle XML
             while (p.nextToken() != JsonToken.END_OBJECT && p.currentToken() != JsonToken.END_OBJECT) {
                 if (p.currentToken() == JsonToken.FIELD_NAME) {
-                    // Handles both <author> and <authors> as the item tag
-                    p.nextToken();
-                    OrganizationalContact contact = p.readValueAs(OrganizationalContact.class);
-                    contacts.add(contact);
+                    String fieldName = p.currentName();
+                    if ("author".equals(fieldName) || "authors".equals(fieldName)) {
+                        // Handles both <author> and <authors> as the item tag
+                        p.nextToken();
+                        contacts.add(p.readValueAs(OrganizationalContact.class));
+                    } else {
+                        ctxt.reportInputMismatch(
+                                List.class,
+                                "Unexpected field '%s' in %s",
+                                fieldName,
+                                getClass().getSimpleName()
+                        );
+                    }
                 }
             }
         } else { // Handle JSON
