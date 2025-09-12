@@ -837,6 +837,10 @@ public class BomXmlGeneratorTest {
         // Verify the xml content
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
+        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         Document doc = dbf.newDocumentBuilder()
                 .parse(new java.io.ByteArrayInputStream(xmlString.getBytes()));
 
