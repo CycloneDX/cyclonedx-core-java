@@ -83,13 +83,18 @@
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.6.0</maven.github.release.plugin.version>
         <project.build.outputTimestamp>2025-03-12T01:44:22Z</project.build.outputTimestamp>
+
+        <!-- Default SCM Properties -->
+        <scm.connection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</scm.connection>
+        <scm.developerConnection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</scm.developerConnection>
+        <scm.url>https://github.com/CycloneDX/cyclonedx-core-java.git</scm.url>
     </properties>
 
     <scm>
-        <connection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</connection>
-        <url>https://github.com/CycloneDX/cyclonedx-core-java.git</url>
-        <developerConnection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</developerConnection>
+        <connection>${scm.connection}</connection>
+        <developerConnection>${scm.developerConnection}</developerConnection>
         <tag>HEAD</tag>
+        <url>${scm.url}</url>
     </scm>
 
     <issueManagement>
@@ -101,48 +106,6 @@
         <system>GitHub</system>
         <url>https://github.com/CycloneDX/cyclonedx-core-java/actions</url>
     </ciManagement>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>maven-central</id>
-            <url>https://repo1.maven.org/maven2</url>
-        </repository>
-        <!-- Resolve snapshot releases -->
-        <repository>
-            <id>ossrh-snapshot</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>ossrh-snapshot</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>always</updatePolicy>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -298,19 +261,25 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>de.jutzig</groupId>
-                <artifactId>github-release-plugin</artifactId>
-                <version>${maven.github.release.plugin.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.1.1</version>
                 <configuration>
-                    <tag>${project.artifactId}-${project.version}</tag>
-                    <fileSets>
-                        <fileSet>
-                            <directory>${project.build.directory}</directory>
-                            <includes>
-                                <include>${project.build.finalName}.jar</include>
-                            </includes>
-                        </fileSet>
-                    </fileSets>
+                    <projectVersionPolicyId>SemVerVersionPolicy</projectVersionPolicyId>
+                    <tagNameFormat>@{project.artifactId}-@{project.version}</tagNameFormat>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <autoPublish>true</autoPublish>
+                    <publishingServerId>central</publishingServerId>
                 </configuration>
             </plugin>
         </plugins>
@@ -336,6 +305,27 @@
     </build>
 
     <profiles>
+        <profile>
+            <!--
+              When running in GitHub Actions, the SCM connection must be via HTTPS
+              so that the GITHUB_TOKEN injected by Actions can be used to authenticate.
+
+              Connection URLs target the repository for which the Actions workflow is
+              running, enabling the release process to be tested in forks.
+            -->
+            <id>github-actions</id>
+            <activation>
+                <property>
+                    <name>env.GITHUB_ACTIONS</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <scm.connection>scm:git:https://github.com/${env.GITHUB_REPOSITORY}.git</scm.connection>
+                <scm.developerConnection>scm:git:https://github.com/${env.GITHUB_REPOSITORY}.git</scm.developerConnection>
+                <scm.url>https://github.com/${env.GITHUB_REPOSITORY}.git</scm.url>
+            </properties>
+        </profile>
         <profile>
             <id>release</id>
             <activation>
