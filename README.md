@@ -48,6 +48,15 @@ the CycloneDX version supported by the target system.
 
 The library API documentation can be viewed online at [https://cyclonedx.github.io/cyclonedx-core-java/](https://cyclonedx.github.io/cyclonedx-core-java/).
 
+## Updating the license list
+1. Download the latest tagged release from [this repo](https://github.com/spdx/license-list-data/tags).
+2. Extract the archived directory.
+3. Navigate to the `license-list-vX.X.X/text/` directory.
+4. Copy all licenses from that directory to the `src/main/java/resources/licenses/` directory in this repo.
+5. Copy `license-list-vX.X.X/json/licenses.json` into the `src/main/java/resources/licenses/` directory in this repo.
+6. Download [this file](http://cyclonedx.org/schema/spdx.schema.json) (ex: `curl http://cyclonedx.org/schema/spdx.schema.json -o spdx.schema.json`). The `$comment` field should match the version you donwloaded from GitHub. Copy this file into `src/main/resources/`.
+7. Download [this file](https://cyclonedx.org/schema/spdx.xsd) (ex `curl https://cyclonedx.org/schema/spdx.xsd -o spdx.xsd`). The version field should match the version you donwloaded from GitHub. Copy this file into `src/main/resources/`. 
+
 Copyright & License
 -------------------
 
