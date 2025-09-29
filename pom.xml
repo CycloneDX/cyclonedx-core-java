@@ -23,7 +23,7 @@
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
     <packaging>jar</packaging>
-    <version>11.0.0</version>
+    <version>11.1.0-SNAPSHOT</version>
 
     <name>CycloneDX Core (Java)</name>
     <description>The CycloneDX core module provides a model representation of the BOM along with utilities to assist in creating, parsing, and validating BOMs.</description>
@@ -82,7 +82,7 @@
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.6.0</maven.github.release.plugin.version>
-        <project.build.outputTimestamp>2025-09-29T07:16:35Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-09-29T07:17:15Z</project.build.outputTimestamp>
 
         <!-- Default SCM Properties -->
         <scm.connection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</scm.connection>
@@ -93,7 +93,7 @@
     <scm>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
-        <tag>cyclonedx-core-java-11.0.0</tag>
+        <tag>HEAD</tag>
         <url>${scm.url}</url>
     </scm>
 
