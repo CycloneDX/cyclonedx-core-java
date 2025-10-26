@@ -47,7 +47,7 @@ public class VersionJsonAnnotationIntrospector extends JacksonAnnotationIntrospe
 
         // Check if the field has the XmlOnly annotation
         if (m.hasAnnotation(XmlOnly.class)) {
-            // If true, the field should be ignored for XML serialization
+            // If true, the field should be ignored for JSON serialization
             return true;
         }
 
