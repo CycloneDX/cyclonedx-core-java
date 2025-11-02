@@ -18,13 +18,14 @@
  */
 package org.cyclonedx.parsers;
 
+import org.apache.commons.io.IOUtils;
 import org.cyclonedx.Version;
+import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
-import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
@@ -65,13 +66,16 @@ import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
 import org.junit.jupiter.api.Test;
+
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -746,4 +750,19 @@ public class XmlParserTest
         final Bom bom = getXmlBom("regression/issue492.xml");
         assertEquals(2, bom.getMetadata().getTools().size());
     }
+
+    @Test
+    void validateShouldNotBeVulnerableToXxe() throws Exception {
+        final byte[] bomBytes;
+        try (final InputStream bomInputStream = getClass().getResourceAsStream("/security/xxe-protection.xml")) {
+            assertThat(bomInputStream).isNotNull();
+            bomBytes = IOUtils.toByteArray(bomInputStream);
+        }
+
+        final List<ParseException> validationFailures = new XmlParser().validate(bomBytes);
+        assertThat(validationFailures).extracting(Throwable::getMessage).allSatisfy(
+                failureMessage -> assertThat(failureMessage)
+                        .contains("not allowed due to restriction set by the accessExternalDTD property"));
+    }
+
 }
