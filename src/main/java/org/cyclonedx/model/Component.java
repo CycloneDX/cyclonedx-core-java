@@ -24,11 +24,13 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.component.ModelCard;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.model.component.data.ComponentData;
+import org.cyclonedx.util.deserializer.ComponentAuthorsDeserializer;
 import org.cyclonedx.util.deserializer.ComponentListDeserializer;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
@@ -43,6 +45,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.github.packageurl.PackageURL;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
+import org.cyclonedx.util.serializer.ComponentAuthorsSerializer;
 
 @SuppressWarnings("unused")
 @JacksonXmlRootElement(localName = "component")
@@ -224,6 +227,9 @@ public class Component extends ExtensibleElement {
 
     @VersionFilter(Version.VERSION_16)
     @JsonProperty("authors")
+    @JacksonXmlElementWrapper(localName = "authors")
+    @JsonSerialize(using = ComponentAuthorsSerializer.class)
+    @JsonDeserialize(using = ComponentAuthorsDeserializer.class)
     private List<OrganizationalContact> authors;
 
     @VersionFilter(Version.VERSION_16)

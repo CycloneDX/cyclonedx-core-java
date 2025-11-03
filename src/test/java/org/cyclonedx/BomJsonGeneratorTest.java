@@ -21,17 +21,14 @@ package org.cyclonedx;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.nio.charset.StandardCharsets;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
-import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.Component;
+import org.cyclonedx.model.*;
 import org.cyclonedx.model.Component.Type;
-import org.cyclonedx.model.License;
-import org.cyclonedx.model.LicenseChoice;
-import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.Service;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.XmlParser;
@@ -48,6 +45,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.Objects;
 
@@ -600,6 +599,67 @@ public class BomJsonGeneratorTest {
 
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testComponentAuthorsSerializationAndDeserialization() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.6/valid-component-authors-1.6.json");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component bomComponent = bom.getComponents().get(0);
+        assertEquals("Outer Author with String value", bomComponent.getAuthor());
+
+        List<OrganizationalContact> bomAuthors = bomComponent.getAuthors();
+        assertNotNull(bomAuthors);
+        assertEquals(2, bomAuthors.size());
+
+        OrganizationalContact bomAuthor1 = bomAuthors.get(0);
+        OrganizationalContact bomAuthor2 = bomAuthors.get(1);
+
+        assertNotNull(bomAuthor1);
+        assertEquals("Test Author 1", bomAuthor1.getName());
+        assertEquals("author1@example.com", bomAuthor1.getEmail());
+        assertEquals("123", bomAuthor1.getPhone());
+
+        assertNotNull(bomAuthor2);
+        assertEquals("Test Author 2", bomAuthor2.getName());
+        assertEquals("author2@example.com", bomAuthor2.getEmail());
+        assertEquals("456", bomAuthor2.getPhone());
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        String jsonString = generator.toJsonString();
+
+        File loadedFile = writeToFile(jsonString);
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        // Verify the json content
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(jsonString);
+
+        JsonNode component = rootNode.path("components").get(0);
+        assertNotNull(component);
+
+        String outerAuthor = component.path("author").asText();
+        assertEquals("Outer Author with String value", outerAuthor, "Outer author value mismatch");
+
+        JsonNode authorsNode = component.path("authors");
+        assertTrue(authorsNode.isArray());
+        assertEquals(2, authorsNode.size(), "Authors list size mismatch");
+
+        Iterator<JsonNode> elements = authorsNode.elements();
+        JsonNode author1 = elements.next();
+        assertEquals("Test Author 1", author1.path("name").asText());
+        assertEquals("author1@example.com", author1.path("email").asText());
+        assertEquals("123", author1.path("phone").asText());
+
+        JsonNode author2 = elements.next();
+        assertEquals("Test Author 2", author2.path("name").asText());
+        assertEquals("author2@example.com", author2.path("email").asText());
+        assertEquals("456", author2.path("phone").asText());
     }
 
     private void assertExternalReferenceInfo(Bom bom) {

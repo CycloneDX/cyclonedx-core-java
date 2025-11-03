@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bom serialNumber="urn:uuid:e1acbeda-240f-4ab6-bd4e-749ab4183fec" version="1" xmlns="http://cyclonedx.org/schema/bom/1.6">
+    <components>
+        <component type="application">
+            <authors>
+                <authors>
+                    <name>Test Author 1</name>
+                    <email>author1@example.com</email>
+                    <phone>123</phone>
+                </authors>
+                <authors>
+                    <name>Test Author 2</name>
+                    <email>author2@example.com</email>
+                    <phone>456</phone>
+                </authors>
+            </authors>
+            <author>Outer Author with String value</author>
+            <name>Test Component</name>
+        </component>
+    </components>
+</bom>

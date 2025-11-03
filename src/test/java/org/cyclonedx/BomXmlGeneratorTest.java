@@ -45,14 +45,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -784,6 +793,105 @@ public class BomXmlGeneratorTest {
 
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "/1.6/valid-component-authors-1.6.xml",
+            "/1.6/invalid-component-authors-legacy-1.6.xml"
+    })
+    public void testComponentAuthorsSerializationAndDeserialization(String xmlFilePath) throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonBomXml(xmlFilePath);
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component bomComponent = bom.getComponents().get(0);
+        assertEquals("Outer Author with String value", bomComponent.getAuthor());
+
+        List<OrganizationalContact> bomAuthors = bomComponent.getAuthors();
+        assertNotNull(bomAuthors);
+        assertEquals(2, bomAuthors.size());
+
+        OrganizationalContact bomAuthor1 = bomAuthors.get(0);
+        OrganizationalContact bomAuthor2 = bomAuthors.get(1);
+
+        assertNotNull(bomAuthor1);
+        assertEquals("Test Author 1", bomAuthor1.getName());
+        assertEquals("author1@example.com", bomAuthor1.getEmail());
+        assertEquals("123", bomAuthor1.getPhone());
+
+        assertNotNull(bomAuthor2);
+        assertEquals("Test Author 2", bomAuthor2.getName());
+        assertEquals("author2@example.com", bomAuthor2.getEmail());
+        assertEquals("456", bomAuthor2.getPhone());
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        String xmlString = generator.toXmlString();
+        File loadedFile = writeToFile(xmlString);
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        // Verify the xml content
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        Document doc = dbf.newDocumentBuilder()
+                .parse(new java.io.ByteArrayInputStream(xmlString.getBytes()));
+
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext(new NamespaceContext() {
+            @Override
+            public String getNamespaceURI(String prefix) {
+                return "bom".equals(prefix) ? "http://cyclonedx.org/schema/bom/1.6" : null;
+            }
+            @Override
+            public String getPrefix(String namespaceURI) {
+                return "http://cyclonedx.org/schema/bom/1.6".equals(namespaceURI) ? "bom" : null;
+            }
+            @Override
+            public Iterator<String> getPrefixes(String namespaceURI) {
+                return Collections.singleton("bom").iterator();
+            }
+        });
+
+        NodeList authors = (NodeList) xpath.evaluate(
+                "//bom:component/bom:authors/bom:author",
+                doc,
+                XPathConstants.NODESET
+        );
+        assertEquals(2, authors.getLength(), "There should be exactly 2 <author> elements");
+
+        String author1 = xpath.evaluate("//bom:component/bom:authors/bom:author[1]/bom:name", doc);
+        String author2 = xpath.evaluate("//bom:component/bom:authors/bom:author[2]/bom:name", doc);
+
+        assertEquals("Test Author 1", author1);
+        assertEquals("Test Author 2", author2);
+
+        String email1 = xpath.evaluate("//bom:component/bom:authors/bom:author[1]/bom:email", doc);
+        String email2 = xpath.evaluate("//bom:component/bom:authors/bom:author[2]/bom:email", doc);
+
+        assertEquals("author1@example.com", email1);
+        assertEquals("author2@example.com", email2);
+
+        String phone1 = xpath.evaluate("//bom:component/bom:authors/bom:author[1]/bom:phone", doc);
+        String phone2 = xpath.evaluate("//bom:component/bom:authors/bom:author[2]/bom:phone", doc);
+
+        assertEquals("123", phone1);
+        assertEquals("456", phone2);
+
+        String outerAuthorStr = (String) xpath.evaluate("//bom:component/bom:author", doc, XPathConstants.STRING);
+        assertEquals("Outer Author with String value", outerAuthorStr);
+    }
+
+    @Test
+    public void testComponentAuthorsWithInvalidItemTag(){
+        assertThrows(ParseException.class, () -> createCommonBomXml("/1.6/invalid-component-authors-bad-item-name-1.6.xml"));
     }
 
     private void assertExternalReferenceInfo(Bom bom) {
