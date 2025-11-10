@@ -271,6 +271,9 @@ public abstract class CycloneDxSchema
 
   public Schema getXmlSchema(InputStream... inputStreams) throws SAXException {
     final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     final Source[] schemaFiles = new Source[inputStreams.length];
     for (int i = 0; i < inputStreams.length; i++) {
       schemaFiles[i] = new StreamSource(inputStreams[i]);

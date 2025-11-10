@@ -338,6 +338,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
         df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        df.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder builder = df.newDocumentBuilder();
         return builder.parse(in);
     }

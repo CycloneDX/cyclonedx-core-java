@@ -18,12 +18,11 @@
  */
 package org.cyclonedx;
 
-import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
-import org.cyclonedx.generators.xml.*;
+import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
@@ -46,20 +45,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
-import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BomXmlGeneratorTest {
 
@@ -670,9 +675,9 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void testXxeProtection() {
-        assertThrows(ParseException.class, () -> {
-            createCommonBomXml("/security/xxe-protection.xml");
-        });
+        assertThatExceptionOfType(ParseException.class)
+                .isThrownBy(() -> createCommonBomXml("/security/xxe-protection.xml"))
+                .withMessageContaining("not allowed due to restriction set by the accessExternalDTD property");
     }
 
     @Test
