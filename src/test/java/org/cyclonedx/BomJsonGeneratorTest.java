@@ -603,7 +603,20 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
-    public void testVulnerabilityParsing15() throws Exception {
+    public void testVulnerabilityParsing16_json() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.4/valid-vulnerability-1.4.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        String jsonString = generator.toJsonString();
+
+        assertFalse(jsonString.isEmpty());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(jsonString.getBytes(StandardCharsets.UTF_8), version));
+    }
+
+    @Test
+    public void testVulnerabilityParsing15_json() throws Exception {
         Version version = Version.VERSION_15;
         Bom bom = createCommonJsonBom("/1.4/valid-vulnerability-1.4.json");
 
@@ -616,9 +629,48 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
-    public void testVulnerabilityParsing14() throws Exception {
+    public void testVulnerabilityParsing14_json() throws Exception {
         Version version = Version.VERSION_14;
         Bom bom = createCommonJsonBom("/1.4/valid-vulnerability-1.4.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        String jsonString = generator.toJsonString();
+
+        assertFalse(jsonString.isEmpty());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(jsonString.getBytes(StandardCharsets.UTF_8), version));
+    }
+
+    @Test
+    public void testVulnerabilityParsing16_xml() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonXmlBom("/1.4/valid-vulnerability-1.4.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        String jsonString = generator.toJsonString();
+
+        assertFalse(jsonString.isEmpty());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(jsonString.getBytes(StandardCharsets.UTF_8), version));
+    }
+
+    @Test
+    public void testVulnerabilityParsing15_xml() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonXmlBom("/1.4/valid-vulnerability-1.4.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        String jsonString = generator.toJsonString();
+
+        assertFalse(jsonString.isEmpty());
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(jsonString.getBytes(StandardCharsets.UTF_8), version));
+    }
+
+    @Test
+    public void testVulnerabilityParsing14_xml() throws Exception {
+        Version version = Version.VERSION_14;
+        Bom bom = createCommonXmlBom("/1.4/valid-vulnerability-1.4.xml");
 
         BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
         String jsonString = generator.toJsonString();
