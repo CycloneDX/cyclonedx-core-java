@@ -401,6 +401,32 @@ public class BomXmlGeneratorTest {
         assertTrue(parser.isValid(xmlString.getBytes(StandardCharsets.UTF_8)));
     }
 
+    @Test
+    public void testVulnerabilityParsing15() throws Exception {
+        Version version = Version.VERSION_15;
+        Bom bom = createCommonJsonBom("/1.4/valid-vulnerability-1.4.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        String xmlString = generator.toXmlString();
+
+        assertFalse(xmlString.isEmpty());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(xmlString.getBytes(StandardCharsets.UTF_8), version));
+    }
+
+    @Test
+    public void testVulnerabilityParsing14() throws Exception {
+        Version version = Version.VERSION_14;
+        Bom bom = createCommonJsonBom("/1.4/valid-vulnerability-1.4.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        String xmlString = generator.toXmlString();
+
+        assertFalse(xmlString.isEmpty());
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(xmlString.getBytes(StandardCharsets.UTF_8), version));
+    }
+
     private static Component getComponentWithEmptyLicenseChoice() {
         Component component = new Component();
         component.setName("xalan");
