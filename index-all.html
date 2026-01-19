@@ -2373,7 +2373,9 @@
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Metadata.html#getTools--">getTools()</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Metadata.html" title="class in org.cyclonedx.model">Metadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/vulnerability/Vulnerability.html#getTools--">getTools()</a></span> - Method in class org.cyclonedx.model.vulnerability.<a href="org/cyclonedx/model/vulnerability/Vulnerability.html" title="class in org.cyclonedx.model.vulnerability">Vulnerability</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/ToolsJsonParser.html#getTools--">getTools()</a></span> - Method in class org.cyclonedx.util.<a href="org/cyclonedx/util/ToolsJsonParser.html" title="class in org.cyclonedx.util">ToolsJsonParser</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/formulation/FormulationCommon.html#getTrigger--">getTrigger()</a></span> - Method in class org.cyclonedx.model.formulation.<a href="org/cyclonedx/model/formulation/FormulationCommon.html" title="class in org.cyclonedx.model.formulation">FormulationCommon</a></dt>
@@ -2603,6 +2605,8 @@
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/PropertiesSerializer.html#handledType--">handledType()</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/PropertiesSerializer.html" title="class in org.cyclonedx.util.serializer">PropertiesSerializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/SignatorySerializer.html#handledType--">handledType()</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/SignatorySerializer.html" title="class in org.cyclonedx.util.serializer">SignatorySerializer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html#handledType--">handledType()</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html" title="class in org.cyclonedx.util.serializer">VulnerabilitySerializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/cyclonedx/model/Hash.html" title="class in org.cyclonedx.model"><span class="typeNameLink">Hash</span></a> - Class in <a href="org/cyclonedx/model/package-summary.html">org.cyclonedx.model</a></dt>
 <dd>&nbsp;</dd>
@@ -3617,6 +3621,8 @@
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/TrimStringSerializer.html#serialize-java.lang.String-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">serialize(String, JsonGenerator, SerializerProvider)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/TrimStringSerializer.html" title="class in org.cyclonedx.util.serializer">TrimStringSerializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/TrimStringSerializer.html#serialize-java.lang.Object-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">serialize(Object, JsonGenerator, SerializerProvider)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/TrimStringSerializer.html" title="class in org.cyclonedx.util.serializer">TrimStringSerializer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html#serialize-org.cyclonedx.model.vulnerability.Vulnerability-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">serialize(Vulnerability, JsonGenerator, SerializerProvider)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html" title="class in org.cyclonedx.util.serializer">VulnerabilitySerializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/SerializerUtils.html#serializeHashJson-com.fasterxml.jackson.core.JsonGenerator-org.cyclonedx.model.Hash-">serializeHashJson(JsonGenerator, Hash)</a></span> - Static method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/SerializerUtils.html" title="class in org.cyclonedx.util.serializer">SerializerUtils</a></dt>
 <dd>&nbsp;</dd>
@@ -5830,6 +5836,12 @@ the order they are declared.</div>
 <dt><a href="org/cyclonedx/util/deserializer/VulnerabilityDeserializer.html" title="class in org.cyclonedx.util.deserializer"><span class="typeNameLink">VulnerabilityDeserializer</span></a> - Class in <a href="org/cyclonedx/util/deserializer/package-summary.html">org.cyclonedx.util.deserializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/deserializer/VulnerabilityDeserializer.html#VulnerabilityDeserializer--">VulnerabilityDeserializer()</a></span> - Constructor for class org.cyclonedx.util.deserializer.<a href="org/cyclonedx/util/deserializer/VulnerabilityDeserializer.html" title="class in org.cyclonedx.util.deserializer">VulnerabilityDeserializer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">VulnerabilitySerializer</span></a> - Class in <a href="org/cyclonedx/util/serializer/package-summary.html">org.cyclonedx.util.serializer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html#VulnerabilitySerializer-boolean-org.cyclonedx.Version-">VulnerabilitySerializer(boolean, Version)</a></span> - Constructor for class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html" title="class in org.cyclonedx.util.serializer">VulnerabilitySerializer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html#VulnerabilitySerializer-java.lang.Class-boolean-org.cyclonedx.Version-">VulnerabilitySerializer(Class&lt;Vulnerability&gt;, boolean, Version)</a></span> - Constructor for class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/VulnerabilitySerializer.html" title="class in org.cyclonedx.util.serializer">VulnerabilitySerializer</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:W">
