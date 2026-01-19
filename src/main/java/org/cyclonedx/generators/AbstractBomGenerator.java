@@ -16,6 +16,7 @@ import org.cyclonedx.util.serializer.LifecycleSerializer;
 import org.cyclonedx.util.serializer.MetadataSerializer;
 import org.cyclonedx.util.serializer.OutputTypeSerializer;
 import org.cyclonedx.util.serializer.SignatorySerializer;
+import org.cyclonedx.util.serializer.VulnerabilitySerializer;
 
 public abstract class AbstractBomGenerator extends CycloneDxSchema
 {
@@ -68,6 +69,10 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     SimpleModule metadataModule = new SimpleModule();
     metadataModule.addSerializer(new MetadataSerializer(isXml, getSchemaVersion()));
     mapper.registerModule(metadataModule);
+
+    SimpleModule vulnerabilityModule = new SimpleModule();
+    vulnerabilityModule.addSerializer(new VulnerabilitySerializer(isXml, getSchemaVersion()));
+    mapper.registerModule(vulnerabilityModule);
 
     SimpleModule inputTypeModule = new SimpleModule();
     inputTypeModule.addSerializer(new InputTypeSerializer(isXml));
