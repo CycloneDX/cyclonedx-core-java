@@ -26,7 +26,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.license.Expression;
+import org.cyclonedx.model.license.ExpressionDetailed;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -38,6 +40,10 @@ public class LicenseChoice {
     private List<License> license;
     private Expression expression;
 
+    @VersionFilter(Version.VERSION_17)
+    @JacksonXmlProperty(localName = "expression-detailed")
+    private ExpressionDetailed expressionDetailed;
+
     @JacksonXmlProperty(localName = "license")
     public List<License> getLicenses() {
         return license;
@@ -46,6 +52,7 @@ public class LicenseChoice {
     public void setLicenses(List<License> licenses) {
         this.license = licenses;
         this.expression = null;
+        this.expressionDetailed = null;
     }
 
     public void addLicense(License license) {
@@ -54,6 +61,7 @@ public class LicenseChoice {
         }
         this.license.add(license);
         this.expression = null;
+        this.expressionDetailed = null;
     }
 
     @JacksonXmlProperty(localName = "expression")
@@ -64,6 +72,17 @@ public class LicenseChoice {
     public void setExpression(Expression expression) {
         this.expression = expression;
         this.license = null;
+        this.expressionDetailed = null;
+    }
+
+    public ExpressionDetailed getExpressionDetailed() {
+        return expressionDetailed;
+    }
+
+    public void setExpressionDetailed(ExpressionDetailed expressionDetailed) {
+        this.expressionDetailed = expressionDetailed;
+        this.license = null;
+        this.expression = null;
     }
 
     @Override
@@ -72,11 +91,12 @@ public class LicenseChoice {
         if (!(o instanceof LicenseChoice)) return false;
         LicenseChoice that = (LicenseChoice) o;
         return Objects.equals(license, that.license) &&
-                Objects.equals(expression, that.expression);
+                Objects.equals(expression, that.expression) &&
+                Objects.equals(expressionDetailed, that.expressionDetailed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(license, expression);
+        return Objects.hash(license, expression, expressionDetailed);
     }
 }
