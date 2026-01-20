@@ -680,6 +680,80 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(jsonString.getBytes(StandardCharsets.UTF_8), version));
     }
 
+    // ==================== CycloneDX 1.7 License Tests ====================
+
+    @Test
+    public void schema17_testLicenseMixedChoice() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-choice-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseMixedChoice_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-choice-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithText() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-expression-with-text-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithText_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-expression-with-text-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithLicensing() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-expression-with-licensing-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithLicensing_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-expression-with-licensing-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private void assertExternalReferenceInfo(Bom bom) {
         assertEquals(3, bom.getExternalReferences().size());
         assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());
