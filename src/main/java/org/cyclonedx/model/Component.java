@@ -156,6 +156,11 @@ public class Component extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private Type type;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "isExternal")
+    @JsonProperty("isExternal")
+    @VersionFilter(Version.VERSION_17)
+    private Boolean isExternal;
+
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
@@ -168,6 +173,10 @@ public class Component extends ExtensibleElement {
     private String group;
     private String name;
     private String version;
+
+    @VersionFilter(Version.VERSION_17)
+    private String versionRange;
+
     private String description;
     private Scope scope;
     private List<Hash> hashes;
@@ -217,6 +226,9 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_16)
     @JsonProperty("provides")
     private List<String> provides;
+
+    @VersionFilter(Version.VERSION_17)
+    private List<PatentAssertion> patentAssertions;
 
     @VersionFilter(Version.VERSION_16)
     @JsonUnwrapped
@@ -296,6 +308,22 @@ public class Component extends ExtensibleElement {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getVersionRange() {
+        return versionRange;
+    }
+
+    public void setVersionRange(String versionRange) {
+        this.versionRange = versionRange;
+    }
+
+    public Boolean getIsExternal() {
+        return isExternal;
+    }
+
+    public void setIsExternal(Boolean isExternal) {
+        this.isExternal = isExternal;
     }
 
     public String getDescription() {
@@ -546,6 +574,16 @@ public class Component extends ExtensibleElement {
 
     public void setProvides(final List<String> provides) {
         this.provides = provides;
+    }
+
+    @JacksonXmlElementWrapper(localName = "patentAssertions")
+    @JacksonXmlProperty(localName = "patentAssertion")
+    public List<PatentAssertion> getPatentAssertions() {
+        return patentAssertions;
+    }
+
+    public void setPatentAssertions(List<PatentAssertion> patentAssertions) {
+        this.patentAssertions = patentAssertions;
     }
 
     public Tags getTags() {

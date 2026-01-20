@@ -42,7 +42,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "timestamp", "lifecycles", "tools", "authors", "component", "manufacturer", "manufacture", "supplier", "licenses",
-    "properties"
+    "properties", "classifications"
 })
 @JsonDeserialize(using = MetadataDeserializer.class)
 public class Metadata
@@ -91,6 +91,9 @@ public class Metadata
 
     @VersionFilter(Version.VERSION_13)
     private List<Property> properties;
+
+    @VersionFilter(Version.VERSION_17)
+    private Classifications classifications;
 
     public Date getTimestamp() {
         return timestamp;
@@ -197,6 +200,14 @@ public class Metadata
             this.properties = new ArrayList<>();
         }
         this.properties.add(property);
+    }
+
+    public Classifications getClassifications() {
+        return classifications;
+    }
+
+    public void setClassifications(Classifications classifications) {
+        this.classifications = classifications;
     }
 
     public Lifecycles getLifecycles() {
