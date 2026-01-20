@@ -15,7 +15,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        java-version: [ 8, 11, 17, 21 ]
+        java-version: [ 17, 21, 25 ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -33,7 +33,7 @@ jobs:
     # PRs from forks do not get access to repository secrets.
     # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
     - name: Publish test coverage
-      if: ${{ github.event_name != 'pull_request' && github.repository_owner == 'CycloneDX' && matrix.java-version == '21' }}
+      if: ${{ github.event_name != 'pull_request' && github.repository_owner == 'CycloneDX' && matrix.java-version == '25' }}
       uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # tag=v1.3.0
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
