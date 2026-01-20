@@ -262,6 +262,18 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Attribute.html#Attribute-java.lang.String-java.lang.String-">Attribute(String, String)</a></span> - Constructor for class org.cyclonedx.model.<a href="org/cyclonedx/model/Attribute.html" title="class in org.cyclonedx.model">Attribute</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/cyclonedx/util/serializer/AuthorsBeanSerializerModifier.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">AuthorsBeanSerializerModifier</span></a> - Class in <a href="org/cyclonedx/util/serializer/package-summary.html">org.cyclonedx.util.serializer</a></dt>
+<dd>
+<div class="block">Bean serializer modifier for Component.authors field.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/AuthorsBeanSerializerModifier.html#AuthorsBeanSerializerModifier-org.cyclonedx.Version-">AuthorsBeanSerializerModifier(Version)</a></span> - Constructor for class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/AuthorsBeanSerializerModifier.html" title="class in org.cyclonedx.util.serializer">AuthorsBeanSerializerModifier</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/cyclonedx/util/serializer/AuthorsSerializer.html" title="class in org.cyclonedx.util.serializer"><span class="typeNameLink">AuthorsSerializer</span></a> - Class in <a href="org/cyclonedx/util/serializer/package-summary.html">org.cyclonedx.util.serializer</a></dt>
+<dd>
+<div class="block">Custom serializer for the Component.authors field to handle XML element naming.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/AuthorsSerializer.html#AuthorsSerializer--">AuthorsSerializer()</a></span> - Constructor for class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/AuthorsSerializer.html" title="class in org.cyclonedx.util.serializer">AuthorsSerializer</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:B">
 <!--   -->
@@ -352,6 +364,8 @@
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/component/crypto/CertificateProperties.html#CertificateProperties--">CertificateProperties()</a></span> - Constructor for class org.cyclonedx.model.component.crypto.<a href="org/cyclonedx/model/component/crypto/CertificateProperties.html" title="class in org.cyclonedx.model.component.crypto">CertificateProperties</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/cyclonedx/model/component/crypto/enums/CertificationLevel.html" title="enum in org.cyclonedx.model.component.crypto.enums"><span class="typeNameLink">CertificationLevel</span></a> - Enum in <a href="org/cyclonedx/model/component/crypto/enums/package-summary.html">org.cyclonedx.model.component.crypto.enums</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/AuthorsBeanSerializerModifier.html#changeProperties-com.fasterxml.jackson.databind.SerializationConfig-com.fasterxml.jackson.databind.BeanDescription-java.util.List-">changeProperties(SerializationConfig, BeanDescription, List&lt;BeanPropertyWriter&gt;)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/AuthorsBeanSerializerModifier.html" title="class in org.cyclonedx.util.serializer">AuthorsBeanSerializerModifier</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/CustomSerializerModifier.html#changeProperties-com.fasterxml.jackson.databind.SerializationConfig-com.fasterxml.jackson.databind.BeanDescription-java.util.List-">changeProperties(SerializationConfig, BeanDescription, List&lt;BeanPropertyWriter&gt;)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/CustomSerializerModifier.html" title="class in org.cyclonedx.util.serializer">CustomSerializerModifier</a></dt>
 <dd>&nbsp;</dd>
@@ -1190,9 +1204,15 @@
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Commit.html#getAuthor--">getAuthor()</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Commit.html" title="class in org.cyclonedx.model">Commit</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Component.html#getAuthor--">getAuthor()</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Component.html" title="class in org.cyclonedx.model">Component</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">since version 1.6, use <a href="org/cyclonedx/model/Component.html#getAuthors--"><code>Component.getAuthors()</code></a> instead</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Component.html#getAuthors--">getAuthors()</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Component.html" title="class in org.cyclonedx.model">Component</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the component authors as a list of contacts.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Metadata.html#getAuthors--">getAuthors()</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Metadata.html" title="class in org.cyclonedx.model">Metadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/vulnerability/Vulnerability10.Score.html#getBase--">getBase()</a></span> - Method in class org.cyclonedx.model.vulnerability.<a href="org/cyclonedx/model/vulnerability/Vulnerability10.Score.html" title="class in org.cyclonedx.model.vulnerability">Vulnerability10.Score</a></dt>
@@ -3586,6 +3606,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/component/crypto/SecuredBy.html#SecuredBy--">SecuredBy()</a></span> - Constructor for class org.cyclonedx.model.component.crypto.<a href="org/cyclonedx/model/component/crypto/SecuredBy.html" title="class in org.cyclonedx.model.component.crypto">SecuredBy</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/AuthorsSerializer.html#serialize-java.util.List-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">serialize(List&lt;OrganizationalContact&gt;, JsonGenerator, SerializerProvider)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/AuthorsSerializer.html" title="class in org.cyclonedx.util.serializer">AuthorsSerializer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/ComponentWrapperSerializer.html#serialize-org.cyclonedx.model.ComponentWrapper-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">serialize(ComponentWrapper, JsonGenerator, SerializerProvider)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/ComponentWrapperSerializer.html" title="class in org.cyclonedx.util.serializer">ComponentWrapperSerializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/util/serializer/CustomDateSerializer.html#serialize-java.util.Date-com.fasterxml.jackson.core.JsonGenerator-com.fasterxml.jackson.databind.SerializerProvider-">serialize(Date, JsonGenerator, SerializerProvider)</a></span> - Method in class org.cyclonedx.util.serializer.<a href="org/cyclonedx/util/serializer/CustomDateSerializer.html" title="class in org.cyclonedx.util.serializer">CustomDateSerializer</a></dt>
@@ -3729,9 +3751,15 @@
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Commit.html#setAuthor-org.cyclonedx.model.IdentifiableActionType-">setAuthor(IdentifiableActionType)</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Commit.html" title="class in org.cyclonedx.model">Commit</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Component.html#setAuthor-java.lang.String-">setAuthor(String)</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Component.html" title="class in org.cyclonedx.model">Component</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="block"><span class="deprecationComment">since version 1.6, use <a href="org/cyclonedx/model/Component.html#setAuthors-java.util.List-"><code>Component.setAuthors(List)</code></a> instead</span></div>
+</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Component.html#setAuthors-java.util.List-">setAuthors(List&lt;OrganizationalContact&gt;)</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Component.html" title="class in org.cyclonedx.model">Component</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sets the component authors as a list of contacts.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/Metadata.html#setAuthors-java.util.List-">setAuthors(List&lt;OrganizationalContact&gt;)</a></span> - Method in class org.cyclonedx.model.<a href="org/cyclonedx/model/Metadata.html" title="class in org.cyclonedx.model">Metadata</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/cyclonedx/model/vulnerability/Vulnerability10.Score.html#setBase-java.lang.Double-">setBase(Double)</a></span> - Method in class org.cyclonedx.model.vulnerability.<a href="org/cyclonedx/model/vulnerability/Vulnerability10.Score.html" title="class in org.cyclonedx.model.vulnerability">Vulnerability10.Score</a></dt>
