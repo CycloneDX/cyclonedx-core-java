@@ -59,6 +59,8 @@ import org.cyclonedx.util.deserializer.VulnerabilityDeserializer;
         "formulation",
         "declarations",
         "definitions",
+        "distributionConstraints",
+        "citations",
         "signature"
 })
 public class Bom extends ExtensibleElement {
@@ -99,6 +101,12 @@ public class Bom extends ExtensibleElement {
 
     @VersionFilter(Version.VERSION_15)
     private List<Annotation> annotations;
+
+    @VersionFilter(Version.VERSION_17)
+    private DistributionConstraints distributionConstraints;
+
+    @VersionFilter(Version.VERSION_17)
+    private List<Citation> citations;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Property> properties;
@@ -237,6 +245,32 @@ public class Bom extends ExtensibleElement {
 
     public void setAnnotations(List<Annotation> annotations) {
         this.annotations = annotations;
+    }
+
+    public DistributionConstraints getDistributionConstraints() {
+        return distributionConstraints;
+    }
+
+    public void setDistributionConstraints(DistributionConstraints distributionConstraints) {
+        this.distributionConstraints = distributionConstraints;
+    }
+
+    @JacksonXmlElementWrapper(localName = "citations")
+    @JacksonXmlProperty(localName = "citation")
+    @VersionFilter(Version.VERSION_17)
+    public List<Citation> getCitations() {
+        return citations;
+    }
+
+    public void setCitations(List<Citation> citations) {
+        this.citations = citations;
+    }
+
+    public void addCitation(Citation citation) {
+        if (this.citations == null) {
+            this.citations = new ArrayList<>();
+        }
+        this.citations.add(citation);
     }
 
     @JacksonXmlElementWrapper(localName = "properties")

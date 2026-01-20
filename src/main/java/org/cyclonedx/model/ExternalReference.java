@@ -121,6 +121,18 @@ public class ExternalReference {
         @VersionFilter(Version.VERSION_16)
         @JsonProperty("digital-signature")
         DIGITAL_SIGNATURE("digital-signature"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("patent")
+        PATENT("patent"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("patent-family")
+        PATENT_FAMILY("patent-family"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("patent-assertion")
+        PATENT_ASSERTION("patent-assertion"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("citation")
+        CITATION("citation"),
         @JsonProperty("other")
         OTHER("other");
 
