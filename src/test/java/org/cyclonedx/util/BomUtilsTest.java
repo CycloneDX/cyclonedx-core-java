@@ -22,8 +22,6 @@ import org.apache.commons.io.FileUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Hash;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledForJreRange;
-import org.junit.jupiter.api.condition.JRE;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,8 +56,7 @@ public class BomUtilsTest {
     }
 
     @Test
-    @EnabledForJreRange(min = JRE.JAVA_17)
-    public void calculateSha3HashesOnJava17AndHigher() throws Exception {
+    public void calculateSha3Hashes() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/hashtest.txt")).toURI());
 
         final List<Hash> hashes = BomUtils.calculateHashes(file, Version.VERSION_12);
@@ -84,8 +81,7 @@ public class BomUtilsTest {
     }
 
     @Test
-    @EnabledForJreRange(min = JRE.JAVA_17)
-    public void calculateSha3HashesForBigFileOnJava17AndHigher() throws Exception {
+    public void calculateSha3HashesForBigFile() throws Exception {
         final File file = generateBigFileWithReproductiveContent();
 
         final List<Hash> hashes = BomUtils.calculateHashes(file, Version.VERSION_12);
