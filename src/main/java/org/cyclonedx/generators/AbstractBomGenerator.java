@@ -6,6 +6,7 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Format;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.util.serializer.AuthorsBeanSerializerModifier;
 import org.cyclonedx.util.serializer.CustomSerializerModifier;
 import org.cyclonedx.util.serializer.EvidenceSerializer;
 import org.cyclonedx.util.serializer.ExternalReferenceSerializer;
@@ -97,6 +98,10 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     SimpleModule hash1Module = new SimpleModule();
     hash1Module.addSerializer(new HashSerializer(version));
     mapper.registerModule(hash1Module);
+
+    SimpleModule authorsModule = new SimpleModule();
+    authorsModule.setSerializerModifier(new AuthorsBeanSerializerModifier(version));
+    mapper.registerModule(authorsModule);
 
     SimpleModule propertiesModule = new SimpleModule();
     propertiesModule.setSerializerModifier(new CustomSerializerModifier(isXml, version));

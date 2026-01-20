@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.component.ModelCard;
@@ -223,7 +225,6 @@ public class Component extends ExtensibleElement {
     private Tags tags;
 
     @VersionFilter(Version.VERSION_16)
-    @JsonProperty("authors")
     private List<OrganizationalContact> authors;
 
     @VersionFilter(Version.VERSION_16)
@@ -258,10 +259,26 @@ public class Component extends ExtensibleElement {
         this.supplier = supplier;
     }
 
+    /**
+     * Gets the deprecated author field as a string.
+     * @return the author name as a string
+     * @deprecated since version 1.6, use {@link #getAuthors()} instead
+     */
+    @Deprecated
+    @JsonGetter("author")
+    @JacksonXmlProperty(localName = "author")
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * Sets the deprecated author field as a string.
+     * @param author the author name as a string
+     * @deprecated since version 1.6, use {@link #setAuthors(List)} instead
+     */
+    @Deprecated
+    @JsonSetter("author")
+    @JacksonXmlProperty(localName = "author")
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -556,10 +573,24 @@ public class Component extends ExtensibleElement {
         this.tags = tags;
     }
 
+    /**
+     * Gets the component authors as a list of contacts.
+     * This replaces the deprecated string-based author field.
+     * @return the list of authors, or null if not set
+     * @since 1.6
+     */
+    @JsonGetter("authors")
     public List<OrganizationalContact> getAuthors() {
         return authors;
     }
 
+    /**
+     * Sets the component authors as a list of contacts.
+     * This replaces the deprecated string-based author field.
+     * @param authors the list of authors
+     * @since 1.6
+     */
+    @JsonSetter("authors")
     public void setAuthors(final List<OrganizationalContact> authors) {
         this.authors = authors;
     }
