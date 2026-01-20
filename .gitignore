@@ -1,5 +1,6 @@
 target
 *.iml
-.idea/
+.idea/*
+!.idea/icon.svg
 dependency-reduced-pom.xml
 .DS_Store
