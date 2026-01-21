@@ -33,7 +33,7 @@ the CycloneDX version supported by the target system.
 
 | Version |  Schema Version  | Format(s) |
 |---------|------------------|-----------|
-| 12.x    | CycloneDX v1.6.1 | XML/JSON  |
+| 12.x    | CycloneDX v1.7   | XML/JSON  |
 | 11.x    | CycloneDX v1.6.1 | XML/JSON  |
 | 10.x    | CycloneDX v1.6.1 | XML/JSON  |
 | 9.x     | CycloneDX v1.6   | XML/JSON  |
