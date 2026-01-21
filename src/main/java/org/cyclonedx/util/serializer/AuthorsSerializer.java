@@ -74,4 +74,10 @@ public class AuthorsSerializer extends StdSerializer<List<OrganizationalContact>
             gen.writeEndArray();
         }
     }
+
+    @Override
+    public boolean isEmpty(SerializerProvider provider, List<OrganizationalContact> value) {
+        return value == null || value.isEmpty();
+    }
+
 }

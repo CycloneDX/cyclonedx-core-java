@@ -31,8 +31,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -201,6 +203,54 @@ public class Issue638ComprehensiveTest {
     // ============================================================================
     // VERSION 1.6 TESTS - Both 'author' (deprecated) and 'authors' exist
     // ============================================================================
+
+    @Test
+    @DisplayName("v1.6 XML: Serialize component with null authors list")
+    public void testV16_XML_SerializeNullAuthorsList() throws Exception {
+        Component component = createComponentWithAuthorsList(
+                null
+        );
+        Bom bom = createBom(component);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_16, bom);
+        String xml = generator.toXmlString();
+
+        assertThat(xml).isEqualTo(/* language=XML */ """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <bom serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79" version="1" xmlns="http://cyclonedx.org/schema/bom/1.6">
+                  <components>
+                    <component type="library">
+                      <name>test-lib</name>
+                      <version>1.0.0</version>
+                    </component>
+                  </components>
+                </bom>
+                """);
+    }
+
+    @Test
+    @DisplayName("v1.6 XML: Serialize component with empty authors list")
+    public void testV16_XML_SerializeEmptyAuthorsList() throws Exception {
+        Component component = createComponentWithAuthorsList(
+                Collections.emptyList()
+        );
+        Bom bom = createBom(component);
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_16, bom);
+        String xml = generator.toXmlString();
+
+        assertThat(xml).isEqualTo(/* language=XML */ """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <bom serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79" version="1" xmlns="http://cyclonedx.org/schema/bom/1.6">
+                  <components>
+                    <component type="library">
+                      <name>test-lib</name>
+                      <version>1.0.0</version>
+                    </component>
+                  </components>
+                </bom>
+                """);
+    }
 
     @Test
     @DisplayName("v1.6 XML: Serialize component with ONLY author string (deprecated field)")
@@ -419,6 +469,50 @@ public class Issue638ComprehensiveTest {
 
         assertThat(json).contains("\"author\" : \"JSON Deprecated Author\"");
         assertThat(json).doesNotContain("\"authors\"");
+    }
+
+    @Test
+    @DisplayName("v1.6 JSON: Serialize component with null authors list")
+    public void testV16_JSON_SerializeNullAuthorsList() throws Exception {
+        Component component = createComponentWithAuthorsList(
+                null
+        );
+        Bom bom = createBom(component);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
+        String json = generator.toJsonString();
+
+        assertThatJson(json)
+                .inPath("$.components[0]")
+                .isEqualTo(/* language=JSON */ """
+                        {
+                          "type": "library",
+                          "name": "test-lib",
+                          "version": "1.0.0"
+                        }
+                        """);
+    }
+
+    @Test
+    @DisplayName("v1.6 JSON: Serialize component with empty authors list")
+    public void testV16_JSON_SerializeEmptyAuthorsList() throws Exception {
+        Component component = createComponentWithAuthorsList(
+                Collections.emptyList()
+        );
+        Bom bom = createBom(component);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
+        String json = generator.toJsonString();
+
+        assertThatJson(json)
+                .inPath("$.components[0]")
+                .isEqualTo(/* language=JSON */ """
+                        {
+                          "type": "library",
+                          "name": "test-lib",
+                          "version": "1.0.0"
+                        }
+                        """);
     }
 
     @Test
