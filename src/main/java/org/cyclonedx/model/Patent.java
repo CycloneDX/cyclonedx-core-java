@@ -41,8 +41,8 @@ import java.util.Objects;
 @JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({
     "bomRef", "patentNumber", "applicationNumber", "jurisdiction", "priorityApplication",
-    "publicationNumber", "title", "abstract", "filingDate", "grantDate", "expirationDate",
-    "patentLegalStatus", "patentAssignee", "externalReferences", "properties"
+    "publicationNumber", "title", "abstract", "filingDate", "grantDate", "patentExpirationDate",
+    "patentLegalStatus", "patentAssignee", "externalReferences"
 })
 public class Patent extends ExtensibleElement {
 
@@ -117,7 +117,7 @@ public class Patent extends ExtensibleElement {
     private Date grantDate;
 
     @JsonSerialize(using = CustomDateSerializer.class)
-    private Date expirationDate;
+    private Date patentExpirationDate;
 
     private PatentLegalStatus patentLegalStatus;
 
@@ -128,10 +128,6 @@ public class Patent extends ExtensibleElement {
     @JacksonXmlElementWrapper(localName = "externalReferences")
     @JacksonXmlProperty(localName = "reference")
     private List<ExternalReference> externalReferences;
-
-    @JacksonXmlElementWrapper(localName = "properties")
-    @JacksonXmlProperty(localName = "property")
-    private List<Property> properties;
 
     public String getBomRef() {
         return bomRef;
@@ -213,12 +209,12 @@ public class Patent extends ExtensibleElement {
         this.grantDate = grantDate;
     }
 
-    public Date getExpirationDate() {
-        return expirationDate;
+    public Date getPatentExpirationDate() {
+        return patentExpirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setPatentExpirationDate(Date patentExpirationDate) {
+        this.patentExpirationDate = patentExpirationDate;
     }
 
     public PatentLegalStatus getPatentLegalStatus() {
@@ -245,14 +241,6 @@ public class Patent extends ExtensibleElement {
         this.externalReferences = externalReferences;
     }
 
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -268,17 +256,16 @@ public class Patent extends ExtensibleElement {
                 Objects.equals(patentAbstract, patent.patentAbstract) &&
                 Objects.equals(filingDate, patent.filingDate) &&
                 Objects.equals(grantDate, patent.grantDate) &&
-                Objects.equals(expirationDate, patent.expirationDate) &&
+                Objects.equals(patentExpirationDate, patent.patentExpirationDate) &&
                 patentLegalStatus == patent.patentLegalStatus &&
                 Objects.equals(patentAssignee, patent.patentAssignee) &&
-                Objects.equals(externalReferences, patent.externalReferences) &&
-                Objects.equals(properties, patent.properties);
+                Objects.equals(externalReferences, patent.externalReferences);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(bomRef, patentNumber, applicationNumber, jurisdiction, priorityApplication,
-                publicationNumber, title, patentAbstract, filingDate, grantDate, expirationDate,
-                patentLegalStatus, patentAssignee, externalReferences, properties);
+                publicationNumber, title, patentAbstract, filingDate, grantDate, patentExpirationDate,
+                patentLegalStatus, patentAssignee, externalReferences);
     }
 }

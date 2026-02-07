@@ -39,7 +39,7 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomRef", "pointers", "expressions", "source", "timestamp"})
+@JsonPropertyOrder({"bomRef", "pointers", "expressions", "timestamp", "attributedTo", "process", "note"})
 public class Citation extends ExtensibleElement {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
@@ -54,10 +54,14 @@ public class Citation extends ExtensibleElement {
     @JacksonXmlProperty(localName = "expression")
     private List<String> expressions;
 
-    private OrganizationalChoice source;
-
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date timestamp;
+
+    private String attributedTo;
+
+    private String process;
+
+    private String note;
 
     public String getBomRef() {
         return bomRef;
@@ -83,20 +87,36 @@ public class Citation extends ExtensibleElement {
         this.expressions = expressions;
     }
 
-    public OrganizationalChoice getSource() {
-        return source;
-    }
-
-    public void setSource(OrganizationalChoice source) {
-        this.source = source;
-    }
-
     public Date getTimestamp() {
         return timestamp;
     }
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getAttributedTo() {
+        return attributedTo;
+    }
+
+    public void setAttributedTo(String attributedTo) {
+        this.attributedTo = attributedTo;
+    }
+
+    public String getProcess() {
+        return process;
+    }
+
+    public void setProcess(String process) {
+        this.process = process;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override
@@ -107,12 +127,14 @@ public class Citation extends ExtensibleElement {
         return Objects.equals(bomRef, citation.bomRef) &&
                 Objects.equals(pointers, citation.pointers) &&
                 Objects.equals(expressions, citation.expressions) &&
-                Objects.equals(source, citation.source) &&
-                Objects.equals(timestamp, citation.timestamp);
+                Objects.equals(timestamp, citation.timestamp) &&
+                Objects.equals(attributedTo, citation.attributedTo) &&
+                Objects.equals(process, citation.process) &&
+                Objects.equals(note, citation.note);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bomRef, pointers, expressions, source, timestamp);
+        return Objects.hash(bomRef, pointers, expressions, timestamp, attributedTo, process, note);
     }
 }

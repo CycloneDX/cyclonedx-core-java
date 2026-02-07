@@ -75,6 +75,7 @@ public class LicenseChoice {
         this.expressionDetailed = null;
     }
 
+    @VersionFilter(Version.VERSION_17)
     public ExpressionDetailed getExpressionDetailed() {
         return expressionDetailed;
     }

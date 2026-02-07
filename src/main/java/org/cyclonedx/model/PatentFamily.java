@@ -36,7 +36,7 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomRef", "familyId", "patents", "properties"})
+@JsonPropertyOrder({"bomRef", "familyId", "priorityApplication", "members", "externalReferences"})
 public class PatentFamily extends ExtensibleElement {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
@@ -45,13 +45,15 @@ public class PatentFamily extends ExtensibleElement {
 
     private String familyId;
 
-    @JacksonXmlElementWrapper(localName = "patents")
-    @JacksonXmlProperty(localName = "patent")
-    private List<Patent> patents;
+    private PriorityApplication priorityApplication;
 
-    @JacksonXmlElementWrapper(localName = "properties")
-    @JacksonXmlProperty(localName = "property")
-    private List<Property> properties;
+    @JacksonXmlElementWrapper(localName = "members")
+    @JacksonXmlProperty(localName = "ref")
+    private List<String> members;
+
+    @JacksonXmlElementWrapper(localName = "externalReferences")
+    @JacksonXmlProperty(localName = "reference")
+    private List<ExternalReference> externalReferences;
 
     public String getBomRef() {
         return bomRef;
@@ -69,20 +71,28 @@ public class PatentFamily extends ExtensibleElement {
         this.familyId = familyId;
     }
 
-    public List<Patent> getPatents() {
-        return patents;
+    public PriorityApplication getPriorityApplication() {
+        return priorityApplication;
     }
 
-    public void setPatents(List<Patent> patents) {
-        this.patents = patents;
+    public void setPriorityApplication(PriorityApplication priorityApplication) {
+        this.priorityApplication = priorityApplication;
     }
 
-    public List<Property> getProperties() {
-        return properties;
+    public List<String> getMembers() {
+        return members;
     }
 
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
+    public void setMembers(List<String> members) {
+        this.members = members;
+    }
+
+    public List<ExternalReference> getExternalReferences() {
+        return externalReferences;
+    }
+
+    public void setExternalReferences(List<ExternalReference> externalReferences) {
+        this.externalReferences = externalReferences;
     }
 
     @Override
@@ -92,12 +102,13 @@ public class PatentFamily extends ExtensibleElement {
         PatentFamily that = (PatentFamily) o;
         return Objects.equals(bomRef, that.bomRef) &&
                 Objects.equals(familyId, that.familyId) &&
-                Objects.equals(patents, that.patents) &&
-                Objects.equals(properties, that.properties);
+                Objects.equals(priorityApplication, that.priorityApplication) &&
+                Objects.equals(members, that.members) &&
+                Objects.equals(externalReferences, that.externalReferences);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bomRef, familyId, patents, properties);
+        return Objects.hash(bomRef, familyId, priorityApplication, members, externalReferences);
     }
 }
