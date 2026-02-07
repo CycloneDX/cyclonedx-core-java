@@ -366,6 +366,9 @@ public class Component extends ExtensibleElement {
     @JsonDeserialize(using = LicenseDeserializer.class)
     @JacksonXmlElementWrapper (useWrapping = false)
     public LicenseChoice getLicenses() {
+        if (licenses != null && (licenses.getItems() == null || licenses.getItems().isEmpty())) {
+            return null;
+        }
         return licenses;
     }
 

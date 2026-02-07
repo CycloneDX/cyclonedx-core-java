@@ -398,7 +398,7 @@ public class BomXmlGeneratorTest {
 
         assertFalse(xmlString.isEmpty());
         XmlParser parser = new XmlParser();
-        assertTrue(parser.isValid(xmlString.getBytes(StandardCharsets.UTF_8)));
+        assertTrue(parser.isValid(xmlString.getBytes(StandardCharsets.UTF_8), version));
     }
 
     @Test
