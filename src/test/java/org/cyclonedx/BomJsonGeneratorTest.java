@@ -754,6 +754,30 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    @Test
+    public void schema17_testLicenseDeclaredConcludedMix() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-declared-concluded-mix-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseDeclaredConcludedMix_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-declared-concluded-mix-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private void assertExternalReferenceInfo(Bom bom) {
         assertEquals(3, bom.getExternalReferences().size());
         assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());

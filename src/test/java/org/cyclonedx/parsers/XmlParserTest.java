@@ -584,6 +584,117 @@ public class XmlParserTest
     }
 
     @Test
+    public void schema17_license_declared_concluded_mix() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-license-declared-concluded-mix-1.7.xml");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(5, bom.getComponents().size());
+
+        // Situation A: Multiple declared licenses + concluded expression
+        Component sitA = bom.getComponents().get(0);
+        assertEquals("situation-A", sitA.getName());
+        LicenseChoice lcA = sitA.getLicenses();
+        assertNotNull(lcA);
+        assertNotNull(lcA.getItems());
+        assertEquals(4, lcA.getItems().size());
+        // 3 declared licenses
+        assertNotNull(lcA.getItems().get(0).getLicense());
+        assertEquals("MIT", lcA.getItems().get(0).getLicense().getId());
+        assertEquals(Acknowledgement.DECLARED, lcA.getItems().get(0).getLicense().getAcknowledgement());
+        assertNotNull(lcA.getItems().get(1).getLicense());
+        assertEquals("PostgreSQL", lcA.getItems().get(1).getLicense().getId());
+        assertNotNull(lcA.getItems().get(2).getLicense());
+        assertEquals("Apache Software License", lcA.getItems().get(2).getLicense().getName());
+        // 1 concluded expression
+        assertNotNull(lcA.getItems().get(3).getExpression());
+        assertEquals(Acknowledgement.CONCLUDED, lcA.getItems().get(3).getExpression().getAcknowledgement());
+
+        // Situation B: declared expression + concluded expression
+        Component sitB = bom.getComponents().get(1);
+        assertEquals("situation-B", sitB.getName());
+        LicenseChoice lcB = sitB.getLicenses();
+        assertNotNull(lcB);
+        assertNotNull(lcB.getItems());
+        assertEquals(2, lcB.getItems().size());
+        assertNotNull(lcB.getItems().get(0).getExpression());
+        assertEquals(Acknowledgement.DECLARED, lcB.getItems().get(0).getExpression().getAcknowledgement());
+        assertNotNull(lcB.getItems().get(1).getExpression());
+        assertEquals(Acknowledgement.CONCLUDED, lcB.getItems().get(1).getExpression().getAcknowledgement());
+
+        // Situation C: declared expression + concluded license ID
+        // Note: XML deserializer groups by element type (license, expression, expression-detailed)
+        // so license comes before expression regardless of document order
+        Component sitC = bom.getComponents().get(2);
+        assertEquals("situation-C", sitC.getName());
+        LicenseChoice lcC = sitC.getLicenses();
+        assertNotNull(lcC);
+        assertNotNull(lcC.getItems());
+        assertEquals(2, lcC.getItems().size());
+        assertNotNull(lcC.getItems().get(0).getLicense());
+        assertEquals("GPL-3.0-only", lcC.getItems().get(0).getLicense().getId());
+        assertEquals(Acknowledgement.CONCLUDED, lcC.getItems().get(0).getLicense().getAcknowledgement());
+        assertNotNull(lcC.getItems().get(1).getExpression());
+        assertEquals(Acknowledgement.DECLARED, lcC.getItems().get(1).getExpression().getAcknowledgement());
+
+        // Situation D: declared expression-detailed with texts + concluded license with text
+        // Note: XML deserializer groups by element type: license first, then expression-detailed
+        Component sitD = bom.getComponents().get(3);
+        assertEquals("situation-D", sitD.getName());
+        LicenseChoice lcD = sitD.getLicenses();
+        assertNotNull(lcD);
+        assertNotNull(lcD.getItems());
+        assertEquals(2, lcD.getItems().size());
+        assertNotNull(lcD.getItems().get(0).getLicense());
+        assertEquals(Acknowledgement.CONCLUDED, lcD.getItems().get(0).getLicense().getAcknowledgement());
+        assertNotNull(lcD.getItems().get(1).getExpressionDetailed());
+        ExpressionDetailed edD = lcD.getItems().get(1).getExpressionDetailed();
+        assertEquals("GPL-3.0-or-later OR GPL-2.0", edD.getExpression());
+        assertEquals(Acknowledgement.DECLARED, edD.getAcknowledgement());
+        assertNotNull(edD.getExpressionDetails());
+        assertEquals(2, edD.getExpressionDetails().size());
+
+        // Situation E: declared licenses with URLs + concluded expression-detailed with URLs
+        Component sitE = bom.getComponents().get(4);
+        assertEquals("situation-E", sitE.getName());
+        LicenseChoice lcE = sitE.getLicenses();
+        assertNotNull(lcE);
+        assertNotNull(lcE.getItems());
+        assertEquals(4, lcE.getItems().size());
+        // 3 declared licenses with URLs
+        assertNotNull(lcE.getItems().get(0).getLicense());
+        assertEquals("https://example.com/licenses/MIT", lcE.getItems().get(0).getLicense().getUrl());
+        // 1 concluded expression-detailed with URLs
+        assertNotNull(lcE.getItems().get(3).getExpressionDetailed());
+        ExpressionDetailed edE = lcE.getItems().get(3).getExpressionDetailed();
+        assertEquals(Acknowledgement.CONCLUDED, edE.getAcknowledgement());
+        assertNotNull(edE.getExpressionDetails());
+        assertEquals(3, edE.getExpressionDetails().size());
+        assertEquals("https://example.com/licenses/MIT", edE.getExpressionDetails().get(0).getUrl());
+    }
+
+    @Test
+    public void schema17_license_backward_compat_getLicenses() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-license-choice-1.7.xml");
+
+        Component component = bom.getComponents().get(0);
+        LicenseChoice lc = component.getLicenses();
+
+        // Deprecated getLicenses() should still return only License items
+        assertNotNull(lc.getLicenses());
+        assertEquals(2, lc.getLicenses().size());
+        assertEquals("Apache-2.0", lc.getLicenses().get(0).getId());
+        assertEquals("My Own License", lc.getLicenses().get(1).getName());
+
+        // Deprecated getExpression() should return the first expression
+        assertNotNull(lc.getExpression());
+        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", lc.getExpression().getValue());
+
+        // getExpressionDetailed() should return the first expression-detailed
+        assertNotNull(lc.getExpressionDetailed());
+        assertEquals("LicenseRef-MIT-Style-2", lc.getExpressionDetailed().getExpression());
+    }
+
+    @Test
     public void schema16_ml_considerations() throws Exception {
         final Bom bom = getXmlBom("1.6/valid-machine-learning-considerations-env-1.6.xml");
 

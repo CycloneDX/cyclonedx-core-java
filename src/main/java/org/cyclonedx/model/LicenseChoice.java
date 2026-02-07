@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.model.license.ExpressionDetailed;
 import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
@@ -186,12 +187,12 @@ public class LicenseChoice {
      * For 1.6 and below: array-level choice (all licenses OR single expression OR single expressionDetailed)
      * For 1.7+: item-level choice (mix allowed)
      */
-    public boolean isValidForVersion(double version) {
+    public boolean isValidForVersion(Version version) {
         if (items == null || items.isEmpty()) {
             return true;
         }
 
-        if (version >= 1.7) {
+        if (version.getVersion() >= Version.VERSION_17.getVersion()) {
             // 1.7+: All items must be valid
             return items.stream().allMatch(LicenseItem::isValid);
         } else {
