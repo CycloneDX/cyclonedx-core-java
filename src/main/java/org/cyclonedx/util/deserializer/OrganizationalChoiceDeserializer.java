@@ -21,57 +21,47 @@ package org.cyclonedx.util.deserializer;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.OrganizationalChoice;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
 
-public class OrganizationalChoiceDeserializer
-    extends JsonDeserializer<OrganizationalChoice>
+/**
+ * Deserializer for OrganizationalChoice that handles both:
+ * 1. Object format: {"individual": {...}} or {"organization": {...}}
+ * 2. String format: "bom-ref" (reference to an organization defined elsewhere)
+ */
+public class OrganizationalChoiceDeserializer extends JsonDeserializer<OrganizationalChoice>
 {
   @Override
-  public OrganizationalChoice deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-    JsonNode node = jp.getCodec().readTree(jp);
-    OrganizationalChoice organizationalChoice = new OrganizationalChoice();
+  public OrganizationalChoice deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
+  {
+    if (p.currentToken() == JsonToken.VALUE_STRING) {
+      // Simple string format - this is a bom-ref reference
+      String bomRef = p.getText();
+      OrganizationalEntity org = new OrganizationalEntity();
+      org.setBomRef(bomRef);
+
+      OrganizationalChoice choice = new OrganizationalChoice();
+      choice.setOrganization(org);
+      return choice;
+    }
+
+    // Object format - deserialize normally
+    JsonNode node = p.getCodec().readTree(p);
+    OrganizationalChoice choice = new OrganizationalChoice();
 
     if (node.has("individual")) {
-      OrganizationalContact individual = jp.getCodec().treeToValue(node.get("individual"), OrganizationalContact.class);
-      organizationalChoice.setIndividual(individual);
+      OrganizationalContact individual = p.getCodec().treeToValue(node.get("individual"), OrganizationalContact.class);
+      choice.setIndividual(individual);
     } else if (node.has("organization")) {
-      JsonNode organizationNode = node.get("organization");
-      OrganizationalEntity organization = deserializeOrganization(jp, organizationNode);
-      organizationalChoice.setOrganization(organization);
+      OrganizationalEntity organization = p.getCodec().treeToValue(node.get("organization"), OrganizationalEntity.class);
+      choice.setOrganization(organization);
     }
 
-    return organizationalChoice;
-  }
-
-  private OrganizationalEntity deserializeOrganization(JsonParser jp, JsonNode organizationNode) throws JsonProcessingException {
-    OrganizationalEntity organization = new OrganizationalEntity();
-    if (organizationNode.has("name")) {
-      organization.setName(organizationNode.get("name").asText());
-    }
-
-    if (organizationNode.has("contact")) {
-      JsonNode contactsNode = organizationNode.get("contact");
-      if (contactsNode.isArray()) {
-        for (JsonNode contactNode : contactsNode) {
-          addContactToOrganization(jp, organization, contactNode);
-        }
-      } else if (contactsNode.isObject()) {
-        addContactToOrganization(jp, organization, contactsNode);
-      }
-    }
-    return organization;
-  }
-
-  private void addContactToOrganization(JsonParser jp, OrganizationalEntity organization, JsonNode node)
-      throws JsonProcessingException
-  {
-    OrganizationalContact contact = jp.getCodec().treeToValue(node, OrganizationalContact.class);
-    organization.addContact(contact);
+    return choice;
   }
 }

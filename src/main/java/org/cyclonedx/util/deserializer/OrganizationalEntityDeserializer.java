@@ -52,16 +52,19 @@ public class OrganizationalEntityDeserializer
   }
 
   private List<String> parseUrls(JsonNode urlNode) {
-    List<String> urls = new ArrayList<>();
-    if (urlNode != null) {
-      if (urlNode.isArray()) {
-        for (JsonNode urlElement : urlNode) {
-          urls.add(urlElement.asText());
-        }
-      } else if (urlNode.isTextual()) {
-        urls.add(urlNode.asText());
-      }
+    if (urlNode == null) {
+      return null;
     }
-    return urls;
+
+    List<String> urls = new ArrayList<>();
+    if (urlNode.isArray()) {
+      for (JsonNode urlElement : urlNode) {
+        urls.add(urlElement.asText());
+      }
+    } else if (urlNode.isTextual()) {
+      urls.add(urlNode.asText());
+    }
+
+    return urls.isEmpty() ? null : urls;
   }
 }
