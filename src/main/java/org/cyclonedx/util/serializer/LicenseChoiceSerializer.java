@@ -80,12 +80,6 @@ public class LicenseChoiceSerializer
   private void serializeXml(ToXmlGenerator toXmlGenerator, LicenseChoice lc, final SerializerProvider provider)
       throws IOException
   {
-    if (CollectionUtils.isEmpty(lc.getItems())) {
-      toXmlGenerator.writeStartArray();
-      toXmlGenerator.writeEndArray();
-      return;
-    }
-
     toXmlGenerator.writeStartObject();
 
     for (LicenseItem item : lc.getItems()) {
@@ -169,12 +163,6 @@ public class LicenseChoiceSerializer
       final LicenseChoice licenseChoice, final JsonGenerator gen, final SerializerProvider provider)
       throws IOException
   {
-    if (CollectionUtils.isEmpty(licenseChoice.getItems())) {
-      gen.writeStartArray();
-      gen.writeEndArray();
-      return;
-    }
-
     gen.writeStartArray();
     for (LicenseItem item : licenseChoice.getItems()) {
       gen.writeStartObject();
