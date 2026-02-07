@@ -58,7 +58,8 @@ public class CipherSuite
   }
 
   @JacksonXmlElementWrapper(localName = "tlsGroups")
-  @JacksonXmlProperty(localName = "tlsGroup")
+  @JacksonXmlProperty(localName = "group")
+  @VersionFilter(Version.VERSION_17)
   public List<String> getTlsGroups() {
     return tlsGroups;
   }
@@ -68,7 +69,8 @@ public class CipherSuite
   }
 
   @JacksonXmlElementWrapper(localName = "tlsSignatureSchemes")
-  @JacksonXmlProperty(localName = "tlsSignatureScheme")
+  @JacksonXmlProperty(localName = "signatureScheme")
+  @VersionFilter(Version.VERSION_17)
   public List<String> getTlsSignatureSchemes() {
     return tlsSignatureSchemes;
   }

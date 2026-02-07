@@ -32,8 +32,8 @@ public enum TlpClassification {
     GREEN("GREEN"),
     @JsonProperty("AMBER")
     AMBER("AMBER"),
-    @JsonProperty("AMBER+STRICT")
-    AMBER_STRICT("AMBER+STRICT"),
+    @JsonProperty("AMBER_AND_STRICT")
+    AMBER_AND_STRICT("AMBER_AND_STRICT"),
     @JsonProperty("RED")
     RED("RED");
 

@@ -278,6 +278,7 @@ public class Service extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "patentAssertions")
     @JacksonXmlProperty(localName = "patentAssertion")
+    @VersionFilter(Version.VERSION_17)
     public List<PatentAssertion> getPatentAssertions() {
         return patentAssertions;
     }
