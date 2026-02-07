@@ -87,7 +87,7 @@ public class LicenseChoiceSerializer
         serializeLicenseToXml(toXmlGenerator, item.getLicense(), provider);
       } else if (item.getExpression() != null) {
         serializeExpressionToXml(toXmlGenerator, item.getExpression());
-      } else if (item.getExpressionDetailed() != null) {
+      } else if (item.getExpressionDetailed() != null && shouldSerializeField(item, version, "expressionDetailed")) {
         serializeExpressionDetailedToXml(toXmlGenerator, item.getExpressionDetailed(), provider);
       }
     }
@@ -165,15 +165,19 @@ public class LicenseChoiceSerializer
   {
     gen.writeStartArray();
     for (LicenseItem item : licenseChoice.getItems()) {
-      gen.writeStartObject();
       if (item.getLicense() != null) {
+        gen.writeStartObject();
         provider.defaultSerializeField("license", item.getLicense(), gen);
+        gen.writeEndObject();
       } else if (item.getExpression() != null) {
+        gen.writeStartObject();
         serializeExpressionToJson(item.getExpression(), gen);
-      } else if (item.getExpressionDetailed() != null) {
+        gen.writeEndObject();
+      } else if (item.getExpressionDetailed() != null && shouldSerializeField(item, version, "expressionDetailed")) {
+        gen.writeStartObject();
         serializeExpressionDetailedToJson(item.getExpressionDetailed(), gen, provider);
+        gen.writeEndObject();
       }
-      gen.writeEndObject();
     }
     gen.writeEndArray();
   }
@@ -196,10 +200,6 @@ public class LicenseChoiceSerializer
       final SerializerProvider provider)
       throws IOException
   {
-    if (version.getVersion() < 1.7) {
-      return; // ExpressionDetailed is only for 1.7+
-    }
-
     toXmlGenerator.writeFieldName("expression-detailed");
     toXmlGenerator.writeStartObject();
 
@@ -250,10 +250,6 @@ public class LicenseChoiceSerializer
   private void serializeExpressionDetailedToJson(
       final ExpressionDetailed expressionDetailed, final JsonGenerator gen, final SerializerProvider provider)
       throws IOException {
-    if (version.getVersion() < 1.7) {
-      return; // ExpressionDetailed is only for 1.7+
-    }
-
     // Flatten the expressionDetailed fields into the license item object
     if (StringUtils.isNotBlank(expressionDetailed.getBomRef())) {
       gen.writeStringField("bom-ref", expressionDetailed.getBomRef());

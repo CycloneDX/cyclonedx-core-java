@@ -21,13 +21,26 @@ package org.cyclonedx.util.serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.component.crypto.AbstractIkeV2Transform;
 import org.cyclonedx.model.component.crypto.IkeV2Enc;
 import org.cyclonedx.model.component.crypto.IkeV2Ke;
 
 import java.io.IOException;
 
+import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
+
 public class IkeV2TransformSerializer extends JsonSerializer<AbstractIkeV2Transform> {
+
+  private final Version version;
+
+  public IkeV2TransformSerializer() {
+    this(null);
+  }
+
+  public IkeV2TransformSerializer(Version version) {
+    this.version = version;
+  }
 
   @Override
   public void serialize(AbstractIkeV2Transform value, JsonGenerator gen, SerializerProvider provider)
@@ -41,21 +54,21 @@ public class IkeV2TransformSerializer extends JsonSerializer<AbstractIkeV2Transf
     gen.writeStartObject();
     if (value instanceof IkeV2Ke) {
       IkeV2Ke ke = (IkeV2Ke) value;
-      if (ke.getGroup() != null) {
+      if (ke.getGroup() != null && shouldSerializeField(ke, version, "group")) {
         gen.writeNumberField("group", ke.getGroup());
       }
     } else {
-      if (value.getName() != null) {
+      if (value.getName() != null && shouldSerializeField(value, version, "name")) {
         gen.writeStringField("name", value.getName());
       }
       if (value instanceof IkeV2Enc) {
         IkeV2Enc enc = (IkeV2Enc) value;
-        if (enc.getKeyLength() != null) {
+        if (enc.getKeyLength() != null && shouldSerializeField(enc, version, "keyLength")) {
           gen.writeNumberField("keyLength", enc.getKeyLength());
         }
       }
     }
-    if (value.getAlgorithm() != null) {
+    if (value.getAlgorithm() != null && shouldSerializeField(value, version, "algorithm")) {
       gen.writeStringField("algorithm", value.getAlgorithm());
     }
     gen.writeEndObject();

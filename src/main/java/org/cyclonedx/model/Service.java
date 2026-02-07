@@ -90,6 +90,7 @@ public class Service extends ExtensibleElement {
     private List<PatentAssertion> patentAssertions;
 
     private List<Service> services;
+    @VersionFilter(Version.VERSION_14)
     private ReleaseNotes releaseNotes;
     @JsonOnly
     @VersionFilter(Version.VERSION_14)

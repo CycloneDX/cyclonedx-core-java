@@ -24,9 +24,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.PatentAssertion;
 
 import javax.xml.namespace.QName;
+
+import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
 
 /**
  * Custom serializer for PatentAssertion that handles the bom-ref attribute/element name
@@ -36,7 +39,18 @@ import javax.xml.namespace.QName;
  */
 public class PatentAssertionSerializer extends JsonSerializer<PatentAssertion> {
 
-    private static final OrganizationalChoiceSerializer CHOICE_SERIALIZER = new OrganizationalChoiceSerializer();
+    private final Version version;
+
+    private final OrganizationalChoiceSerializer choiceSerializer;
+
+    public PatentAssertionSerializer() {
+        this(null);
+    }
+
+    public PatentAssertionSerializer(Version version) {
+        this.version = version;
+        this.choiceSerializer = new OrganizationalChoiceSerializer(version);
+    }
 
     @Override
     public void serialize(PatentAssertion value, JsonGenerator gen, SerializerProvider provider)
@@ -53,24 +67,24 @@ public class PatentAssertionSerializer extends JsonSerializer<PatentAssertion> {
         throws IOException
     {
         gen.writeStartObject();
-        if (value.getBomRef() != null) {
+        if (value.getBomRef() != null && shouldSerializeField(value, version, "bomRef")) {
             gen.writeStringField("bom-ref", value.getBomRef());
         }
-        if (value.getAssertionType() != null) {
+        if (value.getAssertionType() != null && shouldSerializeField(value, version, "assertionType")) {
             gen.writeStringField("assertionType", value.getAssertionType().getValue());
         }
-        if (value.getPatentRefs() != null && !value.getPatentRefs().isEmpty()) {
+        if (value.getPatentRefs() != null && !value.getPatentRefs().isEmpty() && shouldSerializeField(value, version, "patentRefs")) {
             gen.writeArrayFieldStart("patentRefs");
             for (String ref : value.getPatentRefs()) {
                 gen.writeString(ref);
             }
             gen.writeEndArray();
         }
-        if (value.getAsserter() != null) {
+        if (value.getAsserter() != null && shouldSerializeField(value, version, "asserter")) {
             gen.writeFieldName("asserter");
-            CHOICE_SERIALIZER.serialize(value.getAsserter(), gen, provider);
+            choiceSerializer.serialize(value.getAsserter(), gen, provider);
         }
-        if (value.getNotes() != null) {
+        if (value.getNotes() != null && shouldSerializeField(value, version, "notes")) {
             gen.writeStringField("notes", value.getNotes());
         }
         gen.writeEndObject();
@@ -82,7 +96,7 @@ public class PatentAssertionSerializer extends JsonSerializer<PatentAssertion> {
         gen.writeStartObject();
 
         // Write bom-ref as XML attribute
-        if (value.getBomRef() != null) {
+        if (value.getBomRef() != null && shouldSerializeField(value, version, "bomRef")) {
             gen.setNextIsAttribute(true);
             gen.setNextName(new QName("bom-ref"));
             gen.writeFieldName("bom-ref");
@@ -91,12 +105,12 @@ public class PatentAssertionSerializer extends JsonSerializer<PatentAssertion> {
         }
 
         // assertionType
-        if (value.getAssertionType() != null) {
+        if (value.getAssertionType() != null && shouldSerializeField(value, version, "assertionType")) {
             gen.writeStringField("assertionType", value.getAssertionType().getValue());
         }
 
         // patentRefs wrapper with bom-ref child elements
-        if (value.getPatentRefs() != null && !value.getPatentRefs().isEmpty()) {
+        if (value.getPatentRefs() != null && !value.getPatentRefs().isEmpty() && shouldSerializeField(value, version, "patentRefs")) {
             gen.writeFieldName("patentRefs");
             gen.writeStartObject();
             for (String ref : value.getPatentRefs()) {
@@ -106,13 +120,13 @@ public class PatentAssertionSerializer extends JsonSerializer<PatentAssertion> {
         }
 
         // asserter (delegates to OrganizationalChoiceSerializer)
-        if (value.getAsserter() != null) {
+        if (value.getAsserter() != null && shouldSerializeField(value, version, "asserter")) {
             gen.writeFieldName("asserter");
-            CHOICE_SERIALIZER.serialize(value.getAsserter(), gen, provider);
+            choiceSerializer.serialize(value.getAsserter(), gen, provider);
         }
 
         // notes
-        if (value.getNotes() != null) {
+        if (value.getNotes() != null && shouldSerializeField(value, version, "notes")) {
             gen.writeStringField("notes", value.getNotes());
         }
 

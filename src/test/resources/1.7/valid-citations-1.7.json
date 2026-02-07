@@ -69,7 +69,7 @@
           "name": "My Scan Tool"
         }
       ],
-      "bom-ref": "workflow-1",
+      "bom-ref": "formula-1",
       "workflows": [
         {
           "bom-ref": "workflow-1",
