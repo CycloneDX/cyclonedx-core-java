@@ -36,7 +36,7 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomRef", "assertionType", "patents", "patentFamilies", "properties"})
+@JsonPropertyOrder({"bomRef", "assertionType", "patentRefs", "asserter", "notes"})
 public class PatentAssertion extends ExtensibleElement {
 
     public enum AssertionType {
@@ -85,21 +85,11 @@ public class PatentAssertion extends ExtensibleElement {
 
     private AssertionType assertionType;
 
+    private List<String> patentRefs;
+
     private OrganizationalChoice asserter;
 
-    @JacksonXmlElementWrapper(localName = "patents")
-    @JacksonXmlProperty(localName = "patent")
-    private List<BomReference> patents;
-
-    @JacksonXmlElementWrapper(localName = "patentFamilies")
-    @JacksonXmlProperty(localName = "patentFamily")
-    private List<BomReference> patentFamilies;
-
     private String notes;
-
-    @JacksonXmlElementWrapper(localName = "properties")
-    @JacksonXmlProperty(localName = "property")
-    private List<Property> properties;
 
     public String getBomRef() {
         return bomRef;
@@ -117,28 +107,23 @@ public class PatentAssertion extends ExtensibleElement {
         this.assertionType = assertionType;
     }
 
+    @JacksonXmlElementWrapper(localName = "patentRefs")
+    @JacksonXmlProperty(localName = "bom-ref")
+    @JsonProperty("patentRefs")
+    public List<String> getPatentRefs() {
+        return patentRefs;
+    }
+
+    public void setPatentRefs(List<String> patentRefs) {
+        this.patentRefs = patentRefs;
+    }
+
     public OrganizationalChoice getAsserter() {
         return asserter;
     }
 
     public void setAsserter(OrganizationalChoice asserter) {
         this.asserter = asserter;
-    }
-
-    public List<BomReference> getPatents() {
-        return patents;
-    }
-
-    public void setPatents(List<BomReference> patents) {
-        this.patents = patents;
-    }
-
-    public List<BomReference> getPatentFamilies() {
-        return patentFamilies;
-    }
-
-    public void setPatentFamilies(List<BomReference> patentFamilies) {
-        this.patentFamilies = patentFamilies;
     }
 
     public String getNotes() {
@@ -149,14 +134,6 @@ public class PatentAssertion extends ExtensibleElement {
         this.notes = notes;
     }
 
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,15 +141,13 @@ public class PatentAssertion extends ExtensibleElement {
         PatentAssertion that = (PatentAssertion) o;
         return Objects.equals(bomRef, that.bomRef) &&
                 assertionType == that.assertionType &&
+                Objects.equals(patentRefs, that.patentRefs) &&
                 Objects.equals(asserter, that.asserter) &&
-                Objects.equals(patents, that.patents) &&
-                Objects.equals(patentFamilies, that.patentFamilies) &&
-                Objects.equals(notes, that.notes) &&
-                Objects.equals(properties, that.properties);
+                Objects.equals(notes, that.notes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bomRef, assertionType, asserter, patents, patentFamilies, notes, properties);
+        return Objects.hash(bomRef, assertionType, patentRefs, asserter, notes);
     }
 }

@@ -327,6 +327,7 @@ public class Component extends ExtensibleElement {
         this.version = version;
     }
 
+    @VersionFilter(Version.VERSION_17)
     public String getVersionRange() {
         return versionRange;
     }
@@ -335,6 +336,7 @@ public class Component extends ExtensibleElement {
         this.versionRange = versionRange;
     }
 
+    @VersionFilter(Version.VERSION_17)
     public Boolean getIsExternal() {
         return isExternal;
     }
@@ -595,6 +597,7 @@ public class Component extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "patentAssertions")
     @JacksonXmlProperty(localName = "patentAssertion")
+    @VersionFilter(Version.VERSION_17)
     public List<PatentAssertion> getPatentAssertions() {
         return patentAssertions;
     }
