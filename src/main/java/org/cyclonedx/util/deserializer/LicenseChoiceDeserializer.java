@@ -111,9 +111,10 @@ public class LicenseChoiceDeserializer extends JsonDeserializer<LicenseChoice>
     if (node.has("expression-detailed")) {
       processExpressionDetailed(p, node.get("expression-detailed"), licenseChoice);
     }
-    else if (node.has("expressionDetails") || (node.has("expression") && node.has("licensing"))) {
-      // ExpressionDetailed in JSON format: has expressionDetails field OR has both expression and licensing
-      // (ExpressionDetailed can have licensing without expressionDetails)
+    else if (node.has("expressionDetails") ||
+        (node.has("expression") && (node.has("licensing") || node.has("properties")))) {
+      // ExpressionDetailed in JSON format: has expressionDetails, or expression with licensing/properties.
+      // These fields only exist on ExpressionDetailed, not on simple Expression.
       processExpressionDetailed(p, node, licenseChoice);
     }
     else if (node.has("license")) {
