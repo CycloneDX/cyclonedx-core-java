@@ -28,6 +28,21 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
+/**
+ * Represents the CycloneDX specification structure for expressing license information.
+ *
+ * <p>License information can be provided in exactly one of the following mutually exclusive forms:</p>
+ * <ul>
+ *   <li>A list of {@link License} objects, or</li>
+ *   <li>A single SPDX license {@link Expression}</li>
+ * </ul>
+ *
+ * <p>This class does not implement any logic to interpret or resolve license expressions
+ * (e.g., selecting MIT from "MIT OR BSD"). It serves as a container for license data
+ * in one of the supported formats.</p>
+ *
+ * <p>Note: Setting one representation automatically clears the other.</p>
+ */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
