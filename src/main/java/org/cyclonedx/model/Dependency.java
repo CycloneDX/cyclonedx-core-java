@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model;
 
+import org.cyclonedx.Version;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -35,6 +36,12 @@ public class Dependency extends BomReference {
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "dependency")
     private List<Dependency> dependencies;
+
+    @VersionFilter(Version.VERSION_16)
+    @JsonProperty("provides")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "provides")
+    private List<BomReference> provides;
 
     public Dependency(final String ref) {
         super(ref);
@@ -60,6 +67,23 @@ public class Dependency extends BomReference {
         }
     }
 
+    public List<BomReference> getProvides() {
+        return provides;
+    }
+
+    public void setProvides(final List<BomReference> provides) {
+        this.provides = provides;
+    }
+
+    public void addProvides(final BomReference dependency) {
+        if (provides == null) {
+            provides = new ArrayList<>();
+        }
+        boolean found = provides.stream().anyMatch(d -> d.getRef().equals(dependency.getRef()));
+        if (!found) {
+            provides.add(dependency);
+        }
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
