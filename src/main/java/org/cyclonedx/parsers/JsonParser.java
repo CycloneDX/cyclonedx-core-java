@@ -20,7 +20,7 @@ package org.cyclonedx.parsers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Error;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
@@ -36,7 +36,6 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * JsonParser is responsible for validating and parsing CycloneDX bill-of-material
@@ -182,8 +181,8 @@ public class JsonParser extends CycloneDxSchema implements Parser {
             );
         }
 
-        Set<ValidationMessage> errors = getJsonSchema(schemaVersion, mapper).validate(mapper.readTree(bomJson.toString()));
-        for (ValidationMessage message: errors) {
+        List<Error> errors = getJsonSchema(schemaVersion, mapper).validate(mapper.readTree(bomJson.toString()));
+        for (Error message: errors) {
             exceptions.add(new ParseException(message.getMessage()));
         }
 

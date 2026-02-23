@@ -20,11 +20,9 @@ package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SchemaValidatorsConfig;
-import com.networknt.schema.SpecVersionDetector;
-import com.networknt.schema.resource.MapSchemaMapper;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SchemaRegistryConfig;
+import com.networknt.schema.serialization.DefaultNodeReader;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.xml.sax.SAXException;
@@ -82,36 +80,28 @@ public abstract class CycloneDxSchema
    * @throws IOException when errors are encountered
    * @since 6.0.0
    */
-  public JsonSchema getJsonSchema(Version schemaVersion, final ObjectMapper mapper)
+  public com.networknt.schema.Schema getJsonSchema(Version schemaVersion, final ObjectMapper mapper)
       throws IOException
   {
     final InputStream spdxInstream = getJsonSchemaAsStream(schemaVersion);
-    final SchemaValidatorsConfig config = new SchemaValidatorsConfig();
-    config.setPreloadJsonSchema(false);
+    final SchemaRegistryConfig config = SchemaRegistryConfig.builder().preloadSchema(false).build();
 
     final Map<String, String> offlineMappings = new HashMap<>();
-    offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json",
-        getClass().getClassLoader().getResource("spdx.schema.json").toExternalForm());
-    offlineMappings.put("http://cyclonedx.org/schema/jsf-0.82.schema.json",
-        getClass().getClassLoader().getResource("jsf-0.82.schema.json").toExternalForm());
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json",
-        getClass().getClassLoader().getResource("bom-1.2-strict.schema.json").toExternalForm());
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json",
-        getClass().getClassLoader().getResource("bom-1.3-strict.schema.json").toExternalForm());
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json",
-        getClass().getClassLoader().getResource("bom-1.4.schema.json").toExternalForm());
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json",
-        getClass().getClassLoader().getResource("bom-1.5.schema.json").toExternalForm());
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json",
-        getClass().getClassLoader().getResource("bom-1.6.schema.json").toExternalForm());
+    offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", "classpath:spdx.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/jsf-0.82.schema.json", "classpath:jsf-0.82.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json", "classpath:bom-1.2-strict.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json", "classpath:bom-1.3-strict.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", "classpath:bom-1.4.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json", "classpath:bom-1.5.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "classpath:bom-1.6.schema.json");
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
-    final MapSchemaMapper offlineSchemaMapper = new MapSchemaMapper(offlineMappings);
-    JsonSchemaFactory factory = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersionDetector.detect(schemaNode)))
-      .jsonMapper(mapper)
-      .schemaMappers(s -> s.add(offlineSchemaMapper))
-      .build();
-    return factory.getSchema(schemaNode, config);
+    SchemaRegistry registry = SchemaRegistry.builder()
+        .nodeReader(DefaultNodeReader.builder().jsonMapper(mapper).build())
+        .schemaIdResolvers(b -> b.mappings(offlineMappings))
+        .schemaRegistryConfig(config)
+        .build();
+    return registry.getSchema(schemaNode);
   }
 
   private InputStream getJsonSchemaAsStream(final Version schemaVersion) {
