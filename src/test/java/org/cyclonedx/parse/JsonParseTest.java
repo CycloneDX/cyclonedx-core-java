@@ -63,7 +63,7 @@ public class JsonParseTest extends BaseParseTest {
 
         assertThat(exceptions.stream().map(ParseException::getMessage)).containsExactly(
                 "CycloneDX version 1.1 does not support the JSON format",
-                "$: unknown found, object expected"
+                "unknown found, object expected"
         );
     }
 }
