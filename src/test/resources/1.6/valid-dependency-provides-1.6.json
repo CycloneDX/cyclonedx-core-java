@@ -22,6 +22,12 @@
       "type": "library",
       "name": "library-c",
       "version": "1.0.0"
+    },
+    {
+      "bom-ref": "library-d",
+      "type": "library",
+      "name": "library-d",
+      "version": "1.0.0"
     }
   ],
   "dependencies": [
@@ -33,6 +39,12 @@
       "ref": "library-b",
       "dependsOn": [
         "library-c"
+      ]
+    },
+    {
+      "ref": "library-c",
+      "provides": [
+        "library-d"
       ]
     }
   ]
