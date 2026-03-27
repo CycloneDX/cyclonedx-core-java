@@ -40,24 +40,18 @@ jobs:
           git config --global user.email "info@cyclonedx.org"
           git config --global user.name "CycloneDX Automation"
 
-      - name: Set Maven options
-        id: maven_options
-        run: |
-          # Set the Maven options based on the 'dry_run' input
-          if ${{ github.event.inputs.dry_run }}; then
-            echo "options=release:prepare -DdryRun=true" >> $GITHUB_ENV
-          else
-            echo "options=release:clean release:prepare release:perform" >> $GITHUB_ENV
-          fi
-
       - name: Run Maven command
-        run: |
-          mvn -B ${{ env.options }}
         env:
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |-
+          if [ "$DRY_RUN" = "true" ]; then
+            mvn -B release:prepare -DdryRun=true
+          else
+            mvn -B release:clean release:prepare release:perform
+          fi
         continue-on-error: ${{ github.event.inputs.dry_run == false }}
 
       - name: Rollback if release fails
@@ -69,4 +63,3 @@ jobs:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
