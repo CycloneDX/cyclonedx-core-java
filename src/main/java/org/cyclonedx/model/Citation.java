@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 
 import java.util.Date;
@@ -39,7 +40,7 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomRef", "pointers", "expressions", "timestamp", "attributedTo", "process", "note"})
+@JsonPropertyOrder({"bomRef", "pointers", "expressions", "timestamp", "attributedTo", "process", "note", "signature"})
 public class Citation extends ExtensibleElement {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
@@ -62,6 +63,10 @@ public class Citation extends ExtensibleElement {
     private String process;
 
     private String note;
+
+    @JsonOnly
+    @VersionFilter(Version.VERSION_17)
+    private Signature signature;
 
     public String getBomRef() {
         return bomRef;
@@ -119,6 +124,14 @@ public class Citation extends ExtensibleElement {
         this.note = note;
     }
 
+    public Signature getSignature() {
+        return signature;
+    }
+
+    public void setSignature(Signature signature) {
+        this.signature = signature;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -130,11 +143,12 @@ public class Citation extends ExtensibleElement {
                 Objects.equals(timestamp, citation.timestamp) &&
                 Objects.equals(attributedTo, citation.attributedTo) &&
                 Objects.equals(process, citation.process) &&
-                Objects.equals(note, citation.note);
+                Objects.equals(note, citation.note) &&
+                Objects.equals(signature, citation.signature);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bomRef, pointers, expressions, timestamp, attributedTo, process, note);
+        return Objects.hash(bomRef, pointers, expressions, timestamp, attributedTo, process, note, signature);
     }
 }
