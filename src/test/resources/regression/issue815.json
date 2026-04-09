@@ -1,0 +1,29 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:134bdd62-7b55-4f31-bc92-583aeaac3b29",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-04-01T08:22:04Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "authors": [
+            {
+              "name": "CycloneDX"
+            }
+          ],
+          "name": "CycloneDX module for .NET",
+          "version": "6.1.0.0",
+          "externalReferences": [
+            {
+              "type": "website",
+              "url": "https://github.com/CycloneDX/cyclonedx-dotnet"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

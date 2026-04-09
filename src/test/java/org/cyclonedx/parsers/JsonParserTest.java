@@ -597,6 +597,21 @@ public class JsonParserTest
     }
 
     @Test
+    public void testIssue815Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue815.json");
+        assertNotNull(bom.getMetadata().getToolChoice());
+        assertEquals(1, bom.getMetadata().getToolChoice().getComponents().size());
+        Component tool = bom.getMetadata().getToolChoice().getComponents().get(0);
+        assertEquals("CycloneDX module for .NET", tool.getName());
+        assertEquals("6.1.0.0", tool.getVersion());
+        assertNotNull(tool.getAuthors());
+        assertEquals(1, tool.getAuthors().size());
+        assertEquals("CycloneDX", tool.getAuthors().get(0).getName());
+        assertNotNull(tool.getExternalReferences());
+        assertEquals(1, tool.getExternalReferences().size());
+    }
+
+    @Test
     public void testIssue492Regression() throws Exception {
         final Bom bom = getJsonBom("regression/issue492.json");
         assertEquals(2, bom.getMetadata().getTools().size());
