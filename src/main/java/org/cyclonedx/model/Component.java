@@ -34,6 +34,7 @@ import org.cyclonedx.model.component.data.ComponentData;
 import org.cyclonedx.util.deserializer.ComponentListDeserializer;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 import org.cyclonedx.util.deserializer.HashesDeserializer;
+import org.cyclonedx.util.deserializer.OrganizationalContactsDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -580,6 +581,7 @@ public class Component extends ExtensibleElement {
      * @since 1.6
      */
     @JsonGetter("authors")
+    @JsonDeserialize(using = OrganizationalContactsDeserializer.class)
     public List<OrganizationalContact> getAuthors() {
         return authors;
     }
