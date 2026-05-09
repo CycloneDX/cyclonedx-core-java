@@ -702,7 +702,8 @@ public class Component extends ExtensibleElement {
     @Override
     public int hashCode() {
         return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenses, copyright,
-            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
+            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data,
+            isExternal, versionRange, patentAssertions, tags);
     }
 
     @Override
@@ -733,6 +734,10 @@ public class Component extends ExtensibleElement {
                 Objects.equals(releaseNotes, component.releaseNotes) &&
                 Objects.equals(data, component.data) &&
                 Objects.equals(modelCard, component.modelCard) &&
-                Objects.equals(type, component.type);
+                Objects.equals(type, component.type) &&
+                Objects.equals(isExternal, component.isExternal) &&
+                Objects.equals(versionRange, component.versionRange) &&
+                Objects.equals(patentAssertions, component.patentAssertions) &&
+                Objects.equals(tags, component.tags);
     }
 }

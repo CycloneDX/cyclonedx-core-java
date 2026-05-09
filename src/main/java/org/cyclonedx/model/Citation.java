@@ -39,7 +39,7 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomRef", "pointers", "expressions", "timestamp", "attributedTo", "process", "note"})
+@JsonPropertyOrder({"bom-ref", "pointers", "expressions", "timestamp", "attributedTo", "process", "note"})
 public class Citation extends ExtensibleElement {
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
