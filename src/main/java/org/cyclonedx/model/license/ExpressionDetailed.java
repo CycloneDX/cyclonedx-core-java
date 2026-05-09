@@ -18,6 +18,7 @@
  */
 package org.cyclonedx.model.license;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -44,10 +45,12 @@ import java.util.Objects;
 })
 public class ExpressionDetailed extends ExtensibleElement {
 
+    @JacksonXmlProperty(isAttribute = true)
     private String expression;
 
-    @JacksonXmlElementWrapper(localName = "expressionDetails")
-    @JacksonXmlProperty(localName = "expressionDetail")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "details")
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private List<ExpressionDetail> expressionDetails;
 
     @JacksonXmlProperty(isAttribute = true)

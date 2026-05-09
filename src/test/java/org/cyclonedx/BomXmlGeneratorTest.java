@@ -869,6 +869,104 @@ public class BomXmlGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    // ==================== CycloneDX 1.7 License Tests ====================
+
+    @Test
+    public void schema17_testLicenseMixedChoice() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-choice-1.7.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseMixedChoice_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonBomXml("/1.7/valid-license-choice-1.7.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithText() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-expression-with-text-1.7.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithText_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonBomXml("/1.7/valid-license-expression-with-text-1.7.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithLicensing() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-expression-with-licensing-1.7.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithLicensing_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonBomXml("/1.7/valid-license-expression-with-licensing-1.7.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseDeclaredConcludedMix() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-declared-concluded-mix-1.7.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseDeclaredConcludedMix_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonBomXml("/1.7/valid-license-declared-concluded-mix-1.7.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private void assertExternalReferenceInfo(Bom bom) {
         assertEquals(3, bom.getExternalReferences().size());
         assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());

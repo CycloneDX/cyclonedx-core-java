@@ -38,6 +38,8 @@ import java.util.Objects;
 @JsonPropertyOrder({"licenseIdentifier", "bomRef", "text", "url"})
 public class ExpressionDetail {
 
+    @JacksonXmlProperty(isAttribute = true, localName = "license-identifier")
+    @JsonProperty("licenseIdentifier")
     private String licenseIdentifier;
 
     @JacksonXmlProperty(isAttribute = true, localName = "bom-ref")
