@@ -26,6 +26,7 @@ import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.TlpClassification;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Pedigree;
@@ -67,6 +68,11 @@ import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.model.license.ExpressionDetailed;
 import org.cyclonedx.model.license.ExpressionDetail;
+import org.cyclonedx.model.Citation;
+import org.cyclonedx.model.Patent;
+import org.cyclonedx.model.PatentFamily;
+import org.cyclonedx.model.PatentAssertion;
+import org.cyclonedx.model.PatentItem;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -993,6 +999,176 @@ public class XmlParserTest
     public void testIssue492Regression() throws Exception {
         final Bom bom = getXmlBom("regression/issue492.xml");
         assertEquals(2, bom.getMetadata().getTools().size());
+    }
+
+    // ==================== CycloneDX 1.7 Citation Tests ====================
+
+    @Test
+    public void schema17_citations() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-citations-1.7.xml");
+
+        assertNotNull(bom.getCitations());
+        assertEquals(4, bom.getCitations().size());
+
+        // Citation 1: pointers + attributedTo
+        Citation c1 = bom.getCitations().get(0);
+        assertEquals("citation-1", c1.getBomRef());
+        assertNotNull(c1.getPointers());
+        assertEquals(1, c1.getPointers().size());
+        assertEquals("/components/0/name", c1.getPointers().get(0));
+        assertNotNull(c1.getTimestamp());
+        assertEquals("person-1", c1.getAttributedTo());
+        assertNotNull(c1.getNote());
+
+        // Citation 4: expressions + attributedTo + process
+        Citation c4 = bom.getCitations().get(3);
+        assertEquals("citation-4", c4.getBomRef());
+        assertNotNull(c4.getExpressions());
+        assertEquals(1, c4.getExpressions().size());
+        assertEquals("scan-tool-1", c4.getAttributedTo());
+        assertEquals("task-license-scan", c4.getProcess());
+    }
+
+    // ==================== CycloneDX 1.7 External Component Tests ====================
+
+    @Test
+    public void schema17_component_external_with_versionRange() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-component-external-with-versionRange.xml");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertEquals("libcurl", c.getName());
+        assertEquals(true, c.getIsExternal());
+        assertEquals("vers:generic/>=8.7.1|<9.0.0", c.getVersionRange());
+        assertNull(c.getVersion());
+        assertEquals("libcurl ^8.7.1", c.getDescription());
+    }
+
+    @Test
+    public void schema17_component_external_with_version() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-component-external-with-version.xml");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertEquals("Ubuntu", c.getName());
+        assertEquals(true, c.getIsExternal());
+        assertEquals("24H2", c.getVersion());
+        assertNull(c.getVersionRange());
+    }
+
+    @Test
+    public void schema17_component_external_without_version() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-component-external-without-version.xml");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertEquals("Windows 11 (64bit)", c.getName());
+        assertEquals(true, c.getIsExternal());
+        assertNull(c.getVersion());
+        assertNull(c.getVersionRange());
+    }
+
+    @Test
+    public void schema17_external_reference_properties() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-external-reference-properties-1.7.xml");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertNotNull(c.getExternalReferences());
+        assertEquals(1, c.getExternalReferences().size());
+
+        ExternalReference ref = c.getExternalReferences().get(0);
+        assertEquals(ExternalReference.Type.COMPONENT_ANALYSIS_REPORT, ref.getType());
+        assertNotNull(ref.getProperties());
+        assertEquals(2, ref.getProperties().size());
+        assertEquals("author", ref.getProperties().get(0).getName());
+        assertEquals("John Doe", ref.getProperties().get(0).getValue());
+    }
+
+    @Test
+    public void schema17_metadata_distribution() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-metadata-distribution-1.7.xml");
+
+        assertNotNull(bom.getMetadata());
+        assertNotNull(bom.getMetadata().getDistributionConstraints());
+        assertEquals(TlpClassification.RED, bom.getMetadata().getDistributionConstraints().getTlp());
+    }
+
+    // ==================== CycloneDX 1.7 Patent Tests ====================
+
+    @Test
+    public void schema17_patent() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-patent-1.7.xml");
+
+        // Definitions patents
+        assertNotNull(bom.getDefinitions());
+        assertNotNull(bom.getDefinitions().getPatents());
+        assertEquals(4, bom.getDefinitions().getPatents().size());
+
+        // First 3 are patents
+        PatentItem item1 = bom.getDefinitions().getPatents().get(0);
+        assertNotNull(item1.getPatent());
+        assertNull(item1.getPatentFamily());
+        Patent p1 = item1.getPatent();
+        assertEquals("patent-1", p1.getBomRef());
+        assertEquals("US1234567890", p1.getPatentNumber());
+        assertEquals("US", p1.getJurisdiction());
+        assertEquals("Efficient Data Processing Algorithm", p1.getTitle());
+        assertNotNull(p1.getFilingDate());
+        assertNotNull(p1.getGrantDate());
+        assertEquals(Patent.PatentLegalStatus.IN_FORCE, p1.getPatentLegalStatus());
+        assertNotNull(p1.getPatentAssignee());
+        assertEquals(1, p1.getPatentAssignee().size());
+        assertNotNull(p1.getExternalReferences());
+        assertEquals(1, p1.getExternalReferences().size());
+        assertEquals(ExternalReference.Type.PATENT, p1.getExternalReferences().get(0).getType());
+
+        // Patent 2 has priority application
+        Patent p2 = bom.getDefinitions().getPatents().get(1).getPatent();
+        assertEquals("patent-2", p2.getBomRef());
+        assertNotNull(p2.getPriorityApplication());
+        assertEquals("US1234567890", p2.getPriorityApplication().getApplicationNumber());
+        assertEquals("US", p2.getPriorityApplication().getJurisdiction());
+
+        // Fourth is a patent family
+        PatentItem item4 = bom.getDefinitions().getPatents().get(3);
+        assertNull(item4.getPatent());
+        assertNotNull(item4.getPatentFamily());
+        PatentFamily pf = item4.getPatentFamily();
+        assertEquals("patent-family-1", pf.getBomRef());
+        assertEquals("PF-2023001", pf.getFamilyId());
+        assertNotNull(pf.getMembers());
+        assertEquals(2, pf.getMembers().size());
+        assertTrue(pf.getMembers().contains("patent-1"));
+        assertTrue(pf.getMembers().contains("patent-2"));
+        assertNotNull(pf.getExternalReferences());
+        assertEquals(ExternalReference.Type.PATENT_FAMILY, pf.getExternalReferences().get(0).getType());
+
+        // Component patent assertions
+        assertNotNull(bom.getComponents());
+        Component comp = bom.getComponents().get(0);
+        assertNotNull(comp.getPatentAssertions());
+        assertEquals(2, comp.getPatentAssertions().size());
+        PatentAssertion pa1 = comp.getPatentAssertions().get(0);
+        assertEquals("patent-assertion-1", pa1.getBomRef());
+        assertEquals(PatentAssertion.AssertionType.OWNERSHIP, pa1.getAssertionType());
+        assertEquals(1, pa1.getPatentRefs().size());
+        assertEquals("patent-1", pa1.getPatentRefs().get(0));
+
+        // Service patent assertions
+        assertNotNull(bom.getServices());
+        assertNotNull(bom.getServices().get(0).getPatentAssertions());
+        assertEquals(1, bom.getServices().get(0).getPatentAssertions().size());
+        PatentAssertion pa3 = bom.getServices().get(0).getPatentAssertions().get(0);
+        assertEquals(PatentAssertion.AssertionType.EXCLUSIVE_RIGHTS, pa3.getAssertionType());
     }
 
     @Test

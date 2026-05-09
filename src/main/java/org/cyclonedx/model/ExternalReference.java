@@ -56,10 +56,12 @@ public class ExternalReference {
         DOCUMENTATION("documentation"),
         @JsonProperty("support")
         SUPPORT("support"),
+        @VersionFilter(Version.VERSION_16)
         @JsonProperty("source-distribution")
         SOURCE_DISTRIBUTION("source-distribution"),
         @JsonProperty("distribution")
         DISTRIBUTION("distribution"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("distribution-intake")
         DISTRIBUTION_INTAKE("distribution-intake"),
         @JsonProperty("license")
@@ -68,51 +70,73 @@ public class ExternalReference {
         BUILD_META("build-meta"),
         @JsonProperty("build-system")
         BUILD_SYSTEM("build-system"),
+        @VersionFilter(Version.VERSION_14)
         @JsonProperty("release-notes")
         RELEASE_NOTES("release-notes"),
         @VersionFilter(Version.VERSION_15)
         @JsonProperty("security-contact")
         SECURITY_CONTACT("security-contact"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("model_card")
         MODEL_CARD("model_card"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("attestation")
         ATTESTATION("attestation"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("threat-model")
         THREAT_MODEL("threat-model"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("adversary-model")
         ADVERSARY_MODEL("adversary-model"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("risk-assessment")
         RISK_ASSESSMENT("risk-assessment"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("vulnerability-assertion")
         VULNERABILITY_ASSERTION("vulnerability-assertion"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("exploitability-statement")
         EXPLOITABILITY_STATEMENT("exploitability-statement"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("pentest-report")
         PENTEST_REPORT("pentest-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("static-analysis-report")
         STATIC_ANALYSIS_REPORT("static-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("dynamic-analysis-report")
         DYNAMIC_ANALYSIS_REPORT("dynamic-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("runtime-analysis-report")
         RUNTIME_ANALYSIS_REPORT("runtime-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("component-analysis-report")
         COMPONENT_ANALYSIS_REPORT("component-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("maturity-report")
         MATURITY_REPORT("maturity-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("certification-report")
         CERTIFICATION_REPORT("certification-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("codified-infrastructure")
         CODIFIED_INFRASTRUCTURE("codified-infrastructure"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("quality-metrics")
         QUALITY_METRICS("quality-metrics"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("log")
         LOG("log"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("configuration")
         CONFIGURATION("configuration"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("evidence")
         EVIDENCE("evidence"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("formulation")
         FORMULATION("formulation"),
+        @VersionFilter(Version.VERSION_16)
         @JsonProperty("rfc-9116")
         RFC_9116("rfc-9116"),
         @VersionFilter(Version.VERSION_16)

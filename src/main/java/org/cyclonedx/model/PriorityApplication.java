@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.cyclonedx.util.serializer.CustomDateSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 import java.util.Objects;
@@ -40,7 +40,7 @@ public class PriorityApplication {
 
     private String applicationNumber;
     private String jurisdiction;
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date filingDate;
 
     public String getApplicationNumber() {

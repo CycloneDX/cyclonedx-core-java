@@ -20,6 +20,7 @@ package org.cyclonedx.model;
 
 import java.util.Objects;
 
+import org.cyclonedx.Version;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.model.license.ExpressionDetailed;
 
@@ -38,6 +39,7 @@ public class LicenseItem {
 
     private License license;
     private Expression expression;
+    @VersionFilter(Version.VERSION_17)
     private ExpressionDetailed expressionDetailed;
 
     /**

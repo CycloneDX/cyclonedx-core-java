@@ -27,7 +27,6 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.Hash.Algorithm;
-import org.cyclonedx.model.VersionFilter;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.serializeHashJson;
 
@@ -49,7 +48,7 @@ public class HashSerializer
   public void serialize(
       final Hash hash, final JsonGenerator gen, final SerializerProvider provider) throws IOException
   {
-    if (!shouldSerializeField(hash.getAlgorithm())) {
+    if (!shouldSerializeHash(hash)) {
       return;
     }
 
@@ -66,14 +65,16 @@ public class HashSerializer
     return Hash.class;
   }
 
-  private boolean shouldSerializeField(String value) {
-    try {
-      Algorithm algorithm = Algorithm.fromSpec(value);
-      VersionFilter filter = algorithm.getClass().getField(algorithm.name()).getAnnotation(VersionFilter.class);
-      return filter == null || filter.value().getVersion() <= version.getVersion();
+  private boolean shouldSerializeHash(Hash hash) {
+    if (hash.getAlgorithm() == null) {
+      return true;
     }
-    catch (NoSuchFieldException e) {
-      return false;
+    try {
+      Algorithm algorithm = Algorithm.fromSpec(hash.getAlgorithm());
+      return SerializerUtils.shouldSerializeEnumValue(algorithm, version);
+    } catch (IllegalArgumentException e) {
+      // Unknown algorithm - include it
+      return true;
     }
   }
 }

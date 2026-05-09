@@ -23,8 +23,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.deserializer.PatentAssertionDeserializer;
+import org.cyclonedx.util.serializer.PatentAssertionSerializer;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +40,9 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"bomRef", "assertionType", "patentRefs", "asserter", "notes"})
+@JsonPropertyOrder({"bom-ref", "assertionType", "patentRefs", "asserter", "notes"})
+@JsonDeserialize(using = PatentAssertionDeserializer.class)
+@JsonSerialize(using = PatentAssertionSerializer.class)
 public class PatentAssertion extends ExtensibleElement {
 
     public enum AssertionType {
@@ -96,7 +102,11 @@ public class PatentAssertion extends ExtensibleElement {
     }
 
     public void setBomRef(String bomRef) {
-        this.bomRef = bomRef;
+        // Guard against Jackson XML overwriting the attribute value when processing
+        // <bom-ref> child elements inside <patentRefs> (same local name conflict)
+        if (bomRef != null && !bomRef.isEmpty()) {
+            this.bomRef = bomRef;
+        }
     }
 
     public AssertionType getAssertionType() {
