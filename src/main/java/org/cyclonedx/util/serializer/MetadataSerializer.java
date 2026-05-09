@@ -60,7 +60,7 @@ public class MetadataSerializer
 
     if (metadata.getLifecycles() != null && shouldSerializeField(metadata, version, "lifecycles")) {
       jsonGenerator.writeFieldName("lifecycles");
-      new LifecycleSerializer(isXml).serialize(metadata.getLifecycles(), jsonGenerator, serializerProvider);
+      new LifecycleSerializer(isXml, version).serialize(metadata.getLifecycles(), jsonGenerator, serializerProvider);
     }
 
     //Tools

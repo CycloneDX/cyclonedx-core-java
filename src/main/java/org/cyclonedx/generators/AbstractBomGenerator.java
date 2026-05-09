@@ -64,7 +64,7 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     mapper.registerModule(licenseModule);
 
     SimpleModule lifecycleModule = new SimpleModule();
-    lifecycleModule.addSerializer(new LifecycleSerializer(isXml));
+    lifecycleModule.addSerializer(new LifecycleSerializer(isXml, version));
     mapper.registerModule(lifecycleModule);
 
     SimpleModule metadataModule = new SimpleModule();
@@ -76,11 +76,11 @@ public abstract class AbstractBomGenerator extends CycloneDxSchema
     mapper.registerModule(vulnerabilityModule);
 
     SimpleModule inputTypeModule = new SimpleModule();
-    inputTypeModule.addSerializer(new InputTypeSerializer(isXml));
+    inputTypeModule.addSerializer(new InputTypeSerializer(isXml, version));
     mapper.registerModule(inputTypeModule);
 
     SimpleModule outputTypeModule = new SimpleModule();
-    outputTypeModule.addSerializer(new OutputTypeSerializer(isXml));
+    outputTypeModule.addSerializer(new OutputTypeSerializer(isXml, version));
     mapper.registerModule(outputTypeModule);
 
     SimpleModule evidenceModule = new SimpleModule();

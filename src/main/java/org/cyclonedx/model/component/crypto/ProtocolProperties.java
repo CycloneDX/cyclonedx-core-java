@@ -9,11 +9,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
+import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"type", "version", "cipherSuites", "ikev2TransformTypes", "cryptoRefArray"})
+@JsonPropertyOrder({"type", "version", "cipherSuites", "ikev2TransformTypes", "cryptoRefArray", "relatedCryptographicAssets"})
 public class ProtocolProperties
 {
   private ProtocolType type;
@@ -26,6 +28,9 @@ public class ProtocolProperties
   private Ikev2TransformTypes ikev2TransformTypes;
 
   private List<String> cryptoRefArray;
+
+  @VersionFilter(Version.VERSION_17)
+  private List<RelatedCryptographicAsset> relatedCryptographicAssets;
 
   public ProtocolType getType() {
     return type;
@@ -73,6 +78,16 @@ public class ProtocolProperties
     this.cryptoRefArray = cryptoRefArray;
   }
 
+  @JacksonXmlElementWrapper(localName = "relatedCryptographicAssets")
+  @JacksonXmlProperty(localName = "relatedCryptographicAsset")
+  public List<RelatedCryptographicAsset> getRelatedCryptographicAssets() {
+    return relatedCryptographicAssets;
+  }
+
+  public void setRelatedCryptographicAssets(final List<RelatedCryptographicAsset> relatedCryptographicAssets) {
+    this.relatedCryptographicAssets = relatedCryptographicAssets;
+  }
+
   @Override
   public boolean equals(final Object object) {
     if (this == object) {
@@ -85,11 +100,12 @@ public class ProtocolProperties
     return type == that.type && Objects.equals(version, that.version) &&
         Objects.equals(cipherSuites, that.cipherSuites) &&
         Objects.equals(ikev2TransformTypes, that.ikev2TransformTypes) &&
-        Objects.equals(cryptoRefArray, that.cryptoRefArray);
+        Objects.equals(cryptoRefArray, that.cryptoRefArray) &&
+        Objects.equals(relatedCryptographicAssets, that.relatedCryptographicAssets);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, version, cipherSuites, ikev2TransformTypes, cryptoRefArray);
+    return Objects.hash(type, version, cipherSuites, ikev2TransformTypes, cryptoRefArray, relatedCryptographicAssets);
   }
 }

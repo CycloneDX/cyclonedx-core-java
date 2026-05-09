@@ -85,7 +85,12 @@ public class Service extends ExtensibleElement {
     @VersionFilter(Version.VERSION_16)
     @JsonUnwrapped
     private Tags tags;
+
+    @VersionFilter(Version.VERSION_17)
+    private List<PatentAssertion> patentAssertions;
+
     private List<Service> services;
+    @VersionFilter(Version.VERSION_14)
     private ReleaseNotes releaseNotes;
     @JsonOnly
     @VersionFilter(Version.VERSION_14)
@@ -270,6 +275,17 @@ public class Service extends ExtensibleElement {
 
     public void setTags(final Tags tags) {
         this.tags = tags;
+    }
+
+    @JacksonXmlElementWrapper(localName = "patentAssertions")
+    @JacksonXmlProperty(localName = "patentAssertion")
+    @VersionFilter(Version.VERSION_17)
+    public List<PatentAssertion> getPatentAssertions() {
+        return patentAssertions;
+    }
+
+    public void setPatentAssertions(List<PatentAssertion> patentAssertions) {
+        this.patentAssertions = patentAssertions;
     }
 
     public String getTrustZone() {
