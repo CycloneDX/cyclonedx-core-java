@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
+import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.model.component.crypto.enums.CertificationLevel;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.crypto.enums.ExecutionEnvironment;
@@ -22,6 +24,8 @@ import org.cyclonedx.model.component.crypto.enums.Primitive;
 @JsonPropertyOrder({
     "primitive",
     "parameterSetIdentifier",
+    "algorithmFamily",
+    "ellipticCurve",
     "curve",
     "executionEnvironment",
     "implementationPlatform",
@@ -30,13 +34,20 @@ import org.cyclonedx.model.component.crypto.enums.Primitive;
     "padding",
     "cryptoFunctions",
     "classicalSecurityLevel",
-    "nistQuantumSecurityLevel"
+    "nistQuantumSecurityLevel",
+    "relatedCryptographicAssets"
 })
 public class AlgorithmProperties
 {
   private Primitive primitive;
 
   private String parameterSetIdentifier;
+
+  @VersionFilter(Version.VERSION_17)
+  private String algorithmFamily;
+
+  @VersionFilter(Version.VERSION_17)
+  private String ellipticCurve;
 
   private String curve;
 
@@ -56,6 +67,9 @@ public class AlgorithmProperties
 
   private Integer nistQuantumSecurityLevel;
 
+  @VersionFilter(Version.VERSION_17)
+  private List<RelatedCryptographicAsset> relatedCryptographicAssets;
+
   public Primitive getPrimitive() {
     return primitive;
   }
@@ -70,6 +84,22 @@ public class AlgorithmProperties
 
   public void setParameterSetIdentifier(final String parameterSetIdentifier) {
     this.parameterSetIdentifier = parameterSetIdentifier;
+  }
+
+  public String getAlgorithmFamily() {
+    return algorithmFamily;
+  }
+
+  public void setAlgorithmFamily(final String algorithmFamily) {
+    this.algorithmFamily = algorithmFamily;
+  }
+
+  public String getEllipticCurve() {
+    return ellipticCurve;
+  }
+
+  public void setEllipticCurve(final String ellipticCurve) {
+    this.ellipticCurve = ellipticCurve;
   }
 
   public String getCurve() {
@@ -149,6 +179,16 @@ public class AlgorithmProperties
     this.nistQuantumSecurityLevel = nistQuantumSecurityLevel;
   }
 
+  @JacksonXmlElementWrapper(localName = "relatedCryptographicAssets")
+  @JacksonXmlProperty(localName = "relatedCryptographicAsset")
+  public List<RelatedCryptographicAsset> getRelatedCryptographicAssets() {
+    return relatedCryptographicAssets;
+  }
+
+  public void setRelatedCryptographicAssets(final List<RelatedCryptographicAsset> relatedCryptographicAssets) {
+    this.relatedCryptographicAssets = relatedCryptographicAssets;
+  }
+
   @Override
   public boolean equals(final Object object) {
     if (this == object) {
@@ -159,16 +199,19 @@ public class AlgorithmProperties
     }
     AlgorithmProperties that = (AlgorithmProperties) object;
     return primitive == that.primitive && Objects.equals(parameterSetIdentifier, that.parameterSetIdentifier) &&
+        Objects.equals(algorithmFamily, that.algorithmFamily) && Objects.equals(ellipticCurve, that.ellipticCurve) &&
         Objects.equals(curve, that.curve) && executionEnvironment == that.executionEnvironment &&
         implementationPlatform == that.implementationPlatform && certificationLevel == that.certificationLevel &&
         mode == that.mode && padding == that.padding && Objects.equals(cryptoFunctions, that.cryptoFunctions) &&
         Objects.equals(classicalSecurityLevel, that.classicalSecurityLevel) &&
-        Objects.equals(nistQuantumSecurityLevel, that.nistQuantumSecurityLevel);
+        Objects.equals(nistQuantumSecurityLevel, that.nistQuantumSecurityLevel) &&
+        Objects.equals(relatedCryptographicAssets, that.relatedCryptographicAssets);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(primitive, parameterSetIdentifier, curve, executionEnvironment, implementationPlatform,
-        certificationLevel, mode, padding, cryptoFunctions, classicalSecurityLevel, nistQuantumSecurityLevel);
+    return Objects.hash(primitive, parameterSetIdentifier, algorithmFamily, ellipticCurve, curve, executionEnvironment,
+        implementationPlatform, certificationLevel, mode, padding, cryptoFunctions, classicalSecurityLevel,
+        nistQuantumSecurityLevel, relatedCryptographicAssets);
   }
 }

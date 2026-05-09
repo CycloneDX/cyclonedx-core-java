@@ -108,6 +108,8 @@ public abstract class CycloneDxSchema
         getClass().getClassLoader().getResource("bom-1.6.schema.json").toExternalForm());
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.7.schema.json",
         getClass().getClassLoader().getResource("bom-1.7.schema.json").toExternalForm());
+    offlineMappings.put("http://cyclonedx.org/schema/cryptography-defs.schema.json",
+        getClass().getClassLoader().getResource("cryptography-defs.schema.json").toExternalForm());
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
     final MapSchemaMapper offlineSchemaMapper = new MapSchemaMapper(offlineMappings);
