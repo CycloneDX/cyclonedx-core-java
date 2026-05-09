@@ -43,14 +43,18 @@ public class Composition {
         INCOMPLETE("incomplete"),
         @JsonProperty("incomplete_first_party_only")
         INCOMPLETE_FIRST_PARTY_ONLY("incomplete_first_party_only"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("incomplete_first_party_proprietary_only")
         INCOMPLETE_FIRST_PARTY_PROPRIETARY_ONLY("incomplete_first_party_proprietary_only"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("incomplete_first_party_opensource_only")
         INCOMPLETE_FIRST_PARTY_OPENSOURCE_ONLY("incomplete_first_party_opensource_only"),
         @JsonProperty("incomplete_third_party_only")
         INCOMPLETE_THIRD_PARTY_ONLY("incomplete_third_party_only"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("incomplete_third_party_proprietary_only")
         INCOMPLETE_THIRD_PARTY_PROPRIETARY_ONLY("incomplete_third_party_proprietary_only"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("incomplete_third_party_opensource_only")
         INCOMPLETE_THIRD_PARTY_OPENSOURCE_ONLY("incomplete_third_party_opensource_only"),
         @JsonProperty("unknown")

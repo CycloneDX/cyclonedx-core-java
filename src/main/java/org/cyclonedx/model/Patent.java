@@ -23,10 +23,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.cyclonedx.util.serializer.CustomDateSerializer;
+import org.cyclonedx.util.serializer.OrganizationalChoiceSerializer;
 
 import java.util.Date;
 import java.util.List;
@@ -110,19 +111,20 @@ public class Patent extends ExtensibleElement {
     @JsonProperty("abstract")
     private String patentAbstract;
 
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date filingDate;
 
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date grantDate;
 
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date patentExpirationDate;
 
     private PatentLegalStatus patentLegalStatus;
 
-    @JacksonXmlElementWrapper(localName = "patentAssignee")
+    @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "patentAssignee")
+    @JsonSerialize(contentUsing = OrganizationalChoiceSerializer.class)
     private List<OrganizationalChoice> patentAssignee;
 
     @JacksonXmlElementWrapper(localName = "externalReferences")

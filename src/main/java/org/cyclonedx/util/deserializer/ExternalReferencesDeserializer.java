@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.Property;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.List;
 public class ExternalReferencesDeserializer extends JsonDeserializer<List<ExternalReference>> {
 
     private final HashesDeserializer hashesDeserializer = new HashesDeserializer();
+    private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
 
     @Override
     public List<ExternalReference> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
@@ -68,6 +70,12 @@ public class ExternalReferencesDeserializer extends JsonDeserializer<List<Extern
             JsonParser hashesParser = node.get("hashes").traverse(p.getCodec());
             hashesParser.nextToken();
             reference.setHashes(hashesDeserializer.deserialize(hashesParser, ctxt));
+        }
+        if (node.has("properties")) {
+            JsonParser propertiesParser = node.get("properties").traverse(p.getCodec());
+            propertiesParser.nextToken();
+            List<Property> properties = propertiesDeserializer.deserialize(propertiesParser, ctxt);
+            reference.setProperties(properties);
         }
         return reference;
     }

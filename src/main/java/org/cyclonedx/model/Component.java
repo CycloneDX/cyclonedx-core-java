@@ -54,7 +54,9 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @JsonPropertyOrder(
     {
      "type",
+     "mime-type",
      "bom-ref",
+     "isExternal",
      "supplier",
      "manufacturer",
      "authors",
@@ -63,11 +65,13 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "group",
      "name",
      "version",
+     "versionRange",
      "description",
      "scope",
      "hashes",
      "licenses",
      "copyright",
+     "patentAssertions",
      "cpe",
      "purl",
      "omniborId",
@@ -83,6 +87,7 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "modelCard",
      "data",
      "cryptoProperties",
+     "tags",
      "signature",
      "provides"
     })
@@ -95,22 +100,29 @@ public class Component extends ExtensibleElement {
         FRAMEWORK("framework"),
         @JsonProperty("library")
         LIBRARY("library"),
+        @VersionFilter(Version.VERSION_12)
         @JsonProperty("container")
         CONTAINER("container"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("platform")
         PLATFORM("platform"),
         @JsonProperty("operating-system")
         OPERATING_SYSTEM("operating-system"),
         @JsonProperty("device")
         DEVICE("device"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("device-driver")
         DEVICE_DRIVER("device-driver"),
+        @VersionFilter(Version.VERSION_12)
         @JsonProperty("firmware")
         FIRMWARE("firmware"),
+        @VersionFilter(Version.VERSION_11)
         @JsonProperty("file")
         FILE("file"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("machine-learning-model")
         MACHINE_LEARNING_MODEL("machine-learning-model"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("data")
         DATA("data"),
         @VersionFilter(Version.VERSION_16)
@@ -133,6 +145,7 @@ public class Component extends ExtensibleElement {
         REQUIRED("required"),
         @JsonProperty("optional")
         OPTIONAL("optional"),
+        @VersionFilter(Version.VERSION_12)
         @JsonProperty("excluded")
         EXCLUDED("excluded");
 
@@ -171,7 +184,6 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private String author;
 
-    @VersionFilter(Version.VERSION_11)
     private String publisher;
     private String group;
     private String name;

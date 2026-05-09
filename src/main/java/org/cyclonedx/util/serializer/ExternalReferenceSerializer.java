@@ -19,6 +19,7 @@
 package org.cyclonedx.util.serializer;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.function.BiPredicate;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -30,7 +31,6 @@ import org.cyclonedx.Version;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.ExternalReference.Type;
 import org.cyclonedx.model.Hash;
-import org.cyclonedx.model.VersionFilter;
 import org.cyclonedx.util.BomUtils;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.serializeHashJson;
@@ -60,7 +60,7 @@ public class ExternalReferenceSerializer
       return;
     }
 
-    if(!shouldSerializeField(extRef.getType())) {
+    if (!SerializerUtils.shouldSerializeEnumValue(extRef.getType(), version)) {
       return;
     }
 
@@ -84,10 +84,12 @@ public class ExternalReferenceSerializer
     if (extRef.getComment() != null) {
       toXmlGenerator.writeStringField("comment", extRef.getComment());
     }
-    if (CollectionUtils.isNotEmpty(extRef.getHashes())) {
+
+    List<Hash> hashes = SerializerUtils.filterHashesByVersion(extRef.getHashes(), version);
+    if (CollectionUtils.isNotEmpty(hashes)) {
       toXmlGenerator.writeFieldName("hashes");
       toXmlGenerator.writeStartObject();
-      for (Hash hash : extRef.getHashes()) {
+      for (Hash hash : hashes) {
         toXmlGenerator.writeFieldName("hash");
         SerializerUtils.serializeHashXml(toXmlGenerator, hash);
       }
@@ -103,28 +105,17 @@ public class ExternalReferenceSerializer
     if (extRef.getComment() != null) {
       gen.writeStringField("comment", extRef.getComment());
     }
-    if (CollectionUtils.isNotEmpty(extRef.getHashes())) {
+
+    List<Hash> hashes = SerializerUtils.filterHashesByVersion(extRef.getHashes(), version);
+    if (CollectionUtils.isNotEmpty(hashes)) {
       gen.writeFieldName("hashes");
       gen.writeStartArray();
-      for (Hash hash : extRef.getHashes()) {
+      for (Hash hash : hashes) {
         serializeHashJson(gen, hash);
       }
       gen.writeEndArray();
     }
     gen.writeEndObject();
-  }
-
-  private boolean shouldSerializeField(Object obj) {
-    try {
-      if (obj instanceof Type) {
-        Type type = (Type) obj;
-        VersionFilter filter = type.getClass().getField(type.name()).getAnnotation(VersionFilter.class);
-        return filter == null || filter.value().getVersion() <= version.getVersion();
-      }
-      return true;
-    }catch (NoSuchFieldException e) {
-      return false;
-    }
   }
 
   @Override
