@@ -952,6 +952,80 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(loadedFile, version));
     }
 
+    // ==================== CycloneDX 1.7 Cryptography Tests ====================
+
+    @Test
+    public void schema17_testCryptographyFull() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-cryptography-full-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyFull_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-cryptography-full-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyCertificateAdvanced() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-cryptography-certificate-advanced-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyCertificateAdvanced_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-cryptography-certificate-advanced-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyImplementation() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-cryptography-implementation-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyImplementation_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-cryptography-implementation-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private void assertExternalReferenceInfo(Bom bom) {
         assertEquals(3, bom.getExternalReferences().size());
         assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());
