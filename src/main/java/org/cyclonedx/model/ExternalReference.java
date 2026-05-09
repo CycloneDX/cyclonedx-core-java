@@ -77,8 +77,8 @@ public class ExternalReference {
         @JsonProperty("security-contact")
         SECURITY_CONTACT("security-contact"),
         @VersionFilter(Version.VERSION_15)
-        @JsonProperty("model_card")
-        MODEL_CARD("model_card"),
+        @JsonProperty("model-card")
+        MODEL_CARD("model-card"),
         @VersionFilter(Version.VERSION_15)
         @JsonProperty("attestation")
         ATTESTATION("attestation"),
