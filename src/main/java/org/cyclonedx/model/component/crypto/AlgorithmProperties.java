@@ -23,10 +23,10 @@ import org.cyclonedx.model.component.crypto.enums.Primitive;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "primitive",
-    "parameterSetIdentifier",
     "algorithmFamily",
-    "ellipticCurve",
+    "parameterSetIdentifier",
     "curve",
+    "ellipticCurve",
     "executionEnvironment",
     "implementationPlatform",
     "certificationLevel",
