@@ -160,7 +160,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @return a list of exceptions encountered during validation
      */
     public List<ParseException> validate(final String bomString, final Version schemaVersion) throws IOException {
-        return validate(mapper.readTree(bomString), schemaVersion);
+        return validate(mapper.readTree(skipUtf8Bom(bomString)), schemaVersion);
     }
 
     /**
@@ -243,5 +243,12 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public boolean isValid(final InputStream inputStream, final Version schemaVersion) throws IOException {
         return validate(inputStream, schemaVersion).isEmpty();
+    }
+
+    private static String skipUtf8Bom(String string) {
+        if (string.startsWith("\uFEFF")) {
+            return string.substring(1);
+        }
+        return string;
     }
 }
