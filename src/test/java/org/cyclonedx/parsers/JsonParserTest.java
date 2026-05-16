@@ -91,6 +91,15 @@ public class JsonParserTest
     }
 
     @Test
+    public void testValid12BomWithUTF8ByteOrderMarker() throws Exception {
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-utf8bom.json")).getFile());
+        final JsonParser parser = new JsonParser();
+        Bom bom = parser.parse(file);
+        assertTrue(parser.isValid(file, Version.VERSION_12));
+        System.out.println(bom.getSerialNumber());
+    }
+
+    @Test
     public void testParsedObjects12Bom() throws Exception {
         final Bom bom = getJsonBom("bom-1.2.json");
 
@@ -122,6 +131,13 @@ public class JsonParserTest
         Dependency d11 = d1.getDependencies().get(0);
         assertEquals("pkg:npm/acme/common@1.0.0", d11.getRef());
         assertNull(d11.getDependencies());
+    }
+
+    @Test
+    public void testParsedObjects12BomWithUTF8ByteOrderMarker() throws Exception {
+        final Bom bom = getJsonBom("bom-1.2-utf8bom.json");
+
+        assertMetadata(bom, Version.VERSION_12);
     }
 
     @Test

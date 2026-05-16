@@ -40,9 +40,23 @@ public class BomParserFactoryTest {
     }
 
     @Test
+    public void testXMLFactoryWithUTF8ByteOrderMarker() throws Exception {
+        Parser parser = BomParserFactory.createParser(
+                new File(Objects.requireNonNull(BomParserFactory.class.getResource("/bom-1.2-utf8bom.xml")).getFile()));
+        assertInstanceOf(XmlParser.class, parser);
+    }
+
+    @Test
     public void testJSONFactory() throws Exception {
         Parser parser = BomParserFactory.createParser(new File(
             Objects.requireNonNull(BomParserFactory.class.getResource("/bom-1.2.json")).getFile()));
+        assertInstanceOf(JsonParser.class, parser);
+    }
+
+    @Test
+    public void testJSONFactoryWithUTF8ByteOrderMarker() throws Exception {
+        Parser parser = BomParserFactory.createParser(new File(
+                Objects.requireNonNull(BomParserFactory.class.getResource("/bom-1.2-utf8bom.json")).getFile()));
         assertInstanceOf(JsonParser.class, parser);
     }
 
