@@ -31,12 +31,19 @@ import java.io.IOException;
 public class ToolDeserializer
     extends JsonDeserializer<Tool>
 {
-  private final ObjectMapper mapper = new ObjectMapper();
-
   @Override
   public Tool deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     ObjectCodec codec = parser.getCodec();
     JsonNode node = codec.readTree(parser);
+    ObjectMapper mapper = getMapper(parser);
     return mapper.convertValue(node, Tool.class);
+  }
+
+  private ObjectMapper getMapper(JsonParser jsonParser) {
+    if (jsonParser.getCodec() instanceof ObjectMapper) {
+      return (ObjectMapper) jsonParser.getCodec();
+    } else {
+      return new ObjectMapper();
+    }
   }
 }
