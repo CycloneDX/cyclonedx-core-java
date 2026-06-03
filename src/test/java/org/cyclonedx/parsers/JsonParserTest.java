@@ -855,7 +855,7 @@ public class JsonParserTest
         final Bom bom = getJsonBom("1.7/valid-citations-1.7.json");
 
         assertNotNull(bom.getCitations());
-        assertEquals(4, bom.getCitations().size());
+        assertEquals(5, bom.getCitations().size());
 
         // Citation 1: pointers + attributedTo
         Citation c1 = bom.getCitations().get(0);
