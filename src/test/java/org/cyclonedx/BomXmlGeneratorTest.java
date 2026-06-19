@@ -27,6 +27,7 @@ import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
+import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
@@ -535,6 +536,70 @@ public class BomXmlGeneratorTest {
 
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema16_testDependencyProvides() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.6/valid-dependency-provides-1.6.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        Bom parsedBom = parser.parse(loadedFile);
+        assertNotNull(parsedBom.getDependencies());
+        assertEquals(3, parsedBom.getDependencies().size());
+        // Test dependency library-a
+        Dependency libA = parsedBom.getDependencies().get(0);
+        assertEquals("library-a", libA.getRef());
+        assertNull(libA.getDependencies());
+        assertNull(libA.getProvides());
+        // Test dependency library-b
+        Dependency libB = parsedBom.getDependencies().get(1);
+        assertEquals("library-b", libB.getRef());
+        assertEquals(1, libB.getDependencies().size());
+        assertEquals("library-c", libB.getDependencies().get(0).getRef());
+        // Test dependency library-c
+        Dependency libC = parsedBom.getDependencies().get(2);
+        assertEquals("library-c", libC.getRef());
+        assertNull(libC.getDependencies());
+        assertNotNull(libC.getProvides());
+        assertEquals("library-d", libC.getProvides().get(0).getRef());
+    }
+
+    @Test
+    public void schema16_testDependencyProvides_xml() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonBomXml("/1.6/valid-dependency-provides-1.6.xml");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        Bom parsedBom = parser.parse(loadedFile);
+        assertNotNull(parsedBom.getDependencies());
+        assertEquals(3, parsedBom.getDependencies().size());
+        // Test dependency library-a
+        Dependency libA = parsedBom.getDependencies().get(0);
+        assertEquals("library-a", libA.getRef());
+        assertNull(libA.getDependencies());
+        assertNull(libA.getProvides());
+        // Test dependency library-b
+        Dependency libB = parsedBom.getDependencies().get(1);
+        assertEquals("library-b", libB.getRef());
+        assertEquals(1, libB.getDependencies().size());
+        assertEquals("library-c", libB.getDependencies().get(0).getRef());
+        // Test dependency library-c
+        Dependency libC = parsedBom.getDependencies().get(2);
+        assertEquals("library-c", libC.getRef());
+        assertNull(libC.getDependencies());
+        assertNotNull(libC.getProvides());
+        assertEquals("library-d", libC.getProvides().get(0).getRef());
     }
 
     private void addSignature(Bom bom) {
