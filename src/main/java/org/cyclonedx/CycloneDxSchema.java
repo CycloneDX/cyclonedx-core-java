@@ -22,6 +22,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.SchemaRegistry;
 import com.networknt.schema.SchemaRegistryConfig;
+import com.networknt.schema.dialect.DefaultDialectRegistry;
+import com.networknt.schema.dialect.Dialect;
+import com.networknt.schema.dialect.DialectId;
+import com.networknt.schema.dialect.DialectRegistry;
+import com.networknt.schema.dialect.Draft7;
+import com.networknt.schema.keyword.NonValidationKeyword;
 import com.networknt.schema.serialization.DefaultNodeReader;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
@@ -96,12 +102,37 @@ public abstract class CycloneDxSchema
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "classpath:bom-1.6.schema.json");
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
+    final Dialect cycloneDxDialect = getCycloneDxJsonDialect();
+    final DialectRegistry defaultDialectRegistry = new DefaultDialectRegistry();
+    final DialectRegistry dialectRegistry = (dialectId, schemaRegistry) ->
+        DialectId.DRAFT_7.equals(dialectId)
+            ? cycloneDxDialect
+            : defaultDialectRegistry.getDialect(dialectId, schemaRegistry);
     SchemaRegistry registry = SchemaRegistry.builder()
         .nodeReader(DefaultNodeReader.builder().jsonMapper(mapper).build())
         .schemaIdResolvers(b -> b.mappings(offlineMappings))
         .schemaRegistryConfig(config)
+        .dialectRegistry(dialectRegistry)
         .build();
     return registry.getSchema(schemaNode);
+  }
+
+  /**
+   * Returns the JSON schema dialect used to interpret the CycloneDX JSON schemas.
+   * <p>
+   * The CycloneDX JSON schemas declare the draft-07 dialect but make use of the
+   * CycloneDX-specific {@code meta:enum} and {@code deprecated} annotation keywords,
+   * which are not part of draft-07. They are registered here as non-validating
+   * keywords so the underlying validator does not emit "Unknown keyword" warnings.
+   * The keywords carry no validation semantics, so validation behaviour is unchanged.
+   *
+   * @return a draft-07 based dialect that recognises the CycloneDX annotation keywords
+   */
+  static Dialect getCycloneDxJsonDialect() {
+    return Dialect.builder(Draft7.getInstance())
+        .keyword(new NonValidationKeyword("meta:enum"))
+        .keyword(new NonValidationKeyword("deprecated"))
+        .build();
   }
 
   private InputStream getJsonSchemaAsStream(final Version schemaVersion) {
