@@ -24,7 +24,6 @@ import com.networknt.schema.SchemaRegistry;
 import com.networknt.schema.SchemaRegistryConfig;
 import com.networknt.schema.dialect.DefaultDialectRegistry;
 import com.networknt.schema.dialect.Dialect;
-import com.networknt.schema.dialect.DialectId;
 import com.networknt.schema.dialect.DialectRegistry;
 import com.networknt.schema.dialect.Draft7;
 import com.networknt.schema.keyword.NonValidationKeyword;
@@ -102,12 +101,7 @@ public abstract class CycloneDxSchema
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "classpath:bom-1.6.schema.json");
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
-    final Dialect cycloneDxDialect = getCycloneDxJsonDialect();
-    final DialectRegistry defaultDialectRegistry = new DefaultDialectRegistry();
-    final DialectRegistry dialectRegistry = (dialectId, schemaRegistry) ->
-        DialectId.DRAFT_7.equals(dialectId)
-            ? cycloneDxDialect
-            : defaultDialectRegistry.getDialect(dialectId, schemaRegistry);
+    final DialectRegistry dialectRegistry = new DefaultDialectRegistry(getCycloneDxJsonDialect());
     SchemaRegistry registry = SchemaRegistry.builder()
         .nodeReader(DefaultNodeReader.builder().jsonMapper(mapper).build())
         .schemaIdResolvers(b -> b.mappings(offlineMappings))

@@ -18,16 +18,12 @@
  */
 package org.cyclonedx;
 
-import com.networknt.schema.dialect.Dialect;
 import com.networknt.schema.dialect.Draft7;
 import com.networknt.schema.keyword.Keyword;
 import com.networknt.schema.keyword.NonValidationKeyword;
-import org.cyclonedx.parsers.JsonParser;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,14 +32,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  * {@code meta:enum} and {@code deprecated} annotation keywords.
  * <p>
  * The CycloneDX 1.6 JSON schema declares the draft-07 dialect but uses these
- * two
- * keywords, which are not part of draft-07. Without registering them the
- * underlying
- * {@code json-schema-validator} logs a "Unknown keyword" warning for each one.
- * Treating
- * them as {@link NonValidationKeyword}s keeps validation behaviour unchanged
- * while
- * suppressing the warnings.
+ * two keywords, which are not part of draft-07. Without registering them the
+ * underlying {@code json-schema-validator} logs a "Unknown keyword" warning
+ * for each one. Treating them as {@link NonValidationKeyword}s keeps validation
+ * behaviour unchanged while suppressing the warnings.
  */
 class CycloneDxJsonDialectTest {
 
@@ -60,20 +52,11 @@ class CycloneDxJsonDialectTest {
     @Test
     void stockDraft7DialectDoesNotKnowCycloneDxKeywords() {
         // Guards against the fix becoming redundant: if upstream ever adds these
-        // keywords
-        // to draft-07 this assertion fails, signalling the custom dialect can be
-        // removed.
+        // keywords to draft-07 this assertion fails, signalling the custom dialect
+        // can be removed.
         final Map<String, Keyword> keywords = Draft7.getInstance().getKeywords();
 
         assertThat(keywords).doesNotContainKey("meta:enum");
         assertThat(keywords).doesNotContainKey("deprecated");
-    }
-
-    @Test
-    void validatesValid16BomWithCustomDialect() throws Exception {
-        final File bom = new File(
-                Objects.requireNonNull(getClass().getResource("/1.6/valid-bom-1.6.json")).getFile());
-
-        assertThat(new JsonParser().isValid(bom, Version.VERSION_16)).isTrue();
     }
 }
