@@ -101,8 +101,9 @@ public abstract class CycloneDxSchema
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", "classpath:bom-1.4.schema.json");
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json", "classpath:bom-1.5.schema.json");
     offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "classpath:bom-1.6.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.7.schema.json", "bom-1.7.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/cryptography-defs.schema.json","cryptography-defs.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.7.schema.json", "classpath:bom-1.7.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/cryptography-defs.schema.json",
+        "classpath:cryptography-defs.schema.json");
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
     final DialectRegistry dialectRegistry = new DefaultDialectRegistry(getCycloneDxJsonDialect());
