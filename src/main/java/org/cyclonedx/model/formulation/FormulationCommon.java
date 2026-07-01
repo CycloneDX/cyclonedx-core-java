@@ -155,8 +155,8 @@ public abstract class FormulationCommon extends BasicDataAbstract
     COPY("copy"),
     @JsonProperty("clone")
     CLONE("clone"),
-    @JsonProperty("LINT")
-    LINT("LINT"),
+    @JsonProperty("lint")
+    LINT("lint"),
     @JsonProperty("scan")
     SCAN("scan"),
     @JsonProperty("merge")

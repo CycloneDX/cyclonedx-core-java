@@ -32,7 +32,7 @@ import org.cyclonedx.Version;
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"url", "comment", "hashes"})
+@JsonPropertyOrder({"url", "comment", "hashes", "properties"})
 public class ExternalReference {
 
     public enum Type {
@@ -56,10 +56,12 @@ public class ExternalReference {
         DOCUMENTATION("documentation"),
         @JsonProperty("support")
         SUPPORT("support"),
+        @VersionFilter(Version.VERSION_16)
         @JsonProperty("source-distribution")
         SOURCE_DISTRIBUTION("source-distribution"),
         @JsonProperty("distribution")
         DISTRIBUTION("distribution"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("distribution-intake")
         DISTRIBUTION_INTAKE("distribution-intake"),
         @JsonProperty("license")
@@ -68,51 +70,73 @@ public class ExternalReference {
         BUILD_META("build-meta"),
         @JsonProperty("build-system")
         BUILD_SYSTEM("build-system"),
+        @VersionFilter(Version.VERSION_14)
         @JsonProperty("release-notes")
         RELEASE_NOTES("release-notes"),
         @VersionFilter(Version.VERSION_15)
         @JsonProperty("security-contact")
         SECURITY_CONTACT("security-contact"),
-        @JsonProperty("model_card")
-        MODEL_CARD("model_card"),
+        @VersionFilter(Version.VERSION_15)
+        @JsonProperty("model-card")
+        MODEL_CARD("model-card"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("attestation")
         ATTESTATION("attestation"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("threat-model")
         THREAT_MODEL("threat-model"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("adversary-model")
         ADVERSARY_MODEL("adversary-model"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("risk-assessment")
         RISK_ASSESSMENT("risk-assessment"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("vulnerability-assertion")
         VULNERABILITY_ASSERTION("vulnerability-assertion"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("exploitability-statement")
         EXPLOITABILITY_STATEMENT("exploitability-statement"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("pentest-report")
         PENTEST_REPORT("pentest-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("static-analysis-report")
         STATIC_ANALYSIS_REPORT("static-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("dynamic-analysis-report")
         DYNAMIC_ANALYSIS_REPORT("dynamic-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("runtime-analysis-report")
         RUNTIME_ANALYSIS_REPORT("runtime-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("component-analysis-report")
         COMPONENT_ANALYSIS_REPORT("component-analysis-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("maturity-report")
         MATURITY_REPORT("maturity-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("certification-report")
         CERTIFICATION_REPORT("certification-report"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("codified-infrastructure")
         CODIFIED_INFRASTRUCTURE("codified-infrastructure"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("quality-metrics")
         QUALITY_METRICS("quality-metrics"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("log")
         LOG("log"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("configuration")
         CONFIGURATION("configuration"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("evidence")
         EVIDENCE("evidence"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("formulation")
         FORMULATION("formulation"),
+        @VersionFilter(Version.VERSION_16)
         @JsonProperty("rfc-9116")
         RFC_9116("rfc-9116"),
         @VersionFilter(Version.VERSION_16)
@@ -121,6 +145,21 @@ public class ExternalReference {
         @VersionFilter(Version.VERSION_16)
         @JsonProperty("digital-signature")
         DIGITAL_SIGNATURE("digital-signature"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("patent")
+        PATENT("patent"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("patent-family")
+        PATENT_FAMILY("patent-family"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("patent-assertion")
+        PATENT_ASSERTION("patent-assertion"),
+        @VersionFilter(Version.VERSION_17)
+        @JsonProperty("citation")
+        CITATION("citation"),
+        @VersionFilter(Version.VERSION_15)
+        @JsonProperty("poam")
+        POAM("poam"),
         @JsonProperty("other")
         OTHER("other");
 
@@ -151,6 +190,9 @@ public class ExternalReference {
 
     @VersionFilter(Version.VERSION_13)
     private List<Hash> hashes;
+
+    @VersionFilter(Version.VERSION_17)
+    private List<Property> properties;
 
     public String getUrl() {
         return url;
@@ -194,6 +236,17 @@ public class ExternalReference {
         this.hashes.add(hash);
     }
 
+    @JacksonXmlElementWrapper(localName = "properties")
+    @JacksonXmlProperty(localName = "property")
+    @VersionFilter(Version.VERSION_17)
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -202,11 +255,12 @@ public class ExternalReference {
         return Objects.equals(url, reference.url) &&
                 type == reference.type &&
                 Objects.equals(comment, reference.comment) &&
-                Objects.equals(hashes, reference.hashes);
+                Objects.equals(hashes, reference.hashes) &&
+                Objects.equals(properties, reference.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, type, comment, hashes);
+        return Objects.hash(url, type, comment, hashes, properties);
     }
 }

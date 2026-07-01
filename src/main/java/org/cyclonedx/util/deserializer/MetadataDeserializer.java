@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.Component;
+import org.cyclonedx.model.DistributionConstraints;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.Lifecycles;
 import org.cyclonedx.model.Metadata;
@@ -90,6 +91,11 @@ public class MetadataDeserializer
       ToolsJsonParser toolsParser = new ToolsJsonParser(node, jsonParser, ctxt);
       metadata.setTools(toolsParser.getTools());
       metadata.setToolChoice(toolsParser.getToolInformation());
+    }
+
+    if (node.has("distributionConstraints")) {
+      DistributionConstraints dc = mapper.convertValue(node.get("distributionConstraints"), DistributionConstraints.class);
+      metadata.setDistributionConstraints(dc);
     }
 
     return metadata;
