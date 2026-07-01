@@ -8,10 +8,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
+import org.cyclonedx.model.VersionFilter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "algorithms", "identifiers"})
+@JsonPropertyOrder({"name", "algorithms", "identifiers", "tlsGroups", "tlsSignatureSchemes"})
 public class CipherSuite
 {
 
@@ -20,6 +22,12 @@ public class CipherSuite
   private List<String> algorithms;
 
   private List<String> identifiers;
+
+  @VersionFilter(Version.VERSION_17)
+  private List<String> tlsGroups;
+
+  @VersionFilter(Version.VERSION_17)
+  private List<String> tlsSignatureSchemes;
 
   public String getName() {
     return name;
@@ -49,6 +57,28 @@ public class CipherSuite
     this.identifiers = identifiers;
   }
 
+  @JacksonXmlElementWrapper(localName = "tlsGroups")
+  @JacksonXmlProperty(localName = "group")
+  @VersionFilter(Version.VERSION_17)
+  public List<String> getTlsGroups() {
+    return tlsGroups;
+  }
+
+  public void setTlsGroups(final List<String> tlsGroups) {
+    this.tlsGroups = tlsGroups;
+  }
+
+  @JacksonXmlElementWrapper(localName = "tlsSignatureSchemes")
+  @JacksonXmlProperty(localName = "signatureScheme")
+  @VersionFilter(Version.VERSION_17)
+  public List<String> getTlsSignatureSchemes() {
+    return tlsSignatureSchemes;
+  }
+
+  public void setTlsSignatureSchemes(final List<String> tlsSignatureSchemes) {
+    this.tlsSignatureSchemes = tlsSignatureSchemes;
+  }
+
   @Override
   public boolean equals(final Object object) {
     if (this == object) {
@@ -59,11 +89,12 @@ public class CipherSuite
     }
     CipherSuite that = (CipherSuite) object;
     return Objects.equals(name, that.name) && Objects.equals(algorithms, that.algorithms) &&
-        Objects.equals(identifiers, that.identifiers);
+        Objects.equals(identifiers, that.identifiers) && Objects.equals(tlsGroups, that.tlsGroups) &&
+        Objects.equals(tlsSignatureSchemes, that.tlsSignatureSchemes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, algorithms, identifiers);
+    return Objects.hash(name, algorithms, identifiers, tlsGroups, tlsSignatureSchemes);
   }
 }

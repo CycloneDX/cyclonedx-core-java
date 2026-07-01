@@ -680,6 +680,352 @@ public class BomJsonGeneratorTest {
         assertTrue(parser.isValid(jsonString.getBytes(StandardCharsets.UTF_8), version));
     }
 
+    // ==================== CycloneDX 1.7 License Tests ====================
+
+    @Test
+    public void schema17_testLicenseMixedChoice() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-choice-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseMixedChoice_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-choice-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithText() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-expression-with-text-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithText_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-expression-with-text-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithLicensing() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-expression-with-licensing-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseExpressionWithLicensing_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-expression-with-licensing-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseDeclaredConcludedMix() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-license-declared-concluded-mix-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testLicenseDeclaredConcludedMix_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-license-declared-concluded-mix-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    // ==================== CycloneDX 1.7 Citation Tests ====================
+
+    @Test
+    public void schema17_testCitations() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-citations-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCitations_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-citations-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    // ==================== CycloneDX 1.7 Patent Tests ====================
+
+    @Test
+    public void schema17_testPatent() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-patent-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testPatent_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-patent-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    // ==================== CycloneDX 1.7 External Component Tests ====================
+
+    @Test
+    public void schema17_testComponentExternalVersionRange() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-component-external-with-versionRange.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testComponentExternalVersionRange_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-component-external-with-versionRange.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testComponentExternalWithVersion() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-component-external-with-version.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testComponentExternalWithVersion_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-component-external-with-version.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testComponentExternalWithoutVersion() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-component-external-without-version.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testComponentExternalWithoutVersion_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-component-external-without-version.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testExternalReferenceProperties() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-external-reference-properties-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testExternalReferenceProperties_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-external-reference-properties-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testMetadataDistribution() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-metadata-distribution-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testMetadataDistribution_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-metadata-distribution-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    // ==================== CycloneDX 1.7 Cryptography Tests ====================
+
+    @Test
+    public void schema17_testCryptographyFull() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-cryptography-full-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyFull_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-cryptography-full-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyCertificateAdvanced() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-cryptography-certificate-advanced-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyCertificateAdvanced_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-cryptography-certificate-advanced-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyImplementation() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonJsonBom("/1.7/valid-cryptography-implementation-1.7.json");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void schema17_testCryptographyImplementation_xml() throws Exception {
+        Version version = Version.VERSION_17;
+        Bom bom = createCommonXmlBom("/1.7/valid-cryptography-implementation-1.7.xml");
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        File loadedFile = writeToFile(generator.toJsonString());
+
+        JsonParser parser = new JsonParser();
+        assertTrue(parser.isValid(loadedFile, version));
+    }
+
     private void assertExternalReferenceInfo(Bom bom) {
         assertEquals(3, bom.getExternalReferences().size());
         assertEquals(3, bom.getComponents().get(0).getExternalReferences().size());

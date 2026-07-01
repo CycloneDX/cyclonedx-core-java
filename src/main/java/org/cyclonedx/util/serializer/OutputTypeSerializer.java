@@ -7,20 +7,26 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.apache.commons.collections4.CollectionUtils;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.formulation.common.OutputType;
+
+import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
 
 public class OutputTypeSerializer
     extends StdSerializer<OutputType>
 {
   private final boolean isXml;
 
-  public OutputTypeSerializer(boolean isXml) {
-    this(null, isXml);
+  private final Version version;
+
+  public OutputTypeSerializer(boolean isXml, Version version) {
+    this(null, isXml, version);
   }
 
-  public OutputTypeSerializer(Class<OutputType> t, boolean isXml) {
+  public OutputTypeSerializer(Class<OutputType> t, boolean isXml, Version version) {
     super(t);
     this.isXml = isXml;
+    this.version = version;
   }
 
   @Override
@@ -39,22 +45,30 @@ public class OutputTypeSerializer
   {
     jsonGenerator.writeStartObject();
 
-    if (output.getResource() != null) {
+    if (output.getResource() != null && shouldSerializeField(output, version, "resource")) {
       jsonGenerator.writeFieldName("resource");
-      jsonGenerator.writeObject( output.getResource());
+      jsonGenerator.writeObject(output.getResource());
     }
-    else if (output.getEnvironmentVars() != null) {
-      new EnvironmentVarsSerializer(isXml).serialize(output.getEnvironmentVars(), jsonGenerator, serializerProvider);
+    else if (output.getEnvironmentVars() != null && shouldSerializeField(output, version, "environmentVars")) {
+      new EnvironmentVarsSerializer(isXml, version).serialize(output.getEnvironmentVars(), jsonGenerator, serializerProvider);
     }
-    else if (output.getData() != null) {
+    else if (output.getData() != null && shouldSerializeField(output, version, "data")) {
       jsonGenerator.writeFieldName("data");
-      jsonGenerator.writeObject( output.getData());
+      jsonGenerator.writeObject(output.getData());
     }
 
-    SerializerUtils.writeField(jsonGenerator, "type", output.getType());
-    SerializerUtils.writeField(jsonGenerator, "source", output.getSource());
-    SerializerUtils.writeField(jsonGenerator, "target", output.getTarget());
-    SerializerUtils.writeField(jsonGenerator, "properties", output.getProperties());
+    if (output.getType() != null && shouldSerializeField(output, version, "type")) {
+      SerializerUtils.writeField(jsonGenerator, "type", output.getType());
+    }
+    if (output.getSource() != null && shouldSerializeField(output, version, "source")) {
+      SerializerUtils.writeField(jsonGenerator, "source", output.getSource());
+    }
+    if (output.getTarget() != null && shouldSerializeField(output, version, "target")) {
+      SerializerUtils.writeField(jsonGenerator, "target", output.getTarget());
+    }
+    if (output.getProperties() != null && shouldSerializeField(output, version, "properties")) {
+      SerializerUtils.writeField(jsonGenerator, "properties", output.getProperties());
+    }
     jsonGenerator.writeEndObject();
   }
 
@@ -63,33 +77,33 @@ public class OutputTypeSerializer
   {
     xmlGenerator.writeStartObject();
 
-    if (output.getResource() != null) {
+    if (output.getResource() != null && shouldSerializeField(output, version, "resource")) {
       xmlGenerator.writeFieldName("resource");
-      xmlGenerator.writeObject( output.getResource());
+      xmlGenerator.writeObject(output.getResource());
     }
-    else if (output.getEnvironmentVars() != null) {
-      new EnvironmentVarsSerializer(isXml).serialize(output.getEnvironmentVars(), xmlGenerator, serializerProvider);
+    else if (output.getEnvironmentVars() != null && shouldSerializeField(output, version, "environmentVars")) {
+      new EnvironmentVarsSerializer(isXml, version).serialize(output.getEnvironmentVars(), xmlGenerator, serializerProvider);
     }
-    else if (output.getData() != null) {
+    else if (output.getData() != null && shouldSerializeField(output, version, "data")) {
       xmlGenerator.writeFieldName("data");
-      xmlGenerator.writeObject( output.getData());
+      xmlGenerator.writeObject(output.getData());
     }
 
-    if (output.getType() != null) {
+    if (output.getType() != null && shouldSerializeField(output, version, "type")) {
       xmlGenerator.writeFieldName("type");
       xmlGenerator.writeObject(output.getType());
     }
-    if (output.getSource() != null) {
+    if (output.getSource() != null && shouldSerializeField(output, version, "source")) {
       xmlGenerator.writeFieldName("source");
       xmlGenerator.writeObject(output.getSource());
     }
-    if (output.getTarget() != null) {
+    if (output.getTarget() != null && shouldSerializeField(output, version, "target")) {
       xmlGenerator.writeFieldName("target");
       xmlGenerator.writeObject(output.getTarget());
     }
-    if (CollectionUtils.isNotEmpty(output.getProperties())) {
+    if (CollectionUtils.isNotEmpty(output.getProperties()) && shouldSerializeField(output, version, "properties")) {
       xmlGenerator.writeFieldName("properties");
-      xmlGenerator.writeObject( output.getProperties());
+      xmlGenerator.writeObject(output.getProperties());
     }
     xmlGenerator.writeEndObject();
   }

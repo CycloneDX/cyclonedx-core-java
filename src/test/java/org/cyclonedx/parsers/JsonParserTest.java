@@ -24,6 +24,7 @@ import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
+import org.cyclonedx.model.TlpClassification;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -63,6 +64,13 @@ import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
+import org.cyclonedx.model.license.ExpressionDetailed;
+import org.cyclonedx.model.license.ExpressionDetail;
+import org.cyclonedx.model.Citation;
+import org.cyclonedx.model.Patent;
+import org.cyclonedx.model.PatentFamily;
+import org.cyclonedx.model.PatentAssertion;
+import org.cyclonedx.model.PatentItem;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.ArrayList;
@@ -299,6 +307,244 @@ public class JsonParserTest
         assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", expression.getValue());
         assertEquals("my-license", expression.getBomRef());
         assertEquals(Acknowledgement.DECLARED, expression.getAcknowledgement());
+    }
+
+    @Test
+    public void schema17_license_mixed_choice() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-license-choice-1.7.json");
+
+        assertNotNull(bom.getComponents());
+        Component component = bom.getComponents().get(0);
+        LicenseChoice lc = component.getLicenses();
+        assertNotNull(lc);
+        assertNotNull(lc.getItems());
+        assertEquals(4, lc.getItems().size());
+
+        // First item: license with id
+        assertNotNull(lc.getItems().get(0).getLicense());
+        assertEquals("Apache-2.0", lc.getItems().get(0).getLicense().getId());
+
+        // Second item: expression
+        assertNotNull(lc.getItems().get(1).getExpression());
+        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", lc.getItems().get(1).getExpression().getValue());
+
+        // Third item: license with name and text
+        assertNotNull(lc.getItems().get(2).getLicense());
+        assertEquals("My Own License", lc.getItems().get(2).getLicense().getName());
+        assertNotNull(lc.getItems().get(2).getLicense().getAttachmentText());
+        assertTrue(lc.getItems().get(2).getLicense().getAttachmentText().getText().contains("Lorem ipsum"));
+
+        // Fourth item: expression-detailed
+        assertNotNull(lc.getItems().get(3).getExpressionDetailed());
+        ExpressionDetailed ed = lc.getItems().get(3).getExpressionDetailed();
+        assertEquals("LicenseRef-MIT-Style-2", ed.getExpression());
+        assertNotNull(ed.getExpressionDetails());
+        assertEquals(1, ed.getExpressionDetails().size());
+        assertEquals("LicenseRef-MIT-Style-2", ed.getExpressionDetails().get(0).getLicenseIdentifier());
+        assertEquals("https://example.com/license", ed.getExpressionDetails().get(0).getUrl());
+    }
+
+    @Test
+    public void schema17_license_expression_detailed_with_text() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-license-expression-with-text-1.7.json");
+
+        assertNotNull(bom.getComponents());
+        Component component = bom.getComponents().get(0);
+        LicenseChoice lc = component.getLicenses();
+        assertNotNull(lc);
+        assertNotNull(lc.getItems());
+        assertEquals(1, lc.getItems().size());
+
+        ExpressionDetailed ed = lc.getItems().get(0).getExpressionDetailed();
+        assertNotNull(ed);
+        assertEquals("LicenseRef-my-custom-license AND (EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0) AND MIT", ed.getExpression());
+        assertEquals("my-application-license", ed.getBomRef());
+        assertEquals(Acknowledgement.DECLARED, ed.getAcknowledgement());
+
+        assertNotNull(ed.getExpressionDetails());
+        assertEquals(5, ed.getExpressionDetails().size());
+
+        // First detail: LicenseRef-my-custom-license
+        ExpressionDetail detail0 = ed.getExpressionDetails().get(0);
+        assertEquals("LicenseRef-my-custom-license", detail0.getLicenseIdentifier());
+        assertNotNull(detail0.getText());
+        assertTrue(detail0.getText().getText().contains("Lorem ipsum"));
+        assertEquals("https://my-application.example.com/license.txt", detail0.getUrl());
+
+        // Second detail: EPL-2.0
+        ExpressionDetail detail1 = ed.getExpressionDetails().get(1);
+        assertEquals("EPL-2.0", detail1.getLicenseIdentifier());
+        assertNotNull(detail1.getText());
+        assertTrue(detail1.getText().getText().contains("Eclipse Public License"));
+
+        // Third detail: GPL-2.0 WITH Classpath-exception-2.0
+        ExpressionDetail detail2 = ed.getExpressionDetails().get(2);
+        assertEquals("GPL-2.0 WITH Classpath-exception-2.0", detail2.getLicenseIdentifier());
+        assertNotNull(detail2.getText());
+        assertTrue(detail2.getText().getText().contains("GNU GENERAL PUBLIC LICENSE"));
+        assertEquals("text/plain", detail2.getText().getContentType());
+
+        // Fourth detail: MIT (component B)
+        ExpressionDetail detail3 = ed.getExpressionDetails().get(3);
+        assertEquals("MIT", detail3.getLicenseIdentifier());
+        assertEquals("LicenseDetails-component-B", detail3.getBomRef());
+        assertNotNull(detail3.getText());
+        assertTrue(detail3.getText().getText().contains("Component-B-Creators Inc"));
+
+        // Fifth detail: MIT (component C)
+        ExpressionDetail detail4 = ed.getExpressionDetails().get(4);
+        assertEquals("MIT", detail4.getLicenseIdentifier());
+        assertEquals("LicenseDetails-component-C", detail4.getBomRef());
+        assertNotNull(detail4.getText());
+        assertTrue(detail4.getText().getText().contains("Component-C-Creators Org"));
+    }
+
+    @Test
+    public void schema17_license_expression_detailed_with_licensing() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-license-expression-with-licensing-1.7.json");
+
+        assertNotNull(bom.getComponents());
+        Component component = bom.getComponents().get(0);
+        LicenseChoice lc = component.getLicenses();
+        assertNotNull(lc);
+        assertNotNull(lc.getItems());
+        assertEquals(1, lc.getItems().size());
+
+        ExpressionDetailed ed = lc.getItems().get(0).getExpressionDetailed();
+        assertNotNull(ed);
+        assertEquals("LicenseRef-AcmeCommercialLicense", ed.getExpression());
+        assertEquals("acme-license-1", ed.getBomRef());
+
+        assertNotNull(ed.getLicensing());
+        assertNotNull(ed.getLicensing().getAltIds());
+        assertEquals(2, ed.getLicensing().getAltIds().size());
+        assertTrue(ed.getLicensing().getAltIds().contains("acme"));
+        assertTrue(ed.getLicensing().getAltIds().contains("acme-license"));
+
+        assertNotNull(ed.getLicensing().getLicensor());
+        assertNotNull(ed.getLicensing().getLicensor().getOrganization());
+        assertEquals("Acme Inc", ed.getLicensing().getLicensor().getOrganization().getName());
+
+        assertNotNull(ed.getLicensing().getLicensee());
+        assertNotNull(ed.getLicensing().getLicensee().getOrganization());
+        assertEquals("Example Co.", ed.getLicensing().getLicensee().getOrganization().getName());
+
+        assertNotNull(ed.getLicensing().getPurchaser());
+        assertNotNull(ed.getLicensing().getPurchaser().getIndividual());
+        assertEquals("Samantha Wright", ed.getLicensing().getPurchaser().getIndividual().getName());
+
+        assertEquals("PO-12345", ed.getLicensing().getPurchaseOrder());
+
+        assertNotNull(ed.getLicensing().getLicenseTypes());
+        assertEquals(1, ed.getLicensing().getLicenseTypes().size());
+    }
+
+    @Test
+    public void schema17_license_declared_concluded_mix() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-license-declared-concluded-mix-1.7.json");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(5, bom.getComponents().size());
+
+        // Situation A: Multiple declared licenses + concluded expression
+        Component sitA = bom.getComponents().get(0);
+        assertEquals("situation-A", sitA.getName());
+        LicenseChoice lcA = sitA.getLicenses();
+        assertNotNull(lcA);
+        assertNotNull(lcA.getItems());
+        assertEquals(4, lcA.getItems().size());
+        // 3 declared licenses
+        assertNotNull(lcA.getItems().get(0).getLicense());
+        assertEquals("MIT", lcA.getItems().get(0).getLicense().getId());
+        assertEquals(Acknowledgement.DECLARED, lcA.getItems().get(0).getLicense().getAcknowledgement());
+        assertNotNull(lcA.getItems().get(1).getLicense());
+        assertEquals("PostgreSQL", lcA.getItems().get(1).getLicense().getId());
+        assertNotNull(lcA.getItems().get(2).getLicense());
+        assertEquals("Apache Software License", lcA.getItems().get(2).getLicense().getName());
+        // 1 concluded expression
+        assertNotNull(lcA.getItems().get(3).getExpression());
+        assertEquals(Acknowledgement.CONCLUDED, lcA.getItems().get(3).getExpression().getAcknowledgement());
+
+        // Situation B: declared expression + concluded expression
+        Component sitB = bom.getComponents().get(1);
+        assertEquals("situation-B", sitB.getName());
+        LicenseChoice lcB = sitB.getLicenses();
+        assertNotNull(lcB);
+        assertNotNull(lcB.getItems());
+        assertEquals(2, lcB.getItems().size());
+        assertNotNull(lcB.getItems().get(0).getExpression());
+        assertEquals(Acknowledgement.DECLARED, lcB.getItems().get(0).getExpression().getAcknowledgement());
+        assertNotNull(lcB.getItems().get(1).getExpression());
+        assertEquals(Acknowledgement.CONCLUDED, lcB.getItems().get(1).getExpression().getAcknowledgement());
+
+        // Situation C: declared expression + concluded license ID
+        Component sitC = bom.getComponents().get(2);
+        assertEquals("situation-C", sitC.getName());
+        LicenseChoice lcC = sitC.getLicenses();
+        assertNotNull(lcC);
+        assertNotNull(lcC.getItems());
+        assertEquals(2, lcC.getItems().size());
+        assertNotNull(lcC.getItems().get(0).getExpression());
+        assertEquals(Acknowledgement.DECLARED, lcC.getItems().get(0).getExpression().getAcknowledgement());
+        assertNotNull(lcC.getItems().get(1).getLicense());
+        assertEquals("GPL-3.0-only", lcC.getItems().get(1).getLicense().getId());
+        assertEquals(Acknowledgement.CONCLUDED, lcC.getItems().get(1).getLicense().getAcknowledgement());
+
+        // Situation D: declared expression-detailed with texts + concluded license with text
+        Component sitD = bom.getComponents().get(3);
+        assertEquals("situation-D", sitD.getName());
+        LicenseChoice lcD = sitD.getLicenses();
+        assertNotNull(lcD);
+        assertNotNull(lcD.getItems());
+        assertEquals(2, lcD.getItems().size());
+        assertNotNull(lcD.getItems().get(0).getExpressionDetailed());
+        ExpressionDetailed edD = lcD.getItems().get(0).getExpressionDetailed();
+        assertEquals("GPL-3.0-or-later OR GPL-2.0", edD.getExpression());
+        assertEquals(Acknowledgement.DECLARED, edD.getAcknowledgement());
+        assertNotNull(edD.getExpressionDetails());
+        assertEquals(2, edD.getExpressionDetails().size());
+        assertNotNull(lcD.getItems().get(1).getLicense());
+        assertEquals(Acknowledgement.CONCLUDED, lcD.getItems().get(1).getLicense().getAcknowledgement());
+
+        // Situation E: declared licenses with URLs + concluded expression-detailed with URLs
+        Component sitE = bom.getComponents().get(4);
+        assertEquals("situation-E", sitE.getName());
+        LicenseChoice lcE = sitE.getLicenses();
+        assertNotNull(lcE);
+        assertNotNull(lcE.getItems());
+        assertEquals(4, lcE.getItems().size());
+        // 3 declared licenses with URLs
+        assertNotNull(lcE.getItems().get(0).getLicense());
+        assertEquals("https://example.com/licenses/MIT", lcE.getItems().get(0).getLicense().getUrl());
+        // 1 concluded expression-detailed with URLs
+        assertNotNull(lcE.getItems().get(3).getExpressionDetailed());
+        ExpressionDetailed edE = lcE.getItems().get(3).getExpressionDetailed();
+        assertEquals(Acknowledgement.CONCLUDED, edE.getAcknowledgement());
+        assertNotNull(edE.getExpressionDetails());
+        assertEquals(3, edE.getExpressionDetails().size());
+        assertEquals("https://example.com/licenses/MIT", edE.getExpressionDetails().get(0).getUrl());
+    }
+
+    @Test
+    public void schema17_license_backward_compat_getLicenses() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-license-choice-1.7.json");
+
+        Component component = bom.getComponents().get(0);
+        LicenseChoice lc = component.getLicenses();
+
+        // Deprecated getLicenses() should still return only License items
+        assertNotNull(lc.getLicenses());
+        assertEquals(2, lc.getLicenses().size());
+        assertEquals("Apache-2.0", lc.getLicenses().get(0).getId());
+        assertEquals("My Own License", lc.getLicenses().get(1).getName());
+
+        // Deprecated getExpression() should return the first expression
+        assertNotNull(lc.getExpression());
+        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", lc.getExpression().getValue());
+
+        // getExpressionDetailed() should return the first expression-detailed
+        assertNotNull(lc.getExpressionDetailed());
+        assertEquals("LicenseRef-MIT-Style-2", lc.getExpressionDetailed().getExpression());
     }
 
     @Test
@@ -600,5 +846,194 @@ public class JsonParserTest
     public void testIssue492Regression() throws Exception {
         final Bom bom = getJsonBom("regression/issue492.json");
         assertEquals(2, bom.getMetadata().getTools().size());
+    }
+
+    // ==================== CycloneDX 1.7 Citation Tests ====================
+
+    @Test
+    public void schema17_citations() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-citations-1.7.json");
+
+        assertNotNull(bom.getCitations());
+        assertEquals(5, bom.getCitations().size());
+
+        // Citation 1: pointers + attributedTo
+        Citation c1 = bom.getCitations().get(0);
+        assertEquals("citation-1", c1.getBomRef());
+        assertNotNull(c1.getPointers());
+        assertEquals(1, c1.getPointers().size());
+        assertEquals("/components/0/name", c1.getPointers().get(0));
+        assertNotNull(c1.getTimestamp());
+        assertEquals("person-1", c1.getAttributedTo());
+        assertNull(c1.getProcess());
+        assertNotNull(c1.getNote());
+
+        // Citation 2: pointers + process
+        Citation c2 = bom.getCitations().get(1);
+        assertEquals("citation-2", c2.getBomRef());
+        assertNotNull(c2.getPointers());
+        assertEquals("task-license-scan", c2.getProcess());
+        assertNull(c2.getAttributedTo());
+
+        // Citation 3: expressions + process
+        Citation c3 = bom.getCitations().get(2);
+        assertEquals("citation-3", c3.getBomRef());
+        assertNotNull(c3.getExpressions());
+        assertEquals(1, c3.getExpressions().size());
+        assertNull(c3.getPointers());
+
+        // Citation 4: expressions + attributedTo + process
+        Citation c4 = bom.getCitations().get(3);
+        assertEquals("citation-4", c4.getBomRef());
+        assertNotNull(c4.getExpressions());
+        assertEquals("scan-tool-1", c4.getAttributedTo());
+        assertEquals("task-license-scan", c4.getProcess());
+    }
+
+    // ==================== CycloneDX 1.7 External Component Tests ====================
+
+    @Test
+    public void schema17_component_external_with_versionRange() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-component-external-with-versionRange.json");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertEquals("libcurl", c.getName());
+        assertEquals(true, c.getIsExternal());
+        assertEquals("vers:generic/>=8.7.1|<9.0.0", c.getVersionRange());
+        assertNull(c.getVersion());
+        assertEquals("libcurl ^8.7.1", c.getDescription());
+    }
+
+    @Test
+    public void schema17_component_external_with_version() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-component-external-with-version.json");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertEquals("Ubuntu", c.getName());
+        assertEquals(true, c.getIsExternal());
+        assertEquals("24.04", c.getVersion());
+        assertNull(c.getVersionRange());
+    }
+
+    @Test
+    public void schema17_component_external_without_version() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-component-external-without-version.json");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertEquals("Windows 11 (64bit)", c.getName());
+        assertEquals(true, c.getIsExternal());
+        assertNull(c.getVersion());
+        assertNull(c.getVersionRange());
+    }
+
+    @Test
+    public void schema17_external_reference_properties() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-external-reference-properties-1.7.json");
+
+        assertNotNull(bom.getComponents());
+        assertEquals(1, bom.getComponents().size());
+
+        Component c = bom.getComponents().get(0);
+        assertNotNull(c.getExternalReferences());
+        assertEquals(1, c.getExternalReferences().size());
+
+        ExternalReference ref = c.getExternalReferences().get(0);
+        assertEquals(ExternalReference.Type.COMPONENT_ANALYSIS_REPORT, ref.getType());
+        assertEquals("http://example.com/extref/component-analysis-report", ref.getUrl());
+        assertNotNull(ref.getProperties());
+        assertEquals(2, ref.getProperties().size());
+        assertEquals("author", ref.getProperties().get(0).getName());
+        assertEquals("John Doe", ref.getProperties().get(0).getValue());
+        assertEquals("timestamp", ref.getProperties().get(1).getName());
+    }
+
+    @Test
+    public void schema17_metadata_distribution() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-metadata-distribution-1.7.json");
+
+        assertNotNull(bom.getMetadata());
+        assertNotNull(bom.getMetadata().getDistributionConstraints());
+        assertEquals(TlpClassification.RED, bom.getMetadata().getDistributionConstraints().getTlp());
+    }
+
+    // ==================== CycloneDX 1.7 Patent Tests ====================
+
+    @Test
+    public void schema17_patent() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-patent-1.7.json");
+
+        // Definitions patents
+        assertNotNull(bom.getDefinitions());
+        assertNotNull(bom.getDefinitions().getPatents());
+        assertEquals(4, bom.getDefinitions().getPatents().size());
+
+        // First 3 are patents
+        PatentItem item1 = bom.getDefinitions().getPatents().get(0);
+        assertNotNull(item1.getPatent());
+        assertNull(item1.getPatentFamily());
+        Patent p1 = item1.getPatent();
+        assertEquals("patent-1", p1.getBomRef());
+        assertEquals("US1234567890", p1.getPatentNumber());
+        assertEquals("US", p1.getJurisdiction());
+        assertEquals("Efficient Data Processing Algorithm", p1.getTitle());
+        assertNotNull(p1.getFilingDate());
+        assertNotNull(p1.getGrantDate());
+        assertEquals(Patent.PatentLegalStatus.IN_FORCE, p1.getPatentLegalStatus());
+        assertNotNull(p1.getPatentAssignee());
+        assertEquals(1, p1.getPatentAssignee().size());
+        assertNotNull(p1.getExternalReferences());
+        assertEquals(1, p1.getExternalReferences().size());
+        assertEquals(ExternalReference.Type.PATENT, p1.getExternalReferences().get(0).getType());
+
+        // Patent 2 has priority application
+        Patent p2 = bom.getDefinitions().getPatents().get(1).getPatent();
+        assertEquals("patent-2", p2.getBomRef());
+        assertNotNull(p2.getPriorityApplication());
+        assertEquals("US1234567890", p2.getPriorityApplication().getApplicationNumber());
+        assertEquals("US", p2.getPriorityApplication().getJurisdiction());
+
+        // Fourth is a patent family
+        PatentItem item4 = bom.getDefinitions().getPatents().get(3);
+        assertNull(item4.getPatent());
+        assertNotNull(item4.getPatentFamily());
+        PatentFamily pf = item4.getPatentFamily();
+        assertEquals("patent-family-1", pf.getBomRef());
+        assertEquals("PF-2023001", pf.getFamilyId());
+        assertNotNull(pf.getMembers());
+        assertEquals(2, pf.getMembers().size());
+        assertTrue(pf.getMembers().contains("patent-1"));
+        assertTrue(pf.getMembers().contains("patent-2"));
+        assertNotNull(pf.getExternalReferences());
+        assertEquals(ExternalReference.Type.PATENT_FAMILY, pf.getExternalReferences().get(0).getType());
+
+        // Component patent assertions
+        assertNotNull(bom.getComponents());
+        Component comp = bom.getComponents().get(0);
+        assertNotNull(comp.getPatentAssertions());
+        assertEquals(2, comp.getPatentAssertions().size());
+        PatentAssertion pa1 = comp.getPatentAssertions().get(0);
+        assertEquals("patent-assertion-1", pa1.getBomRef());
+        assertEquals(PatentAssertion.AssertionType.OWNERSHIP, pa1.getAssertionType());
+        assertEquals(1, pa1.getPatentRefs().size());
+        assertEquals("patent-1", pa1.getPatentRefs().get(0));
+
+        PatentAssertion pa2 = comp.getPatentAssertions().get(1);
+        assertEquals(PatentAssertion.AssertionType.LICENSE, pa2.getAssertionType());
+
+        // Service patent assertions
+        assertNotNull(bom.getServices());
+        assertNotNull(bom.getServices().get(0).getPatentAssertions());
+        assertEquals(1, bom.getServices().get(0).getPatentAssertions().size());
+        PatentAssertion pa3 = bom.getServices().get(0).getPatentAssertions().get(0);
+        assertEquals(PatentAssertion.AssertionType.EXCLUSIVE_RIGHTS, pa3.getAssertionType());
     }
 }

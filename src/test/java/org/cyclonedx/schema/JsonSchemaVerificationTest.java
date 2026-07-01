@@ -55,6 +55,9 @@ public class JsonSchemaVerificationTest extends BaseSchemaVerificationTest {
                 else if (file.endsWith("-1.6.json")) {
                     schemaVersion = Version.VERSION_16;
                 }
+                else if (file.endsWith("-1.7.json")) {
+                    schemaVersion = Version.VERSION_17;
+                }
                 else {
                     schemaVersion = null;
                 }
