@@ -86,6 +86,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#setVulnerabilities(java.util.List)" tabindex="0">setVulnerabilities(List)</a></li>
 <li><a href="#getAnnotations()" tabindex="0">getAnnotations()</a></li>
 <li><a href="#setAnnotations(java.util.List)" tabindex="0">setAnnotations(List)</a></li>
+<li><a href="#getCitations()" tabindex="0">getCitations()</a></li>
+<li><a href="#setCitations(java.util.List)" tabindex="0">setCitations(List)</a></li>
+<li><a href="#addCitation(org.cyclonedx.model.Citation)" tabindex="0">addCitation(Citation)</a></li>
 <li><a href="#getProperties()" tabindex="0">getProperties()</a></li>
 <li><a href="#setProperties(java.util.List)" tabindex="0">setProperties(List)</a></li>
 <li><a href="#addProperty(org.cyclonedx.model.Property)" tabindex="0">addProperty(Property)</a></li>
@@ -153,28 +156,34 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addComponent(org.cyclonedx.model.Component)" class="member-name-link">addComponent</a><wbr>(<a href="Component.html" title="class in org.cyclonedx.model">Component</a>&nbsp;component)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addCitation(org.cyclonedx.model.Citation)" class="member-name-link">addCitation</a><wbr>(<a href="Citation.html" title="class in org.cyclonedx.model">Citation</a>&nbsp;citation)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addDependency(org.cyclonedx.model.Dependency)" class="member-name-link">addDependency</a><wbr>(<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&nbsp;dependency)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addComponent(org.cyclonedx.model.Component)" class="member-name-link">addComponent</a><wbr>(<a href="Component.html" title="class in org.cyclonedx.model">Component</a>&nbsp;component)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addExternalReference(org.cyclonedx.model.ExternalReference)" class="member-name-link">addExternalReference</a><wbr>(<a href="ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&nbsp;externalReference)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addDependency(org.cyclonedx.model.Dependency)" class="member-name-link">addDependency</a><wbr>(<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&nbsp;dependency)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addProperty(org.cyclonedx.model.Property)" class="member-name-link">addProperty</a><wbr>(<a href="Property.html" title="class in org.cyclonedx.model">Property</a>&nbsp;property)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addExternalReference(org.cyclonedx.model.ExternalReference)" class="member-name-link">addExternalReference</a><wbr>(<a href="ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&nbsp;externalReference)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addService(org.cyclonedx.model.Service)" class="member-name-link">addService</a><wbr>(<a href="Service.html" title="class in org.cyclonedx.model">Service</a>&nbsp;service)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addProperty(org.cyclonedx.model.Property)" class="member-name-link">addProperty</a><wbr>(<a href="Property.html" title="class in org.cyclonedx.model">Property</a>&nbsp;property)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addService(org.cyclonedx.model.Service)" class="member-name-link">addService</a><wbr>(<a href="Service.html" title="class in org.cyclonedx.model">Service</a>&nbsp;service)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Annotation.html" title="class in org.cyclonedx.model">Annotation</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnnotations()" class="member-name-link">getAnnotations</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBomFormat()" class="member-name-link">getBomFormat</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Annotation.html" title="class in org.cyclonedx.model">Annotation</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnnotations()" class="member-name-link">getAnnotations</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBomFormat()" class="member-name-link">getBomFormat</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Citation.html" title="class in org.cyclonedx.model">Citation</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCitations()" class="member-name-link">getCitations</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Component.html" title="class in org.cyclonedx.model">Component</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getComponents()" class="member-name-link">getComponents</a>()</code></div>
@@ -233,50 +242,53 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAnnotations(java.util.List)" class="member-name-link">setAnnotations</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Annotation.html" title="class in org.cyclonedx.model">Annotation</a>&gt;&nbsp;annotations)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setComponents(java.util.List)" class="member-name-link">setComponents</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Component.html" title="class in org.cyclonedx.model">Component</a>&gt;&nbsp;components)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCitations(java.util.List)" class="member-name-link">setCitations</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Citation.html" title="class in org.cyclonedx.model">Citation</a>&gt;&nbsp;citations)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCompositions(java.util.List)" class="member-name-link">setCompositions</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Composition.html" title="class in org.cyclonedx.model">Composition</a>&gt;&nbsp;compositions)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setComponents(java.util.List)" class="member-name-link">setComponents</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Component.html" title="class in org.cyclonedx.model">Component</a>&gt;&nbsp;components)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDeclarations(org.cyclonedx.model.attestation.Declarations)" class="member-name-link">setDeclarations</a><wbr>(<a href="attestation/Declarations.html" title="class in org.cyclonedx.model.attestation">Declarations</a>&nbsp;declarations)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCompositions(java.util.List)" class="member-name-link">setCompositions</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Composition.html" title="class in org.cyclonedx.model">Composition</a>&gt;&nbsp;compositions)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDefinitions(org.cyclonedx.model.definition.Definition)" class="member-name-link">setDefinitions</a><wbr>(<a href="definition/Definition.html" title="class in org.cyclonedx.model.definition">Definition</a>&nbsp;definitions)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDeclarations(org.cyclonedx.model.attestation.Declarations)" class="member-name-link">setDeclarations</a><wbr>(<a href="attestation/Declarations.html" title="class in org.cyclonedx.model.attestation">Declarations</a>&nbsp;declarations)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDependencies(java.util.List)" class="member-name-link">setDependencies</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&gt;&nbsp;dependencies)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDefinitions(org.cyclonedx.model.definition.Definition)" class="member-name-link">setDefinitions</a><wbr>(<a href="definition/Definition.html" title="class in org.cyclonedx.model.definition">Definition</a>&nbsp;definitions)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExternalReferences(java.util.List)" class="member-name-link">setExternalReferences</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;externalReferences)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDependencies(java.util.List)" class="member-name-link">setDependencies</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&gt;&nbsp;dependencies)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFormulation(java.util.List)" class="member-name-link">setFormulation</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="formulation/Formula.html" title="class in org.cyclonedx.model.formulation">Formula</a>&gt;&nbsp;formulation)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExternalReferences(java.util.List)" class="member-name-link">setExternalReferences</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;externalReferences)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMetadata(org.cyclonedx.model.Metadata)" class="member-name-link">setMetadata</a><wbr>(<a href="Metadata.html" title="class in org.cyclonedx.model">Metadata</a>&nbsp;metadata)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFormulation(java.util.List)" class="member-name-link">setFormulation</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="formulation/Formula.html" title="class in org.cyclonedx.model.formulation">Formula</a>&gt;&nbsp;formulation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProperties(java.util.List)" class="member-name-link">setProperties</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Property.html" title="class in org.cyclonedx.model">Property</a>&gt;&nbsp;properties)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMetadata(org.cyclonedx.model.Metadata)" class="member-name-link">setMetadata</a><wbr>(<a href="Metadata.html" title="class in org.cyclonedx.model">Metadata</a>&nbsp;metadata)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSerialNumber(java.lang.String)" class="member-name-link">setSerialNumber</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serialNumber)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProperties(java.util.List)" class="member-name-link">setProperties</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Property.html" title="class in org.cyclonedx.model">Property</a>&gt;&nbsp;properties)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setServices(java.util.List)" class="member-name-link">setServices</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Service.html" title="class in org.cyclonedx.model">Service</a>&gt;&nbsp;services)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSerialNumber(java.lang.String)" class="member-name-link">setSerialNumber</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serialNumber)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSignature(org.cyclonedx.model.Signature)" class="member-name-link">setSignature</a><wbr>(<a href="Signature.html" title="class in org.cyclonedx.model">Signature</a>&nbsp;signature)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setServices(java.util.List)" class="member-name-link">setServices</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Service.html" title="class in org.cyclonedx.model">Service</a>&gt;&nbsp;services)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setVersion(int)" class="member-name-link">setVersion</a><wbr>(int&nbsp;version)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSignature(org.cyclonedx.model.Signature)" class="member-name-link">setSignature</a><wbr>(<a href="Signature.html" title="class in org.cyclonedx.model">Signature</a>&nbsp;signature)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setVulnerabilities(java.util.List)" class="member-name-link">setVulnerabilities</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="vulnerability/Vulnerability.html" title="class in org.cyclonedx.model.vulnerability">Vulnerability</a>&gt;&nbsp;vulnerabilities)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setVersion(int)" class="member-name-link">setVersion</a><wbr>(int&nbsp;version)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setXmlns(java.lang.String)" class="member-name-link">setXmlns</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;xmlns)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setVulnerabilities(java.util.List)" class="member-name-link">setVulnerabilities</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="vulnerability/Vulnerability.html" title="class in org.cyclonedx.model.vulnerability">Vulnerability</a>&gt;&nbsp;vulnerabilities)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setXmlns(java.lang.String)" class="member-name-link">setXmlns</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;xmlns)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -486,6 +498,30 @@ loadScripts(document, 'script');</script>
 <h3>setAnnotations</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAnnotations</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Annotation.html" title="class in org.cyclonedx.model">Annotation</a>&gt;&nbsp;annotations)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCitations()">
+<h3>getCitations</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Citation.html" title="class in org.cyclonedx.model">Citation</a>&gt;</span>&nbsp;<span class="element-name">getCitations</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setCitations(java.util.List)">
+<h3>setCitations</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCitations</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Citation.html" title="class in org.cyclonedx.model">Citation</a>&gt;&nbsp;citations)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="addCitation(org.cyclonedx.model.Citation)">
+<h3>addCitation</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addCitation</span><wbr><span class="parameters">(<a href="Citation.html" title="class in org.cyclonedx.model">Citation</a>&nbsp;citation)</span></div>
 </div>
 </section>
 </li>

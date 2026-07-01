@@ -68,6 +68,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#setPrimitive(org.cyclonedx.model.component.crypto.enums.Primitive)" tabindex="0">setPrimitive(Primitive)</a></li>
 <li><a href="#getParameterSetIdentifier()" tabindex="0">getParameterSetIdentifier()</a></li>
 <li><a href="#setParameterSetIdentifier(java.lang.String)" tabindex="0">setParameterSetIdentifier(String)</a></li>
+<li><a href="#getAlgorithmFamily()" tabindex="0">getAlgorithmFamily()</a></li>
+<li><a href="#setAlgorithmFamily(java.lang.String)" tabindex="0">setAlgorithmFamily(String)</a></li>
+<li><a href="#getEllipticCurve()" tabindex="0">getEllipticCurve()</a></li>
+<li><a href="#setEllipticCurve(java.lang.String)" tabindex="0">setEllipticCurve(String)</a></li>
 <li><a href="#getCurve()" tabindex="0">getCurve()</a></li>
 <li><a href="#setCurve(java.lang.String)" tabindex="0">setCurve(String)</a></li>
 <li><a href="#getExecutionEnvironment()" tabindex="0">getExecutionEnvironment()</a></li>
@@ -86,6 +90,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#setClassicalSecurityLevel(java.lang.Integer)" tabindex="0">setClassicalSecurityLevel(Integer)</a></li>
 <li><a href="#getNistQuantumSecurityLevel()" tabindex="0">getNistQuantumSecurityLevel()</a></li>
 <li><a href="#setNistQuantumSecurityLevel(java.lang.Integer)" tabindex="0">setNistQuantumSecurityLevel(Integer)</a></li>
+<li><a href="#getRelatedCryptographicAssets()" tabindex="0">getRelatedCryptographicAssets()</a></li>
+<li><a href="#setRelatedCryptographicAssets(java.util.List)" tabindex="0">setRelatedCryptographicAssets(List)</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 </ol>
@@ -136,17 +142,23 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="enums/CertificationLevel.html" title="enum in org.cyclonedx.model.component.crypto.enums">CertificationLevel</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCertificationLevel()" class="member-name-link">getCertificationLevel</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAlgorithmFamily()" class="member-name-link">getAlgorithmFamily</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getClassicalSecurityLevel()" class="member-name-link">getClassicalSecurityLevel</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="enums/CertificationLevel.html" title="enum in org.cyclonedx.model.component.crypto.enums">CertificationLevel</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCertificationLevel()" class="member-name-link">getCertificationLevel</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="enums/CryptoFunction.html" title="enum in org.cyclonedx.model.component.crypto.enums">CryptoFunction</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCryptoFunctions()" class="member-name-link">getCryptoFunctions</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getClassicalSecurityLevel()" class="member-name-link">getClassicalSecurityLevel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="enums/CryptoFunction.html" title="enum in org.cyclonedx.model.component.crypto.enums">CryptoFunction</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCryptoFunctions()" class="member-name-link">getCryptoFunctions</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurve()" class="member-name-link">getCurve</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurve()" class="member-name-link">getCurve</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEllipticCurve()" class="member-name-link">getEllipticCurve</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="enums/ExecutionEnvironment.html" title="enum in org.cyclonedx.model.component.crypto.enums">ExecutionEnvironment</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExecutionEnvironment()" class="member-name-link">getExecutionEnvironment</a>()</code></div>
@@ -169,8 +181,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="enums/Primitive.html" title="enum in org.cyclonedx.model.component.crypto.enums">Primitive</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPrimitive()" class="member-name-link">getPrimitive</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="RelatedCryptographicAsset.html" title="class in org.cyclonedx.model.component.crypto">RelatedCryptographicAsset</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRelatedCryptographicAssets()" class="member-name-link">getRelatedCryptographicAssets</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAlgorithmFamily(java.lang.String)" class="member-name-link">setAlgorithmFamily</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;algorithmFamily)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCertificationLevel(java.util.List)" class="member-name-link">setCertificationLevel</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="enums/CertificationLevel.html" title="enum in org.cyclonedx.model.component.crypto.enums">CertificationLevel</a>&gt;&nbsp;certificationLevel)</code></div>
@@ -185,25 +203,31 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurve(java.lang.String)" class="member-name-link">setCurve</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;curve)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExecutionEnvironment(org.cyclonedx.model.component.crypto.enums.ExecutionEnvironment)" class="member-name-link">setExecutionEnvironment</a><wbr>(<a href="enums/ExecutionEnvironment.html" title="enum in org.cyclonedx.model.component.crypto.enums">ExecutionEnvironment</a>&nbsp;executionEnvironment)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEllipticCurve(java.lang.String)" class="member-name-link">setEllipticCurve</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ellipticCurve)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setImplementationPlatform(org.cyclonedx.model.component.crypto.enums.ImplementationPlatform)" class="member-name-link">setImplementationPlatform</a><wbr>(<a href="enums/ImplementationPlatform.html" title="enum in org.cyclonedx.model.component.crypto.enums">ImplementationPlatform</a>&nbsp;implementationPlatform)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExecutionEnvironment(org.cyclonedx.model.component.crypto.enums.ExecutionEnvironment)" class="member-name-link">setExecutionEnvironment</a><wbr>(<a href="enums/ExecutionEnvironment.html" title="enum in org.cyclonedx.model.component.crypto.enums">ExecutionEnvironment</a>&nbsp;executionEnvironment)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMode(org.cyclonedx.model.component.crypto.enums.Mode)" class="member-name-link">setMode</a><wbr>(<a href="enums/Mode.html" title="enum in org.cyclonedx.model.component.crypto.enums">Mode</a>&nbsp;mode)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setImplementationPlatform(org.cyclonedx.model.component.crypto.enums.ImplementationPlatform)" class="member-name-link">setImplementationPlatform</a><wbr>(<a href="enums/ImplementationPlatform.html" title="enum in org.cyclonedx.model.component.crypto.enums">ImplementationPlatform</a>&nbsp;implementationPlatform)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNistQuantumSecurityLevel(java.lang.Integer)" class="member-name-link">setNistQuantumSecurityLevel</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;nistQuantumSecurityLevel)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMode(org.cyclonedx.model.component.crypto.enums.Mode)" class="member-name-link">setMode</a><wbr>(<a href="enums/Mode.html" title="enum in org.cyclonedx.model.component.crypto.enums">Mode</a>&nbsp;mode)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPadding(org.cyclonedx.model.component.crypto.enums.Padding)" class="member-name-link">setPadding</a><wbr>(<a href="enums/Padding.html" title="enum in org.cyclonedx.model.component.crypto.enums">Padding</a>&nbsp;padding)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNistQuantumSecurityLevel(java.lang.Integer)" class="member-name-link">setNistQuantumSecurityLevel</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;nistQuantumSecurityLevel)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setParameterSetIdentifier(java.lang.String)" class="member-name-link">setParameterSetIdentifier</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterSetIdentifier)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPadding(org.cyclonedx.model.component.crypto.enums.Padding)" class="member-name-link">setPadding</a><wbr>(<a href="enums/Padding.html" title="enum in org.cyclonedx.model.component.crypto.enums">Padding</a>&nbsp;padding)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPrimitive(org.cyclonedx.model.component.crypto.enums.Primitive)" class="member-name-link">setPrimitive</a><wbr>(<a href="enums/Primitive.html" title="enum in org.cyclonedx.model.component.crypto.enums">Primitive</a>&nbsp;primitive)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setParameterSetIdentifier(java.lang.String)" class="member-name-link">setParameterSetIdentifier</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterSetIdentifier)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPrimitive(org.cyclonedx.model.component.crypto.enums.Primitive)" class="member-name-link">setPrimitive</a><wbr>(<a href="enums/Primitive.html" title="enum in org.cyclonedx.model.component.crypto.enums">Primitive</a>&nbsp;primitive)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRelatedCryptographicAssets(java.util.List)" class="member-name-link">setRelatedCryptographicAssets</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="RelatedCryptographicAsset.html" title="class in org.cyclonedx.model.component.crypto">RelatedCryptographicAsset</a>&gt;&nbsp;relatedCryptographicAssets)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -267,6 +291,38 @@ loadScripts(document, 'script');</script>
 <h3>setParameterSetIdentifier</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setParameterSetIdentifier</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterSetIdentifier)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getAlgorithmFamily()">
+<h3>getAlgorithmFamily</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getAlgorithmFamily</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setAlgorithmFamily(java.lang.String)">
+<h3>setAlgorithmFamily</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAlgorithmFamily</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;algorithmFamily)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEllipticCurve()">
+<h3>getEllipticCurve</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getEllipticCurve</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setEllipticCurve(java.lang.String)">
+<h3>setEllipticCurve</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEllipticCurve</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ellipticCurve)</span></div>
 </div>
 </section>
 </li>
@@ -411,6 +467,22 @@ loadScripts(document, 'script');</script>
 <h3>setNistQuantumSecurityLevel</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setNistQuantumSecurityLevel</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;nistQuantumSecurityLevel)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getRelatedCryptographicAssets()">
+<h3>getRelatedCryptographicAssets</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="RelatedCryptographicAsset.html" title="class in org.cyclonedx.model.component.crypto">RelatedCryptographicAsset</a>&gt;</span>&nbsp;<span class="element-name">getRelatedCryptographicAssets</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setRelatedCryptographicAssets(java.util.List)">
+<h3>setRelatedCryptographicAssets</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRelatedCryptographicAssets</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="RelatedCryptographicAsset.html" title="class in org.cyclonedx.model.component.crypto">RelatedCryptographicAsset</a>&gt;&nbsp;relatedCryptographicAssets)</span></div>
 </div>
 </section>
 </li>

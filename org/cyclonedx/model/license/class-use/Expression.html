@@ -76,7 +76,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../Expression.html" title="class in org.cyclonedx.model.license">Expression</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">LicenseChoice.</span><code><a href="../../LicenseChoice.html#getExpression()" class="member-name-link">getExpression</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="../../LicenseChoice.html#getItems()"><code>LicenseChoice.getItems()</code></a> and filter by type instead.</div>
+</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../Expression.html" title="class in org.cyclonedx.model.license">Expression</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">LicenseItem.</span><code><a href="../../LicenseItem.html#getExpression()" class="member-name-link">getExpression</a>()</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../../package-summary.html">org.cyclonedx.model</a> with parameters of type <a href="../Expression.html" title="class in org.cyclonedx.model.license">Expression</a></span></div>
 <div class="summary-table three-column-summary">
@@ -84,8 +91,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">LicenseChoice.</span><code><a href="../../LicenseChoice.html#addExpression(org.cyclonedx.model.license.Expression)" class="member-name-link">addExpression</a><wbr>(<a href="../Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Convenience method to add an Expression</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../../LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">LicenseItem.</span><code><a href="../../LicenseItem.html#ofExpression(org.cyclonedx.model.license.Expression)" class="member-name-link">ofExpression</a><wbr>(<a href="../Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a LicenseItem containing an Expression</div>
+</div>
+<div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">LicenseChoice.</span><code><a href="../../LicenseChoice.html#setExpression(org.cyclonedx.model.license.Expression)" class="member-name-link">setExpression</a><wbr>(<a href="../Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="../../LicenseChoice.html#setItems(java.util.List)"><code>LicenseChoice.setItems(List)</code></a> with LicenseItem.ofExpression() instead.</div>
+</div>
+</div>
+<div class="col-first odd-row-color"><code>void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">LicenseItem.</span><code><a href="../../LicenseItem.html#setExpression(org.cyclonedx.model.license.Expression)" class="member-name-link">setExpression</a><wbr>(<a href="../Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

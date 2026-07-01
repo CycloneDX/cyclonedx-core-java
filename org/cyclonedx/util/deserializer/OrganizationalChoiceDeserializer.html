@@ -89,6 +89,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">OrganizationalChoiceDeserializer</span>
 <span class="extends-implements">extends com.fasterxml.jackson.databind.JsonDeserializer&lt;<a href="../../model/OrganizationalChoice.html" title="class in org.cyclonedx.model">OrganizationalChoice</a>&gt;</span></div>
+<div class="block">Deserializer for OrganizationalChoice that handles:
+1. Wrapped format: {"individual": {...}} or {"organization": {...}} (Licensing)
+2. String format: "bom-ref" (reference to an organization defined elsewhere)
+3. XML ref format: {"ref": "bom-ref"} (XML asserter with ref element)
+4. Unwrapped format: direct entity/contact object fields (patent asserter/assignee JSON)</div>
 </div>
 </section>
 <section class="summary">
@@ -127,7 +132,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../model/OrganizationalChoice.html" title="class in org.cyclonedx.model">OrganizationalChoice</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">deserialize</a><wbr>(com.fasterxml.jackson.core.JsonParser&nbsp;jp,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">deserialize</a><wbr>(com.fasterxml.jackson.core.JsonParser&nbsp;p,
  com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -170,7 +175,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">
 <h3>deserialize</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/OrganizationalChoice.html" title="class in org.cyclonedx.model">OrganizationalChoice</a></span>&nbsp;<span class="element-name">deserialize</span><wbr><span class="parameters">(com.fasterxml.jackson.core.JsonParser&nbsp;jp,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/OrganizationalChoice.html" title="class in org.cyclonedx.model">OrganizationalChoice</a></span>&nbsp;<span class="element-name">deserialize</span><wbr><span class="parameters">(com.fasterxml.jackson.core.JsonParser&nbsp;p,
  com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</span>
                                  throws <span class="exceptions"><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
 <dl class="notes">

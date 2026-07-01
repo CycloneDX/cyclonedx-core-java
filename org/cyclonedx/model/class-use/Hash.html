@@ -186,9 +186,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a><wbr>&lt;<a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">HashSerializer.</span><code><a href="../../util/serializer/HashSerializer.html#handledType()" class="member-name-link">handledType</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../../util/serializer/SerializerUtils.html#filterHashesByVersion(java.util.List,org.cyclonedx.Version)" class="member-name-link">filterHashesByVersion</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;&nbsp;hashes,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Filters a list of Hashes, removing entries whose Algorithm has a
+<a href="../VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a><wbr>&lt;<a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">HashSerializer.</span><code><a href="../../util/serializer/HashSerializer.html#handledType()" class="member-name-link">handledType</a>()</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../../util/serializer/package-summary.html">org.cyclonedx.util.serializer</a> with parameters of type <a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a></span></div>
 <div class="summary-table three-column-summary">
@@ -208,6 +215,19 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../../util/serializer/SerializerUtils.html#serializeHashXml(com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator,org.cyclonedx.model.Hash)" class="member-name-link">serializeHashXml</a><wbr>(com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator&nbsp;toXmlGenerator,
  <a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a>&nbsp;hash)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+</div>
+<div class="caption"><span>Method parameters in <a href="../../util/serializer/package-summary.html">org.cyclonedx.util.serializer</a> with type arguments of type <a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../../util/serializer/SerializerUtils.html#filterHashesByVersion(java.util.List,org.cyclonedx.Version)" class="member-name-link">filterHashesByVersion</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;&nbsp;hashes,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Filters a list of Hashes, removing entries whose Algorithm has a
+<a href="../VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
+</div>
 </div>
 <div class="caption"><span>Constructor parameters in <a href="../../util/serializer/package-summary.html">org.cyclonedx.util.serializer</a> with type arguments of type <a href="../Hash.html" title="class in org.cyclonedx.model">Hash</a></span></div>
 <div class="summary-table three-column-summary">

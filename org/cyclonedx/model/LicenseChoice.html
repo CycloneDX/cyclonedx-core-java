@@ -64,11 +64,19 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#getItems()" tabindex="0">getItems()</a></li>
+<li><a href="#setItems(java.util.List)" tabindex="0">setItems(List)</a></li>
+<li><a href="#addItem(org.cyclonedx.model.LicenseItem)" tabindex="0">addItem(LicenseItem)</a></li>
+<li><a href="#addLicense(org.cyclonedx.model.License)" tabindex="0">addLicense(License)</a></li>
+<li><a href="#addExpression(org.cyclonedx.model.license.Expression)" tabindex="0">addExpression(Expression)</a></li>
+<li><a href="#addExpressionDetailed(org.cyclonedx.model.license.ExpressionDetailed)" tabindex="0">addExpressionDetailed(ExpressionDetailed)</a></li>
 <li><a href="#getLicenses()" tabindex="0">getLicenses()</a></li>
 <li><a href="#setLicenses(java.util.List)" tabindex="0">setLicenses(List)</a></li>
-<li><a href="#addLicense(org.cyclonedx.model.License)" tabindex="0">addLicense(License)</a></li>
 <li><a href="#getExpression()" tabindex="0">getExpression()</a></li>
 <li><a href="#setExpression(org.cyclonedx.model.license.Expression)" tabindex="0">setExpression(Expression)</a></li>
+<li><a href="#getExpressionDetailed()" tabindex="0">getExpressionDetailed()</a></li>
+<li><a href="#setExpressionDetailed(org.cyclonedx.model.license.ExpressionDetailed)" tabindex="0">setExpressionDetailed(ExpressionDetailed)</a></li>
+<li><a href="#isValidForVersion(org.cyclonedx.Version)" tabindex="0">isValidForVersion(Version)</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 </ol>
@@ -88,6 +96,16 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">LicenseChoice</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Represents a choice of licenses for a component or service.
+In CycloneDX 1.7+, this implements an item-level choice model where an array
+can contain a mix of License, Expression, and ExpressionDetailed objects.
+For earlier versions (1.6 and below), this enforces an array-level choice where
+the entire array must be either all licenses, or a single expression, or a single
+detailed expression.</div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>9.0.0</dd>
+</dl>
 </div>
 </section>
 <section class="summary">
@@ -110,33 +128,89 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addLicense(org.cyclonedx.model.License)" class="member-name-link">addLicense</a><wbr>(<a href="License.html" title="class in org.cyclonedx.model">License</a>&nbsp;license)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExpression()" class="member-name-link">getExpression</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLicenses()" class="member-name-link">getLicenses</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addExpression(org.cyclonedx.model.license.Expression)" class="member-name-link">addExpression</a><wbr>(<a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convenience method to add an Expression</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExpression(org.cyclonedx.model.license.Expression)" class="member-name-link">setExpression</a><wbr>(<a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addExpressionDetailed(org.cyclonedx.model.license.ExpressionDetailed)" class="member-name-link">addExpressionDetailed</a><wbr>(<a href="license/ExpressionDetailed.html" title="class in org.cyclonedx.model.license">ExpressionDetailed</a>&nbsp;expressionDetailed)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convenience method to add an ExpressionDetailed</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLicenses(java.util.List)" class="member-name-link">setLicenses</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;&nbsp;licenses)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addItem(org.cyclonedx.model.LicenseItem)" class="member-name-link">addItem</a><wbr>(<a href="LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a>&nbsp;item)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds a license item to the choice</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addLicense(org.cyclonedx.model.License)" class="member-name-link">addLicense</a><wbr>(<a href="License.html" title="class in org.cyclonedx.model">License</a>&nbsp;license)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convenience method to add a License</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getExpression()" class="member-name-link">getExpression</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#getItems()"><code>getItems()</code></a> and filter by type instead.</div>
+</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="license/ExpressionDetailed.html" title="class in org.cyclonedx.model.license">ExpressionDetailed</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExpressionDetailed()" class="member-name-link">getExpressionDetailed</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the first ExpressionDetailed item.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getItems()" class="member-name-link">getItems</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the list of license items.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getLicenses()" class="member-name-link">getLicenses</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#getItems()"><code>getItems()</code></a> and filter by type instead.</div>
+</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidForVersion(org.cyclonedx.Version)" class="member-name-link">isValidForVersion</a><wbr>(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Validates whether this choice conforms to a specific version's constraints.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#setExpression(org.cyclonedx.model.license.Expression)" class="member-name-link">setExpression</a><wbr>(<a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#setItems(java.util.List)"><code>setItems(List)</code></a> with LicenseItem.ofExpression() instead.</div>
+</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExpressionDetailed(org.cyclonedx.model.license.ExpressionDetailed)" class="member-name-link">setExpressionDetailed</a><wbr>(<a href="license/ExpressionDetailed.html" title="class in org.cyclonedx.model.license">ExpressionDetailed</a>&nbsp;expressionDetailed)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets a single detailed expression, clearing all other items.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setItems(java.util.List)" class="member-name-link">setItems</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a>&gt;&nbsp;items)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#setLicenses(java.util.List)" class="member-name-link">setLicenses</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;&nbsp;licenses)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#setItems(java.util.List)"><code>setItems(List)</code></a> with LicenseItem.ofLicense() instead.</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -171,18 +245,29 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getLicenses()">
-<h3>getLicenses</h3>
+<section class="detail" id="getItems()">
+<h3>getItems</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;</span>&nbsp;<span class="element-name">getLicenses</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a>&gt;</span>&nbsp;<span class="element-name">getItems</span>()</div>
+<div class="block">Gets the list of license items. Each item can be a License, Expression, or ExpressionDetailed.
+This is the primary API for CycloneDX 1.7+ support.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="setLicenses(java.util.List)">
-<h3>setLicenses</h3>
+<section class="detail" id="setItems(java.util.List)">
+<h3>setItems</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLicenses</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;&nbsp;licenses)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setItems</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a>&gt;&nbsp;items)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="addItem(org.cyclonedx.model.LicenseItem)">
+<h3>addItem</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addItem</span><wbr><span class="parameters">(<a href="LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a>&nbsp;item)</span></div>
+<div class="block">Adds a license item to the choice</div>
 </div>
 </section>
 </li>
@@ -191,6 +276,51 @@ loadScripts(document, 'script');</script>
 <h3>addLicense</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addLicense</span><wbr><span class="parameters">(<a href="License.html" title="class in org.cyclonedx.model">License</a>&nbsp;license)</span></div>
+<div class="block">Convenience method to add a License</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="addExpression(org.cyclonedx.model.license.Expression)">
+<h3>addExpression</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addExpression</span><wbr><span class="parameters">(<a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</span></div>
+<div class="block">Convenience method to add an Expression</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="addExpressionDetailed(org.cyclonedx.model.license.ExpressionDetailed)">
+<h3>addExpressionDetailed</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addExpressionDetailed</span><wbr><span class="parameters">(<a href="license/ExpressionDetailed.html" title="class in org.cyclonedx.model.license">ExpressionDetailed</a>&nbsp;expressionDetailed)</span></div>
+<div class="block">Convenience method to add an ExpressionDetailed</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLicenses()">
+<h3>getLicenses</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;</span>&nbsp;<span class="element-name">getLicenses</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#getItems()"><code>getItems()</code></a> and filter by type instead.
+Returns only License items for backward compatibility with pre-1.7 API.</div>
+</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setLicenses(java.util.List)">
+<h3>setLicenses</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLicenses</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="License.html" title="class in org.cyclonedx.model">License</a>&gt;&nbsp;licenses)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#setItems(java.util.List)"><code>setItems(List)</code></a> with LicenseItem.ofLicense() instead.
+Sets licenses, clearing all other items. For backward compatibility with pre-1.7 API.</div>
+</div>
 </div>
 </section>
 </li>
@@ -198,7 +328,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getExpression()">
 <h3>getExpression</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a></span>&nbsp;<span class="element-name">getExpression</span>()</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a></span>&nbsp;<span class="element-name">getExpression</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#getItems()"><code>getItems()</code></a> and filter by type instead.
+Returns the first Expression item for backward compatibility with pre-1.7 API.</div>
+</div>
 </div>
 </section>
 </li>
@@ -206,7 +341,43 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setExpression(org.cyclonedx.model.license.Expression)">
 <h3>setExpression</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setExpression</span><wbr><span class="parameters">(<a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setExpression</span><wbr><span class="parameters">(<a href="license/Expression.html" title="class in org.cyclonedx.model.license">Expression</a>&nbsp;expression)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="#setItems(java.util.List)"><code>setItems(List)</code></a> with LicenseItem.ofExpression() instead.
+Sets a single expression, clearing all other items. For backward compatibility with pre-1.7 API.</div>
+</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getExpressionDetailed()">
+<h3>getExpressionDetailed</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="license/ExpressionDetailed.html" title="class in org.cyclonedx.model.license">ExpressionDetailed</a></span>&nbsp;<span class="element-name">getExpressionDetailed</span>()</div>
+<div class="block">Returns the first ExpressionDetailed item.
+Note: This is part of the 1.7 API, not deprecated.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setExpressionDetailed(org.cyclonedx.model.license.ExpressionDetailed)">
+<h3>setExpressionDetailed</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setExpressionDetailed</span><wbr><span class="parameters">(<a href="license/ExpressionDetailed.html" title="class in org.cyclonedx.model.license">ExpressionDetailed</a>&nbsp;expressionDetailed)</span></div>
+<div class="block">Sets a single detailed expression, clearing all other items.
+Note: This is part of the 1.7 API, not deprecated.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isValidForVersion(org.cyclonedx.Version)">
+<h3>isValidForVersion</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidForVersion</span><wbr><span class="parameters">(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</span></div>
+<div class="block">Validates whether this choice conforms to a specific version's constraints.
+For 1.6 and below: array-level choice (all licenses OR single expression OR single expressionDetailed)
+For 1.7+: item-level choice (mix allowed)</div>
 </div>
 </section>
 </li>

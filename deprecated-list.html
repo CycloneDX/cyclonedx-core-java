@@ -105,10 +105,38 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="org/cyclonedx/model/Component.html#setLicenseChoice(org.cyclonedx.model.LicenseChoice)">org.cyclonedx.model.Component.setLicenseChoice<wbr>(LicenseChoice)</a></div>
 <div class="col-last odd-row-color"></div>
+<div class="col-summary-item-name even-row-color"><a href="org/cyclonedx/model/definition/Definition.html#getPatentFamilyList()">org.cyclonedx.model.definition.Definition.getPatentFamilyList()</a></div>
+<div class="col-last even-row-color">
+<div class="block">Use <a href="org/cyclonedx/model/definition/Definition.html#getPatents()"><code>Definition.getPatents()</code></a> and filter by type instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org/cyclonedx/model/definition/Definition.html#getPatentList()">org.cyclonedx.model.definition.Definition.getPatentList()</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Use <a href="org/cyclonedx/model/definition/Definition.html#getPatents()"><code>Definition.getPatents()</code></a> and filter by type instead.</div>
+</div>
 <div class="col-summary-item-name even-row-color"><a href="org/cyclonedx/model/Evidence.html#getLicenseChoice()">org.cyclonedx.model.Evidence.getLicenseChoice()</a></div>
 <div class="col-last even-row-color"></div>
 <div class="col-summary-item-name odd-row-color"><a href="org/cyclonedx/model/Evidence.html#setLicenseChoice(org.cyclonedx.model.LicenseChoice)">org.cyclonedx.model.Evidence.setLicenseChoice<wbr>(LicenseChoice)</a></div>
 <div class="col-last odd-row-color"></div>
+<div class="col-summary-item-name even-row-color"><a href="org/cyclonedx/model/LicenseChoice.html#getExpression()">org.cyclonedx.model.LicenseChoice.getExpression()</a></div>
+<div class="col-last even-row-color">
+<div class="block">Use <a href="org/cyclonedx/model/LicenseChoice.html#getItems()"><code>LicenseChoice.getItems()</code></a> and filter by type instead.
+Returns the first Expression item for backward compatibility with pre-1.7 API.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org/cyclonedx/model/LicenseChoice.html#getLicenses()">org.cyclonedx.model.LicenseChoice.getLicenses()</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Use <a href="org/cyclonedx/model/LicenseChoice.html#getItems()"><code>LicenseChoice.getItems()</code></a> and filter by type instead.
+Returns only License items for backward compatibility with pre-1.7 API.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org/cyclonedx/model/LicenseChoice.html#setExpression(org.cyclonedx.model.license.Expression)">org.cyclonedx.model.LicenseChoice.setExpression<wbr>(Expression)</a></div>
+<div class="col-last even-row-color">
+<div class="block">Use <a href="org/cyclonedx/model/LicenseChoice.html#setItems(java.util.List)"><code>LicenseChoice.setItems(List)</code></a> with LicenseItem.ofExpression() instead.
+Sets a single expression, clearing all other items. For backward compatibility with pre-1.7 API.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org/cyclonedx/model/LicenseChoice.html#setLicenses(java.util.List)">org.cyclonedx.model.LicenseChoice.setLicenses<wbr>(List&lt;License&gt;)</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Use <a href="org/cyclonedx/model/LicenseChoice.html#setItems(java.util.List)"><code>LicenseChoice.setItems(List)</code></a> with LicenseItem.ofLicense() instead.
+Sets licenses, clearing all other items. For backward compatibility with pre-1.7 API.</div>
+</div>
 <div class="col-summary-item-name even-row-color"><a href="org/cyclonedx/model/Metadata.html#getLicenseChoice()">org.cyclonedx.model.Metadata.getLicenseChoice()</a></div>
 <div class="col-last even-row-color"></div>
 <div class="col-summary-item-name odd-row-color"><a href="org/cyclonedx/model/Metadata.html#getManufacture()">org.cyclonedx.model.Metadata.getManufacture()</a></div>

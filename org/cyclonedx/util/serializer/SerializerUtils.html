@@ -67,6 +67,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#serializeHashXml(com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator,org.cyclonedx.model.Hash)" tabindex="0">serializeHashXml(ToXmlGenerator, Hash)</a></li>
 <li><a href="#serializeHashJson(com.fasterxml.jackson.core.JsonGenerator,org.cyclonedx.model.Hash)" tabindex="0">serializeHashJson(JsonGenerator, Hash)</a></li>
 <li><a href="#shouldSerializeField(java.lang.Object,org.cyclonedx.Version,java.lang.String)" tabindex="0">shouldSerializeField(Object, Version, String)</a></li>
+<li><a href="#shouldSerializeEnumValue(java.lang.Enum,org.cyclonedx.Version)" tabindex="0">shouldSerializeEnumValue(Enum, Version)</a></li>
+<li><a href="#filterExternalReferencesByVersion(java.util.List,org.cyclonedx.Version)" tabindex="0">filterExternalReferencesByVersion(List, Version)</a></li>
+<li><a href="#filterHashesByVersion(java.util.List,org.cyclonedx.Version)" tabindex="0">filterHashesByVersion(List, Version)</a></li>
 <li><a href="#serializeProperty(java.lang.String,org.cyclonedx.model.Property,com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator)" tabindex="0">serializeProperty(String, Property, ToXmlGenerator)</a></li>
 <li><a href="#writeField(com.fasterxml.jackson.core.JsonGenerator,java.lang.String,java.lang.Object)" tabindex="0">writeField(JsonGenerator, String, Object)</a></li>
 </ol>
@@ -114,6 +117,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#filterExternalReferencesByVersion(java.util.List,org.cyclonedx.Version)" class="member-name-link">filterExternalReferencesByVersion</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;refs,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Filters a list of ExternalReferences, removing entries whose Type has a
+<a href="../../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#filterHashesByVersion(java.util.List,org.cyclonedx.Version)" class="member-name-link">filterHashesByVersion</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;&nbsp;hashes,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Filters a list of Hashes, removing entries whose Algorithm has a
+<a href="../../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#serializeHashJson(com.fasterxml.jackson.core.JsonGenerator,org.cyclonedx.model.Hash)" class="member-name-link">serializeHashJson</a><wbr>(com.fasterxml.jackson.core.JsonGenerator&nbsp;gen,
  <a href="../../model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&nbsp;hash)</code></div>
@@ -128,15 +145,22 @@ loadScripts(document, 'script');</script>
  com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator&nbsp;xmlGenerator)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shouldSerializeField(java.lang.Object,org.cyclonedx.Version,java.lang.String)" class="member-name-link">shouldSerializeField</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shouldSerializeEnumValue(java.lang.Enum,org.cyclonedx.Version)" class="member-name-link">shouldSerializeEnumValue</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;?&gt;&nbsp;enumValue,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Checks whether an enum constant should be serialized for the target version by inspecting
+the <a href="../../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> annotation on the enum constant's field.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shouldSerializeField(java.lang.Object,org.cyclonedx.Version,java.lang.String)" class="member-name-link">shouldSerializeField</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj,
  <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#writeField(com.fasterxml.jackson.core.JsonGenerator,java.lang.String,java.lang.Object)" class="member-name-link">writeField</a><wbr>(com.fasterxml.jackson.core.JsonGenerator&nbsp;jsonGenerator,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#writeField(com.fasterxml.jackson.core.JsonGenerator,java.lang.String,java.lang.Object)" class="member-name-link">writeField</a><wbr>(com.fasterxml.jackson.core.JsonGenerator&nbsp;jsonGenerator,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;fieldValue)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -205,6 +229,46 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldSerializeField</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj,
  <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="shouldSerializeEnumValue(java.lang.Enum,org.cyclonedx.Version)">
+<h3>shouldSerializeEnumValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldSerializeEnumValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;?&gt;&nbsp;enumValue,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</span></div>
+<div class="block">Checks whether an enum constant should be serialized for the target version by inspecting
+the <a href="../../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> annotation on the enum constant's field.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>enumValue</code> - the enum constant to check</dd>
+<dd><code>version</code> - the target BOM version being generated</dd>
+<dt>Returns:</dt>
+<dd>true if the enum value is valid for the target version, false otherwise</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="filterExternalReferencesByVersion(java.util.List,org.cyclonedx.Version)">
+<h3>filterExternalReferencesByVersion</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;</span>&nbsp;<span class="element-name">filterExternalReferencesByVersion</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;refs,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</span></div>
+<div class="block">Filters a list of ExternalReferences, removing entries whose Type has a
+<a href="../../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="filterHashesByVersion(java.util.List,org.cyclonedx.Version)">
+<h3>filterHashesByVersion</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;</span>&nbsp;<span class="element-name">filterHashesByVersion</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;&nbsp;hashes,
+ <a href="../../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</span></div>
+<div class="block">Filters a list of Hashes, removing entries whose Algorithm has a
+<a href="../../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
 </div>
 </section>
 </li>

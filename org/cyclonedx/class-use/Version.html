@@ -67,14 +67,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><a href="#org.cyclonedx.generators.xml">org.cyclonedx.generators.xml</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#org.cyclonedx.parsers">org.cyclonedx.parsers</a></div>
+<div class="col-first even-row-color"><a href="#org.cyclonedx.model">org.cyclonedx.model</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#org.cyclonedx.util">org.cyclonedx.util</a></div>
+<div class="col-first odd-row-color"><a href="#org.cyclonedx.parsers">org.cyclonedx.parsers</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#org.cyclonedx.util.introspector">org.cyclonedx.util.introspector</a></div>
+<div class="col-first even-row-color"><a href="#org.cyclonedx.util">org.cyclonedx.util</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#org.cyclonedx.util.serializer">org.cyclonedx.util.serializer</a></div>
+<div class="col-first odd-row-color"><a href="#org.cyclonedx.util.introspector">org.cyclonedx.util.introspector</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="#org.cyclonedx.util.serializer">org.cyclonedx.util.serializer</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
@@ -234,6 +236,22 @@ the order they are declared.</div>
  <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new BomXmlGenerator object.</div>
+</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.cyclonedx.model">
+<h2>Uses of <a href="../Version.html" title="enum in org.cyclonedx">Version</a> in <a href="../model/package-summary.html">org.cyclonedx.model</a></h2>
+<div class="caption"><span>Methods in <a href="../model/package-summary.html">org.cyclonedx.model</a> with parameters of type <a href="../Version.html" title="enum in org.cyclonedx">Version</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">LicenseChoice.</span><code><a href="../model/LicenseChoice.html#isValidForVersion(org.cyclonedx.Version)" class="member-name-link">isValidForVersion</a><wbr>(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Validates whether this choice conforms to a specific version's constraints.</div>
 </div>
 </div>
 </section>
@@ -458,11 +476,32 @@ the order they are declared.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../util/serializer/SerializerUtils.html#filterExternalReferencesByVersion(java.util.List,org.cyclonedx.Version)" class="member-name-link">filterExternalReferencesByVersion</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;&nbsp;refs,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Filters a list of ExternalReferences, removing entries whose Type has a
+<a href="../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../util/serializer/SerializerUtils.html#filterHashesByVersion(java.util.List,org.cyclonedx.Version)" class="member-name-link">filterHashesByVersion</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Hash.html" title="class in org.cyclonedx.model">Hash</a>&gt;&nbsp;hashes,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Filters a list of Hashes, removing entries whose Algorithm has a
+<a href="../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> above the target version.</div>
+</div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../util/serializer/SerializerUtils.html#shouldSerializeField(java.lang.Object,org.cyclonedx.Version,java.lang.String)" class="member-name-link">shouldSerializeField</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj,
+<div class="col-second even-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../util/serializer/SerializerUtils.html#shouldSerializeEnumValue(java.lang.Enum,org.cyclonedx.Version)" class="member-name-link">shouldSerializeEnumValue</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;?&gt;&nbsp;enumValue,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Checks whether an enum constant should be serialized for the target version by inspecting
+the <a href="../model/VersionFilter.html" title="annotation in org.cyclonedx.model"><code>VersionFilter</code></a> annotation on the enum constant's field.</div>
+</div>
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SerializerUtils.</span><code><a href="../util/serializer/SerializerUtils.html#shouldSerializeField(java.lang.Object,org.cyclonedx.Version,java.lang.String)" class="member-name-link">shouldSerializeField</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj,
  <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Constructors in <a href="../util/serializer/package-summary.html">org.cyclonedx.util.serializer</a> with parameters of type <a href="../Version.html" title="enum in org.cyclonedx">Version</a></span></div>
 <div class="summary-table three-column-summary">
@@ -474,6 +513,15 @@ the order they are declared.</div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../util/serializer/CustomSerializerModifier.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">CustomSerializerModifier</a><wbr>(boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../util/serializer/EnvironmentVarsSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">EnvironmentVarsSerializer</a><wbr>(boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../util/serializer/EnvironmentVarsSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">EnvironmentVarsSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/formulation/common/EnvironmentVars.html" title="class in org.cyclonedx.model.formulation.common">EnvironmentVars</a>&gt;&nbsp;t,
+ boolean&nbsp;isXml,
  <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
@@ -500,22 +548,61 @@ the order they are declared.</div>
 <div class="col-second odd-row-color"><code><a href="../util/serializer/HashSerializer.html#%3Cinit%3E(org.cyclonedx.Version)" class="member-name-link">HashSerializer</a><wbr>(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../util/serializer/LicenseChoiceSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">LicenseChoiceSerializer</a><wbr>(boolean&nbsp;isXml,
+<div class="col-second even-row-color"><code><a href="../util/serializer/IkeV2TransformSerializer.html#%3Cinit%3E(org.cyclonedx.Version)" class="member-name-link">IkeV2TransformSerializer</a><wbr>(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../util/serializer/InputTypeSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">InputTypeSerializer</a><wbr>(boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../util/serializer/InputTypeSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">InputTypeSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/formulation/common/InputType.html" title="class in org.cyclonedx.model.formulation.common">InputType</a>&gt;&nbsp;t,
+ boolean&nbsp;isXml,
  <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../util/serializer/LicenseChoiceSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">LicenseChoiceSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/LicenseChoice.html" title="class in org.cyclonedx.model">LicenseChoice</a>&gt;&nbsp;t,
+<div class="col-second odd-row-color"><code><a href="../util/serializer/LicenseChoiceSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">LicenseChoiceSerializer</a><wbr>(boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../util/serializer/LicenseChoiceSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">LicenseChoiceSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/LicenseChoice.html" title="class in org.cyclonedx.model">LicenseChoice</a>&gt;&nbsp;t,
+ boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../util/serializer/LifecycleSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">LifecycleSerializer</a><wbr>(boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../util/serializer/LifecycleSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">LifecycleSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/Lifecycles.html" title="class in org.cyclonedx.model">Lifecycles</a>&gt;&nbsp;t,
+ boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../util/serializer/MetadataSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">MetadataSerializer</a><wbr>(boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../util/serializer/MetadataSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">MetadataSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/Metadata.html" title="class in org.cyclonedx.model">Metadata</a>&gt;&nbsp;t,
+ boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../util/serializer/OrganizationalChoiceSerializer.html#%3Cinit%3E(org.cyclonedx.Version)" class="member-name-link">OrganizationalChoiceSerializer</a><wbr>(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../util/serializer/OutputTypeSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">OutputTypeSerializer</a><wbr>(boolean&nbsp;isXml,
+ <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../util/serializer/OutputTypeSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">OutputTypeSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;&nbsp;t,
  boolean&nbsp;isXml,
  <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../util/serializer/MetadataSerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">MetadataSerializer</a><wbr>(boolean&nbsp;isXml,
- <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-second even-row-color"><code><a href="../util/serializer/PatentAssertionSerializer.html#%3Cinit%3E(org.cyclonedx.Version)" class="member-name-link">PatentAssertionSerializer</a><wbr>(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../util/serializer/MetadataSerializer.html#%3Cinit%3E(java.lang.Class,boolean,org.cyclonedx.Version)" class="member-name-link">MetadataSerializer</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../model/Metadata.html" title="class in org.cyclonedx.model">Metadata</a>&gt;&nbsp;t,
- boolean&nbsp;isXml,
- <a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
+<div class="col-second odd-row-color"><code><a href="../util/serializer/PatentItemSerializer.html#%3Cinit%3E(org.cyclonedx.Version)" class="member-name-link">PatentItemSerializer</a><wbr>(<a href="../Version.html" title="enum in org.cyclonedx">Version</a>&nbsp;version)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../util/serializer/VulnerabilitySerializer.html#%3Cinit%3E(boolean,org.cyclonedx.Version)" class="member-name-link">VulnerabilitySerializer</a><wbr>(boolean&nbsp;isXml,

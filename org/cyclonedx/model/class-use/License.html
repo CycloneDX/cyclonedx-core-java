@@ -67,6 +67,15 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="org.cyclonedx.model">
 <h2>Uses of <a href="../License.html" title="class in org.cyclonedx.model">License</a> in <a href="../package-summary.html">org.cyclonedx.model</a></h2>
+<div class="caption"><span>Methods in <a href="../package-summary.html">org.cyclonedx.model</a> that return <a href="../License.html" title="class in org.cyclonedx.model">License</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="../License.html" title="class in org.cyclonedx.model">License</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">LicenseItem.</span><code><a href="../LicenseItem.html#getLicense()" class="member-name-link">getLicense</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">org.cyclonedx.model</a> that return types with arguments of type <a href="../License.html" title="class in org.cyclonedx.model">License</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -74,7 +83,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../License.html" title="class in org.cyclonedx.model">License</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">LicenseChoice.</span><code><a href="../LicenseChoice.html#getLicenses()" class="member-name-link">getLicenses</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="../LicenseChoice.html#getItems()"><code>LicenseChoice.getItems()</code></a> and filter by type instead.</div>
+</div>
+</div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">org.cyclonedx.model</a> with parameters of type <a href="../License.html" title="class in org.cyclonedx.model">License</a></span></div>
 <div class="summary-table three-column-summary">
@@ -83,6 +96,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">LicenseChoice.</span><code><a href="../LicenseChoice.html#addLicense(org.cyclonedx.model.License)" class="member-name-link">addLicense</a><wbr>(<a href="../License.html" title="class in org.cyclonedx.model">License</a>&nbsp;license)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Convenience method to add a License</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../LicenseItem.html" title="class in org.cyclonedx.model">LicenseItem</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">LicenseItem.</span><code><a href="../LicenseItem.html#ofLicense(org.cyclonedx.model.License)" class="member-name-link">ofLicense</a><wbr>(<a href="../License.html" title="class in org.cyclonedx.model">License</a>&nbsp;license)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a LicenseItem containing a License</div>
+</div>
+<div class="col-first even-row-color"><code>void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">LicenseItem.</span><code><a href="../LicenseItem.html#setLicense(org.cyclonedx.model.License)" class="member-name-link">setLicense</a><wbr>(<a href="../License.html" title="class in org.cyclonedx.model">License</a>&nbsp;license)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../package-summary.html">org.cyclonedx.model</a> with type arguments of type <a href="../License.html" title="class in org.cyclonedx.model">License</a></span></div>
@@ -92,7 +115,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">LicenseChoice.</span><code><a href="../LicenseChoice.html#setLicenses(java.util.List)" class="member-name-link">setLicenses</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../License.html" title="class in org.cyclonedx.model">License</a>&gt;&nbsp;licenses)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="../LicenseChoice.html#setItems(java.util.List)"><code>LicenseChoice.setItems(List)</code></a> with LicenseItem.ofLicense() instead.</div>
+</div>
+</div>
 </div>
 </section>
 </li>

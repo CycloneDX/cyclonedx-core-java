@@ -61,6 +61,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="#org.cyclonedx.model">org.cyclonedx.model</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><a href="#org.cyclonedx.model.component.crypto">org.cyclonedx.model.component.crypto</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="#org.cyclonedx.model.definition">org.cyclonedx.model.definition</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><a href="#org.cyclonedx.model.vulnerability">org.cyclonedx.model.vulnerability</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -77,11 +81,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Annotation.html" title="class in org.cyclonedx.model">Annotation</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getAnnotations()" class="member-name-link">getAnnotations</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Composition.html" title="class in org.cyclonedx.model">Composition</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getCompositions()" class="member-name-link">getCompositions</a>()</code></div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Citation.html" title="class in org.cyclonedx.model">Citation</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getCitations()" class="member-name-link">getCitations</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getDependencies()" class="member-name-link">getDependencies</a>()</code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Composition.html" title="class in org.cyclonedx.model">Composition</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getCompositions()" class="member-name-link">getCompositions</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getDependencies()" class="member-name-link">getDependencies</a>()</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="../DistributionConstraints.html" title="class in org.cyclonedx.model">DistributionConstraints</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Metadata.</span><code><a href="../Metadata.html#getDistributionConstraints()" class="member-name-link">getDistributionConstraints</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../ExternalReference.html" title="class in org.cyclonedx.model">ExternalReference</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Component.</span><code><a href="../Component.html#getExternalReferences()" class="member-name-link">getExternalReferences</a>()</code></div>
@@ -95,14 +105,26 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../component/evidence/Identity.html" title="class in org.cyclonedx.model.component.evidence">Identity</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Evidence.</span><code><a href="../Evidence.html#getIdentities()" class="member-name-link">getIdentities</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../component/evidence/Occurrence.html" title="class in org.cyclonedx.model.component.evidence">Occurrence</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Evidence.</span><code><a href="../Evidence.html#getOccurrences()" class="member-name-link">getOccurrences</a>()</code></div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Component.</span><code><a href="../Component.html#getIsExternal()" class="member-name-link">getIsExternal</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Component.</span><code><a href="../Component.html#getOmniborId()" class="member-name-link">getOmniborId</a>()</code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../component/evidence/Occurrence.html" title="class in org.cyclonedx.model.component.evidence">Occurrence</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Evidence.</span><code><a href="../Evidence.html#getOccurrences()" class="member-name-link">getOccurrences</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Component.</span><code><a href="../Component.html#getOmniborId()" class="member-name-link">getOmniborId</a>()</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../PatentAssertion.html" title="class in org.cyclonedx.model">PatentAssertion</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Component.</span><code><a href="../Component.html#getPatentAssertions()" class="member-name-link">getPatentAssertions</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../PatentAssertion.html" title="class in org.cyclonedx.model">PatentAssertion</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Service.</span><code><a href="../Service.html#getPatentAssertions()" class="member-name-link">getPatentAssertions</a>()</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Property.html" title="class in org.cyclonedx.model">Property</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getProperties()" class="member-name-link">getProperties</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Property.html" title="class in org.cyclonedx.model">Property</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getProperties()" class="member-name-link">getProperties</a>()</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ExternalReference.</span><code><a href="../ExternalReference.html#getProperties()" class="member-name-link">getProperties</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../Service.html" title="class in org.cyclonedx.model">Service</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getServices()" class="member-name-link">getServices</a>()</code></div>
@@ -113,15 +135,49 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">License.</span><code><a href="../License.html#getUrl()" class="member-name-link">getUrl</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../vulnerability/Vulnerability.html" title="class in org.cyclonedx.model.vulnerability">Vulnerability</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getVulnerabilities()" class="member-name-link">getVulnerabilities</a>()</code></div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Component.</span><code><a href="../Component.html#getVersionRange()" class="member-name-link">getVersionRange</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#getVulnerabilities()" class="member-name-link">getVulnerabilities</a>()</code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../vulnerability/Vulnerability.html" title="class in org.cyclonedx.model.vulnerability">Vulnerability</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Bom.</span><code><a href="../Bom.html#getVulnerabilities()" class="member-name-link">getVulnerabilities</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">License.</span><code><a href="../License.html#setUrl(java.lang.String)" class="member-name-link">setUrl</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#getVulnerabilities()" class="member-name-link">getVulnerabilities</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">License.</span><code><a href="../License.html#setUrl(java.lang.String)" class="member-name-link">setUrl</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.cyclonedx.model.component.crypto">
+<h2>Uses of <a href="../VersionFilter.html" title="annotation in org.cyclonedx.model">VersionFilter</a> in <a href="../component/crypto/package-summary.html">org.cyclonedx.model.component.crypto</a></h2>
+<div class="caption"><span>Methods in <a href="../component/crypto/package-summary.html">org.cyclonedx.model.component.crypto</a> with annotations of type <a href="../VersionFilter.html" title="annotation in org.cyclonedx.model">VersionFilter</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CipherSuite.</span><code><a href="../component/crypto/CipherSuite.html#getTlsGroups()" class="member-name-link">getTlsGroups</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">CipherSuite.</span><code><a href="../component/crypto/CipherSuite.html#getTlsSignatureSchemes()" class="member-name-link">getTlsSignatureSchemes</a>()</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="org.cyclonedx.model.definition">
+<h2>Uses of <a href="../VersionFilter.html" title="annotation in org.cyclonedx.model">VersionFilter</a> in <a href="../definition/package-summary.html">org.cyclonedx.model.definition</a></h2>
+<div class="caption"><span>Methods in <a href="../definition/package-summary.html">org.cyclonedx.model.definition</a> with annotations of type <a href="../VersionFilter.html" title="annotation in org.cyclonedx.model">VersionFilter</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../PatentItem.html" title="class in org.cyclonedx.model">PatentItem</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Definition.</span><code><a href="../definition/Definition.html#getPatents()" class="member-name-link">getPatents</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
