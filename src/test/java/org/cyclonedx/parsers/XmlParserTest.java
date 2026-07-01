@@ -21,14 +21,10 @@ package org.cyclonedx.parsers;
 import org.apache.commons.io.IOUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
-import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.Component;
+import org.cyclonedx.generators.BomGeneratorFactory;
+import org.cyclonedx.generators.xml.BomXmlGenerator;
+import org.cyclonedx.model.*;
 import org.cyclonedx.model.Component.Type;
-import org.cyclonedx.model.Dependency;
-import org.cyclonedx.model.ExternalReference;
-import org.cyclonedx.model.LicenseChoice;
-import org.cyclonedx.model.OrganizationalEntity;
-import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.attestation.Assessor;
 import org.cyclonedx.model.attestation.Attestation;
 import org.cyclonedx.model.attestation.AttestationMap;
@@ -65,14 +61,13 @@ import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
+import org.cyclonedx.model.metadata.ToolInformation;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -765,4 +760,62 @@ public class XmlParserTest
                         .contains("not allowed due to restriction set by the accessExternalDTD property"));
     }
 
+	@Test
+	public void testMetadataToolComponentPedigreeWithSingleCommit() throws Exception {
+		final String expectedUid = "abc123def456abc123def456abc123def456abc1";
+
+		Commit commit = new Commit();
+		commit.setUid(expectedUid);
+
+		List<Commit> commits = parseToolComponentPedigreeCommits(Collections.singletonList(commit));
+
+		assertEquals(1, commits.size());
+		assertEquals(expectedUid, commits.get(0).getUid());
+	}
+
+	@Test
+	public void testMetadataToolComponentPedigreeWithMultipleCommits() throws Exception {
+		final String uid1 = "abc123def456abc123def456abc123def456abc1";
+		final String uid2 = "def456abc123def456abc123def456abc123def4";
+
+		Commit commit1 = new Commit();
+		commit1.setUid(uid1);
+		Commit commit2 = new Commit();
+		commit2.setUid(uid2);
+
+		List<Commit> commits = parseToolComponentPedigreeCommits(Arrays.asList(commit1, commit2));
+
+		assertEquals(2, commits.size());
+		assertEquals(uid1, commits.get(0).getUid());
+		assertEquals(uid2, commits.get(1).getUid());
+	}
+
+	private List<Commit> parseToolComponentPedigreeCommits(List<Commit> commits) throws Exception {
+		Pedigree pedigree = new Pedigree();
+		pedigree.setCommits(commits);
+
+		Component toolComponent = new Component();
+		toolComponent.setType(Component.Type.APPLICATION);
+		toolComponent.setName("my-build-tool");
+		toolComponent.setPedigree(pedigree);
+
+		ToolInformation toolInformation = new ToolInformation();
+		toolInformation.setComponents(Collections.singletonList(toolComponent));
+
+		Metadata metadata = new Metadata();
+		metadata.setToolChoice(toolInformation);
+
+		Bom inputBom = new Bom();
+		inputBom.setMetadata(metadata);
+
+		BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_16, inputBom);
+		byte[] xml = generator.toXmlString().getBytes(StandardCharsets.UTF_8);
+
+		return new XmlParser().parse(xml)
+				.getMetadata()
+				.getToolChoice()
+				.getComponents().get(0)
+				.getPedigree()
+				.getCommits();
+	}
 }
