@@ -136,6 +136,14 @@ public class XmlParserTest
     }
 
     @Test
+    public void testValid12BomWithUtf8ByteOrderMarker() throws Exception {
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-utf8bom.xml")).getFile());
+        final XmlParser parser = new XmlParser();
+        final boolean valid = parser.isValid(file, Version.VERSION_12);
+        assertTrue(valid);
+    }
+
+    @Test
     public void testValidBomLink() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.4-bomlink.xml")).getFile());
         final XmlParser parser = new XmlParser();
@@ -315,6 +323,13 @@ public class XmlParserTest
         Dependency d11 = d1.getDependencies().get(0);
         assertEquals("pkg:maven/org.acme/web-framework@1.0.0", d11.getRef());
         assertNull(d11.getDependencies());
+    }
+
+    @Test
+    public void testParsedObjects12BomWithUTF8ByteOrderMarker() throws Exception {
+        final Bom bom = getXmlBom("bom-1.2-utf8bom.xml");
+
+        assertMetadata(bom, Version.VERSION_12);
     }
 
     @Test

@@ -35,7 +35,18 @@ public class BomParserFactory {
 
     public static Parser createParser(final File file) throws ParseException {
         try (final InputStream fis = Files.newInputStream(file.toPath())) {
-            final byte[] bytes = IOUtils.toByteArray(fis, 1);
+            byte[] bytes = IOUtils.toByteArray(fis, 1);
+
+            //Skip UTF8 byte order marker
+            final byte[] utf8bom = "\uFEFF".getBytes(StandardCharsets.UTF_8);
+            for (byte b : utf8bom) {
+                if (bytes[0] == b) {
+                    bytes = IOUtils.toByteArray(fis, 1);
+                } else {
+                    break;
+                }
+            }
+
             return createParser(bytes);
         } catch (IOException e) {
             throw new ParseException("An error occurred creating parser from file", e);
@@ -47,9 +58,9 @@ public class BomParserFactory {
             throw new ParseException("Cannot create parser from empty byte array.");
         }
 
-        if (bytes[0] == 123) {
+        if (bytes[0] == (byte) '{') {
             return new JsonParser();
-        } else if (bytes[0] == 60) {
+        } else if (bytes[0] == (byte) '<') {
             return new XmlParser();
         } else {
             throw new ParseException("The specified BOM is not in a supported format. Supported formats are XML and JSON");
