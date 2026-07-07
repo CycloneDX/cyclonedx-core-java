@@ -22,14 +22,19 @@ import org.apache.commons.io.IOUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Citation;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
-import org.cyclonedx.model.TlpClassification;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Patent;
+import org.cyclonedx.model.PatentAssertion;
+import org.cyclonedx.model.PatentFamily;
+import org.cyclonedx.model.PatentItem;
 import org.cyclonedx.model.Pedigree;
+import org.cyclonedx.model.TlpClassification;
 import org.cyclonedx.model.attestation.Assessor;
 import org.cyclonedx.model.attestation.Attestation;
 import org.cyclonedx.model.attestation.AttestationMap;
@@ -66,14 +71,10 @@ import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
-import org.cyclonedx.model.license.ExpressionDetailed;
 import org.cyclonedx.model.license.ExpressionDetail;
-import org.cyclonedx.model.Citation;
-import org.cyclonedx.model.Patent;
-import org.cyclonedx.model.PatentFamily;
-import org.cyclonedx.model.PatentAssertion;
-import org.cyclonedx.model.PatentItem;
+import org.cyclonedx.model.license.ExpressionDetailed;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.util.DefaultLocale;
 
 import java.io.File;
 import java.io.InputStream;
@@ -1172,6 +1173,7 @@ public class XmlParserTest
     }
 
     @Test
+    @DefaultLocale("en-US") // Validator exception message is localized.
     void validateShouldNotBeVulnerableToXxe() throws Exception {
         final byte[] bomBytes;
         try (final InputStream bomInputStream = getClass().getResourceAsStream("/security/xxe-protection.xml")) {
