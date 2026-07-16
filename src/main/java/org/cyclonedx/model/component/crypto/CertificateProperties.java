@@ -1,10 +1,15 @@
 package org.cyclonedx.model.component.crypto;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.Version;
+import org.cyclonedx.model.VersionFilter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -16,7 +21,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "signatureAlgorithmRef",
     "subjectPublicKeyRef",
     "certificateFormat",
-    "certificateExtension"
+    "certificateExtension",
+    "relatedCryptographicAssets"
     })
 public class CertificateProperties
 {
@@ -35,6 +41,9 @@ public class CertificateProperties
   private String certificateFormat;
 
   private String certificateExtension;
+
+  @VersionFilter(Version.VERSION_17)
+  private List<RelatedCryptographicAsset> relatedCryptographicAssets;
 
   public String getSubjectName() {
     return subjectName;
@@ -100,6 +109,16 @@ public class CertificateProperties
     this.certificateExtension = certificateExtension;
   }
 
+  @JacksonXmlElementWrapper(localName = "relatedCryptographicAssets")
+  @JacksonXmlProperty(localName = "relatedCryptographicAsset")
+  public List<RelatedCryptographicAsset> getRelatedCryptographicAssets() {
+    return relatedCryptographicAssets;
+  }
+
+  public void setRelatedCryptographicAssets(final List<RelatedCryptographicAsset> relatedCryptographicAssets) {
+    this.relatedCryptographicAssets = relatedCryptographicAssets;
+  }
+
   @Override
   public boolean equals(final Object object) {
     if (this == object) {
@@ -116,12 +135,13 @@ public class CertificateProperties
         Objects.equals(signatureAlgorithmRef, that.signatureAlgorithmRef) &&
         Objects.equals(subjectPublicKeyRef, that.subjectPublicKeyRef) &&
         Objects.equals(certificateFormat, that.certificateFormat) &&
-        Objects.equals(certificateExtension, that.certificateExtension);
+        Objects.equals(certificateExtension, that.certificateExtension) &&
+        Objects.equals(relatedCryptographicAssets, that.relatedCryptographicAssets);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(subjectName, issuerName, notValidBefore, notValidAfter, signatureAlgorithmRef,
-        subjectPublicKeyRef, certificateFormat, certificateExtension);
+        subjectPublicKeyRef, certificateFormat, certificateExtension, relatedCryptographicAssets);
   }
 }

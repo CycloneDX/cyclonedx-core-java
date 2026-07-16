@@ -44,6 +44,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.github.packageurl.PackageURL;
+import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
 import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
@@ -54,7 +55,9 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 @JsonPropertyOrder(
     {
      "type",
+     "mime-type",
      "bom-ref",
+     "isExternal",
      "supplier",
      "manufacturer",
      "authors",
@@ -63,11 +66,13 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "group",
      "name",
      "version",
+     "versionRange",
      "description",
      "scope",
      "hashes",
      "licenses",
      "copyright",
+     "patentAssertions",
      "cpe",
      "purl",
      "omniborId",
@@ -83,6 +88,7 @@ import org.cyclonedx.util.deserializer.PropertiesDeserializer;
      "modelCard",
      "data",
      "cryptoProperties",
+     "tags",
      "signature",
      "provides"
     })
@@ -95,22 +101,29 @@ public class Component extends ExtensibleElement {
         FRAMEWORK("framework"),
         @JsonProperty("library")
         LIBRARY("library"),
+        @VersionFilter(Version.VERSION_12)
         @JsonProperty("container")
         CONTAINER("container"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("platform")
         PLATFORM("platform"),
         @JsonProperty("operating-system")
         OPERATING_SYSTEM("operating-system"),
         @JsonProperty("device")
         DEVICE("device"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("device-driver")
         DEVICE_DRIVER("device-driver"),
+        @VersionFilter(Version.VERSION_12)
         @JsonProperty("firmware")
         FIRMWARE("firmware"),
+        @VersionFilter(Version.VERSION_11)
         @JsonProperty("file")
         FILE("file"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("machine-learning-model")
         MACHINE_LEARNING_MODEL("machine-learning-model"),
+        @VersionFilter(Version.VERSION_15)
         @JsonProperty("data")
         DATA("data"),
         @VersionFilter(Version.VERSION_16)
@@ -133,6 +146,7 @@ public class Component extends ExtensibleElement {
         REQUIRED("required"),
         @JsonProperty("optional")
         OPTIONAL("optional"),
+        @VersionFilter(Version.VERSION_12)
         @JsonProperty("excluded")
         EXCLUDED("excluded");
 
@@ -159,6 +173,11 @@ public class Component extends ExtensibleElement {
     @JacksonXmlProperty(isAttribute = true)
     private Type type;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "isExternal")
+    @JsonProperty("isExternal")
+    @VersionFilter(Version.VERSION_17)
+    private Boolean isExternal;
+
     @VersionFilter(Version.VERSION_12)
     private OrganizationalEntity supplier;
 
@@ -166,11 +185,14 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_12)
     private String author;
 
-    @VersionFilter(Version.VERSION_11)
     private String publisher;
     private String group;
     private String name;
     private String version;
+
+    @VersionFilter(Version.VERSION_17)
+    private String versionRange;
+
     private String description;
     private Scope scope;
     private List<Hash> hashes;
@@ -220,6 +242,9 @@ public class Component extends ExtensibleElement {
     @VersionFilter(Version.VERSION_16)
     @JsonProperty("provides")
     private List<String> provides;
+
+    @VersionFilter(Version.VERSION_17)
+    private List<PatentAssertion> patentAssertions;
 
     @VersionFilter(Version.VERSION_16)
     @JsonUnwrapped
@@ -316,6 +341,24 @@ public class Component extends ExtensibleElement {
         this.version = version;
     }
 
+    @VersionFilter(Version.VERSION_17)
+    public String getVersionRange() {
+        return versionRange;
+    }
+
+    public void setVersionRange(String versionRange) {
+        this.versionRange = versionRange;
+    }
+
+    @VersionFilter(Version.VERSION_17)
+    public Boolean getIsExternal() {
+        return isExternal;
+    }
+
+    public void setIsExternal(Boolean isExternal) {
+        this.isExternal = isExternal;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -351,11 +394,15 @@ public class Component extends ExtensibleElement {
     }
 
     @JsonDeserialize(using = LicenseDeserializer.class)
+    @JacksonXmlElementWrapper (useWrapping = false)
     public LicenseChoice getLicenses() {
+        if (licenses != null && (licenses.getItems() == null || licenses.getItems().isEmpty())) {
+            return null;
+        }
         return licenses;
     }
 
-    @JacksonXmlElementWrapper (useWrapping = false)
+    @JsonDeserialize(using = LicenseChoiceDeserializer.class)
     public void setLicenses(LicenseChoice licenses) {
         this.licenses = licenses;
     }
@@ -566,6 +613,17 @@ public class Component extends ExtensibleElement {
         this.provides = provides;
     }
 
+    @JacksonXmlElementWrapper(localName = "patentAssertions")
+    @JacksonXmlProperty(localName = "patentAssertion")
+    @VersionFilter(Version.VERSION_17)
+    public List<PatentAssertion> getPatentAssertions() {
+        return patentAssertions;
+    }
+
+    public void setPatentAssertions(List<PatentAssertion> patentAssertions) {
+        this.patentAssertions = patentAssertions;
+    }
+
     public Tags getTags() {
         return tags;
     }
@@ -605,10 +663,49 @@ public class Component extends ExtensibleElement {
         this.manufacturer = manufacturer;
     }
 
+    /**
+     * Validates that the component conforms to CycloneDX 1.7 choice group constraints.
+     * Specifically:
+     * - version and versionRange are mutually exclusive (xs:choice group)
+     * - versionRange should have isExternal=true
+     *
+     * @throws IllegalStateException if validation fails
+     */
+    public void validate() {
+        validateVersionChoice();
+        validateVersionRangeRequirements();
+    }
+
+    /**
+     * Validates that version and versionRange are not both set (xs:choice constraint)
+     */
+    private void validateVersionChoice() {
+        if (version != null && versionRange != null) {
+            throw new IllegalStateException(
+                "Component cannot have both 'version' and 'versionRange' set. " +
+                "These fields are mutually exclusive per CycloneDX 1.7 schema (xs:choice group). " +
+                "Component: " + (name != null ? name : "unknown"));
+        }
+    }
+
+    /**
+     * Validates that versionRange is used correctly with isExternal.
+     * Note: This is a warning-level validation. versionRange typically requires isExternal=true,
+     * but we don't enforce it as a hard error to allow flexibility.
+     */
+    private void validateVersionRangeRequirements() {
+        if (versionRange != null && !Boolean.TRUE.equals(isExternal)) {
+            // This is informational - in 1.7, versionRange is typically used with isExternal=true
+            // to indicate external components with version ranges rather than fixed versions.
+            // We don't throw an exception here, just allow it through with this note.
+        }
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(author, publisher, group, name, version, description, scope, hashes, licenses, copyright,
-            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data);
+            cpe, purl, omniborId, swhid, swid, modified, components, evidence, releaseNotes, type, modelCard, data,
+            isExternal, versionRange, patentAssertions, tags);
     }
 
     @Override
@@ -639,6 +736,10 @@ public class Component extends ExtensibleElement {
                 Objects.equals(releaseNotes, component.releaseNotes) &&
                 Objects.equals(data, component.data) &&
                 Objects.equals(modelCard, component.modelCard) &&
-                Objects.equals(type, component.type);
+                Objects.equals(type, component.type) &&
+                Objects.equals(isExternal, component.isExternal) &&
+                Objects.equals(versionRange, component.versionRange) &&
+                Objects.equals(patentAssertions, component.patentAssertions) &&
+                Objects.equals(tags, component.tags);
     }
 }

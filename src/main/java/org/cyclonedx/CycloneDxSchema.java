@@ -22,6 +22,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.SchemaRegistry;
 import com.networknt.schema.SchemaRegistryConfig;
+import com.networknt.schema.dialect.DefaultDialectRegistry;
+import com.networknt.schema.dialect.Dialect;
+import com.networknt.schema.dialect.DialectRegistry;
+import com.networknt.schema.dialect.Draft7;
+import com.networknt.schema.keyword.NonValidationKeyword;
 import com.networknt.schema.serialization.DefaultNodeReader;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
@@ -32,6 +37,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -62,12 +68,14 @@ public abstract class CycloneDxSchema
 
   public static final String NS_BOM_16 = "http://cyclonedx.org/schema/bom/1.6";
 
+  public static final String NS_BOM_17 = "http://cyclonedx.org/schema/bom/1.7";
+
   @Deprecated
   public static final String NS_DEPENDENCY_GRAPH_10 = "http://cyclonedx.org/schema/ext/dependency-graph/1.0";
 
-  public static final String NS_BOM_LATEST = NS_BOM_16;
+  public static final String NS_BOM_LATEST = NS_BOM_17;
 
-  public static final Version VERSION_LATEST = Version.VERSION_16;
+  public static final Version VERSION_LATEST = Version.VERSION_17;
 
   public static final List<Version> ALL_VERSIONS = Arrays.asList(Version.values());
 
@@ -87,21 +95,63 @@ public abstract class CycloneDxSchema
     final SchemaRegistryConfig config = SchemaRegistryConfig.builder().preloadSchema(false).build();
 
     final Map<String, String> offlineMappings = new HashMap<>();
-    offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", "classpath:spdx.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/jsf-0.82.schema.json", "classpath:jsf-0.82.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json", "classpath:bom-1.2-strict.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json", "classpath:bom-1.3-strict.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", "classpath:bom-1.4.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json", "classpath:bom-1.5.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "classpath:bom-1.6.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", "spdx.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/jsf-0.82.schema.json", "jsf-0.82.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json", "bom-1.2-strict.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json", "bom-1.3-strict.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", "bom-1.4.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json", "bom-1.5.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "bom-1.6.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.7.schema.json", "bom-1.7.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/cryptography-defs.schema.json", "cryptography-defs.schema.json");
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
-    SchemaRegistry registry = SchemaRegistry.builder()
+    final DialectRegistry dialectRegistry = new DefaultDialectRegistry(getCycloneDxJsonDialect());
+
+    final ClassLoader classLoader = this.getClass().getClassLoader();
+    final SchemaRegistry registry = SchemaRegistry.builder()
         .nodeReader(DefaultNodeReader.builder().jsonMapper(mapper).build())
-        .schemaIdResolvers(b -> b.mappings(offlineMappings))
+        // Load schemas from classpath resources using the classloader that owns
+        // *this* class. json-schema-validator otherwise uses the current thread's
+        // context classloader, which may not be able to access the schema resources.
+        // https://github.com/CycloneDX/cyclonedx-core-java/issues/849
+        .resourceLoaders(b -> b.add(iri -> {
+          final String resource = offlineMappings.get(iri.toString());
+          if (resource == null) {
+            return null;
+          }
+
+          return () -> {
+            final InputStream in = classLoader.getResourceAsStream(resource);
+            if (in == null) {
+              throw new FileNotFoundException(resource);
+            }
+
+            return in;
+          };
+        }))
         .schemaRegistryConfig(config)
+        .dialectRegistry(dialectRegistry)
         .build();
     return registry.getSchema(schemaNode);
+  }
+
+  /**
+   * Returns the JSON schema dialect used to interpret the CycloneDX JSON schemas.
+   * <p>
+   * The CycloneDX JSON schemas declare the draft-07 dialect but make use of the
+   * CycloneDX-specific {@code meta:enum} and {@code deprecated} annotation keywords,
+   * which are not part of draft-07. They are registered here as non-validating
+   * keywords so the underlying validator does not emit "Unknown keyword" warnings.
+   * The keywords carry no validation semantics, so validation behaviour is unchanged.
+   *
+   * @return a draft-07 based dialect that recognises the CycloneDX annotation keywords
+   */
+  static Dialect getCycloneDxJsonDialect() {
+    return Dialect.builder(Draft7.getInstance())
+        .keyword(new NonValidationKeyword("meta:enum"))
+        .keyword(new NonValidationKeyword("deprecated"))
+        .build();
   }
 
   private InputStream getJsonSchemaAsStream(final Version schemaVersion) {
@@ -117,8 +167,11 @@ public abstract class CycloneDxSchema
     else if(Version.VERSION_15 == schemaVersion){
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.5.schema.json");
     }
-    else {
+    else if(Version.VERSION_16 == schemaVersion){
       return this.getClass().getClassLoader().getResourceAsStream("bom-1.6.schema.json");
+    }
+    else {
+      return this.getClass().getClassLoader().getResourceAsStream("bom-1.7.schema.json");
     }
   }
 
@@ -149,8 +202,11 @@ public abstract class CycloneDxSchema
     else if (Version.VERSION_15 == schemaVersion) {
       return getXmlSchema15();
     }
-    else {
+    else if (Version.VERSION_16 == schemaVersion) {
       return getXmlSchema16();
+    }
+    else {
+      return getXmlSchema17();
     }
   }
 
@@ -256,6 +312,21 @@ public abstract class CycloneDxSchema
     return getXmlSchema(
         this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
         this.getClass().getClassLoader().getResourceAsStream("bom-1.6.xsd")
+    );
+  }
+
+  /**
+   * Returns the CycloneDX XML Schema from the specifications XSD.
+   *
+   * @return a Schema
+   * @throws SAXException a SAXException
+   * @since 10.0.0
+   */
+  private Schema getXmlSchema17() throws SAXException {
+    // Use local copies of schemas rather than resolving from the net. It's faster, and less prone to errors.
+    return getXmlSchema(
+        this.getClass().getClassLoader().getResourceAsStream("spdx.xsd"),
+        this.getClass().getClassLoader().getResourceAsStream("bom-1.7.xsd")
     );
   }
 

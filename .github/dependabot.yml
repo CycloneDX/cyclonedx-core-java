@@ -6,6 +6,11 @@ updates:
       interval: "daily"
     cooldown:
       default-days: 7
+    ignore:
+      # json-schema-validator v3 requires Java 17 and Jackson 3
+      # Remove once the project fulfills these preconditions.
+      - dependency-name: "com.networknt:json-schema-validator"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"

@@ -1,5 +1,5 @@
-[![Build Status](https://github.com/CycloneDX/cyclonedx-core-java/workflows/Maven%20CI/badge.svg)](https://github.com/CycloneDX/cyclonedx-core-java/actions?workflow=Maven+CI)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.cyclonedx/cyclonedx-core-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.cyclonedx/cyclonedx-core-java)
+[![Build Status](https://github.com/CycloneDX/cyclonedx-core-java/actions/workflows/maven.yml/badge.svg)](https://github.com/CycloneDX/cyclonedx-core-java/actions/workflows/maven.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/org.cyclonedx/cyclonedx-core-java?label=Maven%20Central)](https://central.sonatype.com/artifact/org.cyclonedx/cyclonedx-core-java)
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
 [![Website](https://img.shields.io/badge/https://-cyclonedx.org-blue.svg)](https://cyclonedx.org/)
 [![Slack Invite](https://img.shields.io/badge/Slack-Join-blue?logo=slack&labelColor=393939)](https://cyclonedx.org/slack/invite)
@@ -27,12 +27,13 @@ Maven Usage
 
 ## CycloneDX Schema Support
 
-The following table provides information on the version of this node module, the CycloneDX schema version supported, 
+The following table provides information on the version of this library, the CycloneDX schema version supported, 
 as well as the output format options. Use the latest possible version of this library that is the compatible with 
 the CycloneDX version supported by the target system.
 
 | Version |  Schema Version  | Format(s) |
 |---------|------------------|-----------|
+| 13.x    | CycloneDX v1.7.1 | XML/JSON  |
 | 12.x    | CycloneDX v1.6.1 | XML/JSON  |
 | 11.x    | CycloneDX v1.6.1 | XML/JSON  |
 | 10.x    | CycloneDX v1.6.1 | XML/JSON  |
@@ -49,15 +50,6 @@ the CycloneDX version supported by the target system.
 ## Library API Documentation
 
 The library API documentation can be viewed online at [https://cyclonedx.github.io/cyclonedx-core-java/](https://cyclonedx.github.io/cyclonedx-core-java/).
-
-## Updating the license list
-1. Download the latest tagged release from [this repo](https://github.com/spdx/license-list-data/tags).
-2. Extract the archived directory.
-3. Navigate to the `license-list-vX.X.X/text/` directory.
-4. Copy all licenses from that directory to the `src/main/java/resources/licenses/` directory in this repo.
-5. Copy `license-list-vX.X.X/json/licenses.json` into the `src/main/java/resources/licenses/` directory in this repo.
-6. Download [this file](http://cyclonedx.org/schema/spdx.schema.json) (ex: `curl http://cyclonedx.org/schema/spdx.schema.json -o spdx.schema.json`). The `$comment` field should match the version you donwloaded from GitHub. Copy this file into `src/main/resources/`.
-7. Download [this file](https://cyclonedx.org/schema/spdx.xsd) (ex `curl https://cyclonedx.org/schema/spdx.xsd -o spdx.xsd`). The version field should match the version you donwloaded from GitHub. Copy this file into `src/main/resources/`. 
 
 Copyright & License
 -------------------

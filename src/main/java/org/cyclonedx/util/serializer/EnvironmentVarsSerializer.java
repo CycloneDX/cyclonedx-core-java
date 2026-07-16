@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.cyclonedx.Version;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.formulation.common.EnvironmentVars;
 
@@ -15,13 +16,16 @@ public class EnvironmentVarsSerializer
 {
   private final boolean isXml;
 
-  public EnvironmentVarsSerializer(boolean isXml) {
-    this(null, isXml);
+  private final Version version;
+
+  public EnvironmentVarsSerializer(boolean isXml, Version version) {
+    this(null, isXml, version);
   }
 
-  public EnvironmentVarsSerializer(Class<EnvironmentVars> t, boolean isXml) {
+  public EnvironmentVarsSerializer(Class<EnvironmentVars> t, boolean isXml, Version version) {
     super(t);
     this.isXml = isXml;
+    this.version = version;
   }
 
   @Override

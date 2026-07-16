@@ -15,7 +15,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 @JsonPropertyOrder({
     "identifier",
     "title",
-    "text",
     "description",
     "requirements"
 })

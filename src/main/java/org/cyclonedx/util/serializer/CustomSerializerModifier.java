@@ -7,13 +7,18 @@ import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.VersionFilter;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CustomSerializerModifier
     extends BeanSerializerModifier
 {
+  private static final Logger LOGGER = Logger.getLogger(CustomSerializerModifier.class.getName());
+
   private final Version version;
 
   private final boolean isXml;
@@ -29,12 +34,28 @@ public class CustomSerializerModifier
       BeanDescription beanDesc,
       List<BeanPropertyWriter> beanProperties)
   {
-    //Properties were introduced in 1.3 for XML and 1.5 for JSON
-    //Meaning that we should only serialize properties if the version is 1.3 or higher for XML
-    //and 1.5 or higher for JSON
-    //This is to ensure backwards compatibility with older versions of the schema
+    // Automatically remove fields annotated with @VersionFilter whose version
+    // is above the target generation version. This applies to ALL model classes,
+    // ensuring version-specific fields are never serialized for older BOM versions.
+    Iterator<BeanPropertyWriter> iterator = beanProperties.iterator();
+    while (iterator.hasNext()) {
+      BeanPropertyWriter writer = iterator.next();
+      VersionFilter filter = writer.getAnnotation(VersionFilter.class);
+      if (filter != null && filter.value().getVersion() > version.getVersion()) {
+        if (LOGGER.isLoggable(Level.FINE)) {
+          LOGGER.fine(String.format(
+              "Removing field '%s' on %s: introduced in version %s but generating for version %s",
+              writer.getName(), beanDesc.getBeanClass().getSimpleName(),
+              filter.value().getVersionString(), version.getVersionString()));
+        }
+        iterator.remove();
+      }
+    }
+
+    // Special case: Bom.properties has different version thresholds for XML (1.3) and JSON (1.5).
+    // This cannot be expressed with a single @VersionFilter annotation.
     if (Bom.class.isAssignableFrom(beanDesc.getBeanClass())) {
-      Iterator<BeanPropertyWriter> iterator = beanProperties.iterator();
+      iterator = beanProperties.iterator();
       while (iterator.hasNext()) {
         BeanPropertyWriter writer = iterator.next();
         if (isValidAttribute(writer)) {

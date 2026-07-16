@@ -12,7 +12,8 @@ public enum Version
   VERSION_13(CycloneDxSchema.NS_BOM_13, "1.3", 1.3, EnumSet.of(XML, JSON)),
   VERSION_14(CycloneDxSchema.NS_BOM_14, "1.4", 1.4, EnumSet.of(XML, JSON)),
   VERSION_15(CycloneDxSchema.NS_BOM_15, "1.5", 1.5, EnumSet.of(XML, JSON)),
-  VERSION_16(CycloneDxSchema.NS_BOM_16, "1.6", 1.6, EnumSet.of(XML, JSON));
+  VERSION_16(CycloneDxSchema.NS_BOM_16, "1.6", 1.6, EnumSet.of(XML, JSON)),
+  VERSION_17(CycloneDxSchema.NS_BOM_17, "1.7", 1.7, EnumSet.of(XML, JSON));
 
   private final String namespace;
 
@@ -61,6 +62,7 @@ public enum Version
         case "1.4": return VERSION_14;
         case "1.5": return VERSION_15;
         case "1.6": return VERSION_16;
+        case "1.7": return VERSION_17;
       }
     }
     return null;
