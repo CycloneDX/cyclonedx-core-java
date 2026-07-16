@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
@@ -141,7 +142,9 @@ public class SerializerUtils
   }
 
   public static void serializeProperty(String propertyName,  Property prop, ToXmlGenerator xmlGenerator) throws IOException {
-    xmlGenerator.writeFieldName(propertyName);
+    if (StringUtils.isNotBlank(propertyName)) {
+      xmlGenerator.writeFieldName(propertyName);
+    }
     xmlGenerator.writeStartObject();
     xmlGenerator.setNextIsAttribute(true);
     xmlGenerator.writeFieldName("name");

@@ -133,6 +133,10 @@ public class BomXmlGenerator extends AbstractBomGenerator
         return toXML(bom, true);
     }
 
+    public String toXmlString(boolean prettyPrint) throws GeneratorException {
+        return toXML(bom, prettyPrint);
+    }
+
     /**
      * Creates a text representation of a CycloneDX BoM Document. This method calls {@link #toXmlString()} and will return
      * an empty string if {@link #toXmlString()} throws an exception. It's preferred to call {@link #toXmlString()}
