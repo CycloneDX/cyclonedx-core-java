@@ -137,6 +137,15 @@ public class XmlParserTest
     }
 
     @Test
+    public void testValid12BomWithUtf8ByteOrderMarker() throws Exception {
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-utf8bom.xml")).getFile());
+        final XmlParser parser = new XmlParser();
+        assertNotNull(parser.parse(file));
+        assertNotNull(getXmlBom("bom-1.2-utf8bom.xml"));
+        assertTrue(parser.isValid(file, Version.VERSION_12));
+    }
+
+    @Test
     public void testValidBomLink() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.4-bomlink.xml")).getFile());
         final XmlParser parser = new XmlParser();
