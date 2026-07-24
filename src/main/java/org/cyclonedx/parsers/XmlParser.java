@@ -24,6 +24,7 @@ import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.util.XmlFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -335,9 +336,15 @@ public class XmlParser extends CycloneDxSchema implements Parser {
     private Document createSecureDocument(InputSource in) throws ParserConfigurationException, IOException, SAXException
     {
         //https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#xpathexpression
-        DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-        df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        DocumentBuilderFactory df = XmlFactoryUtils.newDocumentBuilderFactory();
+        try {
+            df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        } catch (IllegalArgumentException e) {
+            // JAXP 1.5 secure-processing attributes are not supported by outdated
+            // DocumentBuilderFactory implementations (e.g. Xerces 2.x found on the classpath):
+            // secure processing below still prevents external entity resolution, so ignore
+        }
         df.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder builder = df.newDocumentBuilder();
         return builder.parse(in);

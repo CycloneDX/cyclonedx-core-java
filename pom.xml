@@ -201,6 +201,16 @@
             <version>6.0.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- outdated XML parser on the test classpath: ensures XML BOM validation keeps working
+             even when a library leaks Xerces 2.x onto the classpath (regression for
+             https://github.com/CycloneDX/cyclonedx-gradle-plugin/issues/349) -->
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -30,6 +30,7 @@ import com.networknt.schema.keyword.NonValidationKeyword;
 import com.networknt.schema.serialization.DefaultNodeReader;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
+import org.cyclonedx.util.XmlFactoryUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -331,9 +332,16 @@ public abstract class CycloneDxSchema
   }
 
   public Schema getXmlSchema(InputStream... inputStreams) throws SAXException {
-    final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-    schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    final SchemaFactory schemaFactory = XmlFactoryUtils.newSchemaFactory();
+    try {
+      schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+      schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    } catch (SAXException e) {
+      // JAXP 1.5 secure-processing properties are not supported by outdated SchemaFactory
+      // implementations (e.g. Xerces 2.x found on the classpath): restricting external access
+      // is a hardening measure and not required for correctness, as only local schema copies
+      // are used, so ignore and continue
+    }
     schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     final Source[] schemaFiles = new Source[inputStreams.length];
     for (int i = 0; i < inputStreams.length; i++) {
