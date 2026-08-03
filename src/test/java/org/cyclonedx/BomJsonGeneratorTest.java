@@ -145,6 +145,7 @@ public class BomJsonGeneratorTest {
 
     static Stream<Arguments> testData() {
         return Stream.of(
+            Arguments.of(Version.VERSION_17, "/1.7/valid-bom-1.7.xml"),
             Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.xml"),
             Arguments.of(Version.VERSION_15, "/bom-1.5.xml"),
             Arguments.of(Version.VERSION_14, "/bom-1.4.xml"),
@@ -165,6 +166,13 @@ public class BomJsonGeneratorTest {
         File file = writeToFile(generator.toJsonString());
         JsonParser parser = new JsonParser();
         assertTrue(parser.isValid(file, version));
+
+        // Verify that with pretty printing disabled the output JSON is smaller
+        long prettyPrintedSize = file.length();
+        file = writeToFile(generator.toJsonString(false));
+        assertTrue(parser.isValid(file, version));
+        assertTrue(file.length() < prettyPrintedSize,
+                   "Non pretty-printed output size should be smaller than pretty printed output size");
     }
 
     @Test

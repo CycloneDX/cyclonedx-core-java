@@ -34,28 +34,27 @@ import java.util.List;
 public class ToolInformationDeserializer
     extends JsonDeserializer<ToolInformation>
 {
-  private final ObjectMapper mapper = new ObjectMapper();
-
   @Override
   public ToolInformation deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
       throws IOException
   {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    return parseToolInformation(node);
+    ObjectMapper mapper = getMapper(jsonParser);
+    return parseToolInformation(node, mapper);
   }
 
-  private ToolInformation parseToolInformation(JsonNode toolsNode) {
+  private ToolInformation parseToolInformation(JsonNode toolsNode, ObjectMapper mapper) {
     ToolInformation toolInformation = new ToolInformation();
     if (toolsNode.has("components")) {
-      parseComponents(toolsNode.get("components"), toolInformation);
+      parseComponents(toolsNode.get("components"), toolInformation, mapper);
     }
     if (toolsNode.has("services")) {
-      parseServices(toolsNode.get("services"), toolInformation);
+      parseServices(toolsNode.get("services"), toolInformation, mapper);
     }
     return toolInformation;
   }
 
-  private void parseComponents(JsonNode componentsNode, ToolInformation toolInformation) {
+  private void parseComponents(JsonNode componentsNode, ToolInformation toolInformation, ObjectMapper mapper) {
     if (componentsNode != null) {
       // Case JSON input where "components" is an array
       if (componentsNode.isArray()) {
@@ -76,7 +75,7 @@ public class ToolInformationDeserializer
     }
   }
 
-  private void parseServices(JsonNode servicesNode, ToolInformation toolInformation) {
+  private void parseServices(JsonNode servicesNode, ToolInformation toolInformation, ObjectMapper mapper) {
     if (servicesNode != null) {
       // Case JSON input where "services" is an array
       if (servicesNode.isArray()) {
@@ -94,6 +93,14 @@ public class ToolInformationDeserializer
           toolInformation.getServices().add(service);
         }
       }
+    }
+  }
+
+  private ObjectMapper getMapper(JsonParser jsonParser) {
+    if (jsonParser.getCodec() instanceof ObjectMapper) {
+      return (ObjectMapper) jsonParser.getCodec();
+    } else {
+      return new ObjectMapper();
     }
   }
 }

@@ -20,14 +20,19 @@ package org.cyclonedx.parsers;
 
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Citation;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
-import org.cyclonedx.model.TlpClassification;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Patent;
+import org.cyclonedx.model.PatentAssertion;
+import org.cyclonedx.model.PatentFamily;
+import org.cyclonedx.model.PatentItem;
+import org.cyclonedx.model.TlpClassification;
 import org.cyclonedx.model.attestation.Assessor;
 import org.cyclonedx.model.attestation.Attestation;
 import org.cyclonedx.model.attestation.AttestationMap;
@@ -64,14 +69,10 @@ import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
-import org.cyclonedx.model.license.ExpressionDetailed;
 import org.cyclonedx.model.license.ExpressionDetail;
-import org.cyclonedx.model.Citation;
-import org.cyclonedx.model.Patent;
-import org.cyclonedx.model.PatentFamily;
-import org.cyclonedx.model.PatentAssertion;
-import org.cyclonedx.model.PatentItem;
+import org.cyclonedx.model.license.ExpressionDetailed;
 import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,6 +97,15 @@ public class JsonParserTest
         Bom bom = parser.parse(file);
         assertTrue(parser.isValid(file, Version.VERSION_12));
         System.out.println(bom.getSerialNumber());
+    }
+
+    @Test
+    public void testValid12BomWithUtf8ByteOrderMarker() throws Exception {
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-utf8bom.json")).getFile());
+        final JsonParser parser = new JsonParser();
+        assertNotNull(parser.parse(file));
+        assertNotNull(getJsonBom("bom-1.2-utf8bom.json"));
+        assertTrue(parser.isValid(file, Version.VERSION_12));
     }
 
     @Test
@@ -840,6 +850,21 @@ public class JsonParserTest
         final Bom bom = getJsonBom("regression/issue562.json");
         assertEquals(2, bom.getMetadata().getToolChoice().getComponents().size());
         assertEquals(2, bom.getMetadata().getAuthors().size());
+    }
+
+    @Test
+    public void testIssue815Regression() throws Exception {
+        final Bom bom = getJsonBom("regression/issue815.json");
+        assertNotNull(bom.getMetadata().getToolChoice());
+        assertEquals(1, bom.getMetadata().getToolChoice().getComponents().size());
+        Component tool = bom.getMetadata().getToolChoice().getComponents().get(0);
+        assertEquals("CycloneDX module for .NET", tool.getName());
+        assertEquals("6.1.0.0", tool.getVersion());
+        assertNotNull(tool.getAuthors());
+        assertEquals(1, tool.getAuthors().size());
+        assertEquals("CycloneDX", tool.getAuthors().get(0).getName());
+        assertNotNull(tool.getExternalReferences());
+        assertEquals(1, tool.getExternalReferences().size());
     }
 
     @Test

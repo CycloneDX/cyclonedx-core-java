@@ -139,6 +139,15 @@ public class XmlParserTest
     }
 
     @Test
+    public void testValid12BomWithUtf8ByteOrderMarker() throws Exception {
+        final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.2-utf8bom.xml")).getFile());
+        final XmlParser parser = new XmlParser();
+        assertNotNull(parser.parse(file));
+        assertNotNull(getXmlBom("bom-1.2-utf8bom.xml"));
+        assertTrue(parser.isValid(file, Version.VERSION_12));
+    }
+
+    @Test
     public void testValidBomLink() throws Exception {
         final File file = new File(Objects.requireNonNull(this.getClass().getResource("/bom-1.4-bomlink.xml")).getFile());
         final XmlParser parser = new XmlParser();
@@ -996,6 +1005,21 @@ public class XmlParserTest
         final Bom bom = getXmlBom("regression/issue562.xml");
         assertEquals(2, bom.getMetadata().getToolChoice().getComponents().size());
         assertEquals(2, bom.getMetadata().getAuthors().size());
+    }
+
+    @Test
+    public void testIssue815Regression() throws Exception {
+        final Bom bom = getXmlBom("regression/issue815.xml");
+        assertNotNull(bom.getMetadata().getToolChoice());
+        assertEquals(1, bom.getMetadata().getToolChoice().getComponents().size());
+        Component tool = bom.getMetadata().getToolChoice().getComponents().get(0);
+        assertEquals("CycloneDX module for .NET", tool.getName());
+        assertEquals("6.1.0.0", tool.getVersion());
+        assertNotNull(tool.getAuthors());
+        assertEquals(1, tool.getAuthors().size());
+        assertEquals("CycloneDX", tool.getAuthors().get(0).getName());
+        assertNotNull(tool.getExternalReferences());
+        assertEquals(1, tool.getExternalReferences().size());
     }
 
     @Test

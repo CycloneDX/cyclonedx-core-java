@@ -49,7 +49,11 @@ public class Hash {
         @VersionFilter(Version.VERSION_12)
         BLAKE2b_512("BLAKE2b-512"),
         @VersionFilter(Version.VERSION_12)
-        BLAKE3("BLAKE3");
+        BLAKE3("BLAKE3"),
+        @VersionFilter(Version.VERSION_17)
+        STREEBOG_256("Streebog-256"),
+        @VersionFilter(Version.VERSION_17)
+        STREEBOG_512("Streebog-512");
 
         private final String spec;
 

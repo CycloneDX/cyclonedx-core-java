@@ -154,6 +154,12 @@ public final class BomUtils {
                 case BLAKE2b_512:
                 case BLAKE3:
                     return MessageDigest.getInstance(algorithm.getSpec());
+                case STREEBOG_256:
+                    // NB: Requires a 3rd party library such as BouncyCastle.
+                    return MessageDigest.getInstance("GOST3411-2012-256");
+                case STREEBOG_512:
+                    // NB: Requires a 3rd party library such as BouncyCastle.
+                    return MessageDigest.getInstance("GOST3411-2012-512");
                 default:
                     throw new IllegalArgumentException("Unsupported algorithm: " + algorithm.getSpec());
             }

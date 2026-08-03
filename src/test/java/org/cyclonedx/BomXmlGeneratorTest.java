@@ -182,6 +182,7 @@ public class BomXmlGeneratorTest {
 
     static Stream<Arguments> testData() {
         return Stream.of(
+            Arguments.of(Version.VERSION_17, "/1.7/valid-bom-1.7.json"),
             Arguments.of(Version.VERSION_16, "/1.6/valid-bom-1.6.json"),
             Arguments.of(Version.VERSION_15, "/bom-1.5.json"),
             Arguments.of(Version.VERSION_14, "/bom-1.4.json"),
@@ -191,17 +192,24 @@ public class BomXmlGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("testData")
-    public void testXmlGeneration(Version version, String bomXmlPath)
+    public void testXmlGeneration(Version version, String bomJsonPath)
         throws Exception
     {
-        Bom bom = createCommonJsonBom(bomXmlPath);
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
+        Bom bom = createCommonJsonBom(bomJsonPath);
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
 
         assertEquals(version, generator.getSchemaVersion());
 
-        File file = writeToFile(generator.toJsonString());
-        JsonParser parser = new JsonParser();
+        File file = writeToFile(generator.toXmlString());
+        XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(file, version));
+
+        // Verify that with pretty printing disabled the output XML is smaller
+        long prettyPrintedSize = file.length();
+        file = writeToFile(generator.toXmlString(false));
+        assertTrue(parser.isValid(file, version));
+        assertTrue(file.length() < prettyPrintedSize,
+                   "Non pretty-printed output size should be smaller than pretty printed output size");
     }
 
     @Test
@@ -825,10 +833,10 @@ public class BomXmlGeneratorTest {
         component.setType(Type.APPLICATION);
         bom.getMetadata().getToolChoice().getComponents().add(component);
 
-        BomJsonGenerator generator = BomGeneratorFactory.createJson(version, bom);
-        File loadedFile = writeToFile(generator.toJsonString());
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
 
-        JsonParser parser = new JsonParser();
+        XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
     }
 

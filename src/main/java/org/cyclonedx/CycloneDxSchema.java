@@ -37,6 +37,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -94,22 +95,41 @@ public abstract class CycloneDxSchema
     final SchemaRegistryConfig config = SchemaRegistryConfig.builder().preloadSchema(false).build();
 
     final Map<String, String> offlineMappings = new HashMap<>();
-    offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", "classpath:spdx.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/jsf-0.82.schema.json", "classpath:jsf-0.82.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json", "classpath:bom-1.2-strict.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json", "classpath:bom-1.3-strict.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", "classpath:bom-1.4.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json", "classpath:bom-1.5.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "classpath:bom-1.6.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/bom-1.7.schema.json", "classpath:bom-1.7.schema.json");
-    offlineMappings.put("http://cyclonedx.org/schema/cryptography-defs.schema.json",
-        "classpath:cryptography-defs.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/spdx.schema.json", "spdx.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/jsf-0.82.schema.json", "jsf-0.82.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.2.schema.json", "bom-1.2-strict.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.3.schema.json", "bom-1.3-strict.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.4.schema.json", "bom-1.4.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.5.schema.json", "bom-1.5.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.6.schema.json", "bom-1.6.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/bom-1.7.schema.json", "bom-1.7.schema.json");
+    offlineMappings.put("http://cyclonedx.org/schema/cryptography-defs.schema.json", "cryptography-defs.schema.json");
 
     JsonNode schemaNode = mapper.readTree(spdxInstream);
     final DialectRegistry dialectRegistry = new DefaultDialectRegistry(getCycloneDxJsonDialect());
-    SchemaRegistry registry = SchemaRegistry.builder()
+
+    final ClassLoader classLoader = this.getClass().getClassLoader();
+    final SchemaRegistry registry = SchemaRegistry.builder()
         .nodeReader(DefaultNodeReader.builder().jsonMapper(mapper).build())
-        .schemaIdResolvers(b -> b.mappings(offlineMappings))
+        // Load schemas from classpath resources using the classloader that owns
+        // *this* class. json-schema-validator otherwise uses the current thread's
+        // context classloader, which may not be able to access the schema resources.
+        // https://github.com/CycloneDX/cyclonedx-core-java/issues/849
+        .resourceLoaders(b -> b.add(iri -> {
+          final String resource = offlineMappings.get(iri.toString());
+          if (resource == null) {
+            return null;
+          }
+
+          return () -> {
+            final InputStream in = classLoader.getResourceAsStream(resource);
+            if (in == null) {
+              throw new FileNotFoundException(resource);
+            }
+
+            return in;
+          };
+        }))
         .schemaRegistryConfig(config)
         .dialectRegistry(dialectRegistry)
         .build();

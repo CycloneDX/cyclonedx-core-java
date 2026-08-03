@@ -53,11 +53,11 @@ public class PropertiesSerializer
   private static void serializeXml(final List<Property> properties, final ToXmlGenerator xmlGenerator)
       throws IOException
   {
-    xmlGenerator.writeStartArray();
+    // NB - In this context Jackson already knows we're producing <property> elements so no need to explicitly try and
+    //      write the property field name otherwise we end up with malformed XML with double wrapped <property> elements
     for (Property property : properties) {
-      SerializerUtils.serializeProperty("property", property, xmlGenerator);
+      SerializerUtils.serializeProperty(null, property, xmlGenerator);
     }
-    xmlGenerator.writeEndArray();
   }
 
   @Override

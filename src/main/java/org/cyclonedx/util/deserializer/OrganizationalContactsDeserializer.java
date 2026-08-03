@@ -28,33 +28,25 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.OrganizationalContact;
 
-public class ToolsDeserializer
-        extends JsonDeserializer<List<Tool>>
+public class OrganizationalContactsDeserializer
+    extends JsonDeserializer<List<OrganizationalContact>>
 {
-  private final ToolDeserializer toolDeserializer = new ToolDeserializer();
-
   @Override
-  public List<Tool> deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    ObjectMapper mapper = getMapper(jsonParser);
-    return parseTools(node.has("tool") ? node.get("tool") : node, jsonParser, ctxt, mapper);
+  public List<OrganizationalContact> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    JsonNode node = parser.getCodec().readTree(parser);
+    ObjectMapper mapper = getMapper(parser);
+    return parseContacts(node.has("author") ? node.get("author") : node, mapper);
   }
 
-  private List<Tool> parseTools(JsonNode node, JsonParser p, DeserializationContext ctxt, ObjectMapper mapper) throws IOException {
-    List<Tool> tools = new ArrayList<>();
+  private List<OrganizationalContact> parseContacts(JsonNode node, ObjectMapper mapper) {
+    List<OrganizationalContact> contacts = new ArrayList<>();
     ArrayNode nodes = DeserializerUtils.getArrayNode(node, mapper);
-    for (JsonNode toolNode : nodes) {
-      tools.add(parseTool(toolNode, p, ctxt));
+    for (JsonNode contactNode : nodes) {
+      contacts.add(mapper.convertValue(contactNode, OrganizationalContact.class));
     }
-    return tools;
-  }
-
-  private Tool parseTool(JsonNode node, JsonParser p, DeserializationContext ctxt) throws IOException {
-    JsonParser toolParser = node.traverse(p.getCodec());
-    toolParser.nextToken();
-    return toolDeserializer.deserialize(toolParser, ctxt);
+    return contacts;
   }
 
   private ObjectMapper getMapper(JsonParser jsonParser) {
