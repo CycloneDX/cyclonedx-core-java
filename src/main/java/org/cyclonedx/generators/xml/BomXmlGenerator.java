@@ -35,6 +35,7 @@ import org.cyclonedx.generators.AbstractBomGenerator;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.util.XmlFactoryUtils;
 import org.cyclonedx.util.introspector.VersionXmlAnnotationIntrospector;
 import org.cyclonedx.util.serializer.DependencySerializer;
 import org.w3c.dom.Document;
@@ -84,7 +85,7 @@ public class BomXmlGenerator extends AbstractBomGenerator
      * @throws javax.xml.parsers.ParserConfigurationException thrown if there is a parser configuration exception
      */
     private DocumentBuilder buildSecureDocumentBuilder() throws ParserConfigurationException {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = XmlFactoryUtils.newDocumentBuilderFactory();
         factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);

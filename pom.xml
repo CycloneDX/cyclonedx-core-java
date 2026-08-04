@@ -16,7 +16,9 @@
 
   Copyright (c) OWASP Foundation. All Rights Reserved.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -144,7 +146,7 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.20.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
@@ -199,6 +201,17 @@
             <groupId>net.javacrumbs.json-unit</groupId>
             <artifactId>json-unit-assertj</artifactId>
             <version>6.0.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- outdated XML parser used by XercesFallbackTest, which forces it via the JAXP system
+             properties to verify that BOM parsing/validation stays functional and XXE-safe when
+             an old parser is chosen instead of the JDK's built-in one (regression for
+             https://github.com/CycloneDX/cyclonedx-gradle-plugin/issues/349) -->
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
