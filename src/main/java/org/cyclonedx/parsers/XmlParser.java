@@ -33,13 +33,15 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
@@ -219,9 +221,9 @@ public class XmlParser extends CycloneDxSchema implements Parser {
             } catch (SAXException e) {
                 // JAXP 1.5 secure-processing properties are not supported by outdated Validator
                 // implementations (e.g. Xerces 2.x found on the classpath), leaving the validator
-                // vulnerable to XXE. Compensate by parsing the input with the hardened (DOCTYPE
-                // rejecting) DocumentBuilder and validating the resulting DOM instead
-                validationSource = toSecureDomSource(source);
+                // vulnerable to XXE. Compensate by feeding the raw input through a hardened
+                // XMLReader, keeping validation streaming
+                validationSource = toSecureSaxSource(source);
             }
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
@@ -246,16 +248,37 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         return exceptions;
     }
 
-    private Source toSecureDomSource(final Source source) throws ParserConfigurationException, IOException, SAXException {
-        if (!(source instanceof StreamSource)) {
+    private Source toSecureSaxSource(final Source source) throws ParserConfigurationException, SAXException {
+        final InputSource inputSource;
+        if (source instanceof StreamSource) {
+            final StreamSource streamSource = (StreamSource) source;
+            inputSource = new InputSource(streamSource.getSystemId());
+            inputSource.setByteStream(streamSource.getInputStream());
+            inputSource.setCharacterStream(streamSource.getReader());
+        } else if (source instanceof SAXSource) {
+            inputSource = ((SAXSource) source).getInputSource();
+        } else {
+            // DOMSource/StAXSource carry pre-parsed content: the validator has no raw XML
+            // left to parse, so there is nothing to harden here
             return source;
         }
-        final StreamSource streamSource = (StreamSource) source;
-        final InputSource inputSource = new InputSource(streamSource.getSystemId());
-        inputSource.setByteStream(streamSource.getInputStream());
-        inputSource.setCharacterStream(streamSource.getReader());
-        // namespace awareness is required for schema validation of a DOM
-        return new DOMSource(createSecureDocument(inputSource, true));
+        return new SAXSource(createSecureXmlReader(), inputSource);
+    }
+
+    private XMLReader createSecureXmlReader() throws ParserConfigurationException, SAXException {
+        final SAXParserFactory factory = XmlFactoryUtils.newSAXParserFactory();
+        factory.setNamespaceAware(true);
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        final XMLReader reader = factory.newSAXParser().getXMLReader();
+        try {
+            reader.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            reader.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        } catch (SAXException e) {
+            // same compensation as in createSecureDocument: disallow DOCTYPE declarations
+            // entirely when the JAXP 1.5 properties are unsupported
+            reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        }
+        return reader;
     }
 
     /**
@@ -359,14 +382,8 @@ public class XmlParser extends CycloneDxSchema implements Parser {
 
     private Document createSecureDocument(InputSource in) throws ParserConfigurationException, IOException, SAXException
     {
-        return createSecureDocument(in, false);
-    }
-
-    private Document createSecureDocument(InputSource in, boolean namespaceAware) throws ParserConfigurationException, IOException, SAXException
-    {
         //https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#xpathexpression
         DocumentBuilderFactory df = XmlFactoryUtils.newDocumentBuilderFactory();
-        df.setNamespaceAware(namespaceAware);
         try {
             df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");

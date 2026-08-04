@@ -24,13 +24,9 @@ import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.XmlFactoryUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.util.SetSystemProperty;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.validation.SchemaFactory;
 import java.io.InputStream;
 import java.util.List;
 
@@ -46,29 +42,18 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * path (including the XXE compensations) on every JVM, Xerces is forced via the explicit JAXP
  * system properties, which {@link XmlFactoryUtils} deliberately honors.</p>
  */
+@SetSystemProperty(key = "javax.xml.parsers.DocumentBuilderFactory", value = "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl")
+@SetSystemProperty(key = "javax.xml.parsers.SAXParserFactory", value = "org.apache.xerces.jaxp.SAXParserFactoryImpl")
+@SetSystemProperty(key = "javax.xml.validation.SchemaFactory:http://www.w3.org/2001/XMLSchema", value = "org.apache.xerces.jaxp.validation.XMLSchemaFactory")
 class XercesFallbackTest {
-
-    private static final String DBF_PROPERTY = DocumentBuilderFactory.class.getName();
-
-    private static final String SF_PROPERTY = SchemaFactory.class.getName() + ":" + XMLConstants.W3C_XML_SCHEMA_NS_URI;
-
-    @BeforeAll
-    static void forceXerces() {
-        System.setProperty(DBF_PROPERTY, "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-        System.setProperty(SF_PROPERTY, "org.apache.xerces.jaxp.validation.XMLSchemaFactory");
-    }
-
-    @AfterAll
-    static void restoreDefaults() {
-        System.clearProperty(DBF_PROPERTY);
-        System.clearProperty(SF_PROPERTY);
-    }
 
     @Test
     void factoriesShouldBeXerces() {
         // guards the premise of this test class: Xerces is actually instantiated
         assertThat(XmlFactoryUtils.newDocumentBuilderFactory().getClass().getName())
                 .isEqualTo("org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+        assertThat(XmlFactoryUtils.newSAXParserFactory().getClass().getName())
+                .isEqualTo("org.apache.xerces.jaxp.SAXParserFactoryImpl");
         assertThat(XmlFactoryUtils.newSchemaFactory().getClass().getName())
                 .isEqualTo("org.apache.xerces.jaxp.validation.XMLSchemaFactory");
     }
