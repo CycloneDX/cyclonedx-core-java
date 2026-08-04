@@ -80,7 +80,7 @@
         <maven.cyclonedx.plugin.version>2.9.2</maven.cyclonedx.plugin.version>
         <maven.javadoc.plugin.version>3.12.0</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
-        <maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
+        <maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.6.0</maven.github.release.plugin.version>
         <project.build.outputTimestamp>2026-07-16T17:12:50Z</project.build.outputTimestamp>
 
