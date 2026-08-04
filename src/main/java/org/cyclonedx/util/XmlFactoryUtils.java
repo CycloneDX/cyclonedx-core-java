@@ -33,6 +33,11 @@ import javax.xml.validation.SchemaFactory;
  * recognized}, because such parsers pre-date the JAXP 1.5 secure-processing properties.
  * See <a href="https://github.com/CycloneDX/cyclonedx-gradle-plugin/issues/349">cyclonedx-gradle-plugin#349</a>.</p>
  *
+ * <p>An implementation explicitly requested via the JAXP system properties
+ * ({@code javax.xml.parsers.DocumentBuilderFactory} /
+ * {@code javax.xml.validation.SchemaFactory:<schemaLanguage>}) is still honored, as that is a
+ * deliberate configuration choice rather than an accidental classpath leak.</p>
+ *
  * <p>The {@code newDefaultInstance()} factory methods only exist since Java 9 while this library
  * targets Java 8, so they are invoked reflectively, falling back to the standard lookup.</p>
  *
@@ -44,29 +49,38 @@ public final class XmlFactoryUtils
     }
 
     /**
-     * Creates a new {@link DocumentBuilderFactory}, preferring the JDK's built-in implementation.
+     * Creates a new {@link DocumentBuilderFactory}, preferring the JDK's built-in implementation
+     * unless one is explicitly requested via the {@code javax.xml.parsers.DocumentBuilderFactory}
+     * system property.
      *
      * @return a new {@link DocumentBuilderFactory}
      */
     public static DocumentBuilderFactory newDocumentBuilderFactory() {
-        try {
-            return (DocumentBuilderFactory) DocumentBuilderFactory.class.getMethod("newDefaultInstance").invoke(null);
-        } catch (ReflectiveOperationException e) {
-            return DocumentBuilderFactory.newInstance();
+        if (System.getProperty(DocumentBuilderFactory.class.getName()) == null) {
+            try {
+                return (DocumentBuilderFactory) DocumentBuilderFactory.class.getMethod("newDefaultInstance").invoke(null);
+            } catch (ReflectiveOperationException e) {
+                // Java 8: fall back to the standard lookup below
+            }
         }
+        return DocumentBuilderFactory.newInstance();
     }
 
     /**
      * Creates a new {@link SchemaFactory} for W3C XML Schema, preferring the JDK's built-in
-     * implementation.
+     * implementation unless one is explicitly requested via the
+     * {@code javax.xml.validation.SchemaFactory:http://www.w3.org/2001/XMLSchema} system property.
      *
      * @return a new {@link SchemaFactory}
      */
     public static SchemaFactory newSchemaFactory() {
-        try {
-            return (SchemaFactory) SchemaFactory.class.getMethod("newDefaultInstance").invoke(null);
-        } catch (ReflectiveOperationException e) {
-            return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        if (System.getProperty(SchemaFactory.class.getName() + ":" + XMLConstants.W3C_XML_SCHEMA_NS_URI) == null) {
+            try {
+                return (SchemaFactory) SchemaFactory.class.getMethod("newDefaultInstance").invoke(null);
+            } catch (ReflectiveOperationException e) {
+                // Java 8: fall back to the standard lookup below
+            }
         }
+        return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     }
 }

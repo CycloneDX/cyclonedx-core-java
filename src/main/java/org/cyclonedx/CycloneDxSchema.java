@@ -338,9 +338,10 @@ public abstract class CycloneDxSchema
       schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
     } catch (SAXException e) {
       // JAXP 1.5 secure-processing properties are not supported by outdated SchemaFactory
-      // implementations (e.g. Xerces 2.x found on the classpath): restricting external access
-      // is a hardening measure and not required for correctness, as only local schema copies
-      // are used, so ignore and continue
+      // implementations (e.g. Xerces 2.x found on the classpath). Secure processing alone does
+      // not prevent XXE there, so compensate by disallowing DOCTYPE declarations entirely;
+      // if that is unsupported too, fail rather than validate insecurely
+      schemaFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     }
     schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     final Source[] schemaFiles = new Source[inputStreams.length];

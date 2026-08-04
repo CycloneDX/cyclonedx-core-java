@@ -39,6 +39,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
@@ -211,6 +212,17 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         try {
             final Schema schema = getXmlSchema(schemaVersion);
             final Validator validator = schema.newValidator();
+            Source validationSource = source;
+            try {
+                validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            } catch (SAXException e) {
+                // JAXP 1.5 secure-processing properties are not supported by outdated Validator
+                // implementations (e.g. Xerces 2.x found on the classpath), leaving the validator
+                // vulnerable to XXE. Compensate by parsing the input with the hardened (DOCTYPE
+                // rejecting) DocumentBuilder and validating the resulting DOM instead
+                validationSource = toSecureDomSource(source);
+            }
             validator.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void warning(SAXParseException e) {
@@ -227,11 +239,23 @@ public class XmlParser extends CycloneDxSchema implements Parser {
                     exceptions.add(new ParseException(e.getMessage(), e));
                 }
             });
-            validator.validate(source);
-        } catch (SAXException e) {
+            validator.validate(validationSource);
+        } catch (SAXException | ParserConfigurationException e) {
             exceptions.add(new ParseException(e.getMessage(), e));
         }
         return exceptions;
+    }
+
+    private Source toSecureDomSource(final Source source) throws ParserConfigurationException, IOException, SAXException {
+        if (!(source instanceof StreamSource)) {
+            return source;
+        }
+        final StreamSource streamSource = (StreamSource) source;
+        final InputSource inputSource = new InputSource(streamSource.getSystemId());
+        inputSource.setByteStream(streamSource.getInputStream());
+        inputSource.setCharacterStream(streamSource.getReader());
+        // namespace awareness is required for schema validation of a DOM
+        return new DOMSource(createSecureDocument(inputSource, true));
     }
 
     /**
@@ -335,15 +359,24 @@ public class XmlParser extends CycloneDxSchema implements Parser {
 
     private Document createSecureDocument(InputSource in) throws ParserConfigurationException, IOException, SAXException
     {
+        return createSecureDocument(in, false);
+    }
+
+    private Document createSecureDocument(InputSource in, boolean namespaceAware) throws ParserConfigurationException, IOException, SAXException
+    {
         //https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#xpathexpression
         DocumentBuilderFactory df = XmlFactoryUtils.newDocumentBuilderFactory();
+        df.setNamespaceAware(namespaceAware);
         try {
             df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         } catch (IllegalArgumentException e) {
             // JAXP 1.5 secure-processing attributes are not supported by outdated
-            // DocumentBuilderFactory implementations (e.g. Xerces 2.x found on the classpath):
-            // secure processing below still prevents external entity resolution, so ignore
+            // DocumentBuilderFactory implementations (e.g. Xerces 2.x found on the classpath).
+            // Secure processing alone does not prevent XXE there, so compensate by disallowing
+            // DOCTYPE declarations entirely; if that is unsupported too, fail rather than
+            // parse insecurely
+            df.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         }
         df.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder builder = df.newDocumentBuilder();
