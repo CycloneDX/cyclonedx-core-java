@@ -16,16 +16,14 @@
 
   Copyright (c) OWASP Foundation. All Rights Reserved.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
     <packaging>jar</packaging>
-    <version>13.1.0-SNAPSHOT</version>
+    <version>13.1.0</version>
 
     <name>CycloneDX Core (Java)</name>
     <description>The CycloneDX core module provides a model representation of the BOM along with utilities to assist in creating, parsing, and validating BOMs.</description>
@@ -84,7 +82,7 @@
         <maven.source.plugin.version>3.4.0</maven.source.plugin.version>
         <maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.6.0</maven.github.release.plugin.version>
-        <project.build.outputTimestamp>2026-07-16T17:12:50Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-08-05T12:16:31Z</project.build.outputTimestamp>
 
         <!-- Default SCM Properties -->
         <scm.connection>scm:git:https://github.com/CycloneDX/cyclonedx-core-java.git</scm.connection>
@@ -95,7 +93,7 @@
     <scm>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
-        <tag>HEAD</tag>
+        <tag>cyclonedx-core-java-13.1.0</tag>
         <url>${scm.url}</url>
     </scm>
 
