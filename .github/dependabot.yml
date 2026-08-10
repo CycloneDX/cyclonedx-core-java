@@ -11,10 +11,13 @@ updates:
       # Remove once the project fulfills these preconditions.
       - dependency-name: "com.networknt:json-schema-validator"
         update-types: ["version-update:semver-major"]
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
     cooldown:
       default-days: 7
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
