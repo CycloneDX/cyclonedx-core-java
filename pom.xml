@@ -179,6 +179,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.18</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- outdated XML parser used by XercesFallbackTest, which forces it via the JAXP system
              properties to verify that BOM parsing/validation stays functional and XXE-safe when
              an old parser is chosen instead of the JDK's built-in one (regression for
