@@ -19,6 +19,7 @@
 package org.cyclonedx.parsers;
 
 import org.cyclonedx.Version;
+import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Citation;
 import org.cyclonedx.model.Component;
@@ -97,6 +98,27 @@ public class JsonParserTest
         Bom bom = parser.parse(file);
         assertTrue(parser.isValid(file, Version.VERSION_12));
         System.out.println(bom.getSerialNumber());
+    }
+
+    @Test
+    public void testValidationErrorsIncludeInstanceLocation() throws Exception {
+        final String bomJson = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "components": [
+                    {
+                      "type": "no-such-type",
+                      "name": "acme-lib"
+                    }
+                  ]
+                }
+                """;
+        final List<ParseException> exceptions =
+                new JsonParser().validate(bomJson, Version.VERSION_16);
+        assertThat(exceptions)
+                .isNotEmpty()
+                .anySatisfy(e -> assertThat(e.getMessage()).startsWith("/components/0/type: "));
     }
 
     @Test

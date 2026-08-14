@@ -187,8 +187,15 @@ public class JsonParser extends CycloneDxSchema implements Parser {
         }
 
         List<Error> errors = getJsonSchema(schemaVersion, mapper).validate(mapper.readTree(bomJson.toString()));
-        for (Error message: errors) {
-            exceptions.add(new ParseException(message.getMessage()));
+        for (Error error : errors) {
+            final boolean hasLocation =
+                    error.getInstanceLocation() != null
+                            && error.getInstanceLocation().getNameCount() > 0;
+            exceptions.add(
+                    new ParseException(
+                            hasLocation
+                                    ? error.getInstanceLocation() + ": " + error.getMessage()
+                                    : error.getMessage()));
         }
 
         return exceptions;
