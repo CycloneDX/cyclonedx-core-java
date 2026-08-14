@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.model.Property;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class PropertiesSerializer
   public void serialize(List<Property> properties, JsonGenerator jsonGenerator, SerializerProvider serializers)
       throws IOException
   {
-    if (CollectionUtils.isEmpty(properties)) {
+    if (properties == null || properties.isEmpty()) {
       return; // Do not serialize if the list is null or empty
     }
 

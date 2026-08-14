@@ -19,9 +19,6 @@
 package org.cyclonedx;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
-import java.nio.charset.StandardCharsets;
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
@@ -45,13 +42,19 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 import java.util.Objects;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BomJsonGeneratorTest {
 
@@ -105,8 +108,7 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void schema12MultipleDependenciesJsonTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(
-            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.2.json")));
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.2.json")).readAllBytes();
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -131,8 +133,7 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void schema13MultipleDependenciesJsonTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(
-            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.3.json")));
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.3.json")).readAllBytes();
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -177,8 +178,7 @@ public class BomJsonGeneratorTest {
 
     @Test
     public void schema14MultipleDependenciesJsonTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(
-            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.4.json")));
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.4.json")).readAllBytes();
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -1048,14 +1048,14 @@ public class BomJsonGeneratorTest {
 
     private Bom createCommonXmlBom(String resource) throws Exception {
         final byte[] bomBytes =
-            IOUtils.toByteArray(Objects.requireNonNull(this.getClass().getResourceAsStream(resource)));
+            Objects.requireNonNull(this.getClass().getResourceAsStream(resource)).readAllBytes();
         XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
     }
 
     private Bom createCommonJsonBom(String resource) throws Exception {
         final byte[] bomBytes =
-            IOUtils.toByteArray(Objects.requireNonNull(this.getClass().getResourceAsStream(resource)));
+            Objects.requireNonNull(this.getClass().getResourceAsStream(resource)).readAllBytes();
         JsonParser parser = new JsonParser();
         return parser.parse(bomBytes);
     }

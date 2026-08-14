@@ -27,7 +27,6 @@ import org.cyclonedx.parsers.Parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.apache.commons.io.IOUtils.resourceToByteArray;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ObjectLocatorTest {
@@ -36,7 +35,7 @@ class ObjectLocatorTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        final byte[] bomBytes = resourceToByteArray("/bom-object-locator.json");
+        final byte[] bomBytes = ObjectLocatorTest.class.getResourceAsStream("/bom-object-locator.json").readAllBytes();
         final Parser parser = BomParserFactory.createParser(bomBytes);
         bom = parser.parse(bomBytes);
     }

@@ -18,8 +18,6 @@
  */
 package org.cyclonedx.util;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.VersionFilter;
@@ -109,7 +107,7 @@ public final class BomUtils {
                 digests.stream().parallel().forEach(d -> d.update(buf, 0, read));
             }
         }
-        digests.stream().map(d -> new Hash(toAlgorithm(d), Hex.encodeHexString(d.digest()))).forEach(hashes::add);
+        digests.stream().map(d -> new Hash(toAlgorithm(d), toHexString(d.digest()))).forEach(hashes::add);
         return hashes;
     }
 
@@ -133,27 +131,6 @@ public final class BomUtils {
     private static MessageDigest getDigestForAlgorithm(Hash.Algorithm algorithm) {
         try {
             switch (algorithm) {
-                case MD5:
-                    return DigestUtils.getMd5Digest();
-                case SHA1:
-                    return DigestUtils.getSha1Digest();
-                case SHA_256:
-                    return DigestUtils.getSha256Digest();
-                case SHA_384:
-                    return DigestUtils.getSha384Digest();
-                case SHA_512:
-                    return DigestUtils.getSha512Digest();
-                case SHA3_256:
-                    return DigestUtils.getSha3_256Digest();
-                case SHA3_384:
-                    return DigestUtils.getSha3_384Digest();
-                case SHA3_512:
-                    return DigestUtils.getSha3_512Digest();
-                case BLAKE2b_256:
-                case BLAKE2b_384:
-                case BLAKE2b_512:
-                case BLAKE3:
-                    return MessageDigest.getInstance(algorithm.getSpec());
                 case STREEBOG_256:
                     // NB: Requires a 3rd party library such as BouncyCastle.
                     return MessageDigest.getInstance("GOST3411-2012-256");
@@ -161,11 +138,21 @@ public final class BomUtils {
                     // NB: Requires a 3rd party library such as BouncyCastle.
                     return MessageDigest.getInstance("GOST3411-2012-512");
                 default:
-                    throw new IllegalArgumentException("Unsupported algorithm: " + algorithm.getSpec());
+                    // BLAKE2b and BLAKE3 also require a 3rd party library such as BouncyCastle.
+                    return MessageDigest.getInstance(algorithm.getSpec());
             }
-        } catch (NoSuchAlgorithmException | NoSuchMethodError e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Algorithm not available: " + algorithm.getSpec(), e);
         }
+    }
+
+    private static String toHexString(final byte[] bytes) {
+        final StringBuilder sb = new StringBuilder(bytes.length * 2);
+        for (final byte b : bytes) {
+            sb.append(Character.forDigit((b >> 4) & 0xF, 16));
+            sb.append(Character.forDigit(b & 0xF, 16));
+        }
+        return sb.toString();
     }
 
     private static Hash.Algorithm toAlgorithm(MessageDigest digest) {

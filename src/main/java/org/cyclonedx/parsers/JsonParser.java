@@ -21,8 +21,6 @@ package org.cyclonedx.parsers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.Error;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Format;
 import org.cyclonedx.Version;
@@ -32,8 +30,8 @@ import org.cyclonedx.model.Bom;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +104,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public List<ParseException> validate(final File file, final Version schemaVersion) throws IOException {
-        return validate(FileUtils.readFileToString(file, StandardCharsets.UTF_8), schemaVersion);
+        return validate(mapper.readTree(file), schemaVersion);
     }
 
     /**
@@ -120,7 +118,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public List<ParseException> validate(final byte[] bomBytes, final Version schemaVersion) throws IOException {
-        return validate(new String(bomBytes), schemaVersion);
+        return validate(mapper.readTree(bomBytes), schemaVersion);
     }
 
     /**
@@ -134,7 +132,14 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public List<ParseException> validate(final Reader reader, final Version schemaVersion) throws IOException {
-        return validate(IOUtils.toString(reader), schemaVersion);
+        // NB: Jackson does not strip a UTF-8 BOM from char-based input, but it DOES do that
+        // for byte-based input, hence the manual handling here.
+        final PushbackReader pushbackReader = new PushbackReader(reader);
+        final int firstChar = pushbackReader.read();
+        if (firstChar != -1 && firstChar != '\uFEFF') {
+            pushbackReader.unread(firstChar);
+        }
+        return validate(mapper.readTree(pushbackReader), schemaVersion);
     }
 
     /**
@@ -148,7 +153,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public List<ParseException> validate(final InputStream inputStream, final Version schemaVersion) throws IOException {
-        return validate(IOUtils.toString(inputStream, StandardCharsets.UTF_8), schemaVersion);
+        return validate(mapper.readTree(inputStream), schemaVersion);
     }
 
     /**

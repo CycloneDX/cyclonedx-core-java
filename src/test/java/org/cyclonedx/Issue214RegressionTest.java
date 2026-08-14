@@ -1,17 +1,7 @@
 package org.cyclonedx;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
-
-import org.apache.commons.io.IOUtils;
-import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.exception.GeneratorException;
+import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Bom;
@@ -25,6 +15,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 
 public class Issue214RegressionTest
@@ -78,7 +77,7 @@ public class Issue214RegressionTest
     {
         try (InputStream is = getClass().getResourceAsStream(pPath)) {
             if (is != null) {
-                String result = IOUtils.toString(is, StandardCharsets.UTF_8);
+                String result = new String(is.readAllBytes(), StandardCharsets.UTF_8);
                 result = result.replaceAll(Pattern.quote("${specVersion}"), pSpecVersion.getVersionString());
                 return result;
             }

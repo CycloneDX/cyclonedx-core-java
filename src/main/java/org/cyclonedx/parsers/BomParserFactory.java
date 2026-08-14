@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.parsers;
 
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.exception.ParseException;
 
 import java.io.File;
@@ -35,7 +34,14 @@ public class BomParserFactory {
     public static Parser createParser(final File file) throws ParseException {
         try (final InputStream fis = Files.newInputStream(file.toPath())) {
             final byte[] prefix = new byte[4]; // potential 3-byte UTF-8 byte-order mark + 1 content byte
-            final int actualPrefixLength = IOUtils.read(fis, prefix);
+            int actualPrefixLength = 0;
+            while (actualPrefixLength < prefix.length) {
+                final int read = fis.read(prefix, actualPrefixLength, prefix.length - actualPrefixLength);
+                if (read == -1) {
+                    break;
+                }
+                actualPrefixLength += read;
+            }
             return createParser(Arrays.copyOf(prefix, actualPrefixLength));
         } catch (IOException e) {
             throw new ParseException("An error occurred creating parser from file", e);

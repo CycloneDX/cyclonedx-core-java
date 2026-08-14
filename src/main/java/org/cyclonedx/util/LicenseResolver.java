@@ -19,16 +19,14 @@
 package org.cyclonedx.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.IOUtils;
+import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
-import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.license.Expression;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -112,7 +110,7 @@ public final class LicenseResolver {
           licenses = mapper.readValue(is, LicenseList.class);        
         }
 
-        if (licenses != null && CollectionUtils.isNotEmpty(licenses.licenses)) {
+        if (licenses != null && (licenses.licenses != null && !licenses.licenses.isEmpty())) {
             for (LicenseDetail licenseDetail : licenses.licenses) {
 
                 final String primaryLicenseUrl = (licenseDetail.seeAlso != null && !licenseDetail.seeAlso.isEmpty()) ? licenseDetail.seeAlso.get(0) : null;
@@ -163,7 +161,7 @@ public final class LicenseResolver {
 
         if (mappings != null) {
             for (final SpdxLicenseMapping licenseMapping : mappings) {
-                if (CollectionUtils.isNotEmpty(licenseMapping.names)) {
+                if (licenseMapping.names != null && !licenseMapping.names.isEmpty()) {
                     for (final String name : licenseMapping.names) {
                         if (licenseString.equalsIgnoreCase(name)) {
                             if (licenseMapping.exp.startsWith("(") && licenseMapping.exp.endsWith(")")) {
@@ -197,19 +195,18 @@ public final class LicenseResolver {
         license.setId(licenseId);
         license.setUrl(primaryLicenseUrl);
         if (!isDeprecatedLicenseId && licenseTextSettings.isTextIncluded()) {
-            final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/" + licenseId + ".txt");
-            if (is != null) {
-                final String text = IOUtils.toString(is, StandardCharsets.UTF_8);
+            final byte[] text = readLicenseText(licenseId);
+            if (text != null) {
                 final AttachmentText attachment = new AttachmentText();
                 attachment.setContentType("text/plain");
                 switch(licenseTextSettings.getEncoding()){
                     case NONE:
                         attachment.setEncoding(null);
-                        attachment.setText(text);
+                        attachment.setText(new String(text, StandardCharsets.UTF_8));
                         break;
                     case BASE64:
                         attachment.setEncoding(licenseTextSettings.getEncoding().toString());
-                        attachment.setText(Base64.getEncoder().encodeToString(text.getBytes(Charset.defaultCharset())));
+                        attachment.setText(Base64.getEncoder().encodeToString(text));
                         break;
                     default:
                         throw new IllegalArgumentException("Unhandled License Encoding:" + licenseTextSettings.getEncoding().toString() );
@@ -264,6 +261,22 @@ public final class LicenseResolver {
         }
         public void setEncoding(LicenseEncoding encoding) {
             this.encoding = encoding;
+        }
+    }
+
+    private static byte[] readLicenseText(final String licenseId) throws IOException {
+        try (final InputStream is = LicenseResolver.class.getResourceAsStream("/licenses/" + licenseId + ".txt")) {
+            if (is == null) {
+                return null;
+            }
+
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+            final byte[] buf = new byte[8192];
+            int n;
+            while ((n = is.read(buf)) != -1) {
+                out.write(buf, 0, n);
+            }
+            return out.toByteArray();
         }
     }
 

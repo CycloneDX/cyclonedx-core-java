@@ -1,14 +1,12 @@
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.model.attestation.affirmation.Signatory;
+
+import java.io.IOException;
 
 public class SignatorySerializer
     extends StdSerializer<Signatory>
@@ -39,14 +37,14 @@ public class SignatorySerializer
       throws IOException
   {
     //It might have extensible types (signature)
-    if (CollectionUtils.isNotEmpty(signatory.getExtensibleTypes())) {
+    if (signatory.getExtensibleTypes() != null && !signatory.getExtensibleTypes().isEmpty()) {
       gen.writeStartObject();
 
-      if (StringUtils.isNotBlank(signatory.getName())) {
+      if (signatory.getName() != null && !signatory.getName().trim().isEmpty()) {
         gen.writeStringField("name", signatory.getName());
       }
 
-      if (StringUtils.isNotBlank(signatory.getRole())) {
+      if (signatory.getRole() != null && !signatory.getRole().trim().isEmpty()) {
         gen.writeStringField("role", signatory.getRole());
       }
 
@@ -70,11 +68,11 @@ public class SignatorySerializer
     if (shouldSerialize) {
       gen.writeStartObject();
 
-      if (StringUtils.isNotBlank(signatory.getName())) {
+      if (signatory.getName() != null && !signatory.getName().trim().isEmpty()) {
         gen.writeStringField("name", signatory.getName());
       }
 
-      if (StringUtils.isNotBlank(signatory.getRole())) {
+      if (signatory.getRole() != null && !signatory.getRole().trim().isEmpty()) {
         gen.writeStringField("role", signatory.getRole());
       }
 

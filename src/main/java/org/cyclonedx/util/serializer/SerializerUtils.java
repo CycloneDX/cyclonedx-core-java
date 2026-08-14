@@ -1,21 +1,20 @@
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.Hash.Algorithm;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.VersionFilter;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SerializerUtils
 {
@@ -142,7 +141,7 @@ public class SerializerUtils
   }
 
   public static void serializeProperty(String propertyName,  Property prop, ToXmlGenerator xmlGenerator) throws IOException {
-    if (StringUtils.isNotBlank(propertyName)) {
+    if (propertyName != null && !propertyName.trim().isEmpty()) {
       xmlGenerator.writeFieldName(propertyName);
     }
     xmlGenerator.writeStartObject();

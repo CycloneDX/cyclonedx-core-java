@@ -1,14 +1,13 @@
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.formulation.common.OutputType;
+
+import java.io.IOException;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
 
@@ -101,7 +100,7 @@ public class OutputTypeSerializer
       xmlGenerator.writeFieldName("target");
       xmlGenerator.writeObject(output.getTarget());
     }
-    if (CollectionUtils.isNotEmpty(output.getProperties()) && shouldSerializeField(output, version, "properties")) {
+    if ((output.getProperties() != null && !output.getProperties().isEmpty()) && shouldSerializeField(output, version, "properties")) {
       xmlGenerator.writeFieldName("properties");
       xmlGenerator.writeObject(output.getProperties());
     }
