@@ -18,14 +18,6 @@
  */
 package org.cyclonedx.parsers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Annotation;
@@ -78,6 +70,12 @@ import org.cyclonedx.model.vulnerability.Vulnerability.Analysis.State;
 import org.cyclonedx.model.vulnerability.Vulnerability.Rating.Method;
 import org.cyclonedx.model.vulnerability.Vulnerability.Rating.Severity;
 import org.cyclonedx.model.vulnerability.Vulnerability.Version.Status;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -334,7 +332,7 @@ public class AbstractParserTest
       assertNull(inputType.getData());
       assertNull(inputType.getEnvironmentVars());
     }
-    else if (CollectionUtils.isNotEmpty(inputType.getParameters())) {
+    else if (inputType.getParameters() != null && !inputType.getParameters().isEmpty()) {
       assertNull(inputType.getResource());
       assertNull(inputType.getData());
       assertNull(inputType.getEnvironmentVars());
@@ -427,7 +425,7 @@ public class AbstractParserTest
   }
 
   private void assertProperties(List<Property> properties) {
-    if (CollectionUtils.isNotEmpty(properties)) {
+    if (properties != null && !properties.isEmpty()) {
       Property property = properties.get(0);
       assertNotNull(property.getName());
       assertNotNull(property.getValue());
@@ -1029,6 +1027,6 @@ public class AbstractParserTest
 
   private byte[] getBomBytes(String filename) throws IOException {
     final InputStream inputStream = this.getClass().getResourceAsStream("/" + filename);
-    return IOUtils.toByteArray(Objects.requireNonNull(inputStream));
+    return Objects.requireNonNull(inputStream).readAllBytes();
   }
 }

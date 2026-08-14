@@ -18,20 +18,12 @@
  */
 package org.cyclonedx.util.deserializer;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.cyclonedx.model.ExtensibleType;
 import org.cyclonedx.model.Extension;
 import org.cyclonedx.model.Extension.ExtensionType;
@@ -43,6 +35,13 @@ import org.cyclonedx.model.vulnerability.Vulnerability10.Recommendation;
 import org.cyclonedx.model.vulnerability.Vulnerability10.Score;
 import org.cyclonedx.model.vulnerability.Vulnerability10.ScoreSource;
 import org.cyclonedx.model.vulnerability.Vulnerability10.Severity;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ExtensionDeserializer extends StdDeserializer<Extension>
 {
@@ -183,8 +182,10 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
 
   private Cwe processCwe(final JsonNode cwe) {
     Cwe c = new Cwe();
-    if (NumberUtils.isParsable(cwe.textValue())) {
+    try {
       c.setText(Integer.valueOf(cwe.textValue()));
+    } catch (NumberFormatException e) {
+      // Not a CWE ID; leave unset.
     }
     return c;
   }

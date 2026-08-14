@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.parsers;
 
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
@@ -101,7 +100,7 @@ class XercesFallbackTest {
     private static byte[] resource(final String name) throws Exception {
         try (final InputStream inputStream = XercesFallbackTest.class.getResourceAsStream(name)) {
             assertThat(inputStream).isNotNull();
-            return IOUtils.toByteArray(inputStream);
+            return inputStream.readAllBytes();
         }
     }
 }

@@ -18,14 +18,10 @@
  */
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
@@ -33,8 +29,10 @@ import org.cyclonedx.model.LicenseItem;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
-import org.cyclonedx.model.license.ExpressionDetailed;
 import org.cyclonedx.model.license.ExpressionDetail;
+import org.cyclonedx.model.license.ExpressionDetailed;
+
+import java.io.IOException;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
 
@@ -102,10 +100,10 @@ public class LicenseChoiceSerializer
     toXmlGenerator.writeStartObject();
     serializeXmlAttributes(toXmlGenerator, l.getBomRef(), l.getAcknowledgement(), l);
 
-    if (StringUtils.isNotBlank(l.getId())) {
+    if (l.getId() != null && !l.getId().trim().isEmpty()) {
       toXmlGenerator.writeStringField("id", l.getId());
     }
-    else if (StringUtils.isNotBlank(l.getName())) {
+    else if (l.getName() != null && !l.getName().trim().isEmpty()) {
       toXmlGenerator.writeStringField("name", l.getName());
     }
 
@@ -117,11 +115,11 @@ public class LicenseChoiceSerializer
       toXmlGenerator.writeObjectField("text", l.getAttachmentText());
     }
 
-    if (StringUtils.isNotBlank(l.getUrl())) {
+    if (l.getUrl() != null && !l.getUrl().trim().isEmpty()) {
       toXmlGenerator.writeStringField("url", l.getUrl());
     }
 
-    if (CollectionUtils.isNotEmpty(l.getProperties()) && shouldSerializeField(l, version, "properties")) {
+    if ((l.getProperties() != null && !l.getProperties().isEmpty()) && shouldSerializeField(l, version, "properties")) {
       toXmlGenerator.writeFieldName("properties");
       toXmlGenerator.writeStartObject();
 
@@ -132,7 +130,7 @@ public class LicenseChoiceSerializer
     }
 
     //It might have extensible types
-    if(CollectionUtils.isNotEmpty(l.getExtensibleTypes())) {
+    if (l.getExtensibleTypes() != null && !l.getExtensibleTypes().isEmpty()) {
       new ExtensibleTypesSerializer().serialize(l.getExtensibleTypes(), toXmlGenerator, provider);
     }
 
@@ -145,7 +143,7 @@ public class LicenseChoiceSerializer
       final Acknowledgement acknowledgement,
       final Object object) throws IOException
   {
-    if (StringUtils.isNotBlank(bomRef) && shouldSerializeField(object, version, "bomRef")) {
+    if ((bomRef != null && !bomRef.trim().isEmpty()) && shouldSerializeField(object, version, "bomRef")) {
       toXmlGenerator.setNextIsAttribute(true);
       toXmlGenerator.writeFieldName("bom-ref");
       toXmlGenerator.writeString(bomRef);
@@ -204,7 +202,7 @@ public class LicenseChoiceSerializer
     toXmlGenerator.writeStartObject();
 
     // Write expression as an attribute (required)
-    if (StringUtils.isNotBlank(expressionDetailed.getExpression())) {
+    if (expressionDetailed.getExpression() != null && !expressionDetailed.getExpression().trim().isEmpty()) {
       toXmlGenerator.setNextIsAttribute(true);
       toXmlGenerator.writeFieldName("expression");
       toXmlGenerator.writeString(expressionDetailed.getExpression());
@@ -214,7 +212,7 @@ public class LicenseChoiceSerializer
     // Write other attributes (bom-ref, acknowledgement)
     serializeXmlAttributes(toXmlGenerator, expressionDetailed.getBomRef(), expressionDetailed.getAcknowledgement(), expressionDetailed);
 
-    if (CollectionUtils.isNotEmpty(expressionDetailed.getExpressionDetails())) {
+    if (expressionDetailed.getExpressionDetails() != null && !expressionDetailed.getExpressionDetails().isEmpty()) {
       for (ExpressionDetail detail : expressionDetailed.getExpressionDetails()) {
         toXmlGenerator.writeObjectField("details", detail);
       }
@@ -224,7 +222,7 @@ public class LicenseChoiceSerializer
       toXmlGenerator.writeObjectField("licensing", expressionDetailed.getLicensing());
     }
 
-    if (CollectionUtils.isNotEmpty(expressionDetailed.getProperties()) && shouldSerializeField(expressionDetailed, version, "properties")) {
+    if ((expressionDetailed.getProperties() != null && !expressionDetailed.getProperties().isEmpty()) && shouldSerializeField(expressionDetailed, version, "properties")) {
       toXmlGenerator.writeFieldName("properties");
       toXmlGenerator.writeStartObject();
       for (Property property : expressionDetailed.getProperties()) {
@@ -242,7 +240,7 @@ public class LicenseChoiceSerializer
     if (expression.getAcknowledgement() != null && shouldSerializeField(expression, version, "acknowledgement")) {
       gen.writeStringField("acknowledgement", expression.getAcknowledgement().getValue());
     }
-    if (StringUtils.isNotBlank(expression.getBomRef()) && shouldSerializeField(expression, version, "bomRef")) {
+    if ((expression.getBomRef() != null && !expression.getBomRef().trim().isEmpty()) && shouldSerializeField(expression, version, "bomRef")) {
       gen.writeStringField("bom-ref", expression.getBomRef());
     }
   }
@@ -251,22 +249,22 @@ public class LicenseChoiceSerializer
       final ExpressionDetailed expressionDetailed, final JsonGenerator gen, final SerializerProvider provider)
       throws IOException {
     // Flatten the expressionDetailed fields into the license item object
-    if (StringUtils.isNotBlank(expressionDetailed.getBomRef())) {
+    if (expressionDetailed.getBomRef() != null && !expressionDetailed.getBomRef().trim().isEmpty()) {
       gen.writeStringField("bom-ref", expressionDetailed.getBomRef());
     }
     if (expressionDetailed.getAcknowledgement() != null) {
       gen.writeObjectField("acknowledgement", expressionDetailed.getAcknowledgement());
     }
-    if (StringUtils.isNotBlank(expressionDetailed.getExpression())) {
+    if (expressionDetailed.getExpression() != null && !expressionDetailed.getExpression().trim().isEmpty()) {
       gen.writeStringField("expression", expressionDetailed.getExpression());
     }
-    if (CollectionUtils.isNotEmpty(expressionDetailed.getExpressionDetails())) {
+    if (expressionDetailed.getExpressionDetails() != null && !expressionDetailed.getExpressionDetails().isEmpty()) {
       gen.writeObjectField("expressionDetails", expressionDetailed.getExpressionDetails());
     }
     if (expressionDetailed.getLicensing() != null) {
       gen.writeObjectField("licensing", expressionDetailed.getLicensing());
     }
-    if (CollectionUtils.isNotEmpty(expressionDetailed.getProperties())) {
+    if (expressionDetailed.getProperties() != null && !expressionDetailed.getProperties().isEmpty()) {
       gen.writeObjectField("properties", expressionDetailed.getProperties());
     }
   }

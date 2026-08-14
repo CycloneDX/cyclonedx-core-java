@@ -18,20 +18,19 @@
  */
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.function.BiPredicate;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.ExternalReference.Type;
 import org.cyclonedx.model.Hash;
 import org.cyclonedx.util.BomUtils;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.BiPredicate;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.serializeHashJson;
 
@@ -86,7 +85,7 @@ public class ExternalReferenceSerializer
     }
 
     List<Hash> hashes = SerializerUtils.filterHashesByVersion(extRef.getHashes(), version);
-    if (CollectionUtils.isNotEmpty(hashes)) {
+    if (hashes != null && !hashes.isEmpty()) {
       toXmlGenerator.writeFieldName("hashes");
       toXmlGenerator.writeStartObject();
       for (Hash hash : hashes) {
@@ -107,7 +106,7 @@ public class ExternalReferenceSerializer
     }
 
     List<Hash> hashes = SerializerUtils.filterHashesByVersion(extRef.getHashes(), version);
-    if (CollectionUtils.isNotEmpty(hashes)) {
+    if (hashes != null && !hashes.isEmpty()) {
       gen.writeFieldName("hashes");
       gen.writeStartArray();
       for (Hash hash : hashes) {

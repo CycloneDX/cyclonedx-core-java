@@ -18,18 +18,18 @@
  */
 package org.cyclonedx.util;
 
-import org.apache.commons.io.FileUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Hash;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static org.apache.commons.io.FileUtils.ONE_KB;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.cyclonedx.model.Hash.Algorithm.MD5;
 import static org.cyclonedx.model.Hash.Algorithm.SHA1;
@@ -41,6 +41,8 @@ import static org.cyclonedx.model.Hash.Algorithm.SHA_384;
 import static org.cyclonedx.model.Hash.Algorithm.SHA_512;
 
 public class BomUtilsTest {
+
+    private static final int ONE_KB = 1024;
 
     @Test
     public void calculateHashes() throws Exception {
@@ -105,11 +107,11 @@ public class BomUtilsTest {
         if (file.exists() && file.isFile() && file.length() == 10 * ONE_KB * ONE_KB) {
             return file;
         }
-        FileUtils.deleteQuietly(file);
+        Files.deleteIfExists(file.toPath());
         final byte[] partial = new byte[(int) ONE_KB];
         for (int i = 0; i < 10 * ONE_KB; i++) {
             Arrays.fill(partial, (byte)i);
-            FileUtils.writeByteArrayToFile(file, partial, true);
+            Files.write(file.toPath(), partial, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         }
         return file;
     }

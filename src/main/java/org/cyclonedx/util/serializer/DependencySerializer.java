@@ -18,24 +18,21 @@
  */
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonSerializer;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.DependencyList;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.util.List;
 
 public class DependencySerializer extends StdSerializer<DependencyList> implements ContextualSerializer
 {
@@ -71,7 +68,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
       throws IOException
   {
     try {
-      if ((generator instanceof ToXmlGenerator)) {
+      if (generator instanceof ToXmlGenerator) {
         writeXMLDependenciesWithGenerator((ToXmlGenerator) generator,
             dependencies);
       }
@@ -91,7 +88,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
           generator.writeStartObject();
           generator.writeStringField(REF, dependency.getRef());
           generator.writeArrayFieldStart("dependsOn");
-          if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
+          if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
             for (Dependency subDependency : dependency.getDependencies()) {
               generator.writeString(subDependency.getRef());
             }
@@ -125,7 +122,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
   {
     processNamespace(generator, "dependency");
 
-    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
+    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
       generator.writeStartArray();
     }
 
@@ -134,14 +131,14 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
     generator.writeString(dependency.getRef());
     generator.setNextIsAttribute(false);
 
-    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
+    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
       for (Dependency subDependency : dependency.getDependencies()) {
         // You got Shay'd
         writeXMLDependency(subDependency, generator);
       }
     }
 
-    if (CollectionUtils.isNotEmpty(dependency.getDependencies())) {
+    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
     generator.writeEndArray();
   }
 
@@ -153,7 +150,7 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
   {
     QName qName;
 
-    String dependenciesNamespace = StringUtils.isBlank(dependencies) ? "dependencies" : dependencies;
+    String dependenciesNamespace = (dependencies == null || dependencies.trim().isEmpty()) ? "dependencies" : dependencies;
 
     if (useNamespace) {
       qName = new QName(CycloneDxSchema.NS_DEPENDENCY_GRAPH_10, dependenciesNamespace, "dg");

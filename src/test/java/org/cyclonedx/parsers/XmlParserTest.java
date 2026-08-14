@@ -18,7 +18,6 @@
  */
 package org.cyclonedx.parsers;
 
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
@@ -1202,7 +1201,7 @@ public class XmlParserTest
         final byte[] bomBytes;
         try (final InputStream bomInputStream = getClass().getResourceAsStream("/security/xxe-protection.xml")) {
             assertThat(bomInputStream).isNotNull();
-            bomBytes = IOUtils.toByteArray(bomInputStream);
+            bomBytes = bomInputStream.readAllBytes();
         }
 
         final List<ParseException> validationFailures = new XmlParser().validate(bomBytes);

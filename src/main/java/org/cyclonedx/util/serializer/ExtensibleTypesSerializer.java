@@ -18,19 +18,17 @@
  */
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.ExtensibleType;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.io.IOException;
+import java.util.List;
 
 public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType>>
 {
@@ -53,9 +51,9 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
     final ToXmlGenerator toXmlGenerator = (ToXmlGenerator) generator;
     final XMLStreamWriter staxWriter = toXmlGenerator.getStaxWriter();
     try {
-      if (CollectionUtils.isNotEmpty(extensibleTypes)) {
+      if (extensibleTypes != null && !extensibleTypes.isEmpty()) {
         for (ExtensibleType ext : extensibleTypes) {
-          if (CollectionUtils.isNotEmpty(ext.getAttributes())) {
+          if (ext.getAttributes() != null && !ext.getAttributes().isEmpty()) {
             Attribute xmlNS = ext.getAttributes().stream()
                 .filter(a -> a.getKey().contains(XMLNS))
                 .findAny()
@@ -72,7 +70,7 @@ public class ExtensibleTypesSerializer extends StdSerializer<List<ExtensibleType
             staxWriter.writeStartElement(ext.getNamespace(), ext.getName(), "http://www.w3.org/1999/xhtml");
           }
 
-          if (CollectionUtils.isNotEmpty(ext.getExtensibleTypes())) {
+          if (ext.getExtensibleTypes() != null && !ext.getExtensibleTypes().isEmpty()) {
             serialize(ext.getExtensibleTypes(), generator, provider);
           }
           if (ext.getValue() != null) {

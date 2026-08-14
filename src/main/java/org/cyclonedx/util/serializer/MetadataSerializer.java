@@ -1,17 +1,16 @@
 package org.cyclonedx.util.serializer;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import org.apache.commons.collections4.CollectionUtils;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.Property;
 import org.cyclonedx.model.metadata.ToolInformation;
+
+import java.io.IOException;
+import java.util.List;
 
 import static org.cyclonedx.util.serializer.SerializerUtils.shouldSerializeField;
 
@@ -66,7 +65,7 @@ public class MetadataSerializer
     //Tools
     parseTools(metadata, jsonGenerator);
 
-    if (CollectionUtils.isNotEmpty(metadata.getAuthors()) && shouldSerializeField(metadata, version, "author")) {
+    if ((metadata.getAuthors() != null && !metadata.getAuthors().isEmpty()) && shouldSerializeField(metadata, version, "author")) {
       if (isXml) {
         ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
         writeArrayFieldXML(metadata.getAuthors(), xmlGenerator, "author");
@@ -97,7 +96,7 @@ public class MetadataSerializer
       new LicenseChoiceSerializer(isXml, version).serialize(metadata.getLicenses(), jsonGenerator, serializerProvider);
     }
 
-    if (CollectionUtils.isNotEmpty(metadata.getProperties()) && shouldSerializeField(metadata, version, "properties")) {
+    if ((metadata.getProperties() != null && !metadata.getProperties().isEmpty()) && shouldSerializeField(metadata, version, "properties")) {
       if (isXml) {
         ToXmlGenerator xmlGenerator = (ToXmlGenerator) jsonGenerator;
         xmlGenerator.writeFieldName("properties");
@@ -131,18 +130,18 @@ public class MetadataSerializer
         jsonGenerator.writeFieldName("tools");
         jsonGenerator.writeStartObject();
         if (isXml && jsonGenerator instanceof ToXmlGenerator) {
-          if (CollectionUtils.isNotEmpty(choice.getComponents())) {
+          if (choice.getComponents() != null && !choice.getComponents().isEmpty()) {
             writeArrayFieldXML(choice.getComponents(), (ToXmlGenerator) jsonGenerator, "component");
           }
-          if (CollectionUtils.isNotEmpty(choice.getServices())) {
+          if (choice.getServices() != null && !choice.getServices().isEmpty()) {
             writeArrayFieldXML(choice.getServices(), (ToXmlGenerator) jsonGenerator, "service");
           }
         }
         else {
-          if (CollectionUtils.isNotEmpty(choice.getComponents())) {
+          if (choice.getComponents() != null && !choice.getComponents().isEmpty()) {
             writeArrayFieldJSON(jsonGenerator, "components", choice.getComponents());
           }
-          if (CollectionUtils.isNotEmpty(choice.getServices())) {
+          if (choice.getServices() != null && !choice.getServices().isEmpty()) {
             writeArrayFieldJSON(jsonGenerator, "services", choice.getServices());
           }
         }
@@ -164,7 +163,7 @@ public class MetadataSerializer
   }
 
   private <T> void writeArrayFieldXML(List<T> items, ToXmlGenerator xmlGenerator, String fieldName) throws IOException {
-    if (CollectionUtils.isNotEmpty(items)) {
+    if (items != null && !items.isEmpty()) {
       xmlGenerator.writeFieldName(fieldName + "s");
       xmlGenerator.writeStartObject();
       for (T item : items) {

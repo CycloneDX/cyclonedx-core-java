@@ -18,11 +18,12 @@
  */
 package org.cyclonedx.schema;
 
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.CycloneDxSchema;
 import org.cyclonedx.Version;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,9 @@ public abstract class BaseSchemaVerificationTest {
         }
         try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(dir)) {
             if (in != null) {
-                files.addAll(IOUtils.readLines(in, StandardCharsets.UTF_8));
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                    reader.lines().forEach(files::add);
+                }
             }
         }
         return files;

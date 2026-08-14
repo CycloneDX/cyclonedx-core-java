@@ -18,10 +18,8 @@
  */
 package org.cyclonedx;
 
-import org.apache.commons.io.IOUtils;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
-import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
@@ -156,8 +154,7 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema12MultipleDependenciesXmlTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(
-            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.2.json")));
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.2.json")).readAllBytes();
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -214,8 +211,7 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema13MultipleDependenciesXmlTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(
-            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.3.json")));
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.3.json")).readAllBytes();
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -228,8 +224,7 @@ public class BomXmlGeneratorTest {
 
     @Test
     public void schema14MultipleDependenciesXmlTest() throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(
-            Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.4.json")));
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream("/bom-1.4.json")).readAllBytes();
         final JsonParser parser = new JsonParser();
         final Bom bom = parser.parse(bomBytes);
 
@@ -1236,15 +1231,14 @@ public class BomXmlGeneratorTest {
     }
 
     private Bom createCommonBomXml(String resource) throws Exception {
-        final byte[] bomBytes = IOUtils.toByteArray(
-            Objects.requireNonNull(this.getClass().getResourceAsStream(resource)));
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream(resource)).readAllBytes();
         XmlParser parser = new XmlParser();
         return parser.parse(bomBytes);
     }
 
     private Bom createCommonJsonBom(String resource) throws Exception {
         final byte[] bomBytes =
-            IOUtils.toByteArray(Objects.requireNonNull(this.getClass().getResourceAsStream(resource)));
+            Objects.requireNonNull(this.getClass().getResourceAsStream(resource)).readAllBytes();
         JsonParser parser = new JsonParser();
         return parser.parse(bomBytes);
     }
