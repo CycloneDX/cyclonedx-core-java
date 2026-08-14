@@ -96,7 +96,6 @@ public class JsonParserTest
         final JsonParser parser = new JsonParser();
         Bom bom = parser.parse(file);
         assertTrue(parser.isValid(file, Version.VERSION_12));
-        System.out.println(bom.getSerialNumber());
     }
 
     @Test
