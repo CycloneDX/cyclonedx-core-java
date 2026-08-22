@@ -19,7 +19,10 @@
 package org.cyclonedx.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -163,6 +166,16 @@ public class ExternalReference {
         @JsonProperty("other")
         OTHER("other");
 
+        private static final Map<String, Type> BY_NAME;
+
+        static {
+            final Map<String, Type> byName = new HashMap<>();
+            for (Type t : Type.values()) {
+                byName.put(t.name, t);
+            }
+            BY_NAME = Collections.unmodifiableMap(byName);
+        }
+
         private final String name;
 
         public String getTypeName() {
@@ -174,12 +187,7 @@ public class ExternalReference {
         }
 
         public static Type fromString(String text) {
-            for (Type t : Type.values()) {
-                if (t.name.equals(text)) {
-                    return t;
-                }
-            }
-            return null;
+            return BY_NAME.get(text);
         }
     }
 
