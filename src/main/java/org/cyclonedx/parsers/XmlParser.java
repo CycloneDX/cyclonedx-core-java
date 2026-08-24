@@ -25,10 +25,6 @@ import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.util.XmlFactoryUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,10 +32,12 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
@@ -52,7 +50,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,11 +69,11 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         mapper = new XmlMapper();
     }
 
-    private static final Map<String, String> NAMESPACE_TO_VERSION_MAP = new HashMap<>();
+    private static final Map<String, String> SCHEMA_VERSION_BY_NAMESPACE = new HashMap<>();
 
     static {
         for (Version version : Version.values()) {
-            NAMESPACE_TO_VERSION_MAP.put(version.getNamespace(), version.getVersionString());
+            SCHEMA_VERSION_BY_NAMESPACE.put(version.getNamespace(), version.getVersionString());
         }
     }
 
@@ -85,10 +82,13 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final File file) throws ParseException {
         try {
-            final String schemaVersion = identifySchemaVersion(new InputSource(Files.newInputStream(file.toPath())));
+            final String schemaVersion;
+            try (final InputStream fis = Files.newInputStream(file.toPath())) {
+                schemaVersion = identifySchemaVersion(fis);
+            }
 
             return injectSchemaVersion(mapper.readValue(file, Bom.class), schemaVersion);
-        } catch (IOException | ParserConfigurationException | SAXException e) {
+        } catch (IOException | XMLStreamException e) {
             throw new ParseException(e);
         }
     }
@@ -98,10 +98,10 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final byte[] bomBytes) throws ParseException {
         try {
-            final String schemaVersion = identifySchemaVersion(new InputSource(new ByteArrayInputStream(bomBytes)));
+            final String schemaVersion = identifySchemaVersion(new ByteArrayInputStream(bomBytes));
 
             return injectSchemaVersion(mapper.readValue(bomBytes, Bom.class), schemaVersion);
-        } catch (IOException | ParserConfigurationException | SAXException e) {
+        } catch (IOException | XMLStreamException e) {
             throw new ParseException(e);
         }
     }
@@ -337,66 +337,35 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         return validate(inputStream, schemaVersion).isEmpty();
     }
 
-    private String identifySchemaVersion(final InputSource in)
-        throws ParserConfigurationException, IOException, SAXException
-    {
+    private String identifySchemaVersion(InputStream in) throws XMLStreamException {
+        final XMLStreamReader reader = createSecureXmlStreamReader(in);
+        try {
+            while (reader.hasNext()) {
+                if (reader.next() != XMLStreamConstants.START_ELEMENT) {
+                    continue;
+                }
 
-        List<String> namespaces = extractAllNamespaceDeclarations(in);
-
-        for (String namespaceUri : namespaces) {
-            String versionString = NAMESPACE_TO_VERSION_MAP.get(namespaceUri);
-            if (versionString != null) {
-                return versionString;
-            }
-        }
-        return null;
-    }
-
-    private List<String> extractAllNamespaceDeclarations(final InputSource in)
-        throws ParserConfigurationException, IOException, SAXException
-    {
-        Document doc = createSecureDocument(in);
-
-        // Extract all namespaces, including the default namespace
-        List<String>namespaces = new ArrayList<>();
-        extractNamespaces(doc.getDocumentElement(), namespaces);
-
-        return namespaces;
-    }
-
-    private void extractNamespaces(Node node, List<String> namespaces) {
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            NamedNodeMap attributes = node.getAttributes();
-            for (int i = 0; i < attributes.getLength(); i++) {
-                Node attr = attributes.item(i);
-                if (attr.getNodeName().equals("xmlns")) {
-                    namespaces.add(attr.getNodeValue());
+                for (int i = 0; i < reader.getNamespaceCount(); i++) {
+                    if (reader.getNamespacePrefix(i) == null) {
+                        final String schemaVersion = SCHEMA_VERSION_BY_NAMESPACE.get(reader.getNamespaceURI(i));
+                        if (schemaVersion != null) {
+                            return schemaVersion;
+                        }
+                    }
                 }
             }
-        }
-        NodeList children = node.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            extractNamespaces(children.item(i), namespaces);
+
+            return null;
+        } finally {
+            reader.close();
         }
     }
 
-    private Document createSecureDocument(InputSource in) throws ParserConfigurationException, IOException, SAXException
-    {
-        //https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#xpathexpression
-        DocumentBuilderFactory df = XmlFactoryUtils.newDocumentBuilderFactory();
-        try {
-            df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        } catch (IllegalArgumentException e) {
-            // JAXP 1.5 secure-processing attributes are not supported by outdated
-            // DocumentBuilderFactory implementations (e.g. Xerces 2.x found on the classpath).
-            // Secure processing alone does not prevent XXE there, so compensate by disallowing
-            // DOCTYPE declarations entirely; if that is unsupported too, fail rather than
-            // parse insecurely
-            df.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        }
-        df.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        DocumentBuilder builder = df.newDocumentBuilder();
-        return builder.parse(in);
+    private XMLStreamReader createSecureXmlStreamReader(InputStream in) throws XMLStreamException {
+        //https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#xmlinputfactory-a-stax-parser
+        final XMLInputFactory factory = XmlFactoryUtils.newXMLInputFactory();
+        factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        return factory.createXMLStreamReader(in);
     }
 }

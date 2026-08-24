@@ -82,10 +82,10 @@ class XercesFallbackTest {
     @Test
     void parseShouldNotBeVulnerableToXxeWithXerces() throws Exception {
         final byte[] bomBytes = resource("/security/xxe-protection.xml");
-        // the doctype must be rejected before any external entity can be resolved
+        // No DTD is processed, so the entity is never declared, and not resolved.
         assertThatExceptionOfType(ParseException.class)
                 .isThrownBy(() -> new XmlParser().parse(bomBytes))
-                .withMessageContaining("DOCTYPE");
+                .withMessageContaining("Undeclared general entity \"xxe\"");
     }
 
     @Test

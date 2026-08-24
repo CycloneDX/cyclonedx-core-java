@@ -3,7 +3,7 @@
 <bom xmlns="http://cyclonedx.org/schema/bom/1.5" serialNumber="urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79">
     <components>
         <component type="application">
-            <name>Example Application &#x26;xxe;3</name>
+            <name>Example Application &xxe;</name>
             <version>2.1.0</version>
             <description>This is an example application</description>
             <licenses>

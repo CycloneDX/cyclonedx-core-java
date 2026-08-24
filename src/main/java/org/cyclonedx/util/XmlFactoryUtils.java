@@ -21,6 +21,7 @@ package org.cyclonedx.util;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.validation.SchemaFactory;
 
 /**
@@ -83,6 +84,25 @@ public final class XmlFactoryUtils
             }
         }
         return SAXParserFactory.newInstance();
+    }
+
+    /**
+     * Creates a new {@link XMLInputFactory}, preferring the JDK's built-in implementation
+     * unless one is explicitly requested via the {@code javax.xml.stream.XMLInputFactory}
+     * system property.
+     *
+     * @return a new {@link XMLInputFactory}
+     */
+    public static XMLInputFactory newXMLInputFactory() {
+        if (System.getProperty(XMLInputFactory.class.getName()) == null) {
+            try {
+                return (XMLInputFactory) XMLInputFactory.class.getMethod("newDefaultFactory").invoke(null);
+            } catch (ReflectiveOperationException e) {
+                // Java 8: fall back to the standard lookup below
+            }
+        }
+
+        return XMLInputFactory.newInstance();
     }
 
     /**
