@@ -1,9 +1,8 @@
 package org.cyclonedx.util.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.cyclonedx.model.AttachmentText;
 
@@ -20,39 +19,52 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
   }
 
   @Override
-  public AttachmentText deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-    ObjectCodec codec = parser.getCodec();
-    JsonNode node = codec.readTree(parser);
+  public AttachmentText deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    if (p.currentToken() != JsonToken.START_OBJECT) {
+      if (p.currentToken() != JsonToken.VALUE_STRING) {
+        return null;
+      }
+
+      AttachmentText attachmentText = new AttachmentText();
+      attachmentText.setText(p.getValueAsString());
+      return attachmentText;
+    }
 
     AttachmentText attachmentText = new AttachmentText();
+    boolean hasKnownField = false;
 
-    JsonNode contentNode = node.get("content");
-    if (contentNode != null) {
-      attachmentText.setText(contentNode.asText());
-    } else if (node.has("")) {
-      attachmentText.setText(node.get("").asText());
-    } else if (node.isTextual()) {
-      attachmentText.setText(node.textValue());
+    while (p.nextToken() != JsonToken.END_OBJECT) {
+      final String fieldName = p.currentName();
+      p.nextToken();
+      switch (fieldName) {
+        // NB: For XML, content is the element's text, which gets translated
+        // to a field with empty name.
+        case "content":
+        case "":
+          attachmentText.setText(p.getValueAsString());
+          break;
+        // "content-type" for XML, "contentType" for JSON.
+        case "content-type":
+        case "contentType":
+          if (p.currentToken() != JsonToken.VALUE_STRING) {
+            continue;
+          }
+          attachmentText.setContentType(p.getValueAsString());
+          break;
+        case "encoding":
+          if (p.currentToken() != JsonToken.VALUE_STRING) {
+            continue;
+          }
+          attachmentText.setEncoding(p.getValueAsString());
+          break;
+        default:
+          p.skipChildren();
+          continue;
+      }
+
+      hasKnownField = true;
     }
 
-    JsonNode contentTypeNode = getContentTypeNode(node);
-    if (contentTypeNode != null && contentTypeNode.isTextual()) {
-      attachmentText.setContentType(contentTypeNode.asText());
-    }
-
-    JsonNode encodingNode = node.get("encoding");
-    if (encodingNode != null && encodingNode.isTextual()) {
-      attachmentText.setEncoding(encodingNode.asText());
-    }
-
-    return attachmentText;
-  }
-
-  private JsonNode getContentTypeNode(JsonNode node) {
-    JsonNode contentTypeNode = node.get("content-type");
-    if (contentTypeNode == null || !contentTypeNode.isTextual()) {
-      contentTypeNode = node.get("contentType");
-    }
-    return contentTypeNode;
+    return hasKnownField ? attachmentText : null;
   }
 }
