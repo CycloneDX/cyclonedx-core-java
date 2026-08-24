@@ -43,18 +43,14 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class JsonParser extends CycloneDxSchema implements Parser {
 
-    private final ObjectMapper mapper;
-
-    public JsonParser() {
-        mapper = new ObjectMapper();
-    }
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * {@inheritDoc}
      */
     public Bom parse(final File file) throws ParseException {
         try {
-            return mapper.readValue(file, Bom.class);
+            return MAPPER.readValue(file, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from File", e);
         }
@@ -65,7 +61,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final byte[] bomBytes) throws ParseException {
         try {
-            return mapper.readValue(bomBytes, Bom.class);
+            return MAPPER.readValue(bomBytes, Bom.class);
         } catch (RuntimeException | IOException e) {
             throw new ParseException("Unable to parse BOM from byte array", e);
         }
@@ -76,7 +72,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final InputStream inputStream) throws ParseException {
         try {
-            return mapper.readValue(inputStream, Bom.class);
+            return MAPPER.readValue(inputStream, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from InputStream", e);
         }
@@ -87,7 +83,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final Reader reader) throws ParseException {
         try {
-            return mapper.readValue(reader, Bom.class);
+            return MAPPER.readValue(reader, Bom.class);
         } catch (IOException e) {
             throw new ParseException("Unable to parse BOM from Reader", e);
         }
@@ -104,7 +100,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public List<ParseException> validate(final File file, final Version schemaVersion) throws IOException {
-        return validate(mapper.readTree(file), schemaVersion);
+        return validate(MAPPER.readTree(file), schemaVersion);
     }
 
     /**
@@ -118,7 +114,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public List<ParseException> validate(final byte[] bomBytes, final Version schemaVersion) throws IOException {
-        return validate(mapper.readTree(bomBytes), schemaVersion);
+        return validate(MAPPER.readTree(bomBytes), schemaVersion);
     }
 
     /**
@@ -139,7 +135,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
         if (firstChar != -1 && firstChar != '\uFEFF') {
             pushbackReader.unread(firstChar);
         }
-        return validate(mapper.readTree(pushbackReader), schemaVersion);
+        return validate(MAPPER.readTree(pushbackReader), schemaVersion);
     }
 
     /**
@@ -153,7 +149,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * {@inheritDoc}
      */
     public List<ParseException> validate(final InputStream inputStream, final Version schemaVersion) throws IOException {
-        return validate(mapper.readTree(inputStream), schemaVersion);
+        return validate(MAPPER.readTree(inputStream), schemaVersion);
     }
 
     /**
@@ -165,7 +161,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
      * @return a list of exceptions encountered during validation
      */
     public List<ParseException> validate(final String bomString, final Version schemaVersion) throws IOException {
-        return validate(mapper.readTree(skipUtf8Bom(bomString)), schemaVersion);
+        return validate(MAPPER.readTree(skipUtf8Bom(bomString)), schemaVersion);
     }
 
     /**
@@ -186,7 +182,7 @@ public class JsonParser extends CycloneDxSchema implements Parser {
             );
         }
 
-        List<Error> errors = getJsonSchema(schemaVersion, mapper).validate(mapper.readTree(bomJson.toString()));
+        List<Error> errors = getJsonSchema(schemaVersion, MAPPER).validate(MAPPER.readTree(bomJson.toString()));
         for (Error error : errors) {
             final boolean hasLocation =
                     error.getInstanceLocation() != null
