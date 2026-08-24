@@ -758,7 +758,7 @@ public class BomXmlGeneratorTest {
     public void testXxeProtection() {
         assertThatExceptionOfType(ParseException.class)
                 .isThrownBy(() -> createCommonBomXml("/security/xxe-protection.xml"))
-                .withMessageContaining("not allowed due to restriction set by the accessExternalDTD property");
+                .withMessageContaining("Undeclared general entity \"xxe\"");
     }
 
     @Test

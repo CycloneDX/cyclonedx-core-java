@@ -84,6 +84,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -1193,6 +1194,21 @@ public class XmlParserTest
         assertEquals(1, bom.getServices().get(0).getPatentAssertions().size());
         PatentAssertion pa3 = bom.getServices().get(0).getPatentAssertions().get(0);
         assertEquals(PatentAssertion.AssertionType.EXCLUSIVE_RIGHTS, pa3.getAssertionType());
+    }
+
+    @Test
+    void parseShouldNotBeVulnerableToXxe() throws Exception {
+        final byte[] bomBytes;
+        try (final InputStream bomInputStream = getClass().getResourceAsStream("/security/xxe-protection.xml")) {
+            assertThat(bomInputStream).isNotNull();
+            bomBytes = bomInputStream.readAllBytes();
+        }
+
+        // No DTD is processed, so the entity is never declared, let alone resolved. Were it
+        // resolved, the parse would instead fail on the file the entity points to
+        assertThatExceptionOfType(ParseException.class)
+                .isThrownBy(() -> new XmlParser().parse(bomBytes))
+                .withMessageContaining("Undeclared general entity \"xxe\"");
     }
 
     @Test
