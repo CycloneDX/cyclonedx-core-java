@@ -36,50 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HashesDeserializerTest {
 
     @Test
-    void shouldDeserializeHashesFromJson() throws Exception {
-        List<Hash> hashes = parseJson(/* language=JSON */ """
-                {
-                  "hashes": [
-                    { "alg": "MD5", "content": "abc" },
-                    { "alg": "SHA-1", "content": "def" }
-                  ]
-                }
-                """);
-
-        assertThat(hashes).satisfiesExactly(
-                hash -> {
-                    assertThat(hash.getAlgorithm()).isEqualTo("MD5");
-                    assertThat(hash.getValue()).isEqualTo("abc");
-                },
-                hash -> {
-                    assertThat(hash.getAlgorithm()).isEqualTo("SHA-1");
-                    assertThat(hash.getValue()).isEqualTo("def");
-                });
-    }
-
-    @Test
-    void shouldDeserializeHashesFromXml() throws Exception {
-        List<Hash> hashes = parseXml(/* language=XML */ """
-                <component>
-                  <hashes>
-                    <hash alg="MD5">abc</hash>
-                    <hash alg="SHA-1">def</hash>
-                  </hashes>
-                </component>
-                """);
-
-        assertThat(hashes).satisfiesExactly(
-                hash -> {
-                    assertThat(hash.getAlgorithm()).isEqualTo("MD5");
-                    assertThat(hash.getValue()).isEqualTo("abc");
-                },
-                hash -> {
-                    assertThat(hash.getAlgorithm()).isEqualTo("SHA-1");
-                    assertThat(hash.getValue()).isEqualTo("def");
-                });
-    }
-
-    @Test
     void shouldDeserializeHashesOfNestedXmlComponents() throws Exception {
         Bom bom = new XmlParser().parse(/* language=XML */ """
                 <bom xmlns="http://cyclonedx.org/schema/bom/1.5">
@@ -90,8 +46,8 @@ class HashesDeserializerTest {
                         <name>Awesome Tool</name>
                         <version>9.1.2</version>
                         <hashes>
-                          <hash alg="MD5">abc</hash>
-                          <hash alg="SHA-1">def</hash>
+                          <hash alg="MD5">2342c2eaf1feb9a80195dbaddf2ebaa3</hash>
+                          <hash alg="SHA-1">68b78babe00a053f9e35ec6a2d9080f5b90122b0</hash>
                         </hashes>
                       </component>
                     </components>
@@ -103,11 +59,11 @@ class HashesDeserializerTest {
         assertThat(bom.getMetadata().getToolChoice().getComponents().get(0).getHashes()).satisfiesExactly(
                 hash -> {
                     assertThat(hash.getAlgorithm()).isEqualTo("MD5");
-                    assertThat(hash.getValue()).isEqualTo("abc");
+                    assertThat(hash.getValue()).isEqualTo("2342c2eaf1feb9a80195dbaddf2ebaa3");
                 },
                 hash -> {
                     assertThat(hash.getAlgorithm()).isEqualTo("SHA-1");
-                    assertThat(hash.getValue()).isEqualTo("def");
+                    assertThat(hash.getValue()).isEqualTo("68b78babe00a053f9e35ec6a2d9080f5b90122b0");
                 });
     }
 

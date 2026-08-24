@@ -70,7 +70,7 @@ public class HashesDeserializer
   private List<Hash> readHashesElement(JsonParser p) throws IOException {
     List<Hash> hashes = new ArrayList<>();
 
-    while (p.nextToken() != JsonToken.END_OBJECT) {
+    while (p.nextToken() == JsonToken.FIELD_NAME) {
       final String fieldName = p.currentName();
       p.nextToken();
 
@@ -103,9 +103,16 @@ public class HashesDeserializer
     String value = null;
     boolean hasKnownField = false;
 
-    while (p.nextToken() != JsonToken.END_OBJECT) {
+    while (p.nextToken() == JsonToken.FIELD_NAME) {
       final String fieldName = p.currentName();
-      p.nextToken();
+      final JsonToken valueToken = p.nextToken();
+
+      // None of the known fields have structured values.
+      if (!valueToken.isScalarValue()) {
+        p.skipChildren();
+        continue;
+      }
+
       switch (fieldName) {
         case "alg":
           algorithm = p.getValueAsString();
@@ -117,7 +124,6 @@ public class HashesDeserializer
           value = p.getValueAsString();
           break;
         default:
-          p.skipChildren();
           continue;
       }
 

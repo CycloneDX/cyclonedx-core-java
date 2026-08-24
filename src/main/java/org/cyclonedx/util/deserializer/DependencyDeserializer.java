@@ -49,7 +49,7 @@ public class DependencyDeserializer extends StdDeserializer<List<Dependency>>
         return dependencies[0].getDependencies();
       }
     } else {
-      return Arrays.asList(dependencies.clone());
+      return Arrays.asList(dependencies);
     }
 
     return null;
