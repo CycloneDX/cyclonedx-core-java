@@ -63,11 +63,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class XmlParser extends CycloneDxSchema implements Parser {
 
-    private final ObjectMapper mapper;
-
-    public XmlParser() {
-        mapper = new XmlMapper();
-    }
+    private static final ObjectMapper MAPPER = new XmlMapper();
 
     private static final Map<String, String> SCHEMA_VERSION_BY_NAMESPACE = new HashMap<>();
 
@@ -87,7 +83,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
                 schemaVersion = identifySchemaVersion(fis);
             }
 
-            return injectSchemaVersion(mapper.readValue(file, Bom.class), schemaVersion);
+            return injectSchemaVersion(MAPPER.readValue(file, Bom.class), schemaVersion);
         } catch (IOException | XMLStreamException e) {
             throw new ParseException(e);
         }
@@ -100,7 +96,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
         try {
             final String schemaVersion = identifySchemaVersion(new ByteArrayInputStream(bomBytes));
 
-            return injectSchemaVersion(mapper.readValue(bomBytes, Bom.class), schemaVersion);
+            return injectSchemaVersion(MAPPER.readValue(bomBytes, Bom.class), schemaVersion);
         } catch (IOException | XMLStreamException e) {
             throw new ParseException(e);
         }
@@ -111,7 +107,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final InputStream inputStream) throws ParseException {
         try {
-            return mapper.readValue(inputStream, Bom.class);
+            return MAPPER.readValue(inputStream, Bom.class);
         } catch (IOException e) {
             throw new ParseException(e);
         }
@@ -122,7 +118,7 @@ public class XmlParser extends CycloneDxSchema implements Parser {
      */
     public Bom parse(final Reader reader) throws ParseException {
         try {
-            return mapper.readValue(reader, Bom.class);
+            return MAPPER.readValue(reader, Bom.class);
         } catch (IOException e) {
             throw new ParseException(e);
         }
