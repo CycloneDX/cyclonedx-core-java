@@ -22,6 +22,7 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
   public AttachmentText deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
     if (p.currentToken() != JsonToken.START_OBJECT) {
       if (p.currentToken() != JsonToken.VALUE_STRING) {
+        p.skipChildren();
         return null;
       }
 
@@ -33,9 +34,16 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
     AttachmentText attachmentText = new AttachmentText();
     boolean hasKnownField = false;
 
-    while (p.nextToken() != JsonToken.END_OBJECT) {
+    while (p.nextToken() == JsonToken.FIELD_NAME) {
       final String fieldName = p.currentName();
-      p.nextToken();
+      final JsonToken valueToken = p.nextToken();
+
+      // None of the known fields have structured values.
+      if (!valueToken.isScalarValue()) {
+        p.skipChildren();
+        continue;
+      }
+
       switch (fieldName) {
         // NB: For XML, content is the element's text, which gets translated
         // to a field with empty name.
@@ -58,7 +66,6 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
           attachmentText.setEncoding(p.getValueAsString());
           break;
         default:
-          p.skipChildren();
           continue;
       }
 

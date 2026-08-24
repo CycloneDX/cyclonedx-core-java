@@ -91,7 +91,7 @@ public class ExternalReferencesDeserializer extends JsonDeserializer<List<Extern
             throws IOException {
         List<ExternalReference> references = new ArrayList<>();
 
-        while (p.nextToken() != JsonToken.END_OBJECT) {
+        while (p.nextToken() == JsonToken.FIELD_NAME) {
             final String fieldName = p.currentName();
             p.nextToken();
 
@@ -122,9 +122,17 @@ public class ExternalReferencesDeserializer extends JsonDeserializer<List<Extern
         ExternalReference reference = new ExternalReference();
         boolean hasKnownField = false;
 
-        while (p.nextToken() != JsonToken.END_OBJECT) {
+        while (p.nextToken() == JsonToken.FIELD_NAME) {
             final String fieldName = p.currentName();
-            p.nextToken();
+            final JsonToken valueToken = p.nextToken();
+
+            // Only "hashes" and "properties" have structured values.
+            if (!valueToken.isScalarValue()
+                    && !"hashes".equals(fieldName)
+                    && !"properties".equals(fieldName)) {
+                p.skipChildren();
+                continue;
+            }
 
             switch (fieldName) {
                 case "url":
@@ -143,7 +151,6 @@ public class ExternalReferencesDeserializer extends JsonDeserializer<List<Extern
                     reference.setProperties(propertiesDeserializer.deserialize(p, ctxt));
                     break;
                 default:
-                    p.skipChildren();
                     continue;
             }
 
