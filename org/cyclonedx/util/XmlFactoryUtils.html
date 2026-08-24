@@ -60,6 +60,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#newDocumentBuilderFactory()" tabindex="0">newDocumentBuilderFactory()</a></li>
 <li><a href="#newSAXParserFactory()" tabindex="0">newSAXParserFactory()</a></li>
+<li><a href="#newXMLInputFactory()" tabindex="0">newXMLInputFactory()</a></li>
 <li><a href="#newSchemaFactory()" tabindex="0">newSchemaFactory()</a></li>
 </ol>
 </li>
@@ -135,6 +136,13 @@ system property.</div>
 implementation unless one is explicitly requested via the
 <code>javax.xml.validation.SchemaFactory:http://www.w3.org/2001/XMLSchema</code> system property.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/javax/xml/stream/XMLInputFactory.html" title="class or interface in javax.xml.stream" class="external-link">XMLInputFactory</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newXMLInputFactory()" class="member-name-link">newXMLInputFactory</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a new <a href="https://docs.oracle.com/javase/8/docs/api/javax/xml/stream/XMLInputFactory.html" title="class or interface in javax.xml.stream" class="external-link"><code>XMLInputFactory</code></a>, preferring the JDK's built-in implementation
+unless one is explicitly requested via the <code>javax.xml.stream.XMLInputFactory</code>
+system property.</div>
+</div>
 </div>
 </div>
 </div>
@@ -178,6 +186,21 @@ system property.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a new <a href="https://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/SAXParserFactory.html" title="class or interface in javax.xml.parsers" class="external-link"><code>SAXParserFactory</code></a></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="newXMLInputFactory()">
+<h3>newXMLInputFactory</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/javax/xml/stream/XMLInputFactory.html" title="class or interface in javax.xml.stream" class="external-link">XMLInputFactory</a></span>&nbsp;<span class="element-name">newXMLInputFactory</span>()</div>
+<div class="block">Creates a new <a href="https://docs.oracle.com/javase/8/docs/api/javax/xml/stream/XMLInputFactory.html" title="class or interface in javax.xml.stream" class="external-link"><code>XMLInputFactory</code></a>, preferring the JDK's built-in implementation
+unless one is explicitly requested via the <code>javax.xml.stream.XMLInputFactory</code>
+system property.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a new <a href="https://docs.oracle.com/javase/8/docs/api/javax/xml/stream/XMLInputFactory.html" title="class or interface in javax.xml.stream" class="external-link"><code>XMLInputFactory</code></a></dd>
 </dl>
 </div>
 </section>
