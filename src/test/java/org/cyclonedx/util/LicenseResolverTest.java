@@ -80,5 +80,7 @@ public class LicenseResolverTest {
         assertEquals("Apache-2.0", c3.getLicenses().get(0).getId());
         LicenseChoice c4 = LicenseResolver.resolve("Modified BSD License");
         assertEquals("BSD-3-Clause", c4.getLicenses().get(0).getId());
+        LicenseChoice c5 = LicenseResolver.resolve(" Modified BSD License ");
+        assertEquals("BSD-3-Clause", c5.getLicenses().get(0).getId());
     }
 }

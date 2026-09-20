@@ -163,7 +163,7 @@ public final class LicenseResolver {
             for (final SpdxLicenseMapping licenseMapping : mappings) {
                 if (licenseMapping.names != null && !licenseMapping.names.isEmpty()) {
                     for (final String name : licenseMapping.names) {
-                        if (licenseString.equalsIgnoreCase(name)) {
+                        if (licenseString.trim().equalsIgnoreCase(name)) {
                             if (licenseMapping.exp.startsWith("(") && licenseMapping.exp.endsWith(")")) {
                                 final LicenseChoice lc = new LicenseChoice();
                                 lc.setExpression(new Expression(licenseMapping.exp));
