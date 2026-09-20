@@ -31,7 +31,8 @@
       "ASF 2.0",
       "AL 2.0",
       "ASL, version 2",
-      "Apache License v2"
+      "Apache License v2",
+      "ASL2"
     ]
   },
   {
@@ -67,9 +68,9 @@
       "Revised BSD",
       "Revised BSD License",
       "The New BSD License",
+      "The (New) BSD License",
       "3-Clause BSD License",
       "BSD 3-clause New License",
-      "BSD License",
       "EDL 1.0",
       "Eclipse Distribution License - v 1.0",
       "Eclipse Distribution License v. 1.0",
@@ -133,7 +134,8 @@
       "Eclipse Public License - v 1.0",
       "Eclipse Public License - v1.0",
       "Eclipse Public License (EPL), Version 1.0",
-      "Eclipse Public License Version 1.0"
+      "Eclipse Public License Version 1.0",
+      "EPL 1.0"
     ]
   },
   {
@@ -189,7 +191,8 @@
       "GPLv2 license, includes the CLASSPATH exception",
       "GNU General Public License, version 2, with the Classpath Exception",
       "GNU General Public License, version 2 with the GNU Classpath Exception",
-      "GPL v2 with the Classpath exception"
+      "GPL v2 with the Classpath exception",
+      "GNU General Public License, version 2 with the GNU Classpath Exception"
     ]
   },
   {
@@ -311,7 +314,8 @@
   {
     "exp": "CPL-1.0",
     "names": [
-      "CPL"
+      "CPL",
+      "Common Public 1.0"
     ]
   }
 ]
