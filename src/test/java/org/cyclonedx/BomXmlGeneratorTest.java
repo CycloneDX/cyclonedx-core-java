@@ -21,6 +21,7 @@ package org.cyclonedx;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
+import org.cyclonedx.model.attestation.affirmation.Signatory;
 import org.cyclonedx.model.Attribute;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
@@ -525,6 +526,45 @@ public class BomXmlGeneratorTest {
 
         XmlParser parser = new XmlParser();
         assertTrue(parser.isValid(loadedFile, version));
+    }
+
+    @Test
+    public void testIssue812Regression() throws Exception {
+        Version version = Version.VERSION_16;
+        Bom bom = createCommonJsonBom("/1.6/valid-attestation-1.6.json");
+
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(version, bom);
+        File loadedFile = writeToFile(generator.toXmlString());
+
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(loadedFile, version));
+
+        Bom generatedBom = parser.parse(loadedFile);
+
+        assertNotNull(generatedBom.getDeclarations());
+        assertNotNull(generatedBom.getDeclarations().getAffirmation());
+        assertNotNull(generatedBom.getDeclarations().getAffirmation().getSignatories());
+
+        Signatory signatory = generatedBom.getDeclarations().getAffirmation()
+        .getSignatories()
+        .stream()
+        .filter(candidate -> "Jerry".equals(candidate.getName()))
+        .findFirst()
+        .orElse(null);
+
+        assertNotNull(signatory);
+        assertEquals("COO", signatory.getRole());
+
+        assertNotNull(signatory.getOrganization());
+        assertEquals("Acme Inc", signatory.getOrganization().getName());
+
+        assertNotNull(signatory.getExternalReference());
+        assertEquals(
+                "electronic-signature",
+                signatory.getExternalReference().getType().getTypeName());
+        assertEquals(
+                "https://example.com/coo-sig.png",
+                signatory.getExternalReference().getUrl());
     }
 
     @Test
