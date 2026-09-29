@@ -29,10 +29,10 @@ public class LicenseResolverTest {
 
     @Test
     public void parseLicenseByUrlTest() {
-        LicenseChoice l1 = LicenseResolver.resolve("https://www.opensource.org/licenses/GPL-3.0");
+        LicenseChoice l1 = LicenseResolver.resolve("https://opensource.org/license/GPL-3.0-only");
         LicenseChoice l2 = LicenseResolver.resolve("https://www.gnu.org/licenses/gpl-3.0-standalone.html");
-        LicenseChoice l3 = LicenseResolver.resolve("https://opensource.org/license/mit/");
-        LicenseChoice l4 = LicenseResolver.resolve("https://www.opensource.org/licenses/Apache-2.0");
+        LicenseChoice l3 = LicenseResolver.resolve("https://opensource.org/license/mit");
+        LicenseChoice l4 = LicenseResolver.resolve("https://opensource.org/license/apache-2.0");
         LicenseChoice l5 = LicenseResolver.resolve("https://www.apache.org/licenses/LICENSE-2.0");
         assertEquals("GPL-3.0-only", l1.getLicenses().get(0).getId());
         assertEquals("GPL-3.0-only", l2.getLicenses().get(0).getId());
