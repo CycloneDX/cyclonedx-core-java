@@ -90,11 +90,14 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#getDependencies()" class="member-name-link">getDependencies</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Annotation.</span><code><a href="../Annotation.html#getSubjects()" class="member-name-link">getSubjects</a>()</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Dependency.</span><code><a href="../Dependency.html#getProvides()" class="member-name-link">getProvides</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#getVulnerabilities()" class="member-name-link">getVulnerabilities</a>()</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Annotation.</span><code><a href="../Annotation.html#getSubjects()" class="member-name-link">getSubjects</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#getVulnerabilities()" class="member-name-link">getVulnerabilities</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">org.cyclonedx.model</a> with parameters of type <a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a></span></div>
 <div class="summary-table three-column-summary">
@@ -108,8 +111,11 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#addDependency(org.cyclonedx.model.BomReference)" class="member-name-link">addDependency</a><wbr>(<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&nbsp;dependency)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#addVulnerability(org.cyclonedx.model.BomReference)" class="member-name-link">addVulnerability</a><wbr>(<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&nbsp;vulnerability)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Dependency.</span><code><a href="../Dependency.html#addProvides(org.cyclonedx.model.BomReference)" class="member-name-link">addProvides</a><wbr>(<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&nbsp;dependency)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#addVulnerability(org.cyclonedx.model.BomReference)" class="member-name-link">addVulnerability</a><wbr>(<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&nbsp;vulnerability)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../package-summary.html">org.cyclonedx.model</a> with type arguments of type <a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a></span></div>
 <div class="summary-table three-column-summary">
@@ -123,11 +129,14 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#setDependencies(java.util.List)" class="member-name-link">setDependencies</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;dependencies)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Annotation.</span><code><a href="../Annotation.html#setSubjects(java.util.List)" class="member-name-link">setSubjects</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;subjects)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Dependency.</span><code><a href="../Dependency.html#setProvides(java.util.List)" class="member-name-link">setProvides</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;provides)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#setVulnerabilities(java.util.List)" class="member-name-link">setVulnerabilities</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;vulnerabilities)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Annotation.</span><code><a href="../Annotation.html#setSubjects(java.util.List)" class="member-name-link">setSubjects</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;subjects)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Composition.</span><code><a href="../Composition.html#setVulnerabilities(java.util.List)" class="member-name-link">setVulnerabilities</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;vulnerabilities)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

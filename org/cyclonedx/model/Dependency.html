@@ -68,6 +68,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#getDependencies()" tabindex="0">getDependencies()</a></li>
 <li><a href="#setDependencies(java.util.List)" tabindex="0">setDependencies(List)</a></li>
 <li><a href="#addDependency(org.cyclonedx.model.Dependency)" tabindex="0">addDependency(Dependency)</a></li>
+<li><a href="#getProvides()" tabindex="0">getProvides()</a></li>
+<li><a href="#setProvides(java.util.List)" tabindex="0">setProvides(List)</a></li>
+<li><a href="#addProvides(org.cyclonedx.model.BomReference)" tabindex="0">addProvides(BomReference)</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 </ol>
@@ -122,11 +125,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addDependency(org.cyclonedx.model.Dependency)" class="member-name-link">addDependency</a><wbr>(<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&nbsp;dependency)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addProvides(org.cyclonedx.model.BomReference)" class="member-name-link">addProvides</a><wbr>(<a href="BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&nbsp;dependency)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDependencies()" class="member-name-link">getDependencies</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDependencies()" class="member-name-link">getDependencies</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProvides()" class="member-name-link">getProvides</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
@@ -134,6 +143,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDependencies(java.util.List)" class="member-name-link">setDependencies</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&gt;&nbsp;dependencies)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProvides(java.util.List)" class="member-name-link">setProvides</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;provides)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -199,6 +211,30 @@ loadScripts(document, 'script');</script>
 <h3>addDependency</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addDependency</span><wbr><span class="parameters">(<a href="Dependency.html" title="class in org.cyclonedx.model">Dependency</a>&nbsp;dependency)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getProvides()">
+<h3>getProvides</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;</span>&nbsp;<span class="element-name">getProvides</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setProvides(java.util.List)">
+<h3>setProvides</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProvides</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&gt;&nbsp;provides)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="addProvides(org.cyclonedx.model.BomReference)">
+<h3>addProvides</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addProvides</span><wbr><span class="parameters">(<a href="BomReference.html" title="class in org.cyclonedx.model">BomReference</a>&nbsp;dependency)</span></div>
 </div>
 </section>
 </li>
