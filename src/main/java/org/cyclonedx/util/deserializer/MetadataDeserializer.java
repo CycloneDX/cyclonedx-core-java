@@ -25,7 +25,7 @@ public class MetadataDeserializer
 
   private final LifecycleDeserializer lifecycleDeserializer = new LifecycleDeserializer();
   private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
-  private final LicenseDeserializer licenseDeserializer = new LicenseDeserializer();
+  private final LicenseChoiceDeserializer licenseDeserializer = new LicenseChoiceDeserializer();
 
   @Override
   public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
