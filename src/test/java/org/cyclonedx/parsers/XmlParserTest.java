@@ -55,6 +55,7 @@ import org.cyclonedx.model.component.crypto.enums.ExecutionEnvironment;
 import org.cyclonedx.model.component.crypto.enums.ImplementationPlatform;
 import org.cyclonedx.model.component.crypto.enums.Mode;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
+import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.data.Content;
 import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.modelCard.Considerations;
@@ -996,6 +997,22 @@ public class XmlParserTest
         assertTrue(new ArrayList<>(ap.getCryptoFunctions())
             .containsAll(Arrays.asList(CryptoFunction.KEYGEN, CryptoFunction.ENCRYPT, CryptoFunction.DECRYPT,
                 CryptoFunction.TAG)));
+    }
+
+    @Test
+    public void schema17_cbom_enums() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-cryptography-enums-1.7.xml");
+
+        assertEquals(7, bom.getComponents().size());
+
+        assertEquals(Primitive.KEY_WRAP,
+            bom.getComponents().get(0).getCryptoProperties().getAlgorithmProperties().getPrimitive());
+
+        List<ProtocolType> protocolTypes = bom.getComponents().subList(1, 7).stream()
+            .map(c -> c.getCryptoProperties().getProtocolProperties().getType())
+            .collect(Collectors.toList());
+        assertEquals(Arrays.asList(ProtocolType.DTLS, ProtocolType.QUIC, ProtocolType.EAP_AKA,
+            ProtocolType.EAP_AKA_PRIME, ProtocolType.PRINS, ProtocolType.FIVE_G_AKA), protocolTypes);
     }
 
     @Test
