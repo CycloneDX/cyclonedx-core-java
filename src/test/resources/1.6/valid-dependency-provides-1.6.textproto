@@ -22,6 +22,12 @@ components {
   name: "library-c"
   version: "1.0.0"
 }
+components {
+  type: CLASSIFICATION_LIBRARY
+  bom_ref: "library-d"
+  name: "library-d"
+  version: "1.0.0"
+}
 dependencies {
   ref: "library-a"
 }
@@ -29,5 +35,10 @@ dependencies {
   ref: "library-b"
   dependencies {
     ref: "library-c"
+  }
+}
+dependencies {
+    ref: "library-c"
+    provides: ["library-d"]
   }
 }

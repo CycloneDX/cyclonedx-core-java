@@ -13,11 +13,18 @@
             <name>library-c</name>
             <version>1.0.0</version>
         </component>
+        <component type="library" bom-ref="library-d">
+            <name>library-d</name>
+            <version>1.0.0</version>
+        </component>
     </components>
     <dependencies>
         <dependency ref="library-a"/>
         <dependency ref="library-b">
             <dependency ref="library-c"/>
+        </dependency>
+        <dependency ref="library-c">
+            <provides ref="library-d"/>
         </dependency>
     </dependencies>
 </bom>

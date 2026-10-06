@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import org.cyclonedx.CycloneDxSchema;
+import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.DependencyList;
 
@@ -94,6 +95,13 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
             }
           }
           generator.writeEndArray();
+          if (dependency.getProvides() != null && !dependency.getProvides().isEmpty()) {
+            generator.writeArrayFieldStart("provides");
+            for (BomReference subDependency : dependency.getProvides()) {
+              generator.writeString(subDependency.getRef());
+            }
+            generator.writeEndArray();
+          }
           generator.writeEndObject();
         }
       }
@@ -122,7 +130,10 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
   {
     processNamespace(generator, "dependency");
 
-    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
+    boolean hasChildren = (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty())
+        || (dependency.getProvides() != null && !dependency.getProvides().isEmpty());
+
+    if (hasChildren) {
       generator.writeStartArray();
     }
 
@@ -131,6 +142,11 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
     generator.writeString(dependency.getRef());
     generator.setNextIsAttribute(false);
 
+    // Write provides
+    if (dependency.getProvides() != null && !dependency.getProvides().isEmpty()) {
+        writeXMLProvides(dependency, generator);
+    }
+
     if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
       for (Dependency subDependency : dependency.getDependencies()) {
         // You got Shay'd
@@ -138,11 +154,24 @@ public class DependencySerializer extends StdSerializer<DependencyList> implemen
       }
     }
 
-    if (dependency.getDependencies() != null && !dependency.getDependencies().isEmpty()) {
-    generator.writeEndArray();
-  }
+    if (hasChildren) {
+      generator.writeEndArray();
+    }
 
     generator.writeEndObject();
+  }
+
+  private void writeXMLProvides(final Dependency dependency, final ToXmlGenerator generator)
+      throws IOException, XMLStreamException
+  {
+    for (BomReference ref : dependency.getProvides()) {
+      processNamespace(generator, "provides");
+      generator.setNextIsAttribute(true);
+      generator.setNextName(new QName(REF));
+      generator.writeString(ref.getRef());
+      generator.setNextIsAttribute(false);
+      generator.writeEndObject();
+    }
   }
 
   private void processNamespace(final ToXmlGenerator toXmlGenerator, final String dependencies)
