@@ -16,6 +16,18 @@ public enum ProtocolType
   SSTP("sstp", "Secure Socket Tunneling Protocol"),
   @JsonProperty("wpa")
   WPA("wpa", "Wi-Fi Protected Access"),
+  @JsonProperty("dtls")
+  DTLS("dtls", "Datagram Transport Layer Security"),
+  @JsonProperty("quic")
+  QUIC("quic", "Quick UDP Internet Connections"),
+  @JsonProperty("eap-aka")
+  EAP_AKA("eap-aka", "Extensible Authentication Protocol variant"),
+  @JsonProperty("eap-aka-prime")
+  EAP_AKA_PRIME("eap-aka-prime", "Enhanced version of EAP-AKA"),
+  @JsonProperty("prins")
+  PRINS("prins", "Protection of Inter-Network Signaling"),
+  @JsonProperty("5g-aka")
+  FIVE_G_AKA("5g-aka", "Authentication and Key Agreement for 5G"),
   @JsonProperty("other")
   OTHER("other", "Another protocol type"),
   @JsonProperty("unknown")

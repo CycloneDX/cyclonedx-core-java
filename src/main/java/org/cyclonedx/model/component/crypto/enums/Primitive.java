@@ -30,6 +30,8 @@ public enum Primitive
   AE("ae"),
   @JsonProperty("combiner")
   COMBINER("combiner"),
+  @JsonProperty("key-wrap")
+  KEY_WRAP("key-wrap"),
   @JsonProperty("other")
   OTHER("other"),
   @JsonProperty("unknown")
