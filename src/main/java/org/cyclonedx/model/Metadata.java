@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.Version;
-import org.cyclonedx.util.deserializer.LicenseDeserializer;
+import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
 import org.cyclonedx.util.deserializer.LifecycleDeserializer;
 import org.cyclonedx.util.deserializer.MetadataDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
@@ -175,7 +175,7 @@ public class Metadata
         setLicenses(licenseChoice);
     }
 
-    @JsonDeserialize(using = LicenseDeserializer.class)
+    @JsonDeserialize(using = LicenseChoiceDeserializer.class)
     public LicenseChoice getLicenses() {
         return licenses;
     }
