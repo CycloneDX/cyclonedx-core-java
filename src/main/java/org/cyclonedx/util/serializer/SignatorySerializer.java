@@ -34,10 +34,11 @@ public class SignatorySerializer
   }
 
   private void serializeXml(final ToXmlGenerator gen, final Signatory signatory, final SerializerProvider provider)
-      throws IOException
-  {
-    //It might have extensible types (signature)
-    if (signatory.getExtensibleTypes() != null && !signatory.getExtensibleTypes().isEmpty()) {
+      throws IOException {
+    boolean hasExtensibleTypes = signatory.getExtensibleTypes() != null && !signatory.getExtensibleTypes().isEmpty();
+    boolean hasOrgAndRef = signatory.getOrganization() != null && signatory.getExternalReference() != null;
+
+    if (hasExtensibleTypes || hasOrgAndRef) {
       gen.writeStartObject();
 
       if (signatory.getName() != null && !signatory.getName().trim().isEmpty()) {
@@ -48,14 +49,21 @@ public class SignatorySerializer
         gen.writeStringField("role", signatory.getRole());
       }
 
-      new ExtensibleTypesSerializer().serialize(signatory.getExtensibleTypes(), gen, provider);
+      if (hasOrgAndRef) {
+        gen.writeObjectField("organization", signatory.getOrganization());
+        gen.writeObjectField("externalReference", signatory.getExternalReference());
+      }
+
+      if (hasExtensibleTypes) {
+        new ExtensibleTypesSerializer().serialize(signatory.getExtensibleTypes(), gen, provider);
+      }
+
       gen.writeEndObject();
     }
   }
 
   private void serializeJson(final JsonGenerator gen, final Signatory signatory)
-      throws IOException
-  {
+      throws IOException {
     boolean shouldSerialize = false;
 
     if (signatory.getSignature() != null && !isXml) {
@@ -78,8 +86,7 @@ public class SignatorySerializer
 
       if (signatory.getSignature() != null) {
         gen.writeObjectField("signature", signatory.getSignature());
-      }
-      else if (signatory.getExternalReference() != null && signatory.getOrganization() != null) {
+      } else if (signatory.getExternalReference() != null && signatory.getOrganization() != null) {
         gen.writeObjectField("organization", signatory.getOrganization());
         gen.writeObjectField("externalReference", signatory.getExternalReference());
       }
