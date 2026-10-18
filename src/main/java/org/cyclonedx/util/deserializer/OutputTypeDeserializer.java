@@ -22,47 +22,25 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.formulation.common.OutputType;
-import org.cyclonedx.model.formulation.common.OutputType.OutputTypeEnum;
 
 public class OutputTypeDeserializer
     extends AbstractDataTypeDeserializer<OutputType> {
 
   @Override
-  public OutputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-      throws IOException
-  {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    OutputType outputType = new OutputType();
-
-    setSourceAndTarget(node, outputType);
-    createOutputDataInfo(node, outputType, deserializationContext, jsonParser);
-    setProperties(node, outputType);
-
-    if(node.has("type")) {
-      JsonNode typeNode = node.get("type");
-      OutputTypeEnum type = objectMapper.treeToValue(typeNode, OutputTypeEnum.class);
-      outputType.setType(type);
-    }
-
-    return outputType;
+  protected OutputType createType() {
+    return new OutputType();
   }
 
-  private void createOutputDataInfo(JsonNode node, OutputType outputType, DeserializationContext ctxt, JsonParser jsonParser)
+  @Override
+  protected boolean readField(String fieldName, OutputType outputType, JsonParser parser, DeserializationContext ctxt)
       throws IOException
   {
-    if (node.has("resource")) {
-      setResource(node, outputType);
+    if (!"type".equals(fieldName)) {
+      return false;
     }
-    else if (node.has("environmentVars")) {
-      setEnvironmentVars(node, outputType, jsonParser, ctxt);
-    }
-    else if (node.has("data")) {
-      JsonNode dataNode = node.get("data");
-      AttachmentText data = objectMapper.treeToValue(dataNode, AttachmentText.class);
-      outputType.setData(data);
-    }
+
+    outputType.setType(ctxt.readValue(parser, OutputType.OutputTypeEnum.class));
+    return true;
   }
 }

@@ -19,17 +19,15 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.cyclonedx.model.Property;
-
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.cyclonedx.model.formulation.common.EnvironmentVars;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.cyclonedx.model.Property;
+import org.cyclonedx.model.formulation.common.EnvironmentVars;
 
 public class EnvironmentVarsDeserializer extends StdDeserializer<EnvironmentVars> {
 
@@ -42,67 +40,36 @@ public class EnvironmentVarsDeserializer extends StdDeserializer<EnvironmentVars
   }
 
   @Override
-  public EnvironmentVars deserialize(JsonParser jp, DeserializationContext ctxt)
-      throws IOException{
-    JsonNode node = jp.getCodec().readTree(jp);
-    EnvironmentVars environmentVars = new EnvironmentVars();
-    List<Object> choices = new ArrayList<>();
+  public EnvironmentVars deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    final List<Object> choices = new ArrayList<>();
 
-    if (node.isObject()) {
-      processObject(node, choices);
-    }
-    else if (node.isArray()) {
-      for (JsonNode n : node) {
-        processObject(n, choices);
+    if (parser.currentToken() == JsonToken.START_ARRAY) {
+      while (parser.nextToken() != JsonToken.END_ARRAY) {
+        if (parser.currentToken() == JsonToken.VALUE_STRING) {
+          choices.add(parser.getText());
+        } else if (parser.currentToken() == JsonToken.START_OBJECT) {
+          choices.add(ctxt.readValue(parser, Property.class));
+        } else {
+          parser.skipChildren();
+        }
+      }
+    } else if (parser.currentToken() == JsonToken.START_OBJECT) {
+      for (JsonToken token = parser.nextToken(); token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
+        final String fieldName = parser.currentName();
+        parser.nextToken();
+
+        if ("environmentVar".equals(fieldName)) {
+          choices.add(ctxt.readValue(parser, Property.class));
+        } else if ("value".equals(fieldName) && parser.currentToken().isScalarValue()) {
+          choices.add(parser.getValueAsString());
+        } else {
+          parser.skipChildren();
+        }
       }
     }
-    else {
-      choices.add(node.asText());
-    }
 
+    final EnvironmentVars environmentVars = new EnvironmentVars();
     environmentVars.setChoices(choices);
     return environmentVars;
-  }
-
-  private void processObject(JsonNode node,  List<Object> choices ){
-    if (node.has("environmentVar") && node.has("value")) {
-      JsonNode envVarNode = node.get("environmentVar");
-      Property environmentVar = createProperty(envVarNode);
-      choices.add(environmentVar);
-      choices.add(node.get("value").asText());
-    }
-    else if (node.has("value")) {
-      if (node.has("name")) {
-        Property environmentVar = createProperty(node);
-        choices.add(environmentVar);
-      }
-      else {
-        choices.add(node.get("value").asText());
-      }
-    }
-    else if (node.has("environmentVar")) {
-      JsonNode envVarNode = node.get("environmentVar");
-      Property environmentVar = createProperty(envVarNode);
-      choices.add(environmentVar);
-    } else if(node.isTextual()) {
-      choices.add(node.asText());
-    }
-  }
-
-  private Property createProperty(JsonNode envVarNode){
-    Property prop = new Property();
-
-    if (envVarNode.has("name")) {
-      String name = envVarNode.get("name").asText();
-      prop.setName(name);
-    }
-    if (envVarNode.has("")) {
-      String value = envVarNode.get("").asText();
-      prop.setValue(value);
-    } else  if (envVarNode.has("value")) {
-      String value = envVarNode.get("value").asText();
-      prop.setValue(value);
-    }
-    return prop;
   }
 }

@@ -19,47 +19,27 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.formulation.common.InputType;
-import org.cyclonedx.model.formulation.common.InputType.Parameter;
 
 public class InputTypeDeserializer extends AbstractDataTypeDeserializer<InputType> {
 
   @Override
-  public InputType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-      throws IOException
-  {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    InputType inputType = new InputType();
-
-    setSourceAndTarget(node, inputType);
-    createInputDataInfo(node, inputType, jsonParser, deserializationContext);
-    setProperties(node, inputType);
-
-    return inputType;
+  protected InputType createType() {
+    return new InputType();
   }
 
-  private void createInputDataInfo(JsonNode node, InputType inputType, JsonParser jsonParser, DeserializationContext ctxt)
+  @Override
+  protected boolean readField(String fieldName, InputType inputType, JsonParser parser, DeserializationContext ctxt)
       throws IOException
   {
-    if (node.has("resource")) {
-      setResource(node, inputType);
-    } else if (node.has("parameters")) {
-      JsonNode parametersNode = node.get("parameters");
-      List<Parameter> parameters = objectMapper.convertValue(parametersNode, new TypeReference<List<Parameter>>() {});
-      inputType.setParameters(parameters);
-    } else if (node.has("environmentVars")) {
-      setEnvironmentVars(node, inputType, jsonParser, ctxt);
-    } else if (node.has("data")) {
-      JsonNode dataNode = node.get("data");
-      AttachmentText data = objectMapper.treeToValue(dataNode, AttachmentText.class);
-      inputType.setData(data);
+    if (!"parameters".equals(fieldName)) {
+      return false;
     }
+
+    inputType.setParameters(DeserializerUtils.readList(parser, ctxt, InputType.Parameter.class));
+    return true;
   }
 }

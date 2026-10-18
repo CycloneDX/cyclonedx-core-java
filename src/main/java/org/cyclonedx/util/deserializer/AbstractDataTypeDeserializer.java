@@ -19,69 +19,65 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import org.cyclonedx.model.Property;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.cyclonedx.model.AttachmentText;
 import org.cyclonedx.model.formulation.common.AbstractType;
-import org.cyclonedx.model.formulation.common.EnvironmentVars;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
 public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
     extends JsonDeserializer<T> {
 
-  protected final ObjectMapper objectMapper = new ObjectMapper();
-
   private final EnvironmentVarsDeserializer environmentVarsDeserializer = new EnvironmentVarsDeserializer();
+  private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
 
-  protected void setEnvironmentVars(
-      final JsonNode node,
-      AbstractType data,
-      JsonParser jsonParser,
-      DeserializationContext ctxt) throws IOException
-  {
-    JsonNode nodes = node.get("environmentVars");
-    JsonParser nodeParser = nodes.traverse(jsonParser.getCodec());
-    EnvironmentVars envVar = environmentVarsDeserializer.deserialize(nodeParser, ctxt);
-    data.setEnvironmentVars(envVar);
-  }
+  protected abstract T createType();
 
-  protected void setReference(JsonNode node, String fieldName, AbstractType type) throws JsonProcessingException {
-    if (node.has(fieldName)) {
-      JsonNode fieldNode = node.get(fieldName);
-      ResourceReferenceChoice reference = objectMapper.treeToValue(fieldNode, ResourceReferenceChoice.class);
+  protected abstract boolean readField(String fieldName, T type, JsonParser parser, DeserializationContext ctxt)
+      throws IOException;
 
-      if ("source".equals(fieldName)) {
-        type.setSource(reference);
-      } else if ("target".equals(fieldName)) {
-        type.setTarget(reference);
+  @Override
+  public T deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    final T type = createType();
+
+    JsonToken token = parser.currentToken();
+    if (token == JsonToken.START_OBJECT) {
+      token = parser.nextToken();
+    }
+
+    for (; token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
+      final String fieldName = parser.currentName();
+      parser.nextToken();
+
+      switch (fieldName) {
+        case "source":
+          type.setSource(ctxt.readValue(parser, ResourceReferenceChoice.class));
+          break;
+        case "target":
+          type.setTarget(ctxt.readValue(parser, ResourceReferenceChoice.class));
+          break;
+        case "resource":
+          type.setResource(ctxt.readValue(parser, ResourceReferenceChoice.class));
+          break;
+        case "environmentVars":
+          type.setEnvironmentVars(environmentVarsDeserializer.deserialize(parser, ctxt));
+          break;
+        case "data":
+          type.setData(ctxt.readValue(parser, AttachmentText.class));
+          break;
+        case "properties":
+          type.setProperties(propertiesDeserializer.deserialize(parser, ctxt));
+          break;
+        default:
+          if (!readField(fieldName, type, parser, ctxt)) {
+            parser.skipChildren();
+          }
       }
     }
-  }
 
-  protected void setSourceAndTarget(JsonNode node, AbstractType type) throws JsonProcessingException {
-    setReference(node, "source", type);
-    setReference(node, "target", type);
-  }
-
-  protected void setResource(JsonNode node, AbstractType type) throws JsonProcessingException {
-    JsonNode resourceNode = node.get("resource");
-    ResourceReferenceChoice resource = objectMapper.treeToValue(resourceNode, ResourceReferenceChoice.class);
-    type.setResource(resource);
-  }
-
-  protected void setProperties(JsonNode node, AbstractType type) throws JsonProcessingException {
-    if(node.has("properties")) {
-      JsonNode propertiesNode = node.get("properties");
-      List<Property> properties = objectMapper.convertValue(propertiesNode, new TypeReference<List<Property>>() {});
-      type.setProperties(properties);
-    }
+    return type;
   }
 }
