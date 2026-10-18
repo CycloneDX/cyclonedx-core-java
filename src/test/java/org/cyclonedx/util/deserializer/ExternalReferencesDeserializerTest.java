@@ -19,10 +19,17 @@
 package org.cyclonedx.util.deserializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Patent;
+import org.cyclonedx.model.PatentFamily;
+import org.cyclonedx.model.attestation.Claim;
+import org.cyclonedx.model.definition.Requirement;
+import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.parsers.XmlParser;
 import org.cyclonedx.model.ExternalReference;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -31,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class ExternalReferencesDeserializerTest {
 
@@ -43,6 +51,40 @@ class ExternalReferencesDeserializerTest {
     })
     void shouldNotEmitReferencesWithoutAnyKnownFieldsFromJson(String json) throws Exception {
         assertThat(parseJson(json)).isEmpty();
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {Patent.class, PatentFamily.class, Requirement.class, Standard.class, Claim.class})
+    void shouldNotEmitReferencesWithoutAnyKnownFieldsInOtherTypes(Class<?> type) throws Exception {
+        final Object value = new ObjectMapper().readValue(/* language=JSON */ """
+                {
+                  "externalReferences": [
+                    {},
+                    { "type":"website", "url":"https://example.com" }
+                  ]
+                }
+                """, type);
+
+        assertThat(value).extracting("externalReferences").asInstanceOf(InstanceOfAssertFactories.LIST)
+                .singleElement()
+                .extracting("url").isEqualTo("https://example.com");
+    }
+
+    @ParameterizedTest
+    @ValueSource(classes = {Patent.class, PatentFamily.class, Requirement.class, Standard.class, Claim.class})
+    void shouldNotEmitReferencesWithoutAnyKnownFieldsInOtherTypesFromXml(Class<?> type) throws Exception {
+        final Object value = new XmlMapper().readValue(/* language=XML */ """
+                <type>
+                  <externalReferences>
+                    <reference/>
+                    <reference type="website"><url>https://example.com</url></reference>
+                  </externalReferences>
+                </type>
+                """, type);
+
+        assertThat(value).extracting("externalReferences").asInstanceOf(InstanceOfAssertFactories.LIST)
+                .singleElement()
+                .extracting("url").isEqualTo("https://example.com");
     }
 
     @ParameterizedTest

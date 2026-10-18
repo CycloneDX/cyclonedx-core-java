@@ -7,12 +7,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.ExtensibleElement;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.JsonOnly;
 import org.cyclonedx.model.Signature;
+import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -115,6 +117,7 @@ public class Claim extends ExtensibleElement
 
   @JacksonXmlElementWrapper(localName = "externalReferences")
   @JacksonXmlProperty(localName = "reference")
+  @JsonDeserialize(using = ExternalReferencesDeserializer.class)
   public List<ExternalReference> getExternalReferences() {
     return externalReferences;
   }
