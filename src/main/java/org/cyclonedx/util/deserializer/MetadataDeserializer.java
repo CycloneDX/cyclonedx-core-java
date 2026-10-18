@@ -4,21 +4,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.DistributionConstraints;
-import org.cyclonedx.model.LicenseChoice;
-import org.cyclonedx.model.Lifecycles;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
-import org.cyclonedx.model.Property;
+import org.cyclonedx.model.Service;
+import org.cyclonedx.model.Tool;
+import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.util.TimestampUtils;
-import org.cyclonedx.util.ToolsJsonParser;
 
 public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
@@ -28,74 +31,57 @@ public class MetadataDeserializer
   private final LicenseChoiceDeserializer licenseDeserializer = new LicenseChoiceDeserializer();
 
   @Override
-  public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+  public Metadata deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    final Metadata metadata = new Metadata();
 
-    Metadata metadata = new Metadata();
-
-    ObjectMapper mapper = getMapper(jsonParser);
-
-    // Parsing other fields in the Metadata object
-    if (node.has("authors")) {
-      JsonNode authorsNode = node.get("authors");
-      List<OrganizationalContact> authors = deserializeOrganizationalContact(authorsNode, mapper);
-      metadata.setAuthors(authors);
+    JsonToken token = parser.currentToken();
+    if (token == JsonToken.START_OBJECT) {
+      token = parser.nextToken();
     }
 
-    if(node.has("component")) {
-      Component component = deserializeComponent(node.get("component"), jsonParser, mapper);
-      metadata.setComponent(component);
-    }
+    for (; token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
+      final String fieldName = parser.currentName();
+      parser.nextToken();
 
-    if (node.has("manufacture")) {
-      OrganizationalEntity manufacture = mapper.convertValue(node.get("manufacture"), OrganizationalEntity.class);
-      metadata.setManufacture(manufacture);
-    }
-
-    if (node.has("manufacturer")) {
-      OrganizationalEntity manufacturer = mapper.convertValue(node.get("manufacturer"), OrganizationalEntity.class);
-      metadata.setManufacturer(manufacturer);
-    }
-
-    if (node.has("lifecycles")) {
-      JsonParser lifecycleParser = node.get("lifecycles").traverse(jsonParser.getCodec());
-      lifecycleParser.nextToken();
-      Lifecycles lifecycles = lifecycleDeserializer.deserialize(lifecycleParser, ctxt);
-      metadata.setLifecycles(lifecycles);
-    }
-
-    if (node.has("supplier")) {
-      OrganizationalEntity supplier = mapper.convertValue(node.get("supplier"), OrganizationalEntity.class);
-      metadata.setSupplier(supplier);
-    }
-
-    if(node.has("licenses")) {
-      JsonParser licensesParser = node.get("licenses").traverse(jsonParser.getCodec());
-      licensesParser.nextToken();
-      LicenseChoice licenses = licenseDeserializer.deserialize(licensesParser, ctxt);
-      metadata.setLicenses(licenses);
-    }
-
-    if (node.has("timestamp")) {
-      setTimestamp(node, metadata);
-    }
-
-    if (node.has("properties")) {
-      JsonParser propertiesParser = node.get("properties").traverse(jsonParser.getCodec());
-      propertiesParser.nextToken();
-      List<Property> properties = propertiesDeserializer.deserialize(propertiesParser, ctxt);
-      metadata.setProperties(properties);
-    }
-
-    if (node.has("tools")) {
-      ToolsJsonParser toolsParser = new ToolsJsonParser(node, jsonParser, ctxt);
-      metadata.setTools(toolsParser.getTools());
-      metadata.setToolChoice(toolsParser.getToolInformation());
-    }
-
-    if (node.has("distributionConstraints")) {
-      DistributionConstraints dc = mapper.convertValue(node.get("distributionConstraints"), DistributionConstraints.class);
-      metadata.setDistributionConstraints(dc);
+      switch (fieldName) {
+        case "timestamp":
+          if (parser.currentToken() == JsonToken.VALUE_STRING) {
+            metadata.setTimestamp(TimestampUtils.parseTimestamp(parser.getText()));
+          }
+          break;
+        case "lifecycles":
+          metadata.setLifecycles(lifecycleDeserializer.deserialize(parser, ctxt));
+          break;
+        case "tools":
+          readTools(parser, ctxt, metadata);
+          break;
+        case "authors":
+          metadata.setAuthors(readList(parser, ctxt, OrganizationalContact.class));
+          break;
+        case "component":
+          metadata.setComponent(ctxt.readValue(parser, Component.class));
+          break;
+        case "manufacturer":
+          metadata.setManufacturer(ctxt.readValue(parser, OrganizationalEntity.class));
+          break;
+        case "manufacture":
+          metadata.setManufacture(ctxt.readValue(parser, OrganizationalEntity.class));
+          break;
+        case "supplier":
+          metadata.setSupplier(ctxt.readValue(parser, OrganizationalEntity.class));
+          break;
+        case "licenses":
+          metadata.setLicenses(licenseDeserializer.deserialize(parser, ctxt));
+          break;
+        case "properties":
+          metadata.setProperties(propertiesDeserializer.deserialize(parser, ctxt));
+          break;
+        case "distributionConstraints":
+          metadata.setDistributionConstraints(ctxt.readValue(parser, DistributionConstraints.class));
+          break;
+        default:
+          parser.skipChildren();
+      }
     }
 
     return metadata;
@@ -128,30 +114,41 @@ public class MetadataDeserializer
     organizationalContactList.add(author);
   }
 
-  private ObjectMapper getMapper(JsonParser jsonParser) {
-    if (jsonParser.getCodec() instanceof ObjectMapper) {
-      return (ObjectMapper) jsonParser.getCodec();
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  static class ToolsChoice {
+
+    @SuppressWarnings("deprecation")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    public List<Tool> tool;
+
+    @JacksonXmlElementWrapper(localName = "components")
+    @JacksonXmlProperty(localName = "component")
+    public List<Component> components;
+
+    @JacksonXmlElementWrapper(localName = "services")
+    @JacksonXmlProperty(localName = "service")
+    public List<Service> services;
+  }
+
+  @SuppressWarnings("deprecation")
+  private static void readTools(JsonParser parser, DeserializationContext ctxt, Metadata metadata) throws IOException {
+    if (parser.currentToken() == JsonToken.START_ARRAY) {
+      metadata.setTools(readList(parser, ctxt, Tool.class));
+      return;
+    }
+
+    final ToolsChoice tools = ctxt.readValue(parser, ToolsChoice.class);
+    if (tools.components != null || tools.services != null) {
+      final ToolInformation toolInformation = new ToolInformation();
+      toolInformation.setComponents(tools.components);
+      toolInformation.setServices(tools.services);
+      metadata.setToolChoice(toolInformation);
     } else {
-      return new ObjectMapper();
+      metadata.setTools(tools.tool);
     }
   }
 
-  private void setTimestamp(JsonNode node, Metadata metadata) {
-    JsonNode timestampNode = node.get("timestamp");
-    if (timestampNode != null && timestampNode.isTextual()) {
-      metadata.setTimestamp(TimestampUtils.parseTimestamp(timestampNode.textValue()));
-    }
-  }
-
-  /**
-   * Deserializes a Component from a JsonNode, handling both simple and complex nested structures.
-   * This method properly handles XML parsing where nested components might be represented
-   * as single objects or arrays depending on the XML structure.
-   */
-  private Component deserializeComponent(JsonNode componentNode, JsonParser originalParser, ObjectMapper mapper) throws IOException {
-    try (JsonParser componentParser = componentNode.traverse(originalParser.getCodec())) {
-      componentParser.nextToken(); // Advance to the first token
-      return componentParser.readValueAs(Component.class);
-    }
+  private static <T> List<T> readList(JsonParser parser, DeserializationContext ctxt, Class<T> type) throws IOException {
+    return ctxt.readValue(parser, ctxt.getTypeFactory().constructCollectionType(ArrayList.class, type));
   }
 }
