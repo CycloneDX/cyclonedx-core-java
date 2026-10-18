@@ -63,11 +63,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#%3Cinit%3E()" tabindex="0">ResolvesDeserializer()</a></li>
 </ol>
 </li>
-<li><a href="#method-detail" tabindex="0">Method Details</a>
-<ol class="toc-list">
-<li><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" tabindex="0">deserialize(JsonParser, DeserializationContext)</a></li>
-</ol>
-</li>
 </ol>
 <button class="hide-sidebar"><span>Hide sidebar&nbsp;</span><img src="../../../../resource-files/left.svg" alt="Hide sidebar"></button><button class="show-sidebar"><img src="../../../../resource-files/right.svg" alt="Show sidebar"><span>&nbsp;Show sidebar</span></button></nav>
 <main role="main">
@@ -77,7 +72,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.fasterxml.jackson.databind.JsonDeserializer&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/ReleaseNotes.Resolves.html" title="class in org.cyclonedx.model">ReleaseNotes.Resolves</a>&gt;&gt;
+<div class="inheritance"><a href="WrappedListDeserializer.html" title="class in org.cyclonedx.util.deserializer">org.cyclonedx.util.deserializer.WrappedListDeserializer</a>&lt;<a href="../../model/ReleaseNotes.Resolves.html" title="class in org.cyclonedx.model">ReleaseNotes.Resolves</a>&gt;
 <div class="inheritance">org.cyclonedx.util.deserializer.ResolvesDeserializer</div>
+</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -88,7 +85,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ResolvesDeserializer</span>
-<span class="extends-implements">extends com.fasterxml.jackson.databind.JsonDeserializer&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/ReleaseNotes.Resolves.html" title="class in org.cyclonedx.model">ReleaseNotes.Resolves</a>&gt;&gt;</span></div>
+<span class="extends-implements">extends <a href="WrappedListDeserializer.html" title="class in org.cyclonedx.util.deserializer">WrappedListDeserializer</a>&lt;<a href="../../model/ReleaseNotes.Resolves.html" title="class in org.cyclonedx.model">ReleaseNotes.Resolves</a>&gt;</span></div>
 </div>
 </section>
 <section class="summary">
@@ -119,20 +116,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
-<div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
-<div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../model/ReleaseNotes.Resolves.html" title="class in org.cyclonedx.model">ReleaseNotes.Resolves</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">deserialize</a><wbr>(com.fasterxml.jackson.core.JsonParser&nbsp;parser,
- com.fasterxml.jackson.databind.DeserializationContext&nbsp;context)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-</div>
-</div>
-</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-org.cyclonedx.util.deserializer.WrappedListDeserializer">Methods inherited from class&nbsp;<a href="WrappedListDeserializer.html#method-summary" title="class in org.cyclonedx.util.deserializer">WrappedListDeserializer</a></h3>
+<code><a href="WrappedListDeserializer.html#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" title="deserialize(JsonParser, DeserializationContext)">deserialize</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.fasterxml.jackson.databind.JsonDeserializer">Methods inherited from class&nbsp;com.fasterxml.jackson.databind.JsonDeserializer</h3>
 <code>deserialize, deserializeWithType, deserializeWithType, findBackReference, getAbsentValue, getDelegatee, getEmptyAccessPattern, getEmptyValue, getEmptyValue, getKnownPropertyNames, getNullAccessPattern, getNullValue, getNullValue, getObjectIdReader, handledType, isCachable, logicalType, replaceDelegatee, supportsUpdate, unwrappingDeserializer</code></div>
@@ -155,30 +141,6 @@ loadScripts(document, 'script');</script>
 <h3>ResolvesDeserializer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ResolvesDeserializer</span>()</div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-</li>
-<!-- ============ METHOD DETAIL ========== -->
-<li>
-<section class="method-details" id="method-detail">
-<h2>Method Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">
-<h3>deserialize</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/ReleaseNotes.Resolves.html" title="class in org.cyclonedx.model">ReleaseNotes.Resolves</a>&gt;</span>&nbsp;<span class="element-name">deserialize</span><wbr><span class="parameters">(com.fasterxml.jackson.core.JsonParser&nbsp;parser,
- com.fasterxml.jackson.databind.DeserializationContext&nbsp;context)</span>
-                                        throws <span class="exceptions"><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>deserialize</code>&nbsp;in class&nbsp;<code>com.fasterxml.jackson.databind.JsonDeserializer&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/ReleaseNotes.Resolves.html" title="class in org.cyclonedx.model">ReleaseNotes.Resolves</a>&gt;&gt;</code></dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
-</dl>
 </div>
 </section>
 </li>
