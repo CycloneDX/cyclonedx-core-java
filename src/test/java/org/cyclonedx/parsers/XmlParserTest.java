@@ -1618,4 +1618,68 @@ public class XmlParserTest
                 .extracting(Service::getName)
                 .containsExactly("s1", "s2");
     }
+
+    @Test
+    void parseShouldDeserializeReleaseNotesIssueReferences() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <components>
+                        <component type="library">
+                          <name>nested</name>
+                          <releaseNotes>
+                            <type>minor</type>
+                            <resolves>
+                              <issue type="enhancement">
+                                <id>3</id>
+                                <references>
+                                  <url>https://example.com/3a</url>
+                                  <url>https://example.com/3b</url>
+                                </references>
+                              </issue>
+                            </resolves>
+                          </releaseNotes>
+                        </component>
+                      </components>
+                      <releaseNotes>
+                        <type>major</type>
+                        <resolves>
+                          <issue type="defect">
+                            <id>1</id>
+                            <references>
+                              <url>https://example.com/1a</url>
+                              <url>https://example.com/1b</url>
+                            </references>
+                          </issue>
+                          <issue type="security">
+                            <id>2</id>
+                            <references>
+                              <url>https://example.com/2</url>
+                            </references>
+                          </issue>
+                        </resolves>
+                      </releaseNotes>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final Component component = parser.parse(xml).getComponents().get(0);
+        final List<ReleaseNotes.Resolves> resolves = component.getReleaseNotes().getResolves();
+        assertThat(resolves)
+                .extracting(ReleaseNotes.Resolves::getType)
+                .containsExactly(ReleaseNotes.Resolves.Type.DEFECT, ReleaseNotes.Resolves.Type.SECURITY);
+        assertThat(resolves.get(0).getReferences())
+                .containsExactly("https://example.com/1a", "https://example.com/1b");
+        assertThat(resolves.get(1).getReferences())
+                .containsExactly("https://example.com/2");
+        assertThat(component.getComponents().get(0).getReleaseNotes().getResolves().get(0).getReferences())
+                .containsExactly("https://example.com/3a", "https://example.com/3b");
+    }
 }
