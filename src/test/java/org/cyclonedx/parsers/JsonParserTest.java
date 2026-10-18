@@ -81,11 +81,14 @@ import org.cyclonedx.model.license.ExpressionDetail;
 import org.cyclonedx.model.license.ExpressionDetailed;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -1282,5 +1285,51 @@ public class JsonParserTest
         assertThat(bom.getServices().get(0).getLicenses().getItems())
                 .extracting(item -> item.getExpression().getValue())
                 .containsExactly("MIT", "Apache-2.0");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "\"metadata\": {\"timestamp\": \"oops\"}",
+            "\"vulnerabilities\": [{\"created\": \"oops\"}]",
+            "\"vulnerabilities\": [{\"published\": \"oops\"}]",
+            "\"vulnerabilities\": [{\"updated\": \"oops\"}]",
+            "\"vulnerabilities\": [{\"rejected\": \"oops\"}]",
+            "\"vulnerabilities\": [{\"analysis\": {\"firstIssued\": \"oops\"}}]",
+            "\"vulnerabilities\": [{\"analysis\": {\"lastUpdated\": \"oops\"}}]"
+    })
+    void parseShouldRejectInvalidTimestamps(String content) {
+        final String json = """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  %s
+                }
+                """.formatted(content);
+
+        assertThatExceptionOfType(ParseException.class)
+                .isThrownBy(() -> new JsonParser().parse(json.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2025-07-30T11:18:17.121301+00:00, 2025-07-30T11:18:17.121Z",
+            "2025-07-30T11:18:17.123456789Z,   2025-07-30T11:18:17.123Z",
+            "2025-07-30T11:18:17.1Z,           2025-07-30T11:18:17.100Z",
+            "2025-07-30T13:18:17+02:00,        2025-07-30T11:18:17Z",
+            "2025-07-30T11:18:17,              2025-07-30T11:18:17Z"
+    })
+    void parseShouldDeserializeMetadataTimestamp(String timestamp, String expectedInstant) throws Exception {
+        final String json = """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "metadata": {"timestamp": "%s"}
+                }
+                """.formatted(timestamp);
+
+        assertThat(new JsonParser().parse(json.getBytes(StandardCharsets.UTF_8)).getMetadata().getTimestamp())
+                .isEqualTo(Date.from(Instant.parse(expectedInstant)));
     }
 }

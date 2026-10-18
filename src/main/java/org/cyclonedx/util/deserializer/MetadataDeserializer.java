@@ -2,6 +2,7 @@ package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -15,7 +16,6 @@ import org.cyclonedx.model.DistributionConstraints;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
-import org.cyclonedx.util.TimestampUtils;
 
 public class MetadataDeserializer
     extends JsonDeserializer<Metadata> {
@@ -40,9 +40,7 @@ public class MetadataDeserializer
 
       switch (fieldName) {
         case "timestamp":
-          if (parser.currentToken() == JsonToken.VALUE_STRING) {
-            metadata.setTimestamp(TimestampUtils.parseTimestamp(parser.getText()));
-          }
+          metadata.setTimestamp(ctxt.readValue(parser, Date.class));
           break;
         case "lifecycles":
           metadata.setLifecycles(lifecycleDeserializer.deserialize(parser, ctxt));
