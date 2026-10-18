@@ -74,6 +74,9 @@ import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
+import org.cyclonedx.model.formulation.Workflow;
+import org.cyclonedx.model.formulation.common.InputType;
+import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.metadata.ToolInformation;
 import org.cyclonedx.model.license.ExpressionDetail;
 import org.cyclonedx.model.license.ExpressionDetailed;
@@ -1420,5 +1423,76 @@ public class XmlParserTest
         assertThat(metadataPedigree.getCommits()).hasSize(2);
         assertThat(metadataPedigree.getPatches()).hasSize(2);
         assertThat(componentPedigree.getCommits()).hasSize(3);
+    }
+
+    @Test
+    void parseShouldDeserializeFormulationInputsAndOutputs() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <formulation>
+                    <formula>
+                      <workflows>
+                        <workflow bom-ref="wf">
+                          <uid>wf</uid>
+                          <taskTypes><taskType>build</taskType></taskTypes>
+                          <inputs>
+                            <input>
+                              <parameters>
+                                <parameter><name>p1</name></parameter>
+                                <parameter><name>p2</name></parameter>
+                              </parameters>
+                            </input>
+                            <input>
+                              <resource><ref>r</ref></resource>
+                              <properties>
+                                <property name="a">1</property>
+                                <property name="b">2</property>
+                              </properties>
+                            </input>
+                            <input>
+                              <environmentVars>
+                                <environmentVar name="A">1</environmentVar>
+                                <value>x</value>
+                                <environmentVar name="B">2</environmentVar>
+                              </environmentVars>
+                            </input>
+                          </inputs>
+                          <outputs>
+                            <output>
+                              <resource><ref>r</ref></resource>
+                              <type>artifact</type>
+                              <properties>
+                                <property name="c">3</property>
+                                <property name="d">4</property>
+                              </properties>
+                            </output>
+                          </outputs>
+                        </workflow>
+                      </workflows>
+                    </formula>
+                  </formulation>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final Workflow workflow = parser.parse(xml).getFormulation().get(0).getWorkflows().get(0);
+        final List<InputType> inputs = workflow.getInputs();
+        assertThat(inputs.get(0).getParameters())
+                .extracting(InputType.Parameter::getName)
+                .containsExactly("p1", "p2");
+        assertThat(inputs.get(1).getProperties())
+                .extracting(Property::getName)
+                .containsExactly("a", "b");
+        assertThat(inputs.get(2).getEnvironmentVars().getChoices())
+                .extracting(choice -> choice instanceof Property property ? property.getName() + "=" + property.getValue() : choice)
+                .containsExactly("A=1", "x", "B=2");
+        final OutputType output = workflow.getOutputs().get(0);
+        assertThat(output.getType()).isEqualTo(OutputType.OutputTypeEnum.ARTIFACT);
+        assertThat(output.getProperties())
+                .extracting(Property::getName)
+                .containsExactly("c", "d");
     }
 }
