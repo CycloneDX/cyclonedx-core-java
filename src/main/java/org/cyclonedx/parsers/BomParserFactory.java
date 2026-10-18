@@ -20,19 +20,19 @@ package org.cyclonedx.parsers;
 
 import org.cyclonedx.exception.ParseException;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
 
 public class BomParserFactory {
 
     private BomParserFactory() {}
 
     public static Parser createParser(final File file) throws ParseException {
-        try (final InputStream fis = Files.newInputStream(file.toPath())) {
+        try (final InputStream fis = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             final byte[] prefix = new byte[4]; // potential 3-byte UTF-8 byte-order mark + 1 content byte
             int actualPrefixLength = 0;
             while (actualPrefixLength < prefix.length) {
@@ -42,21 +42,33 @@ public class BomParserFactory {
                 }
                 actualPrefixLength += read;
             }
-            return createParser(Arrays.copyOf(prefix, actualPrefixLength));
+            final int offset = firstContentOffset(prefix, actualPrefixLength);
+            if (offset < actualPrefixLength) {
+                return createParserForContentByte(prefix[offset] & 0xFF);
+            }
+            int contentByte;
+            do {
+                contentByte = fis.read();
+            } while (isWhitespace(contentByte));
+            return createParserForContentByte(contentByte);
         } catch (IOException e) {
             throw new ParseException("An error occurred creating parser from file", e);
         }
     }
 
     public static Parser createParser(final byte[] bytes) throws ParseException {
-        final int offset = hasUtf8ByteOrderMark(bytes) ? 3 : 0;
-        if (bytes.length - offset < 1) {
+        final int offset = firstContentOffset(bytes, bytes.length);
+        return createParserForContentByte(offset < bytes.length ? bytes[offset] & 0xFF : -1);
+    }
+
+    private static Parser createParserForContentByte(final int contentByte) throws ParseException {
+        if (contentByte == -1) {
             throw new ParseException("Cannot create parser from empty byte array.");
         }
 
-        if (bytes[offset] == (byte) '{') {
+        if (contentByte == '{') {
             return new JsonParser();
-        } else if (bytes[offset] == (byte) '<') {
+        } else if (contentByte == '<') {
             return new XmlParser();
         } else {
             throw new ParseException("The specified BOM is not in a supported format. Supported formats are XML and JSON");
@@ -64,7 +76,7 @@ public class BomParserFactory {
     }
 
     public static boolean looksLikeCycloneDX(final byte[] bytes) {
-        final int offset = hasUtf8ByteOrderMark(bytes) ? 3 : 0;
+        final int offset = firstContentOffset(bytes, bytes.length);
         final String bomString = new String(bytes, offset, bytes.length - offset, StandardCharsets.UTF_8);
         if (bomString.startsWith("<?xml") && bomString.contains("<bom") &&
             bomString.contains("http://cyclonedx.org/schema/bom")) {
@@ -73,6 +85,18 @@ public class BomParserFactory {
         else {
             return bomString.startsWith("{") && bomString.contains("bomFormat") && bomString.contains("CycloneDX");
         }
+    }
+
+    private static int firstContentOffset(final byte[] bytes, final int length) {
+        int offset = length >= 3 && hasUtf8ByteOrderMark(bytes) ? 3 : 0;
+        while (offset < length && isWhitespace(bytes[offset])) {
+            offset++;
+        }
+        return offset;
+    }
+
+    private static boolean isWhitespace(final int value) {
+        return value == ' ' || value == '\t' || value == '\r' || value == '\n';
     }
 
     private static boolean hasUtf8ByteOrderMark(byte[] bytes) {

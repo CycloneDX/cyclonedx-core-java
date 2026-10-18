@@ -24,15 +24,67 @@ import org.cyclonedx.parsers.JsonParser;
 import org.cyclonedx.parsers.Parser;
 import org.cyclonedx.parsers.XmlParser;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BomParserFactoryTest {
+
+    @TempDir
+    Path tempDir;
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "\n", "    \t\r\n", "\uFEFF", "\uFEFF \r\n"})
+    void testJsonWithLeadingWhitespace(String prefix) throws Exception {
+        byte[] bytes = (prefix + "{\"bomFormat\":\"CycloneDX\",\"specVersion\":\"1.6\",\"version\":1}")
+                .getBytes(StandardCharsets.UTF_8);
+        Parser parser = BomParserFactory.createParser(bytes);
+        assertInstanceOf(JsonParser.class, parser);
+        assertEquals(1, parser.parse(bytes).getVersion());
+        assertTrue(BomParserFactory.looksLikeCycloneDX(bytes));
+
+        File file = Files.write(tempDir.resolve("bom.json"), bytes).toFile();
+        Parser fileParser = BomParserFactory.createParser(file);
+        assertInstanceOf(JsonParser.class, fileParser);
+        assertEquals(1, fileParser.parse(file).getVersion());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "\n", "    \t\r\n", "\uFEFF", "\uFEFF \r\n"})
+    void testXmlWithLeadingWhitespace(String prefix) throws Exception {
+        byte[] bytes = (prefix + "<bom xmlns=\"http://cyclonedx.org/schema/bom/1.6\" version=\"1\"/>")
+                .getBytes(StandardCharsets.UTF_8);
+        Parser parser = BomParserFactory.createParser(bytes);
+        assertInstanceOf(XmlParser.class, parser);
+        assertEquals(1, parser.parse(bytes).getVersion());
+
+        File file = Files.write(tempDir.resolve("bom.xml"), bytes).toFile();
+        Parser fileParser = BomParserFactory.createParser(file);
+        assertInstanceOf(XmlParser.class, fileParser);
+        assertEquals(1, fileParser.parse(file).getVersion());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " \t\r\n", "\uFEFF", "\uFEFF \n", "x{}", " \u000B{}"})
+    void testRejectsEmptyOrUnsupportedContent(String content) throws Exception {
+        byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+        assertThrows(ParseException.class, () -> BomParserFactory.createParser(bytes));
+        assertFalse(BomParserFactory.looksLikeCycloneDX(bytes));
+        File file = Files.write(tempDir.resolve("unsupported"), bytes).toFile();
+        assertThrows(ParseException.class, () -> BomParserFactory.createParser(file));
+    }
 
     @Test
     public void testXMLFactory() throws Exception {
