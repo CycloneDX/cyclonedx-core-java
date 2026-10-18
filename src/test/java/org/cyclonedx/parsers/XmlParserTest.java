@@ -1303,4 +1303,122 @@ public class XmlParserTest
 				.getPedigree()
 				.getCommits();
 	}
+
+    @Test
+    void parseShouldDeserializePedigreePatchesInMetadata() throws Exception {
+        final String xml = """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <metadata>
+                    <tools>
+                      <components>
+                        <component type="application">
+                          <name>tool</name>
+                          <pedigree>
+                            <patches>
+                              <patch type="backport">
+                                <resolves>
+                                  <issue type="defect">
+                                    <id>1</id>
+                                    <references>
+                                      <url>https://example.com/1a</url>
+                                      <url>https://example.com/1b</url>
+                                    </references>
+                                  </issue>
+                                  <issue type="security"><id>2</id></issue>
+                                </resolves>
+                              </patch>
+                              <patch type="cherry-pick"/>
+                            </patches>
+                          </pedigree>
+                        </component>
+                      </components>
+                    </tools>
+                    <component type="application">
+                      <name>app</name>
+                      <pedigree>
+                        <patches>
+                          <patch type="monkey">
+                            <resolves>
+                              <issue type="enhancement">
+                                <id>3</id>
+                                <references>
+                                  <url>https://example.com/3</url>
+                                </references>
+                              </issue>
+                            </resolves>
+                          </patch>
+                        </patches>
+                      </pedigree>
+                    </component>
+                  </metadata>
+                </bom>
+                """;
+
+        final Metadata metadata = new XmlParser().parse(xml.getBytes(StandardCharsets.UTF_8)).getMetadata();
+
+        final List<Patch> toolPatches = metadata.getToolChoice().getComponents().get(0).getPedigree().getPatches();
+        assertThat(toolPatches)
+                .extracting(Patch::getType)
+                .containsExactly(Patch.Type.BACKPORT, Patch.Type.CHERRY_PICK);
+        assertThat(toolPatches.get(0).getResolves())
+                .extracting(Issue::getId)
+                .containsExactly("1", "2");
+        assertThat(toolPatches.get(0).getResolves().get(0).getReferences())
+                .containsExactly("https://example.com/1a", "https://example.com/1b");
+        final List<Patch> componentPatches = metadata.getComponent().getPedigree().getPatches();
+        assertThat(componentPatches)
+                .extracting(Patch::getType)
+                .containsExactly(Patch.Type.MONKEY);
+        assertThat(componentPatches.get(0).getResolves())
+                .extracting(Issue::getId)
+                .containsExactly("3");
+        assertThat(componentPatches.get(0).getResolves().get(0).getReferences())
+                .containsExactly("https://example.com/3");
+    }
+
+    @Test
+    void parseShouldReturnMutablePedigreeLists() throws Exception {
+        final String xml = """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <metadata>
+                    <component type="application">
+                      <name>app</name>
+                      <pedigree>
+                        <commits>
+                          <commit><uid>u1</uid></commit>
+                        </commits>
+                        <patches>
+                          <patch type="backport"/>
+                        </patches>
+                      </pedigree>
+                    </component>
+                  </metadata>
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <pedigree>
+                        <commits>
+                          <commit><uid>u2</uid></commit>
+                          <commit><uid>u3</uid></commit>
+                        </commits>
+                      </pedigree>
+                    </component>
+                  </components>
+                </bom>
+                """;
+
+        final Bom bom = new XmlParser().parse(xml.getBytes(StandardCharsets.UTF_8));
+        final Pedigree metadataPedigree = bom.getMetadata().getComponent().getPedigree();
+        final Pedigree componentPedigree = bom.getComponents().get(0).getPedigree();
+
+        metadataPedigree.getCommits().add(new Commit());
+        metadataPedigree.getPatches().add(new Patch());
+        componentPedigree.getCommits().add(new Commit());
+
+        assertThat(metadataPedigree.getCommits()).hasSize(2);
+        assertThat(metadataPedigree.getPatches()).hasSize(2);
+        assertThat(componentPedigree.getCommits()).hasSize(3);
+    }
 }

@@ -22,6 +22,7 @@ import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Citation;
+import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
@@ -29,10 +30,12 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Patch;
 import org.cyclonedx.model.Patent;
 import org.cyclonedx.model.PatentAssertion;
 import org.cyclonedx.model.PatentFamily;
 import org.cyclonedx.model.PatentItem;
+import org.cyclonedx.model.Pedigree;
 import org.cyclonedx.model.TlpClassification;
 import org.cyclonedx.model.attestation.Assessor;
 import org.cyclonedx.model.attestation.Attestation;
@@ -74,8 +77,11 @@ import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.model.license.ExpressionDetail;
 import org.cyclonedx.model.license.ExpressionDetailed;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,6 +89,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -1098,5 +1105,59 @@ public class JsonParserTest
         assertEquals(1, bom.getServices().get(0).getPatentAssertions().size());
         PatentAssertion pa3 = bom.getServices().get(0).getPatentAssertions().get(0);
         assertEquals(PatentAssertion.AssertionType.EXCLUSIVE_RIGHTS, pa3.getAssertionType());
+    }
+
+    @Test
+    void parseShouldReturnMutablePedigreeLists() throws Exception {
+        final String json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "pedigree": {
+                        "commits": [{"uid": "u1"}],
+                        "patches": [{"type": "backport"}]
+                      }
+                    }
+                  ]
+                }
+                """;
+
+        final Pedigree pedigree = new JsonParser().parse(json.getBytes(StandardCharsets.UTF_8))
+                .getComponents().get(0).getPedigree();
+
+        pedigree.getCommits().add(new Commit());
+        pedigree.getPatches().add(new Patch());
+
+        assertThat(pedigree.getCommits()).hasSize(2);
+        assertThat(pedigree.getPatches()).hasSize(2);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"\"oops\"", "{\"uid\": \"u1\"}"})
+    void parseShouldRejectNonArrayPedigreeCommits(String commits) {
+        final String json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "pedigree": {
+                        "commits": %s
+                      }
+                    }
+                  ]
+                }
+                """.formatted(commits);
+
+        assertThatExceptionOfType(ParseException.class)
+                .isThrownBy(() -> new JsonParser().parse(json.getBytes(StandardCharsets.UTF_8)));
     }
 }
