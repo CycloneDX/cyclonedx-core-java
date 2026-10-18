@@ -27,6 +27,7 @@ public class MetadataDeserializer
   @Override
   public Metadata deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     final Metadata metadata = new Metadata();
+    metadata.setTimestamp(null); // Clear default value. Don't fabricate data that isn't there!
 
     JsonToken token = parser.currentToken();
     if (token == JsonToken.START_OBJECT) {

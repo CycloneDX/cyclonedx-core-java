@@ -1709,4 +1709,21 @@ public class XmlParserTest
                         tuple(null, "staging", null),
                         tuple(null, "prod", "Production"));
     }
+
+    @Test
+    void parseShouldNotInventMetadataTimestamp() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <metadata>
+                    <component type="application"><name>app</name></component>
+                  </metadata>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        assertThat(parser.parse(xml).getMetadata().getTimestamp()).isNull();
+    }
 }

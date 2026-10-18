@@ -1215,4 +1215,23 @@ public class JsonParserTest
                         tuple(null, "staging", null),
                         tuple(null, "prod", "Production"));
     }
+
+    @Test
+    void parseShouldNotInventMetadataTimestamp() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "metadata": {
+                    "component": {"type": "application", "name": "app"}
+                  }
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        assertThat(parser.parse(json).getMetadata().getTimestamp()).isNull();
+    }
 }
