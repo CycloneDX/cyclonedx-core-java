@@ -94,8 +94,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">WrappedListDeserializer&lt;T&gt;</span>
 <span class="extends-implements">extends com.fasterxml.jackson.databind.JsonDeserializer&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&gt;</span></div>
 <div class="block">Deserializes a list from a JSON array, or from XML where a container element wraps the items,
-e.g. <code>&lt;commits&gt;&lt;commit/&gt;&lt;/commits&gt;</code>. Repeated XML items may arrive as repeated fields or,
-if the XML was read into a tree upstream, as an array. Items deserialized to <code>null</code> are dropped.</div>
+e.g. <code>&lt;commits&gt;&lt;commit/&gt;&lt;/commits&gt;</code>, where repeated items arrive as repeated fields.
+Items deserialized to <code>null</code> are dropped.</div>
 </div>
 </section>
 <section class="summary">
