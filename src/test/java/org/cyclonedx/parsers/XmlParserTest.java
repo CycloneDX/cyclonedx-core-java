@@ -92,6 +92,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -1681,5 +1682,31 @@ public class XmlParserTest
                 .containsExactly("https://example.com/2");
         assertThat(component.getComponents().get(0).getReleaseNotes().getResolves().get(0).getReferences())
                 .containsExactly("https://example.com/3a", "https://example.com/3b");
+    }
+
+    @Test
+    void parseShouldDeserializeCustomLifecycleWithoutDescription() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <metadata>
+                    <lifecycles>
+                      <lifecycle><phase>build</phase></lifecycle>
+                      <lifecycle><name>staging</name></lifecycle>
+                      <lifecycle><name>prod</name><description>Production</description></lifecycle>
+                    </lifecycles>
+                  </metadata>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        assertThat(parser.parse(xml).getMetadata().getLifecycles().getLifecycleChoice())
+                .extracting(LifecycleChoice::getPhase, LifecycleChoice::getName, LifecycleChoice::getDescription)
+                .containsExactly(
+                        tuple(LifecycleChoice.Phase.BUILD, null, null),
+                        tuple(null, "staging", null),
+                        tuple(null, "prod", "Production"));
     }
 }

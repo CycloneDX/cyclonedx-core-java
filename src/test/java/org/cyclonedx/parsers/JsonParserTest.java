@@ -28,6 +28,7 @@ import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
+import org.cyclonedx.model.LifecycleChoice;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Patch;
@@ -90,6 +91,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -1184,5 +1186,33 @@ public class JsonParserTest
 
         assertThat(parser.parse(json).getVulnerabilities().get(0).getProofOfConcept().getReproductionSteps())
                 .isEqualTo("run it");
+    }
+
+    @Test
+    void parseShouldDeserializeCustomLifecycleWithoutDescription() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "metadata": {
+                    "lifecycles": [
+                      {"phase": "build"},
+                      {"name": "staging"},
+                      {"name": "prod", "description": "Production"}
+                    ]
+                  }
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        assertThat(parser.parse(json).getMetadata().getLifecycles().getLifecycleChoice())
+                .extracting(LifecycleChoice::getPhase, LifecycleChoice::getName, LifecycleChoice::getDescription)
+                .containsExactly(
+                        tuple(LifecycleChoice.Phase.BUILD, null, null),
+                        tuple(null, "staging", null),
+                        tuple(null, "prod", "Production"));
     }
 }
