@@ -793,6 +793,10 @@ public class XmlParserTest
         assertNotNull(content);
 
         assertEquals(2, content.getProperties().size());
+
+        assertThat(mc.getConsiderations().getEthicalConsiderations())
+                .extracting("name", "mitigationStrategy")
+                .containsExactly(tuple("The name of the risk", "Strategy used to address this risk"));
     }
 
     @Test
@@ -1817,6 +1821,56 @@ public class XmlParserTest
         final Metadata metadata = parser.parse(xml).getMetadata();
         assertThat(metadata.getTools()).isNullOrEmpty();
         assertThat(metadata.getToolChoice()).isNull();
+    }
+
+    @Test
+    void parseShouldDeserializeVulnerability10Extension() throws Exception {
+        final Bom bom = getXmlBom("bom-1.1-vulnerability-1.0.xml");
+
+        final var vulnerability = (Vulnerability10) bom.getComponents().get(0)
+                .getExtensions().get(Extension.ExtensionType.VULNERABILITIES.getTypeName())
+                .getExtensions().get(0);
+        assertThat(vulnerability.getRef()).isEqualTo("pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.9");
+        assertThat(vulnerability.getId()).isEqualTo("CVE-2018-7489");
+        assertThat(vulnerability.getSource().getName()).isEqualTo("NVD");
+        assertThat(vulnerability.getSource().getUrl()).hasToString("https://nvd.nist.gov/vuln/detail/CVE-2018-7489");
+        assertThat(vulnerability.getRatings()).singleElement().satisfies(rating -> {
+            assertThat(rating.getScore().getBase()).isEqualTo(9.8);
+            assertThat(rating.getScore().getImpact()).isEqualTo(5.9);
+            assertThat(rating.getScore().getExploitability()).isEqualTo(3.0);
+            assertThat(rating.getSeverity()).isEqualTo(Vulnerability10.Severity.CRITICAL);
+        });
+        assertThat(vulnerability.getCwes()).extracting(Vulnerability10.Cwe::getText).containsExactly(184, 502);
+        assertThat(vulnerability.getDescription()).startsWith("FasterXML jackson-databind before 2.7.9.3");
+        assertThat(vulnerability.getRecommendations())
+                .extracting(Vulnerability10.Recommendation::getText).containsExactly("Upgrade");
+        assertThat(vulnerability.getAdvisories()).extracting(Vulnerability10.Advisory::getText).containsExactly(
+                "https://github.com/FasterXML/jackson-databind/issues/1931",
+                "http://www.securityfocus.com/bid/103203",
+                "http://www.securitytracker.com/id/1040693",
+                "http://www.securitytracker.com/id/1041890");
+    }
+
+    @Test
+    void parseShouldSkipUnknownElements() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" xmlns:x="urn:example" version="1">
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <version>1.0</version>
+                      <x:unknown><name>unknown</name><version>unknown</version></x:unknown>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+        assertThat(parser.parse(xml).getComponents())
+                .extracting("name", "version")
+                .containsExactly(tuple("lib", "1.0"));
     }
 
     @Test
