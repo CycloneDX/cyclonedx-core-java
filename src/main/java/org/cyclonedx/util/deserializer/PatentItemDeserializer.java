@@ -3,13 +3,13 @@ package org.cyclonedx.util.deserializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.TokenBuffer;
 import org.cyclonedx.model.Patent;
 import org.cyclonedx.model.PatentFamily;
 import org.cyclonedx.model.PatentItem;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Deserializes a JSON object that could be either a Patent or a PatentFamily.
@@ -19,15 +19,15 @@ public class PatentItemDeserializer extends JsonDeserializer<PatentItem> {
 
     @Override
     public PatentItem deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        JsonNode node = p.readValueAsTree();
-        ObjectMapper mapper = (ObjectMapper) p.getCodec();
+        final TokenBuffer buffer = ctxt.bufferAsCopyOfValue(p);
+        final Set<String> fieldNames = DeserializerUtils.fieldNames(buffer);
 
-        if (node.has("familyId") || node.has("members")) {
-            PatentFamily pf = mapper.treeToValue(node, PatentFamily.class);
-            return PatentItem.ofPatentFamily(pf);
-        } else {
-            Patent patent = mapper.treeToValue(node, Patent.class);
-            return PatentItem.ofPatent(patent);
+        try (final JsonParser itemParser = buffer.asParserOnFirstToken()) {
+            if (fieldNames.contains("familyId") || fieldNames.contains("members")) {
+                return PatentItem.ofPatentFamily(ctxt.readValue(itemParser, PatentFamily.class));
+            }
+
+            return PatentItem.ofPatent(ctxt.readValue(itemParser, Patent.class));
         }
     }
 }

@@ -18,28 +18,44 @@
  */
 package org.cyclonedx.util;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
-
-import java.io.IOException;
 
 public class ResourceReferenceChoiceDeserializer extends JsonDeserializer<ResourceReferenceChoice>
 {
   @Override
   public ResourceReferenceChoice deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    ResourceReferenceChoice resourceReferenceChoice = new ResourceReferenceChoice();
+    final ResourceReferenceChoice resourceReferenceChoice = new ResourceReferenceChoice();
+    if (jsonParser.currentToken() != JsonToken.START_OBJECT) {
+      jsonParser.skipChildren();
+      return resourceReferenceChoice;
+    }
 
-    if (node.has("ref")) {
-      String ref = node.get("ref").asText();
+    String ref = null;
+    ExternalReference externalReference = null;
+
+    for (JsonToken token = jsonParser.nextToken(); token == JsonToken.FIELD_NAME; token = jsonParser.nextToken()) {
+      final String fieldName = jsonParser.currentName();
+      jsonParser.nextToken();
+
+      if ("ref".equals(fieldName) && jsonParser.currentToken().isScalarValue()) {
+        ref = jsonParser.getValueAsString();
+      } else if ("externalReference".equals(fieldName)) {
+        externalReference = deserializationContext.readValue(jsonParser, ExternalReference.class);
+      } else {
+        jsonParser.skipChildren();
+      }
+    }
+
+    if (ref != null) {
       resourceReferenceChoice.setRef(ref);
-    } else if (node.has("externalReference")) {
-      JsonNode externalReferenceNode = node.get("externalReference");
-      ExternalReference externalReference = jsonParser.getCodec().treeToValue(externalReferenceNode, ExternalReference.class);
+    } else {
       resourceReferenceChoice.setExternalReference(externalReference);
     }
 

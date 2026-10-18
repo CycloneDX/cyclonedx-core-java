@@ -30,8 +30,8 @@ import java.util.List;
 
 /**
  * Deserializes a list from a JSON array, or from XML where a container element wraps the items,
- * e.g. {@code <commits><commit/></commits>}. Repeated XML items may arrive as repeated fields or,
- * if the XML was read into a tree upstream, as an array. Items deserialized to {@code null} are dropped.
+ * e.g. {@code <commits><commit/></commits>}, where repeated items arrive as repeated fields.
+ * Items deserialized to {@code null} are dropped.
  */
 public class WrappedListDeserializer<T> extends JsonDeserializer<List<T>> {
 
@@ -45,7 +45,6 @@ public class WrappedListDeserializer<T> extends JsonDeserializer<List<T>> {
 
     @Override
     public List<T> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-        // NB: Checks the codec rather than the parser, so XML that was read into a tree upstream counts as XML too.
         if (!(parser.getCodec() instanceof XmlMapper) && parser.currentToken() != JsonToken.START_ARRAY) {
             return context.reportInputMismatch(this, "Expected an array of %s", elementName);
         }
@@ -53,18 +52,16 @@ public class WrappedListDeserializer<T> extends JsonDeserializer<List<T>> {
         final List<T> items = new ArrayList<>();
 
         if (parser.currentToken() == JsonToken.START_ARRAY) {
-            readArrayItems(parser, context, items);
+            DeserializerUtils.readItemsInto(parser, context, elementType, items);
         } else if (parser.currentToken() == JsonToken.START_OBJECT) {
             for (JsonToken token = parser.nextToken(); token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
                 final String fieldName = parser.currentName();
-                final JsonToken valueToken = parser.nextToken();
+                parser.nextToken();
 
-                if (!elementName.equals(fieldName)) {
-                    parser.skipChildren();
-                } else if (valueToken == JsonToken.START_ARRAY) {
-                    readArrayItems(parser, context, items);
+                if (elementName.equals(fieldName)) {
+                    DeserializerUtils.readItemsInto(parser, context, elementType, items);
                 } else {
-                    addIfNotNull(items, context.readValue(parser, elementType));
+                    parser.skipChildren();
                 }
             }
         } else {
@@ -72,17 +69,5 @@ public class WrappedListDeserializer<T> extends JsonDeserializer<List<T>> {
         }
 
         return items;
-    }
-
-    private void readArrayItems(JsonParser parser, DeserializationContext context, List<T> items) throws IOException {
-        while (parser.nextToken() != JsonToken.END_ARRAY) {
-            addIfNotNull(items, context.readValue(parser, elementType));
-        }
-    }
-
-    private static <T> void addIfNotNull(List<T> items, T item) {
-        if (item != null) {
-            items.add(item);
-        }
     }
 }

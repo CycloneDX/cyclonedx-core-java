@@ -19,6 +19,7 @@
 package org.cyclonedx.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,7 +31,6 @@ import org.cyclonedx.Version;
 import org.cyclonedx.model.component.evidence.Callstack;
 import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.evidence.Occurrence;
-import org.cyclonedx.util.deserializer.IdentityDeserializer;
 import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
 
 import java.util.ArrayList;
@@ -126,7 +126,7 @@ public class Evidence
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "identity")
     @JsonProperty("identity")
-    @JsonDeserialize(using = IdentityDeserializer.class)
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     @VersionFilter(Version.VERSION_15)
     public List<Identity> getIdentities() {
         return identities;

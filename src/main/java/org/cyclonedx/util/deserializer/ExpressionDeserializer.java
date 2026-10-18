@@ -18,53 +18,78 @@
  */
 package org.cyclonedx.util.deserializer;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
+
+import java.io.IOException;
 
 public class ExpressionDeserializer
     extends JsonDeserializer<Expression>
 {
   @Override
   public Expression deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-    JsonNode node = p.getCodec().readTree(p);
-
-    if (node.has("expression") && node.get("expression").isObject()) {
-      node = node.get("expression");
+    if (p.currentToken().isScalarValue()) {
+      return new Expression(readTrimmed(p));
     }
 
-    if (node.isTextual()) {
-      return new Expression(node.asText().trim());
-    }
-    else {
-      return parseExpressionNode(node);
-    }
-  }
-
-  private Expression parseExpressionNode(JsonNode node) {
-    Expression expression = new Expression();
-
-    if (node.has("bom-ref")) {
-      expression.setBomRef(node.get("bom-ref").asText());
+    final Expression expression = new Expression();
+    if (p.currentToken() != JsonToken.START_OBJECT) {
+      p.skipChildren();
+      return expression;
     }
 
-    if (node.has("acknowledgement")) {
-      expression.setAcknowledgement(Acknowledgement.fromString(node.get("acknowledgement").asText()));
+    Expression nested = null;
+    String text = null;
+
+    for (JsonToken token = p.nextToken(); token == JsonToken.FIELD_NAME; token = p.nextToken()) {
+      final String fieldName = p.currentName();
+      final JsonToken valueToken = p.nextToken();
+
+      if ("expression".equals(fieldName) && valueToken == JsonToken.START_OBJECT) {
+        nested = deserialize(p, ctxt);
+        continue;
+      }
+      if (!valueToken.isScalarValue()) {
+        p.skipChildren();
+        continue;
+      }
+
+      switch (fieldName) {
+        case "bom-ref":
+          expression.setBomRef(p.getValueAsString());
+          break;
+        case "acknowledgement":
+          expression.setAcknowledgement(Acknowledgement.fromString(p.getValueAsString()));
+          break;
+        case "expression":
+          expression.setValue(readTrimmed(p));
+          break;
+        // NB: For XML, the expression is the element's text, which gets translated
+        // to a field with empty name.
+        case "":
+          text = readTrimmed(p);
+          break;
+        default:
+          break;
+      }
     }
 
-    JsonNode textNode = node.get("expression");
-    if (textNode != null) {
-      expression.setValue(textNode.asText().trim());
+    if (nested != null) {
+      return nested;
     }
-    else if (node.has("")) {
-      expression.setValue(node.get("").asText().trim());
+    if (expression.getValue() == null) {
+      expression.setValue(text);
     }
 
     return expression;
+  }
+
+  private static String readTrimmed(final JsonParser p) throws IOException {
+    final String text = DeserializerUtils.readText(p);
+    return text == null ? null : text.trim();
   }
 }

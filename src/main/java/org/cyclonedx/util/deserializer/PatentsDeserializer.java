@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.Patent;
 import org.cyclonedx.model.PatentFamily;
@@ -19,78 +17,49 @@ import java.util.List;
  * Deserializes the polymorphic patents array which can contain
  * both Patent and PatentFamily objects.
  *
- * For JSON: reads the array and discriminates by presence of "familyId" or "members".
- * For XML: reads the tree and groups by "patent" and "patentFamily" element names.
+ * For JSON: reads the array, see {@link PatentItemDeserializer}.
+ * For XML: discriminates by the "patent" and "patentFamily" element names.
  */
 public class PatentsDeserializer extends JsonDeserializer<List<PatentItem>> {
 
     @Override
     public List<PatentItem> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        final List<PatentItem> items;
         if (p instanceof FromXmlParser) {
-            return deserializeXml(p, ctxt);
+            items = deserializeXml(p, ctxt);
+        } else if (p.currentToken() == JsonToken.START_ARRAY) {
+            items = DeserializerUtils.readList(p, ctxt, PatentItem.class);
+        } else {
+            p.skipChildren();
+            items = null;
         }
-        return deserializeJson(p, ctxt);
-    }
-
-    private List<PatentItem> deserializeJson(JsonParser p, DeserializationContext ctxt) throws IOException {
-        List<PatentItem> items = new ArrayList<>();
-        ObjectMapper mapper = (ObjectMapper) p.getCodec();
-
-        if (p.currentToken() == JsonToken.START_ARRAY) {
-            while (p.nextToken() != JsonToken.END_ARRAY) {
-                JsonNode node = mapper.readTree(p);
-                if (node.has("familyId") || node.has("members")) {
-                    PatentFamily pf = mapper.treeToValue(node, PatentFamily.class);
-                    items.add(PatentItem.ofPatentFamily(pf));
-                } else {
-                    Patent patent = mapper.treeToValue(node, Patent.class);
-                    items.add(PatentItem.ofPatent(patent));
-                }
-            }
-        }
-
-        return items.isEmpty() ? null : items;
+        return items == null || items.isEmpty() ? null : items;
     }
 
     private List<PatentItem> deserializeXml(JsonParser p, DeserializationContext ctxt) throws IOException {
-        List<PatentItem> items = new ArrayList<>();
+        final List<PatentItem> items = new ArrayList<>();
+        if (p.currentToken() != JsonToken.START_OBJECT) {
+            p.skipChildren();
+            return items;
+        }
 
-        // For XML, we're inside the <patents> wrapper element.
-        // Children can be <patent> or <patentFamily> elements.
-        // Jackson XML presents them as field names within the current object.
-        if (p.currentToken() == JsonToken.START_OBJECT) {
-            while (p.nextToken() != JsonToken.END_OBJECT) {
-                if (p.currentToken() == JsonToken.FIELD_NAME) {
-                    String fieldName = p.currentName();
-                    p.nextToken();
+        for (JsonToken token = p.nextToken(); token == JsonToken.FIELD_NAME; token = p.nextToken()) {
+            final String fieldName = p.currentName();
+            p.nextToken();
 
-                    if ("patent".equals(fieldName)) {
-                        if (p.currentToken() == JsonToken.START_ARRAY) {
-                            while (p.nextToken() != JsonToken.END_ARRAY) {
-                                Patent patent = ctxt.readValue(p, Patent.class);
-                                items.add(PatentItem.ofPatent(patent));
-                            }
-                        } else {
-                            Patent patent = ctxt.readValue(p, Patent.class);
-                            items.add(PatentItem.ofPatent(patent));
-                        }
-                    } else if ("patentFamily".equals(fieldName)) {
-                        if (p.currentToken() == JsonToken.START_ARRAY) {
-                            while (p.nextToken() != JsonToken.END_ARRAY) {
-                                PatentFamily pf = ctxt.readValue(p, PatentFamily.class);
-                                items.add(PatentItem.ofPatentFamily(pf));
-                            }
-                        } else {
-                            PatentFamily pf = ctxt.readValue(p, PatentFamily.class);
-                            items.add(PatentItem.ofPatentFamily(pf));
-                        }
-                    } else {
-                        p.skipChildren();
-                    }
-                }
+            if ("patent".equals(fieldName)) {
+                final List<Patent> patents = new ArrayList<>();
+                DeserializerUtils.readItemsInto(p, ctxt, Patent.class, patents);
+                patents.forEach(patent -> items.add(PatentItem.ofPatent(patent)));
+            } else if ("patentFamily".equals(fieldName)) {
+                final List<PatentFamily> families = new ArrayList<>();
+                DeserializerUtils.readItemsInto(p, ctxt, PatentFamily.class, families);
+                families.forEach(family -> items.add(PatentItem.ofPatentFamily(family)));
+            } else {
+                p.skipChildren();
             }
         }
 
-        return items.isEmpty() ? null : items;
+        return items;
     }
 }

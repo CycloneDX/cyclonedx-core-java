@@ -1,16 +1,12 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.DistributionConstraints;
 import org.cyclonedx.model.Metadata;
@@ -80,32 +76,5 @@ public class MetadataDeserializer
     }
 
     return metadata;
-  }
-
-  static List<OrganizationalContact> deserializeOrganizationalContact(JsonNode node, final ObjectMapper mapper) {
-    List<OrganizationalContact> organizationalContactList = new ArrayList<>();
-
-    if (node.has("author")) {
-      node = node.get("author");
-    }
-
-    if (node.isArray()) {
-      for (JsonNode authorNode : node) {
-        deserializeAuthor(authorNode, mapper, organizationalContactList);
-      }
-    }
-    else if (node.isObject()) {
-      deserializeAuthor(node, mapper, organizationalContactList);
-    }
-    return organizationalContactList;
-  }
-
-  static void deserializeAuthor(
-      JsonNode node,
-      final ObjectMapper mapper,
-      List<OrganizationalContact> organizationalContactList)
-  {
-    OrganizationalContact author = mapper.convertValue(node, OrganizationalContact.class);
-    organizationalContactList.add(author);
   }
 }

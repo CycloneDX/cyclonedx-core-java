@@ -21,6 +21,7 @@ package org.cyclonedx.parsers;
 import org.cyclonedx.Version;
 import org.cyclonedx.exception.ParseException;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.Citation;
 import org.cyclonedx.model.Commit;
 import org.cyclonedx.model.Component;
@@ -32,6 +33,8 @@ import org.cyclonedx.model.LifecycleChoice;
 import org.cyclonedx.model.LicenseChoice;
 import org.cyclonedx.model.LicenseItem;
 import org.cyclonedx.model.LicenseItem.LicenseItemType;
+import org.cyclonedx.model.OrganizationalChoice;
+import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Patch;
 import org.cyclonedx.model.Patent;
@@ -63,7 +66,9 @@ import org.cyclonedx.model.component.crypto.enums.Mode;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.data.Content;
+import org.cyclonedx.model.component.data.DatasetChoice;
 import org.cyclonedx.model.component.evidence.Identity;
+import org.cyclonedx.model.component.evidence.Method;
 import org.cyclonedx.model.component.modelCard.Considerations;
 import org.cyclonedx.model.component.modelCard.ModelParameters;
 import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
@@ -75,6 +80,7 @@ import org.cyclonedx.model.component.modelCard.consideration.consumption.energy.
 import org.cyclonedx.model.definition.Level;
 import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
+import org.cyclonedx.model.formulation.Workflow;
 import org.cyclonedx.model.license.Acknowledgement;
 import org.cyclonedx.model.license.Expression;
 import org.cyclonedx.model.license.ExpressionDetail;
@@ -1366,5 +1372,322 @@ public class JsonParserTest
 
         assertThat(new JsonParser().parse(json.getBytes(StandardCharsets.UTF_8)).getMetadata().getTimestamp())
                 .isEqualTo(Date.from(Instant.parse(expectedInstant)));
+    }
+
+    @Test
+    void parseShouldDeserializeLicenseExpressions() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "a",
+                      "licenses": [{"expression": " MIT OR Apache-2.0 "}]
+                    },
+                    {
+                      "type": "library",
+                      "name": "b",
+                      "licenses": [{"expression": "MIT", "acknowledgement": "concluded", "bom-ref": "expr"}]
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        assertThat(parser.parse(json).getComponents())
+                .extracting(component -> component.getLicenses().getItems().get(0).getExpression())
+                .extracting(Expression::getValue, Expression::getAcknowledgement, Expression::getBomRef)
+                .containsExactly(
+                        tuple("MIT OR Apache-2.0", null, null),
+                        tuple("MIT", Acknowledgement.CONCLUDED, "expr"));
+    }
+
+    @Test
+    void parseShouldDeserializeNullLicenseExpression() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "licenses": [{"expression": null}]
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        assertThat(new JsonParser().parse(json).getComponents().get(0).getLicenses().getItems())
+                .singleElement().extracting(item -> item.getExpression().getValue()).isNull();
+    }
+
+    @Test
+    void parseShouldDeserializeOrganizationalEntities() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "supplier": {
+                        "bom-ref": "supplier",
+                        "name": "Acme",
+                        "address": {"country": "DE", "locality": "Berlin"},
+                        "url": ["https://a.example.com", "https://b.example.com"],
+                        "contact": [{"name": "a"}, {"name": "b", "email": "b@example.com"}]
+                      }
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        final OrganizationalEntity supplier = parser.parse(json).getComponents().get(0).getSupplier();
+        assertThat(supplier.getBomRef()).isEqualTo("supplier");
+        assertThat(supplier.getName()).isEqualTo("Acme");
+        assertThat(supplier.getAddress().getCountry()).isEqualTo("DE");
+        assertThat(supplier.getAddress().getLocality()).isEqualTo("Berlin");
+        assertThat(supplier.getUrls()).containsExactly("https://a.example.com", "https://b.example.com");
+        assertThat(supplier.getContacts())
+                .extracting(OrganizationalContact::getName, OrganizationalContact::getEmail)
+                .containsExactly(tuple("a", null), tuple("b", "b@example.com"));
+    }
+
+    @Test
+    void parseShouldDeserializePatentOrganizationalChoices() throws Exception {
+        final Bom bom = getJsonBom("1.7/valid-patent-1.7.json");
+
+        assertThat(bom.getComponents().get(0).getPatentAssertions())
+                .extracting(assertion -> assertion.getAsserter().getOrganization().getBomRef())
+                .containsExactly("org-acme-inc", "org-acme-inc");
+
+        final OrganizationalChoice serviceAsserter = bom.getServices().get(0).getPatentAssertions().get(0).getAsserter();
+        assertThat(serviceAsserter.getIndividual()).isNull();
+        assertThat(serviceAsserter.getOrganization().getName()).isEqualTo("Partner Company");
+        assertThat(serviceAsserter.getOrganization().getContacts())
+                .extracting(OrganizationalContact::getName, OrganizationalContact::getPhone)
+                .containsExactly(tuple("Sam Smith", "800-555-1212"));
+
+        final List<PatentItem> patents = bom.getDefinitions().getPatents();
+        assertThat(patents.get(0).getPatent().getPatentAssignee()).singleElement().satisfies(assignee -> {
+            assertThat(assignee.getIndividual()).isNull();
+            assertThat(assignee.getOrganization().getName()).isEqualTo("Tech Innovators Inc.");
+            assertThat(assignee.getOrganization().getUrls()).containsExactly("https://techinnovators.com");
+        });
+        assertThat(patents.get(2).getPatent().getPatentAssignee()).singleElement().satisfies(assignee -> {
+            assertThat(assignee.getOrganization()).isNull();
+            assertThat(assignee.getIndividual().getName()).isEqualTo("Jane Smith");
+            assertThat(assignee.getIndividual().getEmail()).isEqualTo("jane.smith@techinnovators.com");
+        });
+    }
+
+    @Test
+    void parseShouldDeserializePatentAssertions() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.7",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "patentAssertions": [
+                        {
+                          "bom-ref": "assertion",
+                          "assertionType": "ownership",
+                          "patentRefs": ["patent-1", "patent-2"],
+                          "asserter": {"name": "Jane Smith", "email": "jane@example.com"},
+                          "notes": "Some notes."
+                        },
+                        {
+                          "assertionType": "license",
+                          "asserter": {"bom-ref": "org-acme", "url": ["https://acme.example"], "contact": [{"name": "Jane Doe"}]}
+                        }
+                      ]
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_17)).isEmpty();
+
+        final List<PatentAssertion> assertions = parser.parse(json).getComponents().get(0).getPatentAssertions();
+        final PatentAssertion assertion = assertions.get(0);
+        assertThat(assertion.getBomRef()).isEqualTo("assertion");
+        assertThat(assertion.getAssertionType()).isEqualTo(PatentAssertion.AssertionType.OWNERSHIP);
+        assertThat(assertion.getPatentRefs()).containsExactly("patent-1", "patent-2");
+        assertThat(assertion.getNotes()).isEqualTo("Some notes.");
+
+        final OrganizationalChoice asserter = assertion.getAsserter();
+        assertThat(asserter.getOrganization()).isNull();
+        assertThat(asserter.getIndividual().getName()).isEqualTo("Jane Smith");
+        assertThat(asserter.getIndividual().getEmail()).isEqualTo("jane@example.com");
+
+        final OrganizationalChoice namelessAsserter = assertions.get(1).getAsserter();
+        assertThat(namelessAsserter.getIndividual()).isNull();
+        assertThat(namelessAsserter.getOrganization().getBomRef()).isEqualTo("org-acme");
+        assertThat(namelessAsserter.getOrganization().getUrls()).containsExactly("https://acme.example");
+        assertThat(namelessAsserter.getOrganization().getContacts())
+                .extracting(OrganizationalContact::getName).containsExactly("Jane Doe");
+    }
+
+    @Test
+    void parseShouldDeserializeModelCardDatasets() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "machine-learning-model",
+                      "name": "model",
+                      "modelCard": {
+                        "modelParameters": {
+                          "datasets": [
+                            {"ref": "dataset-a"},
+                            {"type": "dataset", "name": "Training Data"}
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        final List<DatasetChoice> datasets = parser.parse(json).getComponents().get(0)
+                .getModelCard().getModelParameters().getDatasets();
+        assertThat(datasets)
+                .extracting(DatasetChoice::getRef, dataset -> dataset.getComponentData() == null ? null : dataset.getComponentData().getName())
+                .containsExactly(tuple("dataset-a", null), tuple(null, "Training Data"));
+    }
+
+    @Test
+    void parseShouldRejectScalarModelCardDatasets() {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "machine-learning-model",
+                      "name": "model",
+                      "modelCard": {
+                        "modelParameters": {
+                          "datasets": ["dataset-a"]
+                        }
+                      }
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        assertThatExceptionOfType(ParseException.class).isThrownBy(() -> new JsonParser().parse(json));
+    }
+
+    @Test
+    void parseShouldDeserializeFormulationResourceReferences() throws Exception {
+        final Workflow workflow = getJsonBom("1.6/valid-formulation-1.6.json").getFormulation().get(0).getWorkflows().get(0);
+
+        assertThat(workflow.getTasks().get(0).getInputs().get(0).getResource().getRef()).isEqualTo("component-a");
+        assertThat(workflow.getTrigger().getEvent().getSource().getRef()).isEqualTo("component-g");
+        assertThat(workflow.getTrigger().getEvent().getTarget().getRef()).isEqualTo("component-h");
+        assertThat(workflow.getTrigger().getInputs().get(0).getSource().getExternalReference()).isNull();
+    }
+
+    @Test
+    void parseShouldDeserializeEvidenceIdentities() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "evidence": {
+                        "identity": [
+                          {
+                            "field": "purl",
+                            "confidence": 1,
+                            "concludedValue": "pkg:maven/acme/lib@1.0",
+                            "methods": [
+                              {"technique": "filename", "confidence": 0.5, "value": "lib-1.0.jar"},
+                              {"technique": "hash-comparison", "confidence": 1, "value": "abc"}
+                            ],
+                            "tools": ["tool-a", "tool-b"]
+                          },
+                          {
+                            "field": "name",
+                            "confidence": 0.5
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        final List<Identity> identities = parser.parse(json).getComponents().get(0).getEvidence().getIdentities();
+        assertThat(identities)
+                .extracting(Identity::getField, Identity::getConfidence, Identity::getConcludedValue)
+                .containsExactly(
+                        tuple(Identity.Field.PURL, 1.0, "pkg:maven/acme/lib@1.0"),
+                        tuple(Identity.Field.NAME, 0.5, null));
+        assertThat(identities.get(0).getMethods())
+                .extracting(Method::getTechnique, Method::getValue)
+                .containsExactly(
+                        tuple(Method.Technique.FILENAME, "lib-1.0.jar"),
+                        tuple(Method.Technique.HASH_COMPARISON, "abc"));
+        assertThat(identities.get(0).getTools()).extracting(BomReference::getRef).containsExactly("tool-a", "tool-b");
+    }
+
+    @Test
+    void parseShouldDeserializeSingleEvidenceIdentityOfSpec15() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.5",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "evidence": {
+                        "identity": {"field": "purl", "confidence": 1}
+                      }
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_15)).isEmpty();
+
+        assertThat(parser.parse(json).getComponents().get(0).getEvidence().getIdentities())
+                .extracting(Identity::getField, Identity::getConfidence)
+                .containsExactly(tuple(Identity.Field.PURL, 1.0));
     }
 }

@@ -2,32 +2,73 @@ package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.stream.XMLStreamReader;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.util.TokenBuffer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 
 public class DeserializerUtils
 {
   private static final String CYCLONEDX_BOM_NAMESPACE_PREFIX = "http://cyclonedx.org/schema/bom/";
 
-  public static ArrayNode getArrayNode(JsonNode nodes, final ObjectMapper objectMapper) {
-    if (objectMapper != null) {
-      return nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(objectMapper.getNodeFactory()).add(nodes);
-    }
-    else {
-      return nodes.isArray() ? (ArrayNode) nodes : new ArrayNode(null).add(nodes);
+  static <T> List<T> readList(JsonParser parser, DeserializationContext ctxt, Class<T> type) throws IOException {
+    return ctxt.readValue(parser, ctxt.getTypeFactory().constructCollectionType(ArrayList.class, type));
+  }
+
+  static <T> void readItemsInto(JsonParser parser, DeserializationContext ctxt, Class<T> type, List<T> items) throws IOException {
+    if (parser.currentToken() == JsonToken.START_ARRAY) {
+      while (parser.nextToken() != JsonToken.END_ARRAY) {
+        final T item = ctxt.readValue(parser, type);
+        if (item != null) {
+          items.add(item);
+        }
+      }
+    } else {
+      final T item = ctxt.readValue(parser, type);
+      if (item != null) {
+        items.add(item);
+      }
     }
   }
 
-  static <T> List<T> readList(JsonParser parser, DeserializationContext ctxt, Class<T> type) throws IOException {
-    return ctxt.readValue(parser, ctxt.getTypeFactory().constructCollectionType(ArrayList.class, type));
+  static Set<String> fieldNames(TokenBuffer buffer) throws IOException {
+    final Set<String> fieldNames = new HashSet<>();
+
+    try (final JsonParser parser = buffer.asParserOnFirstToken()) {
+      if (parser.currentToken() == JsonToken.START_OBJECT) {
+        for (JsonToken token = parser.nextToken(); token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
+          fieldNames.add(parser.currentName());
+          parser.nextToken();
+          parser.skipChildren();
+        }
+      }
+    }
+
+    return fieldNames;
+  }
+
+  static JsonParser fieldValue(TokenBuffer buffer, String fieldName) throws IOException {
+    final JsonParser parser = buffer.asParserOnFirstToken();
+    if (parser.currentToken() == JsonToken.START_OBJECT) {
+      for (JsonToken token = parser.nextToken(); token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
+        final String currentName = parser.currentName();
+        parser.nextToken();
+        if (fieldName.equals(currentName)) {
+          return parser;
+        }
+        parser.skipChildren();
+      }
+    }
+
+    parser.close();
+    return null;
   }
 
   static String readText(JsonParser parser) throws IOException {

@@ -24,6 +24,7 @@ import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.xml.BomXmlGenerator;
 import org.cyclonedx.model.*;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.BomReference;
 import org.cyclonedx.model.Citation;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Component.Type;
@@ -62,7 +63,9 @@ import org.cyclonedx.model.component.crypto.enums.Mode;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.data.Content;
+import org.cyclonedx.model.component.data.DatasetChoice;
 import org.cyclonedx.model.component.evidence.Identity;
+import org.cyclonedx.model.component.evidence.Method;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.cyclonedx.model.component.modelCard.Considerations;
 import org.cyclonedx.model.component.modelCard.ModelParameters;
@@ -1958,7 +1961,6 @@ public class XmlParserTest
         assertThat(multiple.getTags().getTags()).containsExactly("a", "b");
     }
 
-    // Licenses are always read into a tree first, see parseShouldDeserializeListsOfNestedComponents.
     @Test
     void parseShouldDeserializeLicensingLists() throws Exception {
         final byte[] xml = /* language=XML */ """
@@ -2120,5 +2122,247 @@ public class XmlParserTest
         assertThat(affects.get(1).getVersions())
                 .extracting(Vulnerability.Version::getVersion)
                 .containsExactly("1.0", "2.0");
+    }
+
+    @Test
+    void parseShouldDeserializeLicenseExpressions() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <name>a</name>
+                      <licenses>
+                        <expression> MIT OR Apache-2.0 </expression>
+                      </licenses>
+                    </component>
+                    <component type="library">
+                      <name>b</name>
+                      <licenses>
+                        <expression acknowledgement="concluded" bom-ref="expr">MIT</expression>
+                      </licenses>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        assertThat(parser.parse(xml).getComponents())
+                .extracting(component -> component.getLicenses().getItems().get(0).getExpression())
+                .extracting(Expression::getValue, Expression::getAcknowledgement, Expression::getBomRef)
+                .containsExactly(
+                        tuple("MIT OR Apache-2.0", null, null),
+                        tuple("MIT", Acknowledgement.CONCLUDED, "expr"));
+    }
+
+    @Test
+    void parseShouldDeserializeOrganizationalEntities() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <supplier bom-ref="supplier">
+                        <name>Acme</name>
+                        <address><country>DE</country><locality>Berlin</locality></address>
+                        <url>https://a.example.com</url>
+                        <url>https://b.example.com</url>
+                        <contact><name>a</name></contact>
+                        <contact><name>b</name><email>b@example.com</email></contact>
+                      </supplier>
+                      <manufacturer>
+                        <name>Initech</name>
+                        <url>https://c.example.com</url>
+                        <contact><name>c</name></contact>
+                      </manufacturer>
+                      <name>lib</name>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final Component component = parser.parse(xml).getComponents().get(0);
+
+        final OrganizationalEntity supplier = component.getSupplier();
+        assertThat(supplier.getBomRef()).isEqualTo("supplier");
+        assertThat(supplier.getName()).isEqualTo("Acme");
+        assertThat(supplier.getAddress().getCountry()).isEqualTo("DE");
+        assertThat(supplier.getAddress().getLocality()).isEqualTo("Berlin");
+        assertThat(supplier.getUrls()).containsExactly("https://a.example.com", "https://b.example.com");
+        assertThat(supplier.getContacts())
+                .extracting(OrganizationalContact::getName, OrganizationalContact::getEmail)
+                .containsExactly(tuple("a", null), tuple("b", "b@example.com"));
+
+        final OrganizationalEntity manufacturer = component.getManufacturer();
+        assertThat(manufacturer.getName()).isEqualTo("Initech");
+        assertThat(manufacturer.getUrls()).containsExactly("https://c.example.com");
+        assertThat(manufacturer.getContacts()).extracting(OrganizationalContact::getName).containsExactly("c");
+    }
+
+    @Test
+    void parseShouldDeserializePatentOrganizationalChoices() throws Exception {
+        final Bom bom = getXmlBom("1.7/valid-patent-1.7.xml");
+
+        assertThat(bom.getComponents().get(0).getPatentAssertions())
+                .extracting(assertion -> assertion.getAsserter().getOrganization().getBomRef())
+                .containsExactly("org-acme-inc", "org-acme-inc");
+
+        final OrganizationalChoice serviceAsserter = bom.getServices().get(0).getPatentAssertions().get(0).getAsserter();
+        assertThat(serviceAsserter.getIndividual()).isNull();
+        assertThat(serviceAsserter.getOrganization().getName()).isEqualTo("Partner Company");
+        assertThat(serviceAsserter.getOrganization().getContacts())
+                .extracting(OrganizationalContact::getName, OrganizationalContact::getPhone)
+                .containsExactly(tuple("Sam Smith", "800-555-1212"));
+
+        final List<PatentItem> patents = bom.getDefinitions().getPatents();
+        assertThat(patents.get(0).getPatent().getPatentAssignee()).singleElement().satisfies(assignee -> {
+            assertThat(assignee.getIndividual()).isNull();
+            assertThat(assignee.getOrganization().getName()).isEqualTo("Tech Innovators Inc.");
+            assertThat(assignee.getOrganization().getUrls()).containsExactly("https://techinnovators.com");
+        });
+        assertThat(patents.get(2).getPatent().getPatentAssignee()).singleElement().satisfies(assignee -> {
+            assertThat(assignee.getOrganization()).isNull();
+            assertThat(assignee.getIndividual().getName()).isEqualTo("Jane Smith");
+            assertThat(assignee.getIndividual().getEmail()).isEqualTo("jane.smith@techinnovators.com");
+        });
+    }
+
+    @Test
+    void parseShouldDeserializePatentAssertions() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.7" version="1">
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <patentAssertions>
+                        <patentAssertion bom-ref="assertion">
+                          <assertionType>ownership</assertionType>
+                          <patentRefs>
+                            <bom-ref>patent-1</bom-ref>
+                            <bom-ref>patent-2</bom-ref>
+                          </patentRefs>
+                          <asserter>
+                            <contact><name>Jane Smith</name><email>jane@example.com</email></contact>
+                          </asserter>
+                          <notes>Some notes.</notes>
+                        </patentAssertion>
+                      </patentAssertions>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_17)).isEmpty();
+
+        final PatentAssertion assertion = parser.parse(xml).getComponents().get(0).getPatentAssertions().get(0);
+        assertThat(assertion.getBomRef()).isEqualTo("assertion");
+        assertThat(assertion.getAssertionType()).isEqualTo(PatentAssertion.AssertionType.OWNERSHIP);
+        assertThat(assertion.getPatentRefs()).containsExactly("patent-1", "patent-2");
+        assertThat(assertion.getNotes()).isEqualTo("Some notes.");
+
+        final OrganizationalChoice asserter = assertion.getAsserter();
+        assertThat(asserter.getOrganization()).isNull();
+        assertThat(asserter.getIndividual().getName()).isEqualTo("Jane Smith");
+        assertThat(asserter.getIndividual().getEmail()).isEqualTo("jane@example.com");
+    }
+
+    @Test
+    void parseShouldDeserializeModelCardDatasets() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="machine-learning-model">
+                      <name>model</name>
+                      <modelCard>
+                        <modelParameters>
+                          <datasets>
+                            <ref>dataset-a</ref>
+                            <dataset>
+                              <type>dataset</type>
+                              <name>Training Data</name>
+                            </dataset>
+                          </datasets>
+                        </modelParameters>
+                      </modelCard>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final List<DatasetChoice> datasets = parser.parse(xml).getComponents().get(0)
+                .getModelCard().getModelParameters().getDatasets();
+        assertThat(datasets)
+                .extracting(DatasetChoice::getRef, dataset -> dataset.getComponentData() == null ? null : dataset.getComponentData().getName())
+                .containsExactly(tuple("dataset-a", null), tuple(null, "Training Data"));
+    }
+
+    @Test
+    void parseShouldDeserializeFormulationResourceReferences() throws Exception {
+        final Workflow workflow = getXmlBom("1.6/valid-formulation-1.6.xml").getFormulation().get(0).getWorkflows().get(0);
+
+        assertThat(workflow.getTasks().get(0).getInputs().get(0).getResource().getRef()).isEqualTo("component-a");
+        assertThat(workflow.getTrigger().getEvent().getSource().getRef()).isEqualTo("component-g");
+        assertThat(workflow.getTrigger().getEvent().getTarget().getRef()).isEqualTo("component-h");
+        assertThat(workflow.getTrigger().getInputs().get(0).getSource().getExternalReference()).isNull();
+    }
+
+    @Test
+    void parseShouldDeserializeEvidenceIdentities() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <evidence>
+                        <identity>
+                          <field>purl</field>
+                          <confidence>1</confidence>
+                          <concludedValue>pkg:maven/acme/lib@1.0</concludedValue>
+                          <methods>
+                            <method><technique>filename</technique><confidence>0.5</confidence><value>lib-1.0.jar</value></method>
+                            <method><technique>hash-comparison</technique><confidence>1</confidence><value>abc</value></method>
+                          </methods>
+                          <tools>
+                            <tool ref="tool-a"/>
+                            <tool ref="tool-b"/>
+                          </tools>
+                        </identity>
+                        <identity>
+                          <field>name</field>
+                          <confidence>0.5</confidence>
+                        </identity>
+                      </evidence>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final List<Identity> identities = parser.parse(xml).getComponents().get(0).getEvidence().getIdentities();
+        assertThat(identities)
+                .extracting(Identity::getField, Identity::getConfidence, Identity::getConcludedValue)
+                .containsExactly(
+                        tuple(Identity.Field.PURL, 1.0, "pkg:maven/acme/lib@1.0"),
+                        tuple(Identity.Field.NAME, 0.5, null));
+        assertThat(identities.get(0).getMethods())
+                .extracting(Method::getTechnique, Method::getValue)
+                .containsExactly(
+                        tuple(Method.Technique.FILENAME, "lib-1.0.jar"),
+                        tuple(Method.Technique.HASH_COMPARISON, "abc"));
+        assertThat(identities.get(0).getTools()).extracting(BomReference::getRef).containsExactly("tool-a", "tool-b");
     }
 }
