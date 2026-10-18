@@ -1865,4 +1865,262 @@ public class XmlParserTest
                         tuple(null, Vulnerability10.ScoreSource.CVSSv3, "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:N/I:H/A:N"));
         assertThat(vulnerability.getRatings().get(1).getScore().getBase()).isEqualTo(6.1);
     }
+
+    @Test
+    void parseShouldDeserializeComponentLists() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <authors>
+                        <author><name>a</name></author>
+                        <author><name>b</name></author>
+                      </authors>
+                      <name>lib</name>
+                      <properties>
+                        <property name="a">1</property>
+                        <property name="b">2</property>
+                      </properties>
+                      <tags>
+                        <tag>a</tag>
+                        <tag>b</tag>
+                      </tags>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final Component component = parser.parse(xml).getComponents().get(0);
+        assertThat(component.getAuthors()).extracting(OrganizationalContact::getName).containsExactly("a", "b");
+        assertThat(component.getProperties())
+                .extracting(Property::getName, Property::getValue)
+                .containsExactly(tuple("a", "1"), tuple("b", "2"));
+        assertThat(component.getTags().getTags()).containsExactly("a", "b");
+    }
+
+    // Nested components are read into a tree first, where a single item becomes an object
+    // and multiple items become an array.
+    @Test
+    void parseShouldDeserializeListsOfNestedComponents() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <name>parent</name>
+                      <components>
+                        <component type="library">
+                          <authors><author><name>a</name></author></authors>
+                          <name>single</name>
+                          <properties><property name="a">1</property></properties>
+                          <tags><tag>a</tag></tags>
+                        </component>
+                        <component type="library">
+                          <authors>
+                            <author><name>a</name></author>
+                            <author><name>b</name></author>
+                          </authors>
+                          <name>multiple</name>
+                          <properties>
+                            <property name="a">1</property>
+                            <property name="b">2</property>
+                          </properties>
+                          <tags>
+                            <tag>a</tag>
+                            <tag>b</tag>
+                          </tags>
+                        </component>
+                      </components>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final List<Component> components = parser.parse(xml).getComponents().get(0).getComponents();
+
+        final Component single = components.get(0);
+        assertThat(single.getAuthors()).extracting(OrganizationalContact::getName).containsExactly("a");
+        assertThat(single.getProperties())
+                .extracting(Property::getName, Property::getValue)
+                .containsExactly(tuple("a", "1"));
+        assertThat(single.getTags().getTags()).containsExactly("a");
+
+        final Component multiple = components.get(1);
+        assertThat(multiple.getAuthors()).extracting(OrganizationalContact::getName).containsExactly("a", "b");
+        assertThat(multiple.getProperties())
+                .extracting(Property::getName, Property::getValue)
+                .containsExactly(tuple("a", "1"), tuple("b", "2"));
+        assertThat(multiple.getTags().getTags()).containsExactly("a", "b");
+    }
+
+    // Licenses are always read into a tree first, see parseShouldDeserializeListsOfNestedComponents.
+    @Test
+    void parseShouldDeserializeLicensingLists() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <licenses>
+                        <license>
+                          <name>single</name>
+                          <licensing>
+                            <altIds><altId>a</altId></altIds>
+                            <licenseTypes><licenseType>academic</licenseType></licenseTypes>
+                          </licensing>
+                        </license>
+                        <license>
+                          <name>multiple</name>
+                          <licensing>
+                            <altIds>
+                              <altId>a</altId>
+                              <altId>b</altId>
+                            </altIds>
+                            <licenseTypes>
+                              <licenseType>academic</licenseType>
+                              <licenseType>appliance</licenseType>
+                            </licenseTypes>
+                          </licensing>
+                        </license>
+                      </licenses>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final List<License> licenses = parser.parse(xml).getComponents().get(0).getLicenses().getLicenses();
+
+        final Licensing single = licenses.get(0).getLicensing();
+        assertThat(single.getAltIds()).containsExactly("a");
+        assertThat(single.getLicenseTypes()).containsExactly(Licensing.LicensingType.ACADEMIC);
+
+        final Licensing multiple = licenses.get(1).getLicensing();
+        assertThat(multiple.getAltIds()).containsExactly("a", "b");
+        assertThat(multiple.getLicenseTypes())
+                .containsExactly(Licensing.LicensingType.ACADEMIC, Licensing.LicensingType.APPLIANCE);
+    }
+
+    @Test
+    void parseShouldDeserializeMetadataLifecycles() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <metadata>
+                    <lifecycles>
+                      <lifecycle><phase>build</phase></lifecycle>
+                      <lifecycle><name>a</name><description>b</description></lifecycle>
+                    </lifecycles>
+                  </metadata>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final Metadata metadata = parser.parse(xml).getMetadata();
+        assertThat(metadata.getLifecycles().getLifecycleChoice())
+                .extracting(LifecycleChoice::getPhase, LifecycleChoice::getName, LifecycleChoice::getDescription)
+                .containsExactly(tuple(LifecycleChoice.Phase.BUILD, null, null), tuple(null, "a", "b"));
+    }
+
+    @Test
+    void parseShouldDeserializeReleaseNotesLists() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <releaseNotes>
+                        <type>major</type>
+                        <aliases>
+                          <alias>a</alias>
+                          <alias>b</alias>
+                        </aliases>
+                        <notes>
+                          <note><locale>en</locale><text>a</text></note>
+                          <note><locale>de</locale><text>b</text></note>
+                        </notes>
+                      </releaseNotes>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final ReleaseNotes releaseNotes = parser.parse(xml).getComponents().get(0).getReleaseNotes();
+        assertThat(releaseNotes.getAliases()).containsExactly("a", "b");
+        assertThat(releaseNotes.getNotes())
+                .extracting(ReleaseNotes.Notes::getLocale, notes -> notes.getText().getText())
+                .containsExactly(tuple("en", "a"), tuple("de", "b"));
+    }
+
+    @Test
+    void parseShouldDeserializeServiceEndpoints() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <services>
+                    <service>
+                      <name>svc</name>
+                      <endpoints>
+                        <endpoint>https://a.example.com</endpoint>
+                        <endpoint>https://b.example.com</endpoint>
+                      </endpoints>
+                    </service>
+                  </services>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final Service service = parser.parse(xml).getServices().get(0);
+        assertThat(service.getEndpoints()).containsExactly("https://a.example.com", "https://b.example.com");
+    }
+
+    @Test
+    void parseShouldDeserializeVulnerabilityAffects() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <vulnerabilities>
+                    <vulnerability>
+                      <affects>
+                        <target><ref>a</ref></target>
+                        <target>
+                          <ref>b</ref>
+                          <versions>
+                            <version><version>1.0</version></version>
+                            <version><version>2.0</version></version>
+                          </versions>
+                        </target>
+                      </affects>
+                    </vulnerability>
+                  </vulnerabilities>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final List<Vulnerability.Affect> affects = parser.parse(xml).getVulnerabilities().get(0).getAffects();
+        assertThat(affects).extracting(Vulnerability.Affect::getRef).containsExactly("a", "b");
+        assertThat(affects.get(1).getVersions())
+                .extracting(Vulnerability.Version::getVersion)
+                .containsExactly("1.0", "2.0");
+    }
 }

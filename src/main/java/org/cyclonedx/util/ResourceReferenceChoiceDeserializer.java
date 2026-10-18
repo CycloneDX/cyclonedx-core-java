@@ -22,7 +22,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 
@@ -30,8 +29,6 @@ import java.io.IOException;
 
 public class ResourceReferenceChoiceDeserializer extends JsonDeserializer<ResourceReferenceChoice>
 {
-  private final ObjectMapper objectMapper = new ObjectMapper();
-
   @Override
   public ResourceReferenceChoice deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
     JsonNode node = jsonParser.getCodec().readTree(jsonParser);
@@ -42,7 +39,7 @@ public class ResourceReferenceChoiceDeserializer extends JsonDeserializer<Resour
       resourceReferenceChoice.setRef(ref);
     } else if (node.has("externalReference")) {
       JsonNode externalReferenceNode = node.get("externalReference");
-      ExternalReference externalReference = objectMapper.treeToValue(externalReferenceNode, ExternalReference.class);
+      ExternalReference externalReference = jsonParser.getCodec().treeToValue(externalReferenceNode, ExternalReference.class);
       resourceReferenceChoice.setExternalReference(externalReference);
     }
 

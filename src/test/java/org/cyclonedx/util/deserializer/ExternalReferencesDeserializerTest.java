@@ -22,11 +22,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Hash;
 import org.cyclonedx.model.Patent;
 import org.cyclonedx.model.PatentFamily;
 import org.cyclonedx.model.attestation.Claim;
+import org.cyclonedx.model.attestation.affirmation.Signatory;
 import org.cyclonedx.model.definition.Requirement;
 import org.cyclonedx.model.definition.Standard;
+import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 import org.cyclonedx.parsers.XmlParser;
 import org.cyclonedx.model.ExternalReference;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -85,6 +88,37 @@ class ExternalReferencesDeserializerTest {
         assertThat(value).extracting("externalReferences").asInstanceOf(InstanceOfAssertFactories.LIST)
                 .singleElement()
                 .extracting("url").isEqualTo("https://example.com");
+    }
+
+    @Test
+    void shouldDeserializeHashesOfResourceReferenceFromXml() throws Exception {
+        final ResourceReferenceChoice choice = new XmlMapper().readValue(/* language=XML */ """
+                <resource>
+                  <externalReference type="website">
+                    <url>https://example.com</url>
+                    <hashes><hash alg="MD5">2342c2eaf1feb9a80195dbaddf2ebaa3</hash></hashes>
+                  </externalReference>
+                </resource>
+                """, ResourceReferenceChoice.class);
+
+        assertThat(choice.getExternalReference().getHashes())
+                .extracting(Hash::getValue).containsExactly("2342c2eaf1feb9a80195dbaddf2ebaa3");
+    }
+
+    @Test
+    void shouldDeserializeHashesOfSignatoryReferenceFromXml() throws Exception {
+        final Signatory signatory = new XmlMapper().readValue(/* language=XML */ """
+                <signatory>
+                  <organization><name>acme</name></organization>
+                  <externalReference type="website">
+                    <url>https://example.com</url>
+                    <hashes><hash alg="MD5">2342c2eaf1feb9a80195dbaddf2ebaa3</hash></hashes>
+                  </externalReference>
+                </signatory>
+                """, Signatory.class);
+
+        assertThat(signatory.getExternalReference().getHashes())
+                .extracting(Hash::getValue).containsExactly("2342c2eaf1feb9a80195dbaddf2ebaa3");
     }
 
     @ParameterizedTest

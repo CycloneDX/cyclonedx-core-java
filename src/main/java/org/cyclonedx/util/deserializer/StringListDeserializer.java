@@ -1,47 +1,33 @@
 package org.cyclonedx.util.deserializer;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import java.io.IOException;
+import java.util.List;
 
 public class StringListDeserializer
     extends JsonDeserializer<List<String>>
 {
   @Override
   public List<String> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-    JsonNode node = p.getCodec().readTree(p);
-    String currentName = p.getCurrentName();
-
-    if ("aliases".equalsIgnoreCase(currentName)) {
-      return deserializeList(node, "alias");
-    } else if ("endpoints".equalsIgnoreCase(currentName)) {
-      return deserializeList(node, "endpoint");
-    } else if ("altIds".equalsIgnoreCase(currentName)) {
-      return deserializeList(node, "altId");
+    final String itemName = itemName(p.currentName());
+    if (itemName == null) {
+      p.skipChildren();
+      return null;
     }
-    return null;
+    return new WrappedListDeserializer<>(itemName, String.class).deserialize(p, ctxt);
   }
 
-  private List<String> deserializeList(JsonNode node, String itemName) {
-    List<String> list = new ArrayList<>();
-
-    JsonNode itemsNode = node.has(itemName) ? node.get(itemName) : node;
-
-    if (itemsNode != null) {
-      if (itemsNode.isArray()) {
-        for (JsonNode itemNode : itemsNode) {
-          list.add(itemNode.asText());
-        }
-      } else {
-        list.add(itemsNode.asText());
-      }
+  private static String itemName(String fieldName) {
+    if ("aliases".equalsIgnoreCase(fieldName)) {
+      return "alias";
+    } else if ("endpoints".equalsIgnoreCase(fieldName)) {
+      return "endpoint";
+    } else if ("altIds".equalsIgnoreCase(fieldName)) {
+      return "altId";
     }
-
-    return list;
+    return null;
   }
 }

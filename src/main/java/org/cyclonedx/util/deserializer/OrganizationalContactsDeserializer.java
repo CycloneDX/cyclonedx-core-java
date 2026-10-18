@@ -18,42 +18,11 @@
  */
 package org.cyclonedx.util.deserializer;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.OrganizationalContact;
 
-public class OrganizationalContactsDeserializer
-    extends JsonDeserializer<List<OrganizationalContact>>
-{
-  @Override
-  public List<OrganizationalContact> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-    JsonNode node = parser.getCodec().readTree(parser);
-    ObjectMapper mapper = getMapper(parser);
-    return parseContacts(node.has("author") ? node.get("author") : node, mapper);
-  }
+public class OrganizationalContactsDeserializer extends WrappedListDeserializer<OrganizationalContact> {
 
-  private List<OrganizationalContact> parseContacts(JsonNode node, ObjectMapper mapper) {
-    List<OrganizationalContact> contacts = new ArrayList<>();
-    ArrayNode nodes = DeserializerUtils.getArrayNode(node, mapper);
-    for (JsonNode contactNode : nodes) {
-      contacts.add(mapper.convertValue(contactNode, OrganizationalContact.class));
+    public OrganizationalContactsDeserializer() {
+        super("author", OrganizationalContact.class);
     }
-    return contacts;
-  }
-
-  private ObjectMapper getMapper(JsonParser jsonParser) {
-    if (jsonParser.getCodec() instanceof ObjectMapper) {
-      return (ObjectMapper) jsonParser.getCodec();
-    } else {
-      return new ObjectMapper();
-    }
-  }
 }

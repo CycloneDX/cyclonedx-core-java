@@ -33,7 +33,7 @@ import java.util.List;
  * e.g. {@code <commits><commit/></commits>}. Repeated XML items may arrive as repeated fields or,
  * if the XML was read into a tree upstream, as an array. Items deserialized to {@code null} are dropped.
  */
-public abstract class WrappedListDeserializer<T> extends JsonDeserializer<List<T>> {
+public class WrappedListDeserializer<T> extends JsonDeserializer<List<T>> {
 
     private final String elementName;
     private final Class<T> elementType;
