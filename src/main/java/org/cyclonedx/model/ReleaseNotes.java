@@ -270,6 +270,7 @@ public class ReleaseNotes
     }
   }
 
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Notes {
 
     @JsonProperty("locale")

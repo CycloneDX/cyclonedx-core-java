@@ -10,10 +10,12 @@
       },
       {
         "name": "MIT-test",
-        "properties": {
-          "name": "name",
-          "value": "value1"
-        }
+        "properties": [
+          {
+            "name": "name",
+            "value": "value1"
+          }
+        ]
       }
     ]
   },

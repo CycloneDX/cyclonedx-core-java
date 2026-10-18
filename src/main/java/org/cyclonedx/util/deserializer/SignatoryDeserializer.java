@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.ObjectCodec;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Signature;
@@ -33,17 +33,16 @@ import org.cyclonedx.model.attestation.affirmation.Signatory;
 public class SignatoryDeserializer
     extends JsonDeserializer<Signatory>
 {
-  private final ObjectMapper mapper = new ObjectMapper();
-
   @Override
   public Signatory deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
       throws IOException
   {
-    JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-    return parseSignatory(node);
+    final ObjectCodec codec = jsonParser.getCodec();
+    JsonNode node = codec.readTree(jsonParser);
+    return parseSignatory(node, codec);
   }
 
-  private Signatory parseSignatory(JsonNode node) {
+  private Signatory parseSignatory(JsonNode node, ObjectCodec codec) throws IOException {
     Signatory signatory = new Signatory();
 
     if (node.has("name")) {
@@ -56,23 +55,23 @@ public class SignatoryDeserializer
 
     JsonNode signatureNode = node.get("signature");
     if (signatureNode != null) {
-      Signature signature = mapper.convertValue(node.get("signature"), Signature.class);
+      Signature signature = codec.treeToValue(node.get("signature"), Signature.class);
       signatory.setSignature(signature);
     }
     else {
-      parseOrganizationAndReference(node, signatory);
+      parseOrganizationAndReference(node, signatory, codec);
     }
 
     return signatory;
   }
 
-  private void parseOrganizationAndReference(JsonNode node, Signatory signatory) {
+  private void parseOrganizationAndReference(JsonNode node, Signatory signatory, ObjectCodec codec) throws IOException {
     JsonNode organizationNode = node.get("organization");
     JsonNode externalReferenceNode = node.get("externalReference");
 
     if (organizationNode != null && externalReferenceNode != null) {
-      OrganizationalEntity organization = mapper.convertValue(organizationNode, OrganizationalEntity.class);
-      ExternalReference externalReference = mapper.convertValue(externalReferenceNode, ExternalReference.class);
+      OrganizationalEntity organization = codec.treeToValue(organizationNode, OrganizationalEntity.class);
+      ExternalReference externalReference = codec.treeToValue(externalReferenceNode, ExternalReference.class);
       signatory.setExternalReferenceAndOrganization(externalReference, organization);
     }
   }
