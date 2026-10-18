@@ -11,6 +11,7 @@ import javax.xml.stream.XMLStreamReader;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 
@@ -23,18 +24,23 @@ public class DeserializerUtils
   }
 
   static <T> void readItemsInto(JsonParser parser, DeserializationContext ctxt, Class<T> type, List<T> items) throws IOException {
+    final JsonDeserializer<Object> deserializer = ctxt.findContextualValueDeserializer(ctxt.constructType(type), null);
     if (parser.currentToken() == JsonToken.START_ARRAY) {
       while (parser.nextToken() != JsonToken.END_ARRAY) {
-        final T item = ctxt.readValue(parser, type);
-        if (item != null) {
-          items.add(item);
-        }
+        readItemInto(parser, ctxt, deserializer, type, items);
       }
     } else {
-      final T item = ctxt.readValue(parser, type);
-      if (item != null) {
-        items.add(item);
-      }
+      readItemInto(parser, ctxt, deserializer, type, items);
+    }
+  }
+
+  private static <T> void readItemInto(JsonParser parser, DeserializationContext ctxt,
+      JsonDeserializer<Object> deserializer, Class<T> type, List<T> items) throws IOException {
+    final Object item = parser.hasToken(JsonToken.VALUE_NULL)
+        ? deserializer.getNullValue(ctxt)
+        : deserializer.deserialize(parser, ctxt);
+    if (item != null) {
+      items.add(type.cast(item));
     }
   }
 

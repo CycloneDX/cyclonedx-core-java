@@ -41,6 +41,12 @@ import org.cyclonedx.model.OrganizationalEntity;
 public class OrganizationalChoiceDeserializer extends JsonDeserializer<OrganizationalChoice>
 {
   @Override
+  public boolean isCachable()
+  {
+    return true;
+  }
+
+  @Override
   public OrganizationalChoice deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
   {
     if (p.currentToken() == JsonToken.VALUE_STRING) {

@@ -14,6 +14,11 @@ public class DatasetsChoiceDeserializer
     extends JsonDeserializer<DatasetChoice>
 {
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public DatasetChoice deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     final DatasetChoice datasetChoice = new DatasetChoice();
 

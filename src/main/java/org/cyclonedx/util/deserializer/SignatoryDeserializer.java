@@ -33,6 +33,11 @@ public class SignatoryDeserializer
     extends JsonDeserializer<Signatory>
 {
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public Signatory deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     final Signatory signatory = new Signatory();
     if (parser.currentToken() != JsonToken.START_OBJECT) {

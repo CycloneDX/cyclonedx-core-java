@@ -19,6 +19,11 @@ public class AttachmentTextDeserializer extends StdDeserializer<AttachmentText> 
   }
 
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public AttachmentText deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
     if (p.currentToken() != JsonToken.START_OBJECT) {
       if (p.currentToken() != JsonToken.VALUE_STRING) {

@@ -40,6 +40,11 @@ public abstract class AbstractDataTypeDeserializer<T extends AbstractType>
       throws IOException;
 
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public T deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     final T type = createType();
 

@@ -32,6 +32,11 @@ public class ExternalReferenceDeserializer extends JsonDeserializer<ExternalRefe
     private final PropertiesDeserializer propertiesDeserializer = new PropertiesDeserializer();
 
     @Override
+    public boolean isCachable() {
+        return true;
+    }
+
+    @Override
     public ExternalReference deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         if (p.currentToken() != JsonToken.START_OBJECT) {
             p.skipChildren();
