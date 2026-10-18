@@ -86,6 +86,8 @@ import org.cyclonedx.model.license.ExpressionDetail;
 import org.cyclonedx.model.license.ExpressionDetailed;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.util.DefaultLocale;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.io.InputStream;
@@ -1790,5 +1792,25 @@ public class XmlParserTest
         assertThat(bom.getServices().get(0).getLicenses().getItems())
                 .extracting(LicenseItem::getType)
                 .containsExactly(LicenseItemType.EXPRESSION_DETAILED, LicenseItemType.EXPRESSION);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"<tools />", "<tools></tools>"})
+    void parseShouldAcceptEmptyMetadataTools(String tools) throws Exception {
+        final byte[] xml = """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.3" version="1">
+                  <metadata>
+                    %s
+                  </metadata>
+                </bom>
+                """.formatted(tools).getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_13)).isEmpty();
+
+        final Metadata metadata = parser.parse(xml).getMetadata();
+        assertThat(metadata.getTools()).isNullOrEmpty();
+        assertThat(metadata.getToolChoice()).isNull();
     }
 }
