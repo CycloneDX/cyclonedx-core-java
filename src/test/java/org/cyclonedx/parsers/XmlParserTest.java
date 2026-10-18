@@ -63,6 +63,7 @@ import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.data.Content;
 import org.cyclonedx.model.component.evidence.Identity;
+import org.cyclonedx.model.component.evidence.Occurrence;
 import org.cyclonedx.model.component.modelCard.Considerations;
 import org.cyclonedx.model.component.modelCard.ModelParameters;
 import org.cyclonedx.model.component.modelCard.consideration.EnvironmentalConsideration;
@@ -1529,6 +1530,10 @@ public class XmlParserTest
                     <component type="application">
                       <name>app</name>
                       <evidence>
+                        <occurrences>
+                          <occurrence><location>lib/a.jar</location></occurrence>
+                          <occurrence><location>lib/b.jar</location><line>42</line></occurrence>
+                        </occurrences>
                         <copyright>
                           <text>Acme</text>
                           <text>Other</text>
@@ -1543,6 +1548,9 @@ public class XmlParserTest
         assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
 
         final Metadata metadata = parser.parse(xml).getMetadata();
+        assertThat(metadata.getComponent().getEvidence().getOccurrences())
+                .extracting(Occurrence::getLocation, Occurrence::getLine)
+                .containsExactly(tuple("lib/a.jar", null), tuple("lib/b.jar", 42));
         assertThat(metadata.getComponent().getEvidence().getCopyright())
                 .extracting(Copyright::getText)
                 .containsExactly("Acme", "Other");
