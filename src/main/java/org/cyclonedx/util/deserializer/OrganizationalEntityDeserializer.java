@@ -16,6 +16,11 @@ public class OrganizationalEntityDeserializer
     extends JsonDeserializer<OrganizationalEntity>
 {
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public OrganizationalEntity deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     final OrganizationalEntity entity = new OrganizationalEntity();
     if (parser.currentToken() != JsonToken.START_OBJECT) {

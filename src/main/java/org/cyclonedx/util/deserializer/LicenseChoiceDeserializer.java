@@ -41,6 +41,12 @@ import org.cyclonedx.model.license.ExpressionDetailed;
 public class LicenseChoiceDeserializer extends JsonDeserializer<LicenseChoice>
 {
   @Override
+  public boolean isCachable()
+  {
+    return true;
+  }
+
+  @Override
   public LicenseChoice deserialize(
       final JsonParser p, final DeserializationContext ctxt) throws IOException
   {

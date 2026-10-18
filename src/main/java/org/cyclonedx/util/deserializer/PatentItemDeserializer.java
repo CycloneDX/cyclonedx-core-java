@@ -18,6 +18,11 @@ import java.util.Set;
 public class PatentItemDeserializer extends JsonDeserializer<PatentItem> {
 
     @Override
+    public boolean isCachable() {
+        return true;
+    }
+
+    @Override
     public PatentItem deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         final TokenBuffer buffer = ctxt.bufferAsCopyOfValue(p);
         final Set<String> fieldNames = DeserializerUtils.fieldNames(buffer);

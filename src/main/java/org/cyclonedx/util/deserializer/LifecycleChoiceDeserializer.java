@@ -30,6 +30,11 @@ import java.io.IOException;
 public class LifecycleChoiceDeserializer extends JsonDeserializer<LifecycleChoice> {
 
     @Override
+    public boolean isCachable() {
+        return true;
+    }
+
+    @Override
     public LifecycleChoice deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         if (parser.currentToken() != JsonToken.START_OBJECT) {
             parser.skipChildren();

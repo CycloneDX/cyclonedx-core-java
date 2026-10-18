@@ -41,6 +41,11 @@ public class PatentAssertionDeserializer extends JsonDeserializer<PatentAssertio
             new WrappedListDeserializer<>("bom-ref", String.class);
 
     @Override
+    public boolean isCachable() {
+        return true;
+    }
+
+    @Override
     public PatentAssertion deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         final PatentAssertion pa = new PatentAssertion();
         if (p.currentToken() != JsonToken.START_OBJECT) {

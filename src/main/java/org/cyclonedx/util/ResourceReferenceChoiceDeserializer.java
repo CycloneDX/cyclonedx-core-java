@@ -30,6 +30,11 @@ import org.cyclonedx.model.formulation.common.ResourceReferenceChoice;
 public class ResourceReferenceChoiceDeserializer extends JsonDeserializer<ResourceReferenceChoice>
 {
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public ResourceReferenceChoice deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
     final ResourceReferenceChoice resourceReferenceChoice = new ResourceReferenceChoice();
     if (jsonParser.currentToken() != JsonToken.START_OBJECT) {

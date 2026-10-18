@@ -12,6 +12,11 @@ public class PropertyDeserializer
     extends JsonDeserializer<Property>
 {
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public Property deserialize(JsonParser parser, DeserializationContext context) throws IOException {
     final Property property = new Property();
     if (parser.currentToken() != JsonToken.START_OBJECT) {

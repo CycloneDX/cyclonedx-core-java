@@ -21,6 +21,11 @@ public class MetadataDeserializer
   private final LicenseChoiceDeserializer licenseDeserializer = new LicenseChoiceDeserializer();
 
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public Metadata deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     final Metadata metadata = new Metadata();
     metadata.setTimestamp(null); // Clear default value. Don't fabricate data that isn't there!

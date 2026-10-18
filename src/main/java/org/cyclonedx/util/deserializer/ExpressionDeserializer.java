@@ -31,6 +31,11 @@ public class ExpressionDeserializer
     extends JsonDeserializer<Expression>
 {
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public Expression deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
     if (p.currentToken().isScalarValue()) {
       return new Expression(readTrimmed(p));

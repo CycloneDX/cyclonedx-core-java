@@ -40,6 +40,11 @@ public class EnvironmentVarsDeserializer extends StdDeserializer<EnvironmentVars
   }
 
   @Override
+  public boolean isCachable() {
+    return true;
+  }
+
+  @Override
   public EnvironmentVars deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     final List<Object> choices = new ArrayList<>();
 

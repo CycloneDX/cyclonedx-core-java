@@ -29,6 +29,11 @@ import java.io.IOException;
 public class HashDeserializer extends JsonDeserializer<Hash> {
 
     @Override
+    public boolean isCachable() {
+        return true;
+    }
+
+    @Override
     public Hash deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         if (p.currentToken() != JsonToken.START_OBJECT) {
             p.skipChildren();
