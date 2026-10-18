@@ -56,14 +56,8 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
 <li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
-<li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
-<li><a href="#field-detail" tabindex="0">Field Details</a>
-<ol class="toc-list">
-<li><a href="#objectMapper" tabindex="0">objectMapper</a></li>
-</ol>
-</li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
 <li><a href="#%3Cinit%3E()" tabindex="0">AbstractDataTypeDeserializer()</a></li>
@@ -71,11 +65,9 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#setEnvironmentVars(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" tabindex="0">setEnvironmentVars(JsonNode, AbstractType, JsonParser, DeserializationContext)</a></li>
-<li><a href="#setReference(com.fasterxml.jackson.databind.JsonNode,java.lang.String,org.cyclonedx.model.formulation.common.AbstractType)" tabindex="0">setReference(JsonNode, String, AbstractType)</a></li>
-<li><a href="#setSourceAndTarget(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" tabindex="0">setSourceAndTarget(JsonNode, AbstractType)</a></li>
-<li><a href="#setResource(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" tabindex="0">setResource(JsonNode, AbstractType)</a></li>
-<li><a href="#setProperties(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" tabindex="0">setProperties(JsonNode, AbstractType)</a></li>
+<li><a href="#createType()" tabindex="0">createType()</a></li>
+<li><a href="#readField(java.lang.String,T,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" tabindex="0">readField(String, T, JsonParser, DeserializationContext)</a></li>
+<li><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" tabindex="0">deserialize(JsonParser, DeserializationContext)</a></li>
 </ol>
 </li>
 </ol>
@@ -116,21 +108,6 @@ loadScripts(document, 'script');</script>
 <code>com.fasterxml.jackson.databind.JsonDeserializer.None</code></div>
 </section>
 </li>
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field-summary">
-<h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected final com.fasterxml.jackson.databind.ObjectMapper</code></div>
-<div class="col-second even-row-color"><code><a href="#objectMapper" class="member-name-link">objectMapper</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -149,41 +126,31 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEnvironmentVars(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">setEnvironmentVars</a><wbr>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;data,
- com.fasterxml.jackson.core.JsonParser&nbsp;jsonParser,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="#type-param-T" title="type parameter in AbstractDataTypeDeserializer">T</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#createType()" class="member-name-link">createType</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type-param-T" title="type parameter in AbstractDataTypeDeserializer">T</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">deserialize</a><wbr>(com.fasterxml.jackson.core.JsonParser&nbsp;parser,
  com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProperties(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" class="member-name-link">setProperties</a><wbr>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setReference(com.fasterxml.jackson.databind.JsonNode,java.lang.String,org.cyclonedx.model.formulation.common.AbstractType)" class="member-name-link">setReference</a><wbr>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setResource(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" class="member-name-link">setResource</a><wbr>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSourceAndTarget(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" class="member-name-link">setSourceAndTarget</a><wbr>(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#readField(java.lang.String,T,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">readField</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName,
+ <a href="#type-param-T" title="type parameter in AbstractDataTypeDeserializer">T</a>&nbsp;type,
+ com.fasterxml.jackson.core.JsonParser&nbsp;parser,
+ com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.fasterxml.jackson.databind.JsonDeserializer">Methods inherited from class&nbsp;com.fasterxml.jackson.databind.JsonDeserializer</h3>
-<code>deserialize, deserialize, deserializeWithType, deserializeWithType, findBackReference, getAbsentValue, getDelegatee, getEmptyAccessPattern, getEmptyValue, getEmptyValue, getKnownPropertyNames, getNullAccessPattern, getNullValue, getNullValue, getObjectIdReader, handledType, isCachable, logicalType, replaceDelegatee, supportsUpdate, unwrappingDeserializer</code></div>
+<code>deserialize, deserializeWithType, deserializeWithType, findBackReference, getAbsentValue, getDelegatee, getEmptyAccessPattern, getEmptyValue, getEmptyValue, getKnownPropertyNames, getNullAccessPattern, getNullValue, getNullValue, getObjectIdReader, handledType, isCachable, logicalType, replaceDelegatee, supportsUpdate, unwrappingDeserializer</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone--" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals-java.lang.Object-" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize--" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass--" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode--" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify--" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll--" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait--" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait-long-" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait-long-int-" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -193,22 +160,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="objectMapper">
-<h3>objectMapper</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">com.fasterxml.jackson.databind.ObjectMapper</span>&nbsp;<span class="element-name">objectMapper</span></div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -231,14 +182,22 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="setEnvironmentVars(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">
-<h3>setEnvironmentVars</h3>
+<section class="detail" id="createType()">
+<h3>createType</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEnvironmentVars</span><wbr><span class="parameters">(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;data,
- com.fasterxml.jackson.core.JsonParser&nbsp;jsonParser,
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="#type-param-T" title="type parameter in AbstractDataTypeDeserializer">T</a></span>&nbsp;<span class="element-name">createType</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="readField(java.lang.String,T,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">
+<h3 id="readField(java.lang.String,org.cyclonedx.model.formulation.common.AbstractType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">readField</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">readField</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName,
+ <a href="#type-param-T" title="type parameter in AbstractDataTypeDeserializer">T</a>&nbsp;type,
+ com.fasterxml.jackson.core.JsonParser&nbsp;parser,
  com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</span>
-                           throws <span class="exceptions"><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+                              throws <span class="exceptions"><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
@@ -247,58 +206,17 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setReference(com.fasterxml.jackson.databind.JsonNode,java.lang.String,org.cyclonedx.model.formulation.common.AbstractType)">
-<h3>setReference</h3>
+<section class="detail" id="deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">
+<h3>deserialize</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setReference</span><wbr><span class="parameters">(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</span>
-                     throws <span class="exceptions">com.fasterxml.jackson.core.JsonProcessingException</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="#type-param-T" title="type parameter in AbstractDataTypeDeserializer">T</a></span>&nbsp;<span class="element-name">deserialize</span><wbr><span class="parameters">(com.fasterxml.jackson.core.JsonParser&nbsp;parser,
+ com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</span>
+              throws <span class="exceptions"><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>deserialize</code>&nbsp;in class&nbsp;<code>com.fasterxml.jackson.databind.JsonDeserializer&lt;<a href="#type-param-T" title="type parameter in AbstractDataTypeDeserializer">T</a> extends <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&gt;</code></dd>
 <dt>Throws:</dt>
-<dd><code>com.fasterxml.jackson.core.JsonProcessingException</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setSourceAndTarget(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)">
-<h3>setSourceAndTarget</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSourceAndTarget</span><wbr><span class="parameters">(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</span>
-                           throws <span class="exceptions">com.fasterxml.jackson.core.JsonProcessingException</span></div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code>com.fasterxml.jackson.core.JsonProcessingException</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setResource(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)">
-<h3>setResource</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setResource</span><wbr><span class="parameters">(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</span>
-                    throws <span class="exceptions">com.fasterxml.jackson.core.JsonProcessingException</span></div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code>com.fasterxml.jackson.core.JsonProcessingException</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setProperties(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)">
-<h3>setProperties</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProperties</span><wbr><span class="parameters">(com.fasterxml.jackson.databind.JsonNode&nbsp;node,
- <a href="../../model/formulation/common/AbstractType.html" title="class in org.cyclonedx.model.formulation.common">AbstractType</a>&nbsp;type)</span>
-                      throws <span class="exceptions">com.fasterxml.jackson.core.JsonProcessingException</span></div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code>com.fasterxml.jackson.core.JsonProcessingException</code></dd>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </div>
 </section>

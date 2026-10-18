@@ -56,7 +56,6 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
 <li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
-<li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -66,7 +65,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" tabindex="0">deserialize(JsonParser, DeserializationContext)</a></li>
+<li><a href="#createType()" tabindex="0">createType()</a></li>
+<li><a href="#readField(java.lang.String,org.cyclonedx.model.formulation.common.OutputType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" tabindex="0">readField(String, OutputType, JsonParser, DeserializationContext)</a></li>
 </ol>
 </li>
 </ol>
@@ -105,15 +105,6 @@ loadScripts(document, 'script');</script>
 <code>com.fasterxml.jackson.databind.JsonDeserializer.None</code></div>
 </section>
 </li>
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field-summary">
-<h2>Field Summary</h2>
-<div class="inherited-list">
-<h3 id="fields-inherited-from-class-org.cyclonedx.util.deserializer.AbstractDataTypeDeserializer">Fields inherited from class&nbsp;<a href="AbstractDataTypeDeserializer.html#field-summary" title="class in org.cyclonedx.util.deserializer">AbstractDataTypeDeserializer</a></h3>
-<code><a href="AbstractDataTypeDeserializer.html#objectMapper">objectMapper</a></code></div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -138,16 +129,21 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">deserialize</a><wbr>(com.fasterxml.jackson.core.JsonParser&nbsp;jsonParser,
- com.fasterxml.jackson.databind.DeserializationContext&nbsp;deserializationContext)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createType()" class="member-name-link">createType</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#readField(java.lang.String,org.cyclonedx.model.formulation.common.OutputType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" class="member-name-link">readField</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName,
+ <a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&nbsp;outputType,
+ com.fasterxml.jackson.core.JsonParser&nbsp;parser,
+ com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.cyclonedx.util.deserializer.AbstractDataTypeDeserializer">Methods inherited from class&nbsp;<a href="AbstractDataTypeDeserializer.html#method-summary" title="class in org.cyclonedx.util.deserializer">AbstractDataTypeDeserializer</a></h3>
-<code><a href="AbstractDataTypeDeserializer.html#setEnvironmentVars(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" title="setEnvironmentVars(JsonNode, AbstractType, JsonParser, DeserializationContext)">setEnvironmentVars</a>, <a href="AbstractDataTypeDeserializer.html#setProperties(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" title="setProperties(JsonNode, AbstractType)">setProperties</a>, <a href="AbstractDataTypeDeserializer.html#setReference(com.fasterxml.jackson.databind.JsonNode,java.lang.String,org.cyclonedx.model.formulation.common.AbstractType)" title="setReference(JsonNode, String, AbstractType)">setReference</a>, <a href="AbstractDataTypeDeserializer.html#setResource(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" title="setResource(JsonNode, AbstractType)">setResource</a>, <a href="AbstractDataTypeDeserializer.html#setSourceAndTarget(com.fasterxml.jackson.databind.JsonNode,org.cyclonedx.model.formulation.common.AbstractType)" title="setSourceAndTarget(JsonNode, AbstractType)">setSourceAndTarget</a></code></div>
+<code><a href="AbstractDataTypeDeserializer.html#deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)" title="deserialize(JsonParser, DeserializationContext)">deserialize</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.fasterxml.jackson.databind.JsonDeserializer">Methods inherited from class&nbsp;com.fasterxml.jackson.databind.JsonDeserializer</h3>
 <code>deserialize, deserializeWithType, deserializeWithType, findBackReference, getAbsentValue, getDelegatee, getEmptyAccessPattern, getEmptyValue, getEmptyValue, getKnownPropertyNames, getNullAccessPattern, getNullValue, getNullValue, getObjectIdReader, handledType, isCachable, logicalType, replaceDelegatee, supportsUpdate, unwrappingDeserializer</code></div>
@@ -182,15 +178,29 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">
-<h3>deserialize</h3>
+<section class="detail" id="createType()">
+<h3>createType</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a></span>&nbsp;<span class="element-name">deserialize</span><wbr><span class="parameters">(com.fasterxml.jackson.core.JsonParser&nbsp;jsonParser,
- com.fasterxml.jackson.databind.DeserializationContext&nbsp;deserializationContext)</span>
-                       throws <span class="exceptions"><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a></span>&nbsp;<span class="element-name">createType</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>deserialize</code>&nbsp;in class&nbsp;<code>com.fasterxml.jackson.databind.JsonDeserializer&lt;<a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</code></dd>
+<dd><code><a href="AbstractDataTypeDeserializer.html#createType()">createType</a></code>&nbsp;in class&nbsp;<code><a href="AbstractDataTypeDeserializer.html" title="class in org.cyclonedx.util.deserializer">AbstractDataTypeDeserializer</a>&lt;<a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="readField(java.lang.String,org.cyclonedx.model.formulation.common.OutputType,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">
+<h3>readField</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">readField</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName,
+ <a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&nbsp;outputType,
+ com.fasterxml.jackson.core.JsonParser&nbsp;parser,
+ com.fasterxml.jackson.databind.DeserializationContext&nbsp;ctxt)</span>
+                     throws <span class="exceptions"><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="AbstractDataTypeDeserializer.html#readField(java.lang.String,T,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext)">readField</a></code>&nbsp;in class&nbsp;<code><a href="AbstractDataTypeDeserializer.html" title="class in org.cyclonedx.util.deserializer">AbstractDataTypeDeserializer</a>&lt;<a href="../../model/formulation/common/OutputType.html" title="class in org.cyclonedx.model.formulation.common">OutputType</a>&gt;</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
