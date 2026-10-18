@@ -53,7 +53,7 @@ public abstract class WrappedListDeserializer<T> extends JsonDeserializer<List<T
             return context.readValue(parser, listType);
         }
 
-        // XML-via-JsonNode path (e.g. ToolInformationDeserializer): wrapper element
+        // XML-via-JsonNode path (e.g. ComponentListDeserializer): wrapper element
         // <commits><commit>...</commit></commits> becomes {"commit": {...}} or {"commit": [{...},...]}
         final JsonNode node = context.readTree(parser);
         if (node.isTextual() && node.textValue().isEmpty()) {
