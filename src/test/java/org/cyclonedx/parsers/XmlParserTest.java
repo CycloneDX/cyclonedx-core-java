@@ -1902,8 +1902,6 @@ public class XmlParserTest
         assertThat(component.getTags().getTags()).containsExactly("a", "b");
     }
 
-    // Nested components are read into a tree first, where a single item becomes an object
-    // and multiple items become an array.
     @Test
     void parseShouldDeserializeListsOfNestedComponents() throws Exception {
         final byte[] xml = /* language=XML */ """

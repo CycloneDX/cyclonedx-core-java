@@ -1169,6 +1169,41 @@ public class JsonParserTest
     }
 
     @Test
+    void parseShouldDeserializePedigreeComponents() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "pedigree": {
+                        "ancestors": [
+                          {"type": "library", "name": "a"},
+                          {"type": "library", "name": "b"}
+                        ],
+                        "descendants": [
+                          {"type": "library", "name": "c"}
+                        ],
+                        "variants": []
+                      }
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        final Pedigree pedigree = parser.parse(json).getComponents().get(0).getPedigree();
+        assertThat(pedigree.getAncestors().getComponents()).extracting(Component::getName).containsExactly("a", "b");
+        assertThat(pedigree.getDescendants().getComponents()).extracting(Component::getName).containsExactly("c");
+        assertThat(pedigree.getVariants().getComponents()).isEmpty();
+    }
+
+    @Test
     void parseShouldDeserializeVulnerabilityProofOfConcept() throws Exception {
         final byte[] json = /* language=JSON */ """
                 {
