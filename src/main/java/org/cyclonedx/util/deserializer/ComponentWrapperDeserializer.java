@@ -19,20 +19,11 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.Ancestors;
-import org.cyclonedx.model.Component;
 import org.cyclonedx.model.ComponentWrapper;
 import org.cyclonedx.model.Descendants;
 import org.cyclonedx.model.Variants;
@@ -43,36 +34,15 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
   private static final String DESCENDANTS = "descendants";
   private static final String VARIANTS = "variants";
 
+  private final ComponentListDeserializer componentsDeserializer = new ComponentListDeserializer();
+
   @Override
   public ComponentWrapper deserialize(
       final JsonParser parser, final DeserializationContext context)
       throws IOException
   {
-    final String location = parser.currentName();
-    if (parser instanceof FromXmlParser) {
-      final ComponentWrapper wrapper;
-      switch (location) {
-        case ANCESTORS:
-          wrapper = parser.readValueAs(Ancestors.class);
-          break;
-        case DESCENDANTS:
-          wrapper = parser.readValueAs(Descendants.class);
-          break;
-        case VARIANTS:
-          wrapper = parser.readValueAs(Variants.class);
-          break;
-        default:
-          return null;
-      }
-      if (wrapper != null && wrapper.getComponents() == null) {
-        wrapper.setComponents(new ArrayList<>());
-      }
-      return wrapper;
-    }
-
-    ComponentWrapper wrapper;
-
-    switch (location) {
+    final ComponentWrapper wrapper;
+    switch (parser.currentName()) {
       case ANCESTORS:
         wrapper = new Ancestors();
         break;
@@ -83,30 +53,11 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
         wrapper = new Variants();
         break;
       default:
+        parser.skipChildren();
         return null;
     }
 
-    List<Component> components = Collections.emptyList();
-    JsonToken currentToken = parser.currentToken();
-    if (currentToken == JsonToken.START_ARRAY) {
-      components = Arrays.asList(parser.readValueAs(Component[].class));
-    } else if (currentToken == JsonToken.START_OBJECT) {
-      // This is possible for XML input when tree has been read, then parsed with token buffer parser
-      ObjectNode node = parser.readValueAs(ObjectNode.class);
-      if (node.has("component")) {
-        JsonNode component = node.get("component");
-        try (JsonParser componentsParser = component.traverse(parser.getCodec())) {
-          if (component.isArray()) {
-            components = Arrays.asList(componentsParser.readValueAs(Component[].class));
-          }
-          else {
-            components = Collections.singletonList(componentsParser.readValueAs(Component.class));
-          }
-        }
-      }
-    }
-    wrapper.setComponents(components);
+    wrapper.setComponents(componentsDeserializer.deserialize(parser, context));
     return wrapper;
-
   }
 }
