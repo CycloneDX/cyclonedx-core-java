@@ -206,37 +206,36 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
     return source;
   }
 
+  @SuppressWarnings("deprecation")
   private List<Rating> processRatings(final JsonNode ratings) {
-    List<Rating> ratingsList = new ArrayList<>();
-    if (ratings != null) {
-      if (ratings.isArray() && !ratings.isEmpty()) {
-        for (JsonNode rating : ratings) {
-          ratingsList.add(processRating(rating));
+    final List<Rating> ratingsList = new ArrayList<>();
+    final JsonNode rating = ratings.get(Vulnerability10.RATING);
+    if (rating != null) {
+      if (rating.isArray() && !rating.isEmpty()) {
+        for (JsonNode r : rating) {
+          ratingsList.add(processRating(r));
         }
       } else {
-        ratingsList.add(processRating(ratings));
+        ratingsList.add(processRating(rating));
       }
     }
     return ratingsList.isEmpty() ? null : ratingsList;
   }
 
-  private Rating processRating(final JsonNode ratingNode) {
-    Rating rating = new Rating();
-    JsonNode r = ratingNode.get(Vulnerability10.RATING);
-    if (r != null) {
-      if (r.get(Vulnerability10.SCORE) != null) {
-        Score score = new Score();
-        JsonNode s = r.get(Vulnerability10.SCORE);
-        score.setBase(getAsDouble(Vulnerability10.BASE, s));
-        score.setImpact(getAsDouble(Vulnerability10.IMPACT, s));
-        score.setExploitability(getAsDouble(Vulnerability10.EXPLOITABILITY, s));
-        rating.setScore(score);
-      }
-      rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, r)));
-      rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, r)));
-      rating.setVector(getAsString(Vulnerability10.VECTOR, r));
+  @SuppressWarnings("deprecation")
+  private Rating processRating(final JsonNode r) {
+    final Rating rating = new Rating();
+    if (r.get(Vulnerability10.SCORE) != null) {
+      final Score score = new Score();
+      final JsonNode s = r.get(Vulnerability10.SCORE);
+      score.setBase(getAsDouble(Vulnerability10.BASE, s));
+      score.setImpact(getAsDouble(Vulnerability10.IMPACT, s));
+      score.setExploitability(getAsDouble(Vulnerability10.EXPLOITABILITY, s));
+      rating.setScore(score);
     }
-
+    rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, r)));
+    rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, r)));
+    rating.setVector(getAsString(Vulnerability10.VECTOR, r));
     return rating;
   }
 
