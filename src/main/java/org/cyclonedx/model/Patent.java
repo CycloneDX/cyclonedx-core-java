@@ -23,11 +23,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.util.serializer.OrganizationalChoiceSerializer;
+import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
 
 import java.util.Date;
 import java.util.List;
@@ -129,6 +131,7 @@ public class Patent extends ExtensibleElement {
 
     @JacksonXmlElementWrapper(localName = "externalReferences")
     @JacksonXmlProperty(localName = "reference")
+    @JsonDeserialize(using = ExternalReferencesDeserializer.class)
     private List<ExternalReference> externalReferences;
 
     public String getBomRef() {

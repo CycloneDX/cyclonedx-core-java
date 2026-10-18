@@ -30,6 +30,16 @@ public class DeserializerUtils
     return ctxt.readValue(parser, ctxt.getTypeFactory().constructCollectionType(ArrayList.class, type));
   }
 
+  static String readText(JsonParser parser) throws IOException {
+    if (!parser.currentToken().isScalarValue()) {
+      parser.skipChildren();
+      return null;
+    }
+
+    final String text = parser.getValueAsString();
+    return text == null || text.isEmpty() ? null : text;
+  }
+
   static boolean isForeignXmlElement(final JsonParser parser) {
     if (!(parser instanceof FromXmlParser)) {
       return false;

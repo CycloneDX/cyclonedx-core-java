@@ -21,10 +21,8 @@ package org.cyclonedx.util.deserializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +30,8 @@ import java.util.List;
 
 /**
  * Deserializes a list from a JSON array, or from XML where a container element wraps the items,
- * e.g. {@code <commits><commit/></commits>}.
+ * e.g. {@code <commits><commit/></commits>}. Repeated XML items may arrive as repeated fields or,
+ * if the XML was read into a tree upstream, as an array. Items deserialized to {@code null} are dropped.
  */
 public abstract class WrappedListDeserializer<T> extends JsonDeserializer<List<T>> {
 
@@ -46,30 +45,44 @@ public abstract class WrappedListDeserializer<T> extends JsonDeserializer<List<T
 
     @Override
     public List<T> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-        final JavaType listType = context.getTypeFactory().constructCollectionType(ArrayList.class, elementType);
-
-        // NB: Do not read XML into a tree, as it loses wrapper handling for nested lists such as Patch.resolves.
-        if (parser instanceof FromXmlParser || parser.currentToken() == JsonToken.START_ARRAY) {
-            return context.readValue(parser, listType);
+        // NB: Checks the codec rather than the parser, so XML that was read into a tree upstream counts as XML too.
+        if (!(parser.getCodec() instanceof XmlMapper) && parser.currentToken() != JsonToken.START_ARRAY) {
+            return context.reportInputMismatch(this, "Expected an array of %s", elementName);
         }
 
-        // XML-via-JsonNode path (e.g. ComponentListDeserializer): wrapper element
-        // <commits><commit>...</commit></commits> becomes {"commit": {...}} or {"commit": [{...},...]}
-        final JsonNode node = context.readTree(parser);
-        if (node.isTextual() && node.textValue().isEmpty()) {
-            return new ArrayList<>();
+        final List<T> items = new ArrayList<>();
+
+        if (parser.currentToken() == JsonToken.START_ARRAY) {
+            readArrayItems(parser, context, items);
+        } else if (parser.currentToken() == JsonToken.START_OBJECT) {
+            for (JsonToken token = parser.nextToken(); token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
+                final String fieldName = parser.currentName();
+                final JsonToken valueToken = parser.nextToken();
+
+                if (!elementName.equals(fieldName)) {
+                    parser.skipChildren();
+                } else if (valueToken == JsonToken.START_ARRAY) {
+                    readArrayItems(parser, context, items);
+                } else {
+                    addIfNotNull(items, context.readValue(parser, elementType));
+                }
+            }
+        } else {
+            parser.skipChildren();
         }
 
-        final JsonNode elements = node.get(elementName);
-        if (elements == null) {
-            return context.reportInputMismatch(listType, "Expected an array or <%s> elements", elementName);
-        }
-        if (elements.isArray()) {
-            return context.readTreeAsValue(elements, listType);
-        }
+        return items;
+    }
 
-        final List<T> list = new ArrayList<>();
-        list.add(context.readTreeAsValue(elements, elementType));
-        return list;
+    private void readArrayItems(JsonParser parser, DeserializationContext context, List<T> items) throws IOException {
+        while (parser.nextToken() != JsonToken.END_ARRAY) {
+            addIfNotNull(items, context.readValue(parser, elementType));
+        }
+    }
+
+    private static <T> void addIfNotNull(List<T> items, T item) {
+        if (item != null) {
+            items.add(item);
+        }
     }
 }
