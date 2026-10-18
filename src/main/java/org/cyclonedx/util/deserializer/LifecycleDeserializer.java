@@ -70,10 +70,12 @@ public class LifecycleDeserializer
     }
 
     JsonNode nameNode = choiceNode.get("name");
-    JsonNode descriptionNode = choiceNode.get("description");
-    if (nameNode != null && descriptionNode != null) {
+    if (nameNode != null) {
       choice.setName(nameNode.asText());
-      choice.setDescription(descriptionNode.asText());
+      final JsonNode descriptionNode = choiceNode.get("description");
+      if (descriptionNode != null) {
+        choice.setDescription(descriptionNode.asText());
+      }
       return choice;
     }
 
