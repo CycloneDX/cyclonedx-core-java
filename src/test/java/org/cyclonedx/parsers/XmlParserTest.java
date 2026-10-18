@@ -81,7 +81,9 @@ import org.cyclonedx.model.formulation.Workflow;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.metadata.ToolInformation;
+import org.cyclonedx.model.vulnerability.Rating;
 import org.cyclonedx.model.vulnerability.Vulnerability;
+import org.cyclonedx.model.vulnerability.Vulnerability10;
 import org.cyclonedx.model.license.ExpressionDetail;
 import org.cyclonedx.model.license.ExpressionDetailed;
 import org.junit.jupiter.api.Test;
@@ -1812,5 +1814,55 @@ public class XmlParserTest
         final Metadata metadata = parser.parse(xml).getMetadata();
         assertThat(metadata.getTools()).isNullOrEmpty();
         assertThat(metadata.getToolChoice()).isNull();
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    void parseShouldDeserializeMultipleVulnerability10Ratings() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.1"
+                     xmlns:v="http://cyclonedx.org/schema/ext/vulnerability/1.0"
+                     version="1">
+                  <components>
+                    <component type="library" bom-ref="lib">
+                      <name>lib</name>
+                      <version>1</version>
+                      <v:vulnerabilities>
+                        <v:vulnerability ref="lib">
+                          <v:id>CVE-1</v:id>
+                          <v:ratings>
+                            <v:rating>
+                              <v:severity>Low</v:severity>
+                            </v:rating>
+                            <v:rating>
+                              <v:score>
+                                <v:base>6.1</v:base>
+                                <v:impact>4</v:impact>
+                                <v:exploitability>1.6</v:exploitability>
+                              </v:score>
+                              <v:method>CVSSv3</v:method>
+                              <v:vector>CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:N/I:H/A:N</v:vector>
+                            </v:rating>
+                          </v:ratings>
+                        </v:vulnerability>
+                      </v:vulnerabilities>
+                    </component>
+                  </components>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_11)).isEmpty();
+
+        final var vulnerability = (Vulnerability10) parser.parse(xml).getComponents().get(0)
+                .getExtensions().get(Extension.ExtensionType.VULNERABILITIES.getTypeName())
+                .getExtensions().get(0);
+        assertThat(vulnerability.getRatings())
+                .extracting(Rating::getSeverity, Rating::getMethod, Rating::getVector)
+                .containsExactly(
+                        tuple(Vulnerability10.Severity.LOW, null, null),
+                        tuple(null, Vulnerability10.ScoreSource.CVSSv3, "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:N/I:H/A:N"));
+        assertThat(vulnerability.getRatings().get(1).getScore().getBase()).isEqualTo(6.1);
     }
 }
