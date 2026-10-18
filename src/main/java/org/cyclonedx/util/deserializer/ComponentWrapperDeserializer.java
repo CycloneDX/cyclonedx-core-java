@@ -19,6 +19,7 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -47,18 +48,26 @@ public class ComponentWrapperDeserializer extends JsonDeserializer<ComponentWrap
       final JsonParser parser, final DeserializationContext context)
       throws IOException
   {
-    final String location = parser.getCurrentName();
+    final String location = parser.currentName();
     if (parser instanceof FromXmlParser) {
+      final ComponentWrapper wrapper;
       switch (location) {
         case ANCESTORS:
-          return parser.readValueAs(Ancestors.class);
+          wrapper = parser.readValueAs(Ancestors.class);
+          break;
         case DESCENDANTS:
-          return parser.readValueAs(Descendants.class);
+          wrapper = parser.readValueAs(Descendants.class);
+          break;
         case VARIANTS:
-          return parser.readValueAs(Variants.class);
+          wrapper = parser.readValueAs(Variants.class);
+          break;
         default:
           return null;
       }
+      if (wrapper != null && wrapper.getComponents() == null) {
+        wrapper.setComponents(new ArrayList<>());
+      }
+      return wrapper;
     }
 
     ComponentWrapper wrapper;
