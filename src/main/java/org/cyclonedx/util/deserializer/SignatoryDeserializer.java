@@ -21,10 +21,9 @@ package org.cyclonedx.util.deserializer;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.core.ObjectCodec;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Signature;
@@ -34,45 +33,48 @@ public class SignatoryDeserializer
     extends JsonDeserializer<Signatory>
 {
   @Override
-  public Signatory deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-      throws IOException
-  {
-    final ObjectCodec codec = jsonParser.getCodec();
-    JsonNode node = codec.readTree(jsonParser);
-    return parseSignatory(node, codec);
-  }
-
-  private Signatory parseSignatory(JsonNode node, ObjectCodec codec) throws IOException {
-    Signatory signatory = new Signatory();
-
-    if (node.has("name")) {
-      signatory.setName(node.get("name").asText());
+  public Signatory deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    final Signatory signatory = new Signatory();
+    if (parser.currentToken() != JsonToken.START_OBJECT) {
+      parser.skipChildren();
+      return signatory;
     }
 
-    if (node.has("role")) {
-      signatory.setRole(node.get("role").asText());
+    Signature signature = null;
+    OrganizationalEntity organization = null;
+    ExternalReference externalReference = null;
+
+    for (JsonToken token = parser.nextToken(); token == JsonToken.FIELD_NAME; token = parser.nextToken()) {
+      final String fieldName = parser.currentName();
+      parser.nextToken();
+
+      switch (fieldName) {
+        case "name":
+          signatory.setName(DeserializerUtils.readText(parser));
+          break;
+        case "role":
+          signatory.setRole(DeserializerUtils.readText(parser));
+          break;
+        case "signature":
+          signature = ctxt.readValue(parser, Signature.class);
+          break;
+        case "organization":
+          organization = ctxt.readValue(parser, OrganizationalEntity.class);
+          break;
+        case "externalReference":
+          externalReference = ctxt.readValue(parser, ExternalReference.class);
+          break;
+        default:
+          parser.skipChildren();
+      }
     }
 
-    JsonNode signatureNode = node.get("signature");
-    if (signatureNode != null) {
-      Signature signature = codec.treeToValue(node.get("signature"), Signature.class);
+    if (signature != null) {
       signatory.setSignature(signature);
-    }
-    else {
-      parseOrganizationAndReference(node, signatory, codec);
+    } else if (organization != null && externalReference != null) {
+      signatory.setExternalReferenceAndOrganization(externalReference, organization);
     }
 
     return signatory;
-  }
-
-  private void parseOrganizationAndReference(JsonNode node, Signatory signatory, ObjectCodec codec) throws IOException {
-    JsonNode organizationNode = node.get("organization");
-    JsonNode externalReferenceNode = node.get("externalReference");
-
-    if (organizationNode != null && externalReferenceNode != null) {
-      OrganizationalEntity organization = codec.treeToValue(organizationNode, OrganizationalEntity.class);
-      ExternalReference externalReference = codec.treeToValue(externalReferenceNode, ExternalReference.class);
-      signatory.setExternalReferenceAndOrganization(externalReference, organization);
-    }
   }
 }

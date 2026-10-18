@@ -19,12 +19,14 @@
 package org.cyclonedx.util.deserializer;
 
 import java.io.IOException;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.util.TokenBuffer;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.model.OrganizationalChoice;
 import org.cyclonedx.model.OrganizationalContact;
 import org.cyclonedx.model.OrganizationalEntity;
@@ -33,7 +35,7 @@ import org.cyclonedx.model.OrganizationalEntity;
  * Deserializer for OrganizationalChoice that handles:
  * 1. Wrapped format: {"individual": {...}} or {"organization": {...}} (Licensing)
  * 2. String format: "bom-ref" (reference to an organization defined elsewhere)
- * 3. XML ref format: {"ref": "bom-ref"} (XML asserter with ref element)
+ * 3. XML choice format: {"ref": "bom-ref"} or {"contact": {...}} (XML asserter)
  * 4. Unwrapped format: direct entity/contact object fields (patent asserter/assignee JSON)
  */
 public class OrganizationalChoiceDeserializer extends JsonDeserializer<OrganizationalChoice>
@@ -42,54 +44,82 @@ public class OrganizationalChoiceDeserializer extends JsonDeserializer<Organizat
   public OrganizationalChoice deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
   {
     if (p.currentToken() == JsonToken.VALUE_STRING) {
-      // Simple string format - this is a bom-ref reference
-      String bomRef = p.getText();
-      OrganizationalEntity org = new OrganizationalEntity();
-      org.setBomRef(bomRef);
-
-      OrganizationalChoice choice = new OrganizationalChoice();
-      choice.setOrganization(org);
+      final OrganizationalChoice choice = new OrganizationalChoice();
+      choice.setOrganization(referenceTo(p.getText()));
       return choice;
     }
+    if (p.currentToken() != JsonToken.START_OBJECT) {
+      p.skipChildren();
+      return new OrganizationalChoice();
+    }
+    if (p.getCodec() instanceof XmlMapper) {
+      return readWrapped(p, ctxt);
+    }
 
-    // Object format
-    JsonNode node = p.getCodec().readTree(p);
-    OrganizationalChoice choice = new OrganizationalChoice();
+    final TokenBuffer buffer = ctxt.bufferAsCopyOfValue(p);
+    final Set<String> fieldNames = DeserializerUtils.fieldNames(buffer);
 
-    // Wrapped format (Licensing): {"individual": {...}} or {"organization": {...}}
-    if (node.has("individual")) {
-      OrganizationalContact individual = p.getCodec().treeToValue(node.get("individual"), OrganizationalContact.class);
-      choice.setIndividual(individual);
-    } else if (node.has("organization")) {
-      OrganizationalEntity organization = p.getCodec().treeToValue(node.get("organization"), OrganizationalEntity.class);
-      choice.setOrganization(organization);
+    try (final JsonParser choiceParser = buffer.asParserOnFirstToken()) {
+      if (fieldNames.contains("individual") || fieldNames.contains("organization") || fieldNames.contains("ref")) {
+        return readWrapped(choiceParser, ctxt);
+      }
+
+      final OrganizationalChoice choice = new OrganizationalChoice();
+      if (fieldNames.contains("email") || fieldNames.contains("phone")) {
+        choice.setIndividual(ctxt.readValue(choiceParser, OrganizationalContact.class));
+      } else if (!fieldNames.isEmpty()) {
+        choice.setOrganization(ctxt.readValue(choiceParser, OrganizationalEntity.class));
+      }
+
+      return choice;
     }
-    // XML ref format: <ref>bom-ref</ref> → {"ref": "bom-ref"}
-    else if (node.has("ref")) {
-      String bomRef = node.get("ref").asText();
-      OrganizationalEntity org = new OrganizationalEntity();
-      org.setBomRef(bomRef);
-      choice.setOrganization(org);
-    }
-    // XML contact format: <contact>...</contact> (asserter XSD uses "contact" not "individual")
-    else if (node.has("contact") && !node.has("name")) {
-      OrganizationalContact contact = p.getCodec().treeToValue(node.get("contact"), OrganizationalContact.class);
-      choice.setIndividual(contact);
-    }
-    // Unwrapped format (patent JSON): direct entity or contact fields
-    else if (node.size() > 0) {
-      // Distinguish entity from contact by field presence
-      if (node.has("email") || node.has("phone")) {
-        // OrganizationalContact fields
-        OrganizationalContact contact = p.getCodec().treeToValue(node, OrganizationalContact.class);
-        choice.setIndividual(contact);
-      } else {
-        // OrganizationalEntity fields (name, url, contact, address, bom-ref)
-        OrganizationalEntity entity = p.getCodec().treeToValue(node, OrganizationalEntity.class);
-        choice.setOrganization(entity);
+  }
+
+  private static OrganizationalChoice readWrapped(JsonParser p, DeserializationContext ctxt) throws IOException {
+    OrganizationalContact individual = null;
+    OrganizationalEntity organization = null;
+    String ref = null;
+    OrganizationalContact contact = null;
+
+    for (JsonToken token = p.nextToken(); token == JsonToken.FIELD_NAME; token = p.nextToken()) {
+      final String fieldName = p.currentName();
+      p.nextToken();
+
+      switch (fieldName) {
+        case "individual":
+          individual = ctxt.readValue(p, OrganizationalContact.class);
+          break;
+        case "organization":
+          organization = ctxt.readValue(p, OrganizationalEntity.class);
+          break;
+        case "ref":
+          ref = DeserializerUtils.readText(p);
+          break;
+        case "contact":
+          contact = ctxt.readValue(p, OrganizationalContact.class);
+          break;
+        default:
+          p.skipChildren();
       }
     }
 
+    final OrganizationalChoice choice = new OrganizationalChoice();
+    if (individual != null) {
+      choice.setIndividual(individual);
+    } else if (organization != null) {
+      choice.setOrganization(organization);
+    } else if (ref != null) {
+      choice.setOrganization(referenceTo(ref));
+    } else {
+      choice.setIndividual(contact);
+    }
+
     return choice;
+  }
+
+  private static OrganizationalEntity referenceTo(String bomRef) {
+    final OrganizationalEntity organization = new OrganizationalEntity();
+    organization.setBomRef(bomRef);
+    return organization;
   }
 }

@@ -18,18 +18,16 @@
  */
 package org.cyclonedx.util.deserializer;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.cyclonedx.model.OrganizationalChoice;
 import org.cyclonedx.model.PatentAssertion;
 import org.cyclonedx.model.PatentAssertion.AssertionType;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Custom deserializer for PatentAssertion that handles the bom-ref attribute/element conflict
@@ -39,64 +37,41 @@ import org.cyclonedx.model.PatentAssertion.AssertionType;
  */
 public class PatentAssertionDeserializer extends JsonDeserializer<PatentAssertion> {
 
+    private final WrappedListDeserializer<String> patentRefsDeserializer =
+            new WrappedListDeserializer<>("bom-ref", String.class);
+
     @Override
     public PatentAssertion deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        JsonNode node = p.readValueAsTree();
-        PatentAssertion pa = new PatentAssertion();
+        final PatentAssertion pa = new PatentAssertion();
+        if (p.currentToken() != JsonToken.START_OBJECT) {
+            p.skipChildren();
+            return pa;
+        }
 
-        // bom-ref (attribute in XML, property in JSON)
-        if (node.has("bom-ref")) {
-            JsonNode bomRefNode = node.get("bom-ref");
-            if (bomRefNode.isTextual()) {
-                pa.setBomRef(bomRefNode.asText());
+        for (JsonToken token = p.nextToken(); token == JsonToken.FIELD_NAME; token = p.nextToken()) {
+            final String fieldName = p.currentName();
+            p.nextToken();
+
+            switch (fieldName) {
+                case "bom-ref":
+                    pa.setBomRef(DeserializerUtils.readText(p));
+                    break;
+                case "assertionType":
+                    pa.setAssertionType(AssertionType.fromValue(DeserializerUtils.readText(p)));
+                    break;
+                case "patentRefs":
+                    final List<String> refs = patentRefsDeserializer.deserialize(p, ctxt);
+                    pa.setPatentRefs(refs.isEmpty() ? null : refs);
+                    break;
+                case "asserter":
+                    pa.setAsserter(ctxt.readValue(p, OrganizationalChoice.class));
+                    break;
+                case "notes":
+                    pa.setNotes(DeserializerUtils.readText(p));
+                    break;
+                default:
+                    p.skipChildren();
             }
-        }
-
-        // assertionType
-        if (node.has("assertionType")) {
-            pa.setAssertionType(AssertionType.fromValue(node.get("assertionType").asText()));
-        }
-
-        // patentRefs - in JSON it's an array of strings, in XML it's an object with bom-ref children
-        if (node.has("patentRefs")) {
-            JsonNode patentRefsNode = node.get("patentRefs");
-            List<String> refs = new ArrayList<>();
-            if (patentRefsNode.isArray()) {
-                // JSON format: ["patent-1", "patent-2"]
-                for (JsonNode ref : patentRefsNode) {
-                    refs.add(ref.asText());
-                }
-            } else if (patentRefsNode.isObject()) {
-                // XML format: {"bom-ref": "patent-1"} or {"bom-ref": ["patent-1", "patent-2"]}
-                JsonNode bomRefChildren = patentRefsNode.get("bom-ref");
-                if (bomRefChildren != null) {
-                    if (bomRefChildren.isArray()) {
-                        for (JsonNode ref : bomRefChildren) {
-                            refs.add(ref.asText());
-                        }
-                    } else {
-                        refs.add(bomRefChildren.asText());
-                    }
-                }
-            }
-            if (!refs.isEmpty()) {
-                pa.setPatentRefs(refs);
-            }
-        }
-
-        // asserter (OrganizationalChoice)
-        if (node.has("asserter")) {
-            JsonNode asserterNode = node.get("asserter");
-            OrganizationalChoiceDeserializer choiceDeser = new OrganizationalChoiceDeserializer();
-            JsonParser asserterParser = asserterNode.traverse(p.getCodec());
-            asserterParser.nextToken();
-            OrganizationalChoice asserter = choiceDeser.deserialize(asserterParser, ctxt);
-            pa.setAsserter(asserter);
-        }
-
-        // notes
-        if (node.has("notes")) {
-            pa.setNotes(node.get("notes").asText());
         }
 
         return pa;
