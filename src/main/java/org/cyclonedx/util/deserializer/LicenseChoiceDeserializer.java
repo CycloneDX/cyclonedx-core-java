@@ -21,10 +21,10 @@ package org.cyclonedx.util.deserializer;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.cyclonedx.model.License;
@@ -46,61 +46,57 @@ public class LicenseChoiceDeserializer extends JsonDeserializer<LicenseChoice>
   public LicenseChoice deserialize(
       final JsonParser p, final DeserializationContext ctxt) throws IOException
   {
-    ObjectMapper codec = (ObjectMapper) p.getCodec();
-    boolean isXml = codec instanceof XmlMapper;
-    JsonNode rootNode = p.getCodec().readTree(p);
+    final LicenseChoice licenseChoice = new LicenseChoice();
 
-    if (!rootNode.isEmpty()) {
-      LicenseChoice licenseChoice = new LicenseChoice();
-
-      if (isXml) {
-        // For XML, the root node contains all license choice items as fields
-        // (license, expression, expression-detailed)
-        processXmlNode(p, rootNode, licenseChoice, ctxt);
-      } else {
-        // For JSON, the root node is an array of individual license items
-        ArrayNode nodes = DeserializerUtils.getArrayNode(rootNode, null);
-        for (JsonNode node : nodes) {
-          processJsonNode(p, node, licenseChoice, ctxt);
-        }
+    if (p.getCodec() instanceof XmlMapper) {
+      readXml(p, ctxt, licenseChoice);
+    } else {
+      // For JSON, the root node is an array of individual license items
+      JsonNode rootNode = p.getCodec().readTree(p);
+      ArrayNode nodes = DeserializerUtils.getArrayNode(rootNode, null);
+      for (JsonNode node : nodes) {
+        processJsonNode(p, node, licenseChoice, ctxt);
       }
-      return licenseChoice;
     }
-    return null;
+
+    return licenseChoice.getItems() == null || licenseChoice.getItems().isEmpty() ? null : licenseChoice;
   }
 
-  private void processXmlNode(JsonParser p, JsonNode node, LicenseChoice licenseChoice, DeserializationContext ctxt)
-      throws IOException {
-    // XML format: node contains fields for "license", "expression", and/or "expression-detailed"
-    // Each field can be a single item or an array
-
-    // Process all license elements
-    if (node.has("license")) {
-      processLicenseNode(p, node.get("license"), licenseChoice);
+  private void readXml(JsonParser p, DeserializationContext ctxt, LicenseChoice licenseChoice) throws IOException {
+    if (p.currentToken() != JsonToken.START_OBJECT) {
+      p.skipChildren();
+      return;
     }
 
-    // Process all expression elements
-    if (node.has("expression")) {
-      JsonNode exprNode = node.get("expression");
-      if (exprNode.isArray()) {
-        for (JsonNode expr : exprNode) {
-          processExpression(p, expr, licenseChoice, ctxt);
+    for (JsonToken token = p.nextToken(); token == JsonToken.FIELD_NAME; token = p.nextToken()) {
+      final String fieldName = p.currentName();
+      // Repeated elements arrive grouped into an array when the XML was read into a tree upstream.
+      if (p.nextToken() == JsonToken.START_ARRAY) {
+        while (p.nextToken() != JsonToken.END_ARRAY) {
+          readXmlItem(fieldName, p, ctxt, licenseChoice);
         }
       } else {
-        processExpression(p, exprNode, licenseChoice, ctxt);
+        readXmlItem(fieldName, p, ctxt, licenseChoice);
       }
     }
+  }
 
-    // Process all expression-detailed elements
-    if (node.has("expression-detailed")) {
-      JsonNode exprDetailedNode = node.get("expression-detailed");
-      if (exprDetailedNode.isArray()) {
-        for (JsonNode exprDetailed : exprDetailedNode) {
-          processExpressionDetailed(p, exprDetailed, licenseChoice);
-        }
-      } else {
-        processExpressionDetailed(p, exprDetailedNode, licenseChoice);
-      }
+  private void readXmlItem(String fieldName, JsonParser p, DeserializationContext ctxt, LicenseChoice licenseChoice)
+      throws IOException
+  {
+    final JsonNode node = p.getCodec().readTree(p);
+    switch (fieldName) {
+      case "license":
+        processLicenseNode(p, node, licenseChoice);
+        break;
+      case "expression":
+        processExpression(p, node, licenseChoice, ctxt);
+        break;
+      case "expression-detailed":
+        processExpressionDetailed(p, node, licenseChoice);
+        break;
+      default:
+        break;
     }
   }
 

@@ -30,6 +30,8 @@ import org.cyclonedx.model.Component.Type;
 import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.LicenseItem;
+import org.cyclonedx.model.LicenseItem.LicenseItemType;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Patent;
 import org.cyclonedx.model.PatentAssertion;
@@ -491,15 +493,15 @@ public class XmlParserTest
         assertNotNull(lc.getItems().get(0).getLicense());
         assertEquals("Apache-2.0", lc.getItems().get(0).getLicense().getId());
 
-        // Second item: license with name and text
-        assertNotNull(lc.getItems().get(1).getLicense());
-        assertEquals("My Own License", lc.getItems().get(1).getLicense().getName());
-        assertNotNull(lc.getItems().get(1).getLicense().getAttachmentText());
-        assertTrue(lc.getItems().get(1).getLicense().getAttachmentText().getText().contains("Lorem ipsum"));
+        // Second item: expression
+        assertNotNull(lc.getItems().get(1).getExpression());
+        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", lc.getItems().get(1).getExpression().getValue());
 
-        // Third item: expression
-        assertNotNull(lc.getItems().get(2).getExpression());
-        assertEquals("EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0", lc.getItems().get(2).getExpression().getValue());
+        // Third item: license with name and text
+        assertNotNull(lc.getItems().get(2).getLicense());
+        assertEquals("My Own License", lc.getItems().get(2).getLicense().getName());
+        assertNotNull(lc.getItems().get(2).getLicense().getAttachmentText());
+        assertTrue(lc.getItems().get(2).getLicense().getAttachmentText().getText().contains("Lorem ipsum"));
 
         // Fourth item: expression-detailed
         assertNotNull(lc.getItems().get(3).getExpressionDetailed());
@@ -646,36 +648,33 @@ public class XmlParserTest
         assertEquals(Acknowledgement.CONCLUDED, lcB.getItems().get(1).getExpression().getAcknowledgement());
 
         // Situation C: declared expression + concluded license ID
-        // Note: XML deserializer groups by element type (license, expression, expression-detailed)
-        // so license comes before expression regardless of document order
         Component sitC = bom.getComponents().get(2);
         assertEquals("situation-C", sitC.getName());
         LicenseChoice lcC = sitC.getLicenses();
         assertNotNull(lcC);
         assertNotNull(lcC.getItems());
         assertEquals(2, lcC.getItems().size());
-        assertNotNull(lcC.getItems().get(0).getLicense());
-        assertEquals("GPL-3.0-only", lcC.getItems().get(0).getLicense().getId());
-        assertEquals(Acknowledgement.CONCLUDED, lcC.getItems().get(0).getLicense().getAcknowledgement());
-        assertNotNull(lcC.getItems().get(1).getExpression());
-        assertEquals(Acknowledgement.DECLARED, lcC.getItems().get(1).getExpression().getAcknowledgement());
+        assertNotNull(lcC.getItems().get(0).getExpression());
+        assertEquals(Acknowledgement.DECLARED, lcC.getItems().get(0).getExpression().getAcknowledgement());
+        assertNotNull(lcC.getItems().get(1).getLicense());
+        assertEquals("GPL-3.0-only", lcC.getItems().get(1).getLicense().getId());
+        assertEquals(Acknowledgement.CONCLUDED, lcC.getItems().get(1).getLicense().getAcknowledgement());
 
         // Situation D: declared expression-detailed with texts + concluded license with text
-        // Note: XML deserializer groups by element type: license first, then expression-detailed
         Component sitD = bom.getComponents().get(3);
         assertEquals("situation-D", sitD.getName());
         LicenseChoice lcD = sitD.getLicenses();
         assertNotNull(lcD);
         assertNotNull(lcD.getItems());
         assertEquals(2, lcD.getItems().size());
-        assertNotNull(lcD.getItems().get(0).getLicense());
-        assertEquals(Acknowledgement.CONCLUDED, lcD.getItems().get(0).getLicense().getAcknowledgement());
-        assertNotNull(lcD.getItems().get(1).getExpressionDetailed());
-        ExpressionDetailed edD = lcD.getItems().get(1).getExpressionDetailed();
+        assertNotNull(lcD.getItems().get(0).getExpressionDetailed());
+        ExpressionDetailed edD = lcD.getItems().get(0).getExpressionDetailed();
         assertEquals("GPL-3.0-or-later OR GPL-2.0", edD.getExpression());
         assertEquals(Acknowledgement.DECLARED, edD.getAcknowledgement());
         assertNotNull(edD.getExpressionDetails());
         assertEquals(2, edD.getExpressionDetails().size());
+        assertNotNull(lcD.getItems().get(1).getLicense());
+        assertEquals(Acknowledgement.CONCLUDED, lcD.getItems().get(1).getLicense().getAcknowledgement());
 
         // Situation E: declared licenses with URLs + concluded expression-detailed with URLs
         Component sitE = bom.getComponents().get(4);
@@ -1725,5 +1724,63 @@ public class XmlParserTest
         assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
 
         assertThat(parser.parse(xml).getMetadata().getTimestamp()).isNull();
+    }
+
+    @Test
+    void parseShouldDeserializeLicenseChoicesInDocumentOrder() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.7" version="1">
+                  <components>
+                    <component type="library">
+                      <name>lib</name>
+                      <licenses>
+                        <expression>Apache-2.0</expression>
+                        <license><id>MIT</id></license>
+                        <expression-detailed expression="MIT OR Apache-2.0">
+                          <details license-identifier="MIT"><url>https://example.com/mit</url></details>
+                        </expression-detailed>
+                        <expression>BSD-3-Clause</expression>
+                      </licenses>
+                      <evidence>
+                        <licenses>
+                          <expression>Apache-2.0</expression>
+                          <license><id>MIT</id></license>
+                        </licenses>
+                      </evidence>
+                    </component>
+                  </components>
+                  <services>
+                    <service>
+                      <name>svc</name>
+                      <licenses>
+                        <expression-detailed expression="MIT OR Apache-2.0">
+                          <details license-identifier="MIT"><url>https://example.com/mit</url></details>
+                        </expression-detailed>
+                        <expression>BSD-3-Clause</expression>
+                      </licenses>
+                    </service>
+                  </services>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_17)).isEmpty();
+
+        final Bom bom = parser.parse(xml);
+        final Component component = bom.getComponents().get(0);
+        assertThat(component.getLicenses().getItems())
+                .extracting(LicenseItem::getType)
+                .containsExactly(
+                        LicenseItemType.EXPRESSION,
+                        LicenseItemType.LICENSE,
+                        LicenseItemType.EXPRESSION_DETAILED,
+                        LicenseItemType.EXPRESSION);
+        assertThat(component.getEvidence().getLicenses().getItems())
+                .extracting(LicenseItem::getType)
+                .containsExactly(LicenseItemType.EXPRESSION, LicenseItemType.LICENSE);
+        assertThat(bom.getServices().get(0).getLicenses().getItems())
+                .extracting(LicenseItem::getType)
+                .containsExactly(LicenseItemType.EXPRESSION_DETAILED, LicenseItemType.EXPRESSION);
     }
 }

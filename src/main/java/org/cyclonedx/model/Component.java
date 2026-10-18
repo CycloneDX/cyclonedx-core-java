@@ -45,7 +45,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.github.packageurl.PackageURL;
 import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
-import org.cyclonedx.util.deserializer.LicenseDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
 @SuppressWarnings("unused")
@@ -393,7 +392,6 @@ public class Component extends ExtensibleElement {
         this.hashes.add(hash);
     }
 
-    @JsonDeserialize(using = LicenseDeserializer.class)
     @JacksonXmlElementWrapper (useWrapping = false)
     public LicenseChoice getLicenses() {
         if (licenses != null && (licenses.getItems() == null || licenses.getItems().isEmpty())) {
