@@ -37,6 +37,7 @@ import org.cyclonedx.util.deserializer.NotesDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 import org.cyclonedx.util.deserializer.ResolvesDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
+import org.cyclonedx.util.deserializer.UrlListDeserializer;
 import org.cyclonedx.util.serializer.CustomDateSerializer;
 
 /**
@@ -176,6 +177,7 @@ public class ReleaseNotes
     this.properties = properties;
   }
 
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Resolves {
 
     public enum Type {
@@ -216,6 +218,7 @@ public class ReleaseNotes
     private Source source;
     @JacksonXmlElementWrapper(localName = "references")
     @JacksonXmlProperty(localName = "url")
+    @JsonDeserialize(using = UrlListDeserializer.class)
     private List<String> references;
 
     public Type getType() {
