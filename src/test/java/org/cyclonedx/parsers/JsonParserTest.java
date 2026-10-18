@@ -1160,4 +1160,29 @@ public class JsonParserTest
         assertThatExceptionOfType(ParseException.class)
                 .isThrownBy(() -> new JsonParser().parse(json.getBytes(StandardCharsets.UTF_8)));
     }
+
+    @Test
+    void parseShouldDeserializeVulnerabilityProofOfConcept() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "vulnerabilities": [
+                    {
+                      "id": "CVE-1",
+                      "proofOfConcept": {
+                        "reproductionSteps": "run it"
+                      }
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
+
+        assertThat(parser.parse(json).getVulnerabilities().get(0).getProofOfConcept().getReproductionSteps())
+                .isEqualTo("run it");
+    }
 }

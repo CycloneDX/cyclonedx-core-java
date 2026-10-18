@@ -78,6 +78,7 @@ import org.cyclonedx.model.formulation.Workflow;
 import org.cyclonedx.model.formulation.common.InputType;
 import org.cyclonedx.model.formulation.common.OutputType;
 import org.cyclonedx.model.metadata.ToolInformation;
+import org.cyclonedx.model.vulnerability.Vulnerability;
 import org.cyclonedx.model.license.ExpressionDetail;
 import org.cyclonedx.model.license.ExpressionDetailed;
 import org.junit.jupiter.api.Test;
@@ -1494,5 +1495,127 @@ public class XmlParserTest
         assertThat(output.getProperties())
                 .extracting(Property::getName)
                 .containsExactly("c", "d");
+    }
+
+    @Test
+    void parseShouldDeserializeMetadataComponentAndTools() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <metadata>
+                    <tools>
+                      <components>
+                        <component type="application">
+                          <name>tool</name>
+                          <evidence>
+                            <copyright>
+                              <text>Acme</text>
+                              <text>Other</text>
+                            </copyright>
+                          </evidence>
+                        </component>
+                      </components>
+                      <services>
+                        <service>
+                          <name>s1</name>
+                          <properties>
+                            <property name="a">1</property>
+                            <property name="b">2</property>
+                          </properties>
+                        </service>
+                        <service><name>s2</name></service>
+                      </services>
+                    </tools>
+                    <component type="application">
+                      <name>app</name>
+                      <evidence>
+                        <copyright>
+                          <text>Acme</text>
+                          <text>Other</text>
+                        </copyright>
+                      </evidence>
+                    </component>
+                  </metadata>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final Metadata metadata = parser.parse(xml).getMetadata();
+        assertThat(metadata.getComponent().getEvidence().getCopyright())
+                .extracting(Copyright::getText)
+                .containsExactly("Acme", "Other");
+        final ToolInformation tools = metadata.getToolChoice();
+        assertThat(tools.getComponents().get(0).getEvidence().getCopyright())
+                .extracting(Copyright::getText)
+                .containsExactly("Acme", "Other");
+        assertThat(tools.getServices())
+                .extracting(Service::getName)
+                .containsExactly("s1", "s2");
+        assertThat(tools.getServices().get(0).getProperties())
+                .extracting(Property::getName)
+                .containsExactly("a", "b");
+    }
+
+    @Test
+    void parseShouldDeserializeVulnerabilities() throws Exception {
+        final byte[] xml = /* language=XML */ """
+                <?xml version="1.0"?>
+                <bom xmlns="http://cyclonedx.org/schema/bom/1.6" version="1">
+                  <vulnerabilities>
+                    <vulnerability>
+                      <id>CVE-1</id>
+                      <proofOfConcept>
+                        <reproductionSteps>run it</reproductionSteps>
+                      </proofOfConcept>
+                      <credits>
+                        <organizations>
+                          <organization><name>o1</name></organization>
+                          <organization><name>o2</name></organization>
+                        </organizations>
+                        <individuals>
+                          <individual><name>i1</name></individual>
+                          <individual><name>i2</name></individual>
+                        </individuals>
+                      </credits>
+                      <tools>
+                        <components>
+                          <component type="application">
+                            <name>scanner</name>
+                            <evidence>
+                              <copyright><text>Acme</text></copyright>
+                            </evidence>
+                          </component>
+                        </components>
+                        <services>
+                          <service><name>s1</name></service>
+                          <service><name>s2</name></service>
+                        </services>
+                      </tools>
+                    </vulnerability>
+                  </vulnerabilities>
+                </bom>
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new XmlParser();
+        assertThat(parser.validate(xml, Version.VERSION_16)).isEmpty();
+
+        final List<Vulnerability> vulnerabilities = parser.parse(xml).getVulnerabilities();
+        assertThat(vulnerabilities).hasSize(1);
+        final Vulnerability vulnerability = vulnerabilities.get(0);
+        assertThat(vulnerability.getProofOfConcept().getReproductionSteps()).isEqualTo("run it");
+        assertThat(vulnerability.getCredits().getOrganizations())
+                .extracting(OrganizationalEntity::getName)
+                .containsExactly("o1", "o2");
+        assertThat(vulnerability.getCredits().getIndividuals())
+                .extracting(OrganizationalContact::getName)
+                .containsExactly("i1", "i2");
+        assertThat(vulnerability.getToolChoice().getComponents().get(0).getEvidence().getCopyright())
+                .extracting(Copyright::getText)
+                .containsExactly("Acme");
+        assertThat(vulnerability.getToolChoice().getServices())
+                .extracting(Service::getName)
+                .containsExactly("s1", "s2");
     }
 }
