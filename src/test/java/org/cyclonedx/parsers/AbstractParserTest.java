@@ -952,7 +952,7 @@ public class AbstractParserTest
 
   void assertMetadata_validTools(final Metadata metadata) {
     assertNotNull(metadata);
-    assertNotNull(metadata.getTimestamp());
+    assertNull(metadata.getTimestamp());
 
     assertNull(metadata.getLifecycles());
     assertNull(metadata.getLicenseChoice());
