@@ -667,6 +667,10 @@ public class JsonParserTest
         assertNotNull(content);
 
         assertEquals(2, content.getProperties().size());
+
+        assertThat(mc.getConsiderations().getEthicalConsiderations())
+                .extracting("name", "mitigationStrategy")
+                .containsExactly(tuple("The name of the risk", "Strategy used to address this risk"));
     }
 
     @Test
@@ -1426,6 +1430,50 @@ public class JsonParserTest
 
         assertThat(new JsonParser().parse(json).getComponents().get(0).getLicenses().getItems())
                 .singleElement().extracting(item -> item.getExpression().getValue()).isNull();
+    }
+
+    @Test
+    void parseShouldDeserializeNullEthicalConsiderationName() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "machine-learning-model",
+                      "name": "model",
+                      "modelCard": {"considerations": {"ethicalConsiderations": [{"name": null}]}}
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        assertThat(new JsonParser().parse(json).getComponents().get(0).getModelCard().getConsiderations()
+                .getEthicalConsiderations()).singleElement().extracting("name").isNull();
+    }
+
+    @Test
+    void parseShouldSkipUnknownObjectFields() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.6",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "x-unknown": {"name": "unknown", "version": "unknown"},
+                      "name": "lib",
+                      "version": "1.0"
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        assertThat(new JsonParser().parse(json).getComponents())
+                .extracting("name", "version")
+                .containsExactly(tuple("lib", "1.0"));
     }
 
     @Test

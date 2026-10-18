@@ -19,9 +19,8 @@
 package org.cyclonedx.util.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import org.cyclonedx.model.ExtensibleType;
@@ -40,8 +39,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import static org.cyclonedx.util.deserializer.DeserializerUtils.readText;
 
 public class ExtensionDeserializer extends StdDeserializer<Extension>
 {
@@ -54,214 +54,219 @@ public class ExtensionDeserializer extends StdDeserializer<Extension>
   }
 
   @Override
+  @SuppressWarnings("deprecation")
   public Extension deserialize(
       final JsonParser p, final DeserializationContext ctxt) throws IOException
   {
-    if (p.currentName().equals(Vulnerability10.VULNERABILITIES)) {
-      if (p instanceof FromXmlParser) {
-        return processVulnerabilities(p);
-      }
+    if (!(p instanceof FromXmlParser) || !Vulnerability10.VULNERABILITIES.equals(p.currentName())) {
+      p.skipChildren();
+      return null;
     }
-    return null;
-  }
 
-  private Extension processVulnerabilities(final JsonParser parser) throws IOException {
-    TreeNode treeNode =  parser.readValueAsTree();
-    JsonNode vulnerabilityNode = (JsonNode) treeNode.get(Vulnerability10.NAME);
-    List<ExtensibleType> extensibleTypes = new ArrayList<>();
-    if (vulnerabilityNode != null) {
-      if (vulnerabilityNode.isArray() && !vulnerabilityNode.isEmpty()) {
-        for (JsonNode jn : vulnerabilityNode) {
-          Vulnerability10 vulnerability = processVulnerability(jn);
-          extensibleTypes.add(vulnerability);
-        }
+    final List<ExtensibleType> vulnerabilities = new ArrayList<>();
+    for (String field = firstField(p); field != null; field = p.nextFieldName()) {
+      p.nextToken();
+      if (Vulnerability10.NAME.equals(field)) {
+        vulnerabilities.add(processVulnerability(p));
       } else {
-        Vulnerability10 vuln = processVulnerability(vulnerabilityNode);
-        extensibleTypes.add(vuln);
+        p.skipChildren();
       }
     }
-    if (!extensibleTypes.isEmpty()) {
-      return createAndReturnExtension(ExtensionType.VULNERABILITIES, extensibleTypes);
-    }
-    return null;
+    return vulnerabilities.isEmpty() ? null : createExtension(vulnerabilities);
   }
 
-  private Vulnerability10 processVulnerability(final JsonNode vulnJson) {
-    Vulnerability10 vuln = new Vulnerability10();
-    for (Iterator<String> it = vulnJson.fieldNames(); it.hasNext(); ) {
-      String field = it.next();
+  @SuppressWarnings("deprecation")
+  private Vulnerability10 processVulnerability(JsonParser p) throws IOException {
+    final Vulnerability10 vuln = new Vulnerability10();
+    for (String field = firstField(p); field != null; field = p.nextFieldName()) {
+      p.nextToken();
       switch (field) {
         case Vulnerability10.REF:
-          vuln.setRef(vulnJson.get(field).textValue());
+          vuln.setRef(readText(p));
           break;
         case Vulnerability10.ID:
-          vuln.setId(vulnJson.get(field).textValue());
+          vuln.setId(readText(p));
           break;
         case Vulnerability10.SOURCE:
-          vuln.setSource(processSource(vulnJson.get(field)));
+          vuln.setSource(processSource(p));
           break;
         case Vulnerability10.RATINGS:
-          vuln.setRatings(processRatings(vulnJson.get(field)));
+          vuln.setRatings(processRatings(p));
           break;
         case Vulnerability10.CWES:
-          vuln.setCwes(processCwes(vulnJson.get(field)));
+          vuln.setCwes(processCwes(p));
           break;
         case Vulnerability10.DESCRIPTION:
-          vuln.setDescription(vulnJson.get(field).textValue());
+          vuln.setDescription(readText(p));
           break;
         case Vulnerability10.RECOMMENDATIONS:
-          vuln.setRecommendations(processRecommendations(vulnJson.get(field)));
+          vuln.setRecommendations(processRecommendations(p));
           break;
         case Vulnerability10.ADVISORIES:
-          vuln.setAdvisories(processAdvisories(vulnJson.get(field)));
+          vuln.setAdvisories(processAdvisories(p));
           break;
         default:
-          // Unsupported field, skipped and not deserialized
+          p.skipChildren();
           break;
       }
     }
     return vuln;
   }
 
-  private List<Advisory> processAdvisories(final JsonNode advisories) {
-    List<Advisory> advisoryList = new ArrayList<>();
-    JsonNode adv = advisories.get(Vulnerability10.ADVISORY);
-    if (adv != null) {
-      if (adv.isArray() && !adv.isEmpty()) {
-        for (JsonNode a : adv) {
-          advisoryList.add(processAdvisory(a));
-        }
-      } else {
-        advisoryList.add(processAdvisory(adv));
-      }
+  @SuppressWarnings("deprecation")
+  private List<Advisory> processAdvisories(JsonParser p) throws IOException {
+    final List<Advisory> advisories = new ArrayList<>();
+    for (String text : readTexts(p, Vulnerability10.ADVISORY)) {
+      final Advisory advisory = new Advisory();
+      advisory.setText(text);
+      advisories.add(advisory);
     }
-    return advisoryList.isEmpty() ? null : advisoryList;
+    return advisories.isEmpty() ? null : advisories;
   }
 
-  private Advisory processAdvisory(final JsonNode advisory) {
-    Advisory adv = new Advisory();
-    adv.setText(advisory.textValue());
-    return adv;
-  }
-
-  private List<Recommendation> processRecommendations(final JsonNode recommendations) {
-    List<Recommendation> recommendationsList = new ArrayList<>();
-    JsonNode rec = recommendations.get(Vulnerability10.RECOMMENDATION);
-    if (rec != null) {
-      if (rec.isArray() && !rec.isEmpty()) {
-        for (JsonNode r : rec) {
-          recommendationsList.add(processRecommendation(r));
-        }
-      } else {
-        recommendationsList.add(processRecommendation(rec));
-      }
+  @SuppressWarnings("deprecation")
+  private List<Recommendation> processRecommendations(JsonParser p) throws IOException {
+    final List<Recommendation> recommendations = new ArrayList<>();
+    for (String text : readTexts(p, Vulnerability10.RECOMMENDATION)) {
+      final Recommendation recommendation = new Recommendation();
+      recommendation.setText(text);
+      recommendations.add(recommendation);
     }
-    return recommendationsList.isEmpty() ? null : recommendationsList;
+    return recommendations.isEmpty() ? null : recommendations;
   }
 
-  private Recommendation processRecommendation(final JsonNode recommendation) {
-    Recommendation rec = new Recommendation();
-    rec.setText(recommendation.textValue());
-    return rec;
-  }
-
-  private List<Cwe> processCwes(final JsonNode cwes) {
-    List<Cwe> cweList = new ArrayList<>();
-    JsonNode cwe = cwes.get(Vulnerability10.CWE);
-    if (cwe != null) {
-      if (cwe.isArray() && !cwe.isEmpty()) {
-        for (JsonNode c : cwe) {
-          cweList.add(processCwe(c));
-        }
-      } else {
-        cweList.add(processCwe(cwe));
-      }
-    }
-    return cweList.isEmpty() ? null : cweList;
-  }
-
-  private Cwe processCwe(final JsonNode cwe) {
-    Cwe c = new Cwe();
-    try {
-      c.setText(Integer.valueOf(cwe.textValue()));
-    } catch (NumberFormatException e) {
-      // Not a CWE ID; leave unset.
-    }
-    return c;
-  }
-
-  private Vulnerability10.Source processSource(final JsonNode sourceNode) {
-    Vulnerability10.Source source = new Vulnerability10.Source();
-    source.setName(getAsString("name", sourceNode));
-    if (sourceNode.get(Vulnerability10.URL) != null) {
+  @SuppressWarnings("deprecation")
+  private List<Cwe> processCwes(JsonParser p) throws IOException {
+    final List<Cwe> cwes = new ArrayList<>();
+    for (String text : readTexts(p, Vulnerability10.CWE)) {
+      final Cwe cwe = new Cwe();
       try {
-        source.setUrl(new URL(sourceNode.get(Vulnerability10.URL).textValue()));
+        cwe.setText(Integer.valueOf(text));
+      } catch (NumberFormatException e) {
+        // Not a CWE ID; leave unset.
       }
-      catch (MalformedURLException e) {
-        // Should we throw an exception? Is this worth stopping things over?
-        e.printStackTrace();
+      cwes.add(cwe);
+    }
+    return cwes.isEmpty() ? null : cwes;
+  }
+
+  @SuppressWarnings("deprecation")
+  private Vulnerability10.Source processSource(JsonParser p) throws IOException {
+    final Vulnerability10.Source source = new Vulnerability10.Source();
+    for (String field = firstField(p); field != null; field = p.nextFieldName()) {
+      p.nextToken();
+      if (Vulnerability10.SOURCE_NAME.equals(field)) {
+        source.setName(readText(p));
+      } else if (Vulnerability10.URL.equals(field)) {
+        final String url = readText(p);
+        try {
+          source.setUrl(url == null ? null : new URL(url));
+        }
+        catch (MalformedURLException e) {
+          // Should we throw an exception? Is this worth stopping things over?
+          e.printStackTrace();
+        }
+      } else {
+        p.skipChildren();
       }
     }
-
     return source;
   }
 
   @SuppressWarnings("deprecation")
-  private List<Rating> processRatings(final JsonNode ratings) {
-    final List<Rating> ratingsList = new ArrayList<>();
-    final JsonNode rating = ratings.get(Vulnerability10.RATING);
-    if (rating != null) {
-      if (rating.isArray() && !rating.isEmpty()) {
-        for (JsonNode r : rating) {
-          ratingsList.add(processRating(r));
-        }
+  private List<Rating> processRatings(JsonParser p) throws IOException {
+    final List<Rating> ratings = new ArrayList<>();
+    for (String field = firstField(p); field != null; field = p.nextFieldName()) {
+      p.nextToken();
+      if (Vulnerability10.RATING.equals(field)) {
+        ratings.add(processRating(p));
       } else {
-        ratingsList.add(processRating(rating));
+        p.skipChildren();
       }
     }
-    return ratingsList.isEmpty() ? null : ratingsList;
+    return ratings.isEmpty() ? null : ratings;
   }
 
   @SuppressWarnings("deprecation")
-  private Rating processRating(final JsonNode r) {
+  private Rating processRating(JsonParser p) throws IOException {
     final Rating rating = new Rating();
-    if (r.get(Vulnerability10.SCORE) != null) {
-      final Score score = new Score();
-      final JsonNode s = r.get(Vulnerability10.SCORE);
-      score.setBase(getAsDouble(Vulnerability10.BASE, s));
-      score.setImpact(getAsDouble(Vulnerability10.IMPACT, s));
-      score.setExploitability(getAsDouble(Vulnerability10.EXPLOITABILITY, s));
-      rating.setScore(score);
+    for (String field = firstField(p); field != null; field = p.nextFieldName()) {
+      p.nextToken();
+      switch (field) {
+        case Vulnerability10.SCORE:
+          rating.setScore(processScore(p));
+          break;
+        case Vulnerability10.SEVERITY:
+          rating.setSeverity(Severity.fromString(readText(p)));
+          break;
+        case Vulnerability10.METHOD:
+          rating.setMethod(ScoreSource.fromString(readText(p)));
+          break;
+        case Vulnerability10.VECTOR:
+          rating.setVector(readText(p));
+          break;
+        default:
+          p.skipChildren();
+          break;
+      }
     }
-    rating.setSeverity(Severity.fromString(getAsString(Vulnerability10.SEVERITY, r)));
-    rating.setMethod(ScoreSource.fromString(getAsString(Vulnerability10.METHOD, r)));
-    rating.setVector(getAsString(Vulnerability10.VECTOR, r));
     return rating;
   }
 
-  private Extension createAndReturnExtension(final ExtensionType extType, final List<ExtensibleType> list) {
-    if (extType == ExtensionType.VULNERABILITIES) {
-      Extension ext = new Extension(extType, list);
-
-      ext.setNamespaceURI(Vulnerability10.NAMESPACE_URI);
-      ext.setPrefix(Vulnerability10.PREFIX);
-
-      return ext;
+  @SuppressWarnings("deprecation")
+  private Score processScore(JsonParser p) throws IOException {
+    final Score score = new Score();
+    for (String field = firstField(p); field != null; field = p.nextFieldName()) {
+      p.nextToken();
+      switch (field) {
+        case Vulnerability10.BASE:
+          score.setBase(readDouble(p));
+          break;
+        case Vulnerability10.IMPACT:
+          score.setImpact(readDouble(p));
+          break;
+        case Vulnerability10.EXPLOITABILITY:
+          score.setExploitability(readDouble(p));
+          break;
+        default:
+          p.skipChildren();
+          break;
+      }
     }
-    return null;
+    return score;
   }
 
-  private Double getAsDouble(final String fieldName, final JsonNode node) {
-    if (node.get(fieldName) != null) {
-      return node.get(fieldName).asDouble();
-    }
-    return null;
+  @SuppressWarnings("deprecation")
+  private Extension createExtension(List<ExtensibleType> list) {
+    final Extension ext = new Extension(ExtensionType.VULNERABILITIES, list);
+    ext.setNamespaceURI(Vulnerability10.NAMESPACE_URI);
+    ext.setPrefix(Vulnerability10.PREFIX);
+    return ext;
   }
 
-  private String getAsString(final String fieldName, final JsonNode node) {
-    if (node.get(fieldName) != null) {
-      return node.get(fieldName).textValue();
+  private static List<String> readTexts(JsonParser p, String itemName) throws IOException {
+    final List<String> texts = new ArrayList<>();
+    for (String field = firstField(p); field != null; field = p.nextFieldName()) {
+      p.nextToken();
+      if (itemName.equals(field)) {
+        texts.add(readText(p));
+      } else {
+        p.skipChildren();
+      }
     }
-    return null;
+    return texts;
+  }
+
+  private static Double readDouble(JsonParser p) throws IOException {
+    final String text = readText(p);
+    return text == null ? null : p.getValueAsDouble();
+  }
+
+  private static String firstField(JsonParser p) throws IOException {
+    if (p.currentToken() != JsonToken.START_OBJECT) {
+      p.skipChildren();
+      return null;
+    }
+    return p.nextFieldName();
   }
 }
