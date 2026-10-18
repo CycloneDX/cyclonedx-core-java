@@ -22,8 +22,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.cyclonedx.util.deserializer.UrlListDeserializer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,7 @@ public class Issue {
   private String name;
   private String description;
   private Source source;
+  @JsonDeserialize(using = UrlListDeserializer.class)
   private List<String> references;
   @JacksonXmlProperty(isAttribute = true)
   private Type type;
