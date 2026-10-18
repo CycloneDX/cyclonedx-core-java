@@ -31,7 +31,7 @@ import org.cyclonedx.model.component.evidence.Callstack;
 import org.cyclonedx.model.component.evidence.Identity;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.cyclonedx.util.deserializer.IdentityDeserializer;
-import org.cyclonedx.util.deserializer.LicenseDeserializer;
+import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class Evidence
         setLicenses(licenseChoice);
     }
 
-    @JsonDeserialize(using = LicenseDeserializer.class)
+    @JsonDeserialize(using = LicenseChoiceDeserializer.class)
     public LicenseChoice getLicenses() {
         return licenses;
     }

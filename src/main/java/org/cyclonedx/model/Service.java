@@ -30,7 +30,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.cyclonedx.Version;
 import org.cyclonedx.model.component.Tags;
 import org.cyclonedx.util.deserializer.ExternalReferencesDeserializer;
-import org.cyclonedx.util.deserializer.LicenseDeserializer;
+import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
 import org.cyclonedx.util.deserializer.StringListDeserializer;
 
 import java.util.ArrayList;
@@ -206,7 +206,7 @@ public class Service extends ExtensibleElement {
         setLicenses(licenseChoice);
     }
 
-    @JsonDeserialize(using = LicenseDeserializer.class)
+    @JsonDeserialize(using = LicenseChoiceDeserializer.class)
     public LicenseChoice getLicenses() {
         return licenses;
     }

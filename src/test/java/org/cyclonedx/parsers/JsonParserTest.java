@@ -30,6 +30,8 @@ import org.cyclonedx.model.ExternalReference;
 import org.cyclonedx.model.License;
 import org.cyclonedx.model.LifecycleChoice;
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.LicenseItem;
+import org.cyclonedx.model.LicenseItem.LicenseItemType;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Patch;
 import org.cyclonedx.model.Patent;
@@ -1233,5 +1235,52 @@ public class JsonParserTest
         assertThat(parser.validate(json, Version.VERSION_16)).isEmpty();
 
         assertThat(parser.parse(json).getMetadata().getTimestamp()).isNull();
+    }
+
+    @Test
+    void parseShouldDeserializeServiceAndEvidenceLicenseChoices() throws Exception {
+        final byte[] json = /* language=JSON */ """
+                {
+                  "bomFormat": "CycloneDX",
+                  "specVersion": "1.7",
+                  "version": 1,
+                  "components": [
+                    {
+                      "type": "library",
+                      "name": "lib",
+                      "evidence": {
+                        "licenses": [
+                          {"license": {"id": "MIT"}},
+                          {"expression": "Apache-2.0"},
+                          {
+                            "expression": "MIT OR Apache-2.0",
+                            "expressionDetails": [{"licenseIdentifier": "MIT", "url": "https://example.com/mit"}]
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "services": [
+                    {
+                      "name": "svc",
+                      "licenses": [
+                        {"expression": "MIT"},
+                        {"expression": "Apache-2.0"}
+                      ]
+                    }
+                  ]
+                }
+                """.getBytes(StandardCharsets.UTF_8);
+
+        final var parser = new JsonParser();
+        assertThat(parser.validate(json, Version.VERSION_17)).isEmpty();
+
+        final Bom bom = parser.parse(json);
+        assertThat(bom.getComponents().get(0).getEvidence().getLicenses().getItems())
+                .extracting(LicenseItem::getType)
+                .containsExactly(LicenseItemType.LICENSE, LicenseItemType.EXPRESSION, LicenseItemType.EXPRESSION_DETAILED);
+        assertThat(bom.getServices().get(0).getLicenses().getItems())
+                .extracting(item -> item.getExpression().getValue())
+                .containsExactly("MIT", "Apache-2.0");
     }
 }
