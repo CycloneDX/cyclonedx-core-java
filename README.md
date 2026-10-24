@@ -21,7 +21,7 @@ Maven Usage
 <dependency>
     <groupId>org.cyclonedx</groupId>
     <artifactId>cyclonedx-core-java</artifactId>
-    <version>14.0.0</version>
+    <version>13.4.0</version>
 </dependency>
 ```
 
@@ -33,7 +33,6 @@ the CycloneDX version supported by the target system.
 
 | Version |  Schema Version  | Format(s) |
 |---------|------------------|-----------|
-| 14.x    | CycloneDX v1.7.1 | XML/JSON  |
 | 13.x    | CycloneDX v1.7.1 | XML/JSON  |
 | 12.x    | CycloneDX v1.6.1 | XML/JSON  |
 | 11.x    | CycloneDX v1.6.1 | XML/JSON  |
