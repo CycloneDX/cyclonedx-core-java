@@ -43,7 +43,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.github.packageurl.PackageURL;
 import org.cyclonedx.util.deserializer.LicenseChoiceDeserializer;
 import org.cyclonedx.util.deserializer.PropertiesDeserializer;
 
@@ -444,10 +443,6 @@ public class Component extends ExtensibleElement {
 
     public void setPurl(String purl) {
         this.purl = purl;
-    }
-
-    public void setPurl(PackageURL purl) {
-        this.purl = purl.canonicalize();
     }
 
     public Swid getSwid() {
