@@ -112,6 +112,10 @@ public class MetadataSerializer
       }
     }
 
+    if (metadata.getDistributionConstraints() != null && shouldSerializeField(metadata, version, "distributionConstraints")) {
+      jsonGenerator.writeObjectField("distributionConstraints", metadata.getDistributionConstraints());
+    }
+
     jsonGenerator.writeEndObject();
   }
 

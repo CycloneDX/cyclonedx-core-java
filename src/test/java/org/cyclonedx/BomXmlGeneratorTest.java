@@ -1335,6 +1335,16 @@ public class BomXmlGeneratorTest {
         return tempFile;
     }
 
+    @Test
+    public void schema17MetadataDistributionConstraintsGenerationTest() throws Exception {
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_17, createCommonBomXml("/1.7/valid-metadata-distribution-1.7.xml"));
+        String xml = generator.toXmlString();
+        assertTrue(xml.contains("<tlp>RED</tlp>"), xml);
+        File file = writeToFile(xml);
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(file, Version.VERSION_17));
+    }
+
     private Bom createCommonBomXml(String resource) throws Exception {
         final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream(resource)).readAllBytes();
         XmlParser parser = new XmlParser();
