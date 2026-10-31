@@ -102,6 +102,8 @@ public class Standard extends ExtensibleElement
     this.requirements = requirements;
   }
 
+  @JacksonXmlElementWrapper(localName = "levels")
+  @JacksonXmlProperty(localName = "level")
   public List<Level> getLevels() {
     return levels;
   }
