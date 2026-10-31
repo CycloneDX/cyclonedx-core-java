@@ -178,6 +178,7 @@ public class ReleaseNotes
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   public static class Resolves {
 
     public enum Type {
