@@ -121,6 +121,18 @@ public class BomJsonGeneratorTest {
     }
 
     @Test
+    public void schema16ReleaseNotesResolvesWithoutNameJsonTest() throws Exception {
+        final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream("/1.6/valid-release-notes-1.6.json")).readAllBytes();
+        final Bom bom = new JsonParser().parse(bomBytes);
+
+        BomJsonGenerator generator = BomGeneratorFactory.createJson(Version.VERSION_16, bom);
+        String json = generator.toJsonString();
+        assertFalse(json.contains("null"), json);
+        File file = writeToFile(json);
+        assertTrue(new JsonParser().isValid(file, Version.VERSION_16));
+    }
+
+    @Test
     public void schema13EmptyComponentsJsonTest() throws Exception {
         final Bom bom =  new Bom();
         bom.setComponents(new ArrayList<>());
