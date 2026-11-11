@@ -1335,6 +1335,16 @@ public class BomXmlGeneratorTest {
         return tempFile;
     }
 
+    @Test
+    public void schema16StandardLevelsGenerationTest() throws Exception {
+        BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_16, createCommonBomXml("/1.6/valid-standard-1.6.xml"));
+        String xml = generator.toXmlString();
+        assertTrue(xml.contains("<level bom-ref=\"level-1\">"), xml);
+        File file = writeToFile(xml);
+        XmlParser parser = new XmlParser();
+        assertTrue(parser.isValid(file, Version.VERSION_16));
+    }
+
     private Bom createCommonBomXml(String resource) throws Exception {
         final byte[] bomBytes = Objects.requireNonNull(this.getClass().getResourceAsStream(resource)).readAllBytes();
         XmlParser parser = new XmlParser();
