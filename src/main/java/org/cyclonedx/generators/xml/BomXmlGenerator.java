@@ -18,15 +18,20 @@
  */
 package org.cyclonedx.generators.xml;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.util.DefaultXmlPrettyPrinter;
@@ -136,6 +141,29 @@ public class BomXmlGenerator extends AbstractBomGenerator
 
     public String toXmlString(boolean prettyPrint) throws GeneratorException {
         return toXML(bom, prettyPrint);
+    }
+
+    /**
+     * @since 13.5.0
+     */
+    public byte[] toXmlBytes(boolean prettyPrint) throws GeneratorException {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        writeXml(out, prettyPrint);
+        return out.toByteArray();
+    }
+
+    /**
+     * @since 13.5.0
+     */
+    public void writeXml(OutputStream out, boolean prettyPrint) throws GeneratorException {
+        try {
+            out.write((prettyPrint ? PROLOG + System.lineSeparator() : PROLOG).getBytes(StandardCharsets.UTF_8));
+            final ObjectWriter writer = prettyPrint ? mapper.writer(prettyPrinter) : mapper.writer();
+            writer.without(JsonGenerator.Feature.AUTO_CLOSE_TARGET).writeValue(out, bom);
+        }
+        catch (IOException ex) {
+            throw new GeneratorException(ex);
+        }
     }
 
     /**
