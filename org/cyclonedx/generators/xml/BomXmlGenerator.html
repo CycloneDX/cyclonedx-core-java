@@ -74,6 +74,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#generate()" tabindex="0">generate()</a></li>
 <li><a href="#toXmlString()" tabindex="0">toXmlString()</a></li>
 <li><a href="#toXmlString(boolean)" tabindex="0">toXmlString(boolean)</a></li>
+<li><a href="#toXmlBytes(boolean)" tabindex="0">toXmlBytes(boolean)</a></li>
+<li><a href="#writeXml(java.io.OutputStream,boolean)" tabindex="0">writeXml(OutputStream, boolean)</a></li>
 <li><a href="#toString()" tabindex="0">toString()</a></li>
 </ol>
 </li>
@@ -161,11 +163,18 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates a text representation of a CycloneDX BoM Document.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toXmlString()" class="member-name-link">toXmlString</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toXmlBytes(boolean)" class="member-name-link">toXmlBytes</a><wbr>(boolean&nbsp;prettyPrint)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toXmlString(boolean)" class="member-name-link">toXmlString</a><wbr>(boolean&nbsp;prettyPrint)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toXmlString()" class="member-name-link">toXmlString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toXmlString(boolean)" class="member-name-link">toXmlString</a><wbr>(boolean&nbsp;prettyPrint)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeXml(java.io.OutputStream,boolean)" class="member-name-link">writeXml</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html" title="class or interface in java.io" class="external-link">OutputStream</a>&nbsp;out,
+ boolean&nbsp;prettyPrint)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -290,6 +299,37 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="../../exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toXmlBytes(boolean)">
+<h3>toXmlBytes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">toXmlBytes</span><wbr><span class="parameters">(boolean&nbsp;prettyPrint)</span>
+                  throws <span class="exceptions"><a href="../../exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="../../exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></code></dd>
+<dt>Since:</dt>
+<dd>13.5.0</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="writeXml(java.io.OutputStream,boolean)">
+<h3>writeXml</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">writeXml</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html" title="class or interface in java.io" class="external-link">OutputStream</a>&nbsp;out,
+ boolean&nbsp;prettyPrint)</span>
+              throws <span class="exceptions"><a href="../../exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="../../exception/GeneratorException.html" title="class in org.cyclonedx.exception">GeneratorException</a></code></dd>
+<dt>Since:</dt>
+<dd>13.5.0</dd>
 </dl>
 </div>
 </section>
