@@ -44,8 +44,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Document;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -60,6 +62,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -209,6 +212,31 @@ public class BomXmlGeneratorTest {
         assertTrue(parser.isValid(file, version));
         assertTrue(file.length() < prettyPrintedSize,
                    "Non pretty-printed output size should be smaller than pretty printed output size");
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    public void testXmlBytesAndStreamMatchString(boolean prettyPrint) throws Exception {
+        final var bom = new Bom();
+        final var component = new Component();
+        component.setType(Type.LIBRARY);
+        component.setName("na\u00efve-\u2713");
+        bom.addComponent(component);
+        final BomXmlGenerator generator = BomGeneratorFactory.createXml(Version.VERSION_16, bom);
+        final byte[] expected = generator.toXmlString(prettyPrint).getBytes(StandardCharsets.UTF_8);
+
+        assertArrayEquals(expected, generator.toXmlBytes(prettyPrint));
+
+        final boolean[] closed = {false};
+        final var out = new ByteArrayOutputStream() {
+            @Override
+            public void close() {
+                closed[0] = true;
+            }
+        };
+        generator.writeXml(out, prettyPrint);
+        assertArrayEquals(expected, out.toByteArray());
+        assertFalse(closed[0], "Caller-owned stream must not be closed");
     }
 
     @Test

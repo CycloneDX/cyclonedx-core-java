@@ -18,13 +18,17 @@
  */
 package org.cyclonedx.generators.json;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.cyclonedx.Format;
 import org.cyclonedx.Version;
@@ -66,6 +70,7 @@ public class BomJsonGenerator extends AbstractBomGenerator
 
   private void setupObjectMapper() {
     mapper.setAnnotationIntrospector(new VersionJsonAnnotationIntrospector(version));
+    mapper.addMixIn(BomReference.class, MixInBomReference.class);
 
     super.setupObjectMapper(false);
 
@@ -124,6 +129,28 @@ public class BomJsonGenerator extends AbstractBomGenerator
   }
 
   /**
+   * @since 13.5.0
+   */
+  public byte[] toJsonBytes(boolean prettyPrint) throws GeneratorException {
+    try {
+      return writer(prettyPrint).writeValueAsBytes(bom);
+    } catch (JsonProcessingException e) {
+      throw new GeneratorException(e);
+    }
+  }
+
+  /**
+   * @since 13.5.0
+   */
+  public void writeJson(OutputStream out, boolean prettyPrint) throws GeneratorException {
+    try {
+      writer(prettyPrint).without(JsonGenerator.Feature.AUTO_CLOSE_TARGET).writeValue(out, bom);
+    } catch (IOException e) {
+      throw new GeneratorException(e);
+    }
+  }
+
+  /**
    * Creates a text representation of a CycloneDX BoM Document. This method calls {@link #toJsonString()} and will return
    * an empty string if {@link #toJsonString()} throws an exception. It's preferred to call {@link #toJsonString()}
    * directly so that exceptions can be caught.
@@ -141,14 +168,14 @@ public class BomJsonGenerator extends AbstractBomGenerator
 
   String toJson(final Bom bom, final boolean prettyPrint) throws GeneratorException {
     try {
-      mapper.addMixIn(BomReference.class, MixInBomReference.class);
-      if (prettyPrint) {
-        return mapper.writer(prettyPrinter).writeValueAsString(bom);
-      }
-      return mapper.writeValueAsString(bom);
+      return writer(prettyPrint).writeValueAsString(bom);
     }
     catch (JsonProcessingException e) {
       throw new GeneratorException(e);
     }
+  }
+
+  private ObjectWriter writer(boolean prettyPrint) {
+    return prettyPrint ? mapper.writer(prettyPrinter) : mapper.writer();
   }
 }
