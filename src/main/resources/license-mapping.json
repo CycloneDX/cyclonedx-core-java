@@ -104,7 +104,7 @@
     ]
   },
   {
-    "exp": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+    "exp": "(CDDL-1.0 OR GPL-2.0-only WITH Classpath-exception-2.0)",
     "names": [
       "CDDL + GPLv2 with classpath exception",
       "CDDL/GPLv2+CE"
@@ -183,7 +183,7 @@
     ]
   },
   {
-    "exp": "GPL-2.0-with-classpath-exception",
+    "exp": "(GPL-2.0-only WITH Classpath-exception-2.0)",
     "names": [
       "GPL2 w/ CPE",
       "GPLv2+CE",

@@ -19,7 +19,12 @@
 package org.cyclonedx.util;
 
 import org.cyclonedx.model.LicenseChoice;
+import org.cyclonedx.model.LicenseItem;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -82,5 +87,36 @@ public class LicenseResolverTest {
         assertEquals("BSD-3-Clause", c4.getLicenses().get(0).getId());
         LicenseChoice c5 = LicenseResolver.resolve(" Modified BSD License ");
         assertEquals("BSD-3-Clause", c5.getLicenses().get(0).getId());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "GPL2 w/ CPE",
+        "GPLv2+CE",
+        "GPLv2 with classpath exception",
+        "GPLv2 license, includes the CLASSPATH exception",
+        "GNU General Public License, version 2, with the Classpath Exception",
+        "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "GPL v2 with the Classpath exception"
+    })
+    public void fuzzyMatchingGplWithClasspathExceptionTest(String licenseName) {
+        assertSingleExpression("(GPL-2.0-only WITH Classpath-exception-2.0)", LicenseResolver.resolve(licenseName));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "CDDL + GPLv2 with classpath exception",
+        "CDDL/GPLv2+CE"
+    })
+    public void fuzzyMatchingCddlOrGplWithClasspathExceptionTest(String licenseName) {
+        assertSingleExpression("(CDDL-1.0 OR GPL-2.0-only WITH Classpath-exception-2.0)", LicenseResolver.resolve(licenseName));
+    }
+
+    private static void assertSingleExpression(String expected, LicenseChoice choice) {
+        assertNotNull(choice);
+        List<LicenseItem> items = choice.getItems();
+        assertEquals(1, items.size());
+        assertNotNull(items.get(0).getExpression());
+        assertEquals(expected, items.get(0).getExpression().getValue());
     }
 }
