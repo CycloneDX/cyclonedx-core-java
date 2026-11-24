@@ -97,10 +97,23 @@ public class LicenseResolverTest {
         "GPLv2 license, includes the CLASSPATH exception",
         "GNU General Public License, version 2, with the Classpath Exception",
         "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "GNU General Public License, Version 2 with the Classpath Exception",
         "GPL v2 with the Classpath exception"
     })
     public void fuzzyMatchingGplWithClasspathExceptionTest(String licenseName) {
         assertSingleExpression("(GPL-2.0-only WITH Classpath-exception-2.0)", LicenseResolver.resolve(licenseName));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "GNU General Public License (GPL) version 2",
+        "GNU General Public License, version 2"
+    })
+    public void fuzzyMatchingGpl2Test(String licenseName) {
+        LicenseChoice choice = LicenseResolver.resolve(licenseName);
+        assertNotNull(choice);
+        assertEquals(1, choice.getLicenses().size());
+        assertEquals("GPL-2.0-only", choice.getLicenses().get(0).getId());
     }
 
     @ParameterizedTest
