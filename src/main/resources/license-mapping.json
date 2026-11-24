@@ -104,7 +104,7 @@
     ]
   },
   {
-    "exp": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+    "exp": "(CDDL-1.0 OR GPL-2.0-only WITH Classpath-exception-2.0)",
     "names": [
       "CDDL + GPLv2 with classpath exception",
       "CDDL/GPLv2+CE"
@@ -166,6 +166,7 @@
     "exp": "GPL-2.0-only",
     "names": [
       "GNU General Public License (GPL) version 2",
+      "GNU General Public License, version 2",
       "GNU General Public License (GPL) version 2.0",
       "GNU General Public License v2",
       "GNU General Public License v2.0",
@@ -183,7 +184,7 @@
     ]
   },
   {
-    "exp": "GPL-2.0-with-classpath-exception",
+    "exp": "(GPL-2.0-only WITH Classpath-exception-2.0)",
     "names": [
       "GPL2 w/ CPE",
       "GPLv2+CE",
@@ -191,6 +192,7 @@
       "GPLv2 license, includes the CLASSPATH exception",
       "GNU General Public License, version 2, with the Classpath Exception",
       "GNU General Public License, version 2 with the GNU Classpath Exception",
+      "GNU General Public License, Version 2 with the Classpath Exception",
       "GPL v2 with the Classpath exception"
     ]
   },
